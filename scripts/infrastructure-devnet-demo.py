@@ -128,6 +128,7 @@ class Demonstrations:
         self.submit([Instruction(TOKEN, b'\x07' + struct.pack('<Q', 1_000_000), [meta(self.mint, True), meta(self.source, True), meta(self.developer.pubkey(), False, True)])], self.label + '-mint-mock-usdc', self.developer)
         if not any(v['state'] == str(self.state) for v in self.manifest['vaults']):
             self.manifest['vaults'].append({'mode': self.label, 'vault_id': self.vault.hex(), 'state': str(self.state), 'treasury': str(self.treasury), 'token_source': str(self.source), 'initialized': True,
+                'leaf_capacity': 1024 if mode == 3 else 16, 'merkle_authentication_path_height': 4 if mode == 2 else None,
                 'explorer_url': f'https://explorer.solana.com/address/{self.treasury}?cluster=devnet',
                 'recipient_sol': str(self.recipient.pubkey()), 'recipient_token': str(self.token_recipient.pubkey())})
         self.flush()
