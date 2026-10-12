@@ -47,7 +47,7 @@ Each request is capped at 1,400,000 CUs. The full measurements, including 20-sam
 
 ## Live on devnet
 
-The [public manifest](artifacts/public-deployment.json) records the executable program, the six-decimal mock mint and three initialized vaults. All ten custody operations confirmed, including six single-transaction XMSS operations. Rejection controls are separately labeled devnet simulations. The devnet deployment uses a test mint and carries no real value, and no mainnet or real USDC is authorized.
+The [public manifest](artifacts/public-deployment.json) records the executable program, the six-decimal mock mint and three initialized vaults. All ten custody operations confirmed, including six single-transaction XMSS operations. Rejection controls are separately labeled devnet simulations. The deployment is on devnet with a test mint; there is no mainnet deployment.
 
 - **Program:** [`HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V`](https://explorer.solana.com/address/HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V?cluster=devnet)
 - **Mock USDC mint:** [`41BK2eVZsGdua58DFz3U7ydMd7bBqZbumTNbv61RpZgS`](https://explorer.solana.com/address/41BK2eVZsGdua58DFz3U7ydMd7bBqZbumTNbv61RpZgS?cluster=devnet)
