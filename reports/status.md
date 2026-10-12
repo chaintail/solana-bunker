@@ -1,39 +1,81 @@
-Updated: 2026-10-12T14:12:51.678721+00:00
-
 # Sprint status
 
-**Sprint start:** 2026-10-12T13:36:06.597515Z.
-**Target end:** 2026-10-13T13:36:06.597515Z.
-**Current state:** Core local-SVM demonstrations complete; public deployment blocked on funding. A 24-hour target does not imply unattended execution after this runtime ends.
+Updated October 12, 2026 (Eastern Time).
 
-## Completed local evidence
+**Complete: fresh local validation and all ten devnet custody operations pass.** The default XMSS client carries one exact
+canonical intent and a full 2,500-byte signature in one transaction. SOL, Mock
+USDC, leaf burning and root rotation share the existing custody verifier.
+Array/Merkle remain unchanged; explicit staged XMSS remains supported.
 
-| Gate | Result | Evidence |
+The [v1 execution report](v1-single-transaction.md) is the current evidence
+index. Earlier milestone reports describe the staged baseline and retain their
+historical scope. Public identifiers and confirmation state come from the
+[deployment manifest](../artifacts/public-deployment.json).
+
+## Confirmed devnet evidence
+
+The [completed summary](../artifacts/v1-devnet-validation-summary.json) records
+three initialized vaults, the verified six-decimal mock mint and exact onchain
+SBF hash. Six XMSS operations each used one v1 transaction: SOL 3,117 bytes /
+518,509 CUs; Mock USDC 3,214 / 532,564; burn 3,086 / 529,687; rotation 3,146 /
+483,319; post-rotation SOL 3,117 / 506,910 and token 3,214 / 578,944. The
+rotation preserved receiving addresses and balances; both new-root withdrawals
+passed custody and recipient checks.
+
+Low-CU, loaded-data, destination-substitution and stale-old-authorization
+rejections are devnet **simulations**, distinct from those confirmed successes.
+The register contains 140 confirmed signatures including deployment/setup and
+one unconfirmed loader preflight rejection. Full addresses, receipts and the
+separate local/deployment/demo source commits are in the v1 report.
+
+## Fresh local validation
+
+Source `e4d20bff4eb589f97fcdf84a9d668c2cbc46b67f`, custody binary
+`48e2e324abcdcfd7e4c7cb601765da374595b922ed94e29d5ec168d37c06de79`
+(124,464 bytes), Agave 4.3.0/platform-tools 1.57, Python 3.13.5 and solders 0.29.0.
+
+| Check | Result | Evidence |
 |---|---|---|
-| E1 | Fresh developer wallet; devnet; last balance 0 SOL | early/E1-wallet-environment.md, environment.json |
-| E2 | Exact 2,029-byte SDK v1 transaction executes locally; public submit/read unfinished | early/E2-v1-transport.md, v1 resource controls |
-| E3 | Standalone XMSS 42/42 valid/invalid cases; 120 repeated valid measurements | early/E3-xmss-feasibility.md, crypto-svm-* |
-| Host tests | 37 passed | artifacts/test-results.json |
-| Functional custody harness | 195/195 cases, 573 measured attempts; 20 samples for each principal mode/asset | validation-20261012T135652 |
-| Client XMSS / independent review | 15 cases, 77 transactions, both assets, burn, root rotation, exact retry | client-svm-xmss-final.json, crypto-reviewed-client-xmss.json |
-| Storage comparison | Actual 16/256/1,024-leaf state allocation; all three modes on same treasury | validation-svm-results.json, client-comparison-summary.json |
-| Clean source build/replay | Both SBF digests; 37 host + 195 main + 15 program + 15 intent SVM assertions independently reproduced, plus one intent host check | clean-build-origin.json, clean-reproduction-summary.json |
+| Full custody harness | 195 cases; 317 measured attempts; 20 principal samples per mode/asset | [Full results](../artifacts/canonical-v1-full-results.json) |
+| Inline XMSS client | 22 scenarios; 24 measured transactions including setup | [Inline results](../artifacts/canonical-v1-inline-results.json) |
+| Explicit staged fallback | 22 scenarios; 112 measured transactions including setup | [Staged results](../artifacts/canonical-v1-staged-results.json) |
+| Host / client tests | 37 / 16 passed | [Validation summary](../artifacts/canonical-v1-validation-summary.json) |
+| Native program tests | 10 passed on program-worker commit `912537b` | [Native result and log](../artifacts/v1-native-program-test-results.json) |
 
-Final custody program: 124,464 bytes, SHA-256 `8d7435ea6225ef4b09e972cef7ed3d2b99f7f4e1d1b9e9f8aa5124a0848f6e25`.
-Standalone XMSS probe: 33,864 bytes, SHA-256 `21088f9ef0f6add41231e5ef7b19eb8ab3272f17fc493fe104df44b612c8f700`.
+## Implemented behavior
 
-## Remaining limitations and dependency
+- Existing opcode 2 supports inline XMSS; opcode 3 retains sealed-stage execution.
+- The client serializes signed MessageV1 envelopes and checks the full 4,096-byte
+  limit, with explicit CU, loaded-account and heap configuration.
+- Ten new native Rust tests pass for inline/staged parity, malformed witnesses,
+  signature/replay rejection, burns and fresh/old authority behavior.
+- The devnet runner persists exact authorizations and prepared envelopes,
+  reconciles pending signatures, checks expected simulation errors, and verifies
+  both custody debits and recipient credits.
 
-Developer address `AxQBVSbA3tEc8RsMhn3D4gPLBLnEu3XD84Zd9yy3pmnQ`, **devnet**, remains unfunded. Recommend 2 devnet SOL (about 1.3 SOL estimated peak deployment/fixture rent). No program/mint creation or application transaction is publicly confirmed. Funding affects public deployment only.
+## Evidence boundaries
 
-All 31 acceptance IDs have bounded evidence: 29 local-runtime IDs, S03 host-tested, D02 source-inspected. Program and intent supplements add 15 runtime assertions each, independently reproduced without Git/private credentials; intent also has one separately labeled host RFC mint-binding check. Sealed-stage write mutation and same-authority rotation rejection now have actual runtime cases. Cheap account/policy rejection and deep signature-verifier failures remain distinct. See the matrix and clean-reproduction-summary.json.
+Solders 0.29.0/LiteSVM ignores serialized v1 inline resource limits. Local inline
+execution uses a disclosed 1.4-million-CU runtime override; it measures execution
+and full transaction bytes, not network acceptance of those limits. Devnet
+resource controls and retrieved confirmed transactions are separate evidence.
 
-Local LiteSVM 0.29 does not enforce v1 inline resource limits. Custody measurements use enforced legacy ComputeBudget instructions and five-transaction XMSS staging. Temporary stage rent is retained; refunds are not implemented. Ordinary upgrade/demo administration remains trusted. SLH-DSA and final UI remain deferred.
+The earlier staged baseline passed 195 main runtime cases and 30 supplemental
+runtime assertions, plus separately labeled host checks. Its results remain in
+[the comparison](../research/results-summary.md); they are not new inline
+measurements. Stable receiving addresses are scoped to the same program and
+cluster. Ordinary upgrade/demo administration and mock mint authority remain
+trusted. SLH-DSA, UI, mainnet and real USDC remain outside this delivery.
 
-## Execution and restart
+## Reproduce and continue
 
-The parent only coordinates. Workers own infrastructure/integration, program, cryptography, client, validation and documentation. The original validator worker stopped after runtime capability failures; infrastructure completed an independent replay and honest acceptance mapping, with a separate crypto crosscheck. All execution/source writers are frozen; final documentation and checkpoint packaging are complete.
+Use `bash scripts/infrastructure-replay.sh` with Agave 4.3.0/platform-tools 1.57.
+Run `python -m client.cli --adapter svm demo-xmss` for inline v1, or add
+`--xmss-transport staged` before the subcommand for the fallback. Native Rust
+checks use `cargo test --locked --manifest-path program/Cargo.toml`.
 
-Active local branch: `main`. Read README.md, decisions.md, interfaces.md, all early/milestone reports and final-research-handover.md. Reproduce with `bash scripts/infrastructure-replay.sh`; use fresh local disposable keysets. Do not treat a source review as a runtime test or a local transaction identifier as public confirmation.
-
-The public checkpoint captures committed source/evidence, with a commit/file-digest manifest. Preserve the separate confidential continuation bundle privately to recover the development credentials. Never restore an old journal over a newer one or infer signer progress from unused chain leaves. If signing state is uncertain, retire/abandon affected leaves or install a fresh tree. If developer credentials are unavailable, generate a new dedicated wallet and report its address before funding.
+Shared-cluster continuation requires the dedicated private credentials and
+current journals. Keep one writer per XMSS keyset; retain exact authorized bytes
+for retries. Never overwrite a newer journal, fund public deterministic vectors,
+or infer safe signing progress from the onchain bitmap. No private material
+belongs in the public evidence package.
