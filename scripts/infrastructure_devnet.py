@@ -20,11 +20,16 @@ DEVELOPER_PATH = Path(os.environ.get('BUNKER_DEVNET_KEYPAIR', '/srv/world/secret
 DEVELOPER_ADDRESS = 'N4FZnqmfXWoGhofuJAYnDdnYF8ows635ZAw2omFCtW1'
 PRIVATE = ROOT / '.private' / 'devnet-v1'
 NOW = lambda: datetime.now(timezone.utc).isoformat()
+_NEXT_RPC_START = 0.0
 
 
 def rpc(method, params=()):
+    global _NEXT_RPC_START
     body = json.dumps({'jsonrpc': '2.0', 'id': 1, 'method': method, 'params': list(params)}).encode()
-    for attempt in range(5):
+    for attempt in range(7):
+        # Stay below the public endpoint's per-method burst allowance.
+        time.sleep(max(0.0, _NEXT_RPC_START - time.monotonic()))
+        _NEXT_RPC_START = time.monotonic() + 0.4
         try:
             request = urllib.request.Request(RPC, data=body, headers={'Content-Type': 'application/json'})
             with urllib.request.urlopen(request, timeout=45) as response:
@@ -32,10 +37,19 @@ def rpc(method, params=()):
             if 'error' in result:
                 raise RuntimeError(json.dumps(result['error']))
             return result['result']
-        except (urllib.error.URLError, TimeoutError):
-            if attempt == 4:
+        except urllib.error.HTTPError as error:
+            if error.code != 429 or attempt == 6:
                 raise
-            time.sleep(min(2 ** attempt, 10))
+            retry_after = error.headers.get('Retry-After', '10')
+            try:
+                delay = float(retry_after)
+            except ValueError:
+                delay = 10
+            time.sleep(min(max(delay, 2 ** attempt), 30))
+        except (urllib.error.URLError, TimeoutError):
+            if attempt == 6:
+                raise
+            time.sleep(min(2 ** attempt, 15))
 
 
 def private_json(path, value):
