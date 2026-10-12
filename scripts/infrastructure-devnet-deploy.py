@@ -17,7 +17,7 @@ BIN = Path(os.environ.get('BUNKER_SOLANA_BIN', str(Path.home() / '.local/share/s
 TOKEN = Pubkey.from_string('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
 
 
-def main():
+def main(paced=False):
     manifest = environment()
     developer, program, mint = keypair(), keypair('program'), keypair('mint')
     binary = ROOT / 'program/target/deploy/bunker_program.so'
@@ -39,10 +39,17 @@ def main():
                    '--keypair', str(DEVELOPER_PATH), '--fee-payer', str(DEVELOPER_PATH), '--upgrade-authority', str(DEVELOPER_PATH),
                    '--program-id', str(PRIVATE / 'program.json'), '--buffer', str(PRIVATE / 'deployment-buffer.json'),
                    '--max-len', str(len(raw)), '--use-rpc', '--max-sign-attempts', '5', '--output', 'json']
-        result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=600)
-        if result.returncode:
-            raise RuntimeError('Deployment failed: ' + result.stderr[-3000:])
-        deployed = json.loads(result.stdout)
+        if paced:
+            from infrastructure_devnet_loader import paced_deploy
+            deployed = paced_deploy(raw)
+        else:
+            result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=600)
+            if result.returncode:
+                # CLI recovery phrases must never enter public artifacts. The
+                # explicit private buffer avoids them; retain only error lines.
+                errors = [line for line in result.stderr.splitlines() if line.startswith('Error:') and not any(word in line.lower() for word in ('mnemonic', 'seed phrase', 'recovery'))]
+                raise RuntimeError('Deployment failed: ' + '\n'.join(errors)[-1500:])
+            deployed = json.loads(result.stdout)
         manifest['program_deployment_result'] = deployed
         manifest['program_deployed'] = bool(account(program.pubkey())['executable'])
         dump = PRIVATE / 'deployed-program.so'
@@ -84,4 +91,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--paced', action='store_true', help='Resume exact buffer with paced official loader instructions')
+    main(paced=parser.parse_args().paced)
