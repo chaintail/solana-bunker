@@ -156,13 +156,13 @@ class BunkerLedger:
         self.validate_authority(mode, authority, leaf_count)
         addr, sb = pda(self.program_id,[b'bunker_state',vault_id])
         treasury, tb = pda(self.program_id,[b'bunker_treasury',addr])
-        require(addr not in self.states and treasury not in self.owners, 'already_initialized')
+        require(addr not in self.states and all(self.owners.get(a) in (None, bytes(32)) for a in (addr,treasury)), 'already_initialized')
         require(token_source not in self.tokens and token_source not in (addr,treasury), 'invalid_source')
         s = State(vault_id,addr,treasury,namespace,admin,mint,token_source,mode,authority,leaf_count,
                   rent=rent,state_bump=sb,treasury_bump=tb)
         self.states[addr] = s
-        self.sol[addr] = rent
-        self.sol[treasury] = rent
+        self.sol[addr] = max(rent,self.sol.get(addr,0))
+        self.sol[treasury] = max(rent,self.sol.get(treasury,0))
         self.owners[addr] = self.owners[treasury] = self.program_id
         self.tokens[token_source] = TokenAccount(mint,treasury)
         return s

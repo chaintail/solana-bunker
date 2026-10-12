@@ -72,7 +72,10 @@ little endian. Authority/signature bytes are passed unchanged.
 Opcode 0 checks the standard Token Program, six decimals, initialized mint, and
 no freeze authority. It creates and initializes the exact source with the
 Token Program. Authority writing must begin at offset zero and continue
-without gaps. Duplicate initialization is rejected.
+without gaps. Duplicate initialization is rejected. Empty system-owned PDAs that were funded
+before initialization are allocated and assigned using the canonical PDA signer,
+with only a rent-deficit top-up; existing deposits are preserved. Program-owned
+or nonempty existing accounts are never accepted as bootstrap fixtures.
 
 Canonical action bytes are defined in `client/actions.py` and
 `reports/interfaces.md`. The native parser independently checks lengths and
