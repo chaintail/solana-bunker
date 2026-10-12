@@ -1,0 +1,16 @@
+[package]
+name = "bunker-program"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[features]
+no-entrypoint = []
+
+[dependencies]
+solana-program = "=2.1.0"
+spl-token = { version = "=7.0.0", features = ["no-entrypoint"] }
+bunker-xmss-verifier = { path = "../crypto/xmss-verifier" }
