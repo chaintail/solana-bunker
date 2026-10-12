@@ -15,6 +15,8 @@ interface Pos {
 interface Shown {
   idx: number;
   instant: boolean;
+  /** reached by stepping forward (keyframe animations run) */
+  anim: boolean;
 }
 
 function parseHash(scenes: SceneDef[]): Pos | null {
@@ -35,19 +37,19 @@ export function useDeck(scenes: SceneDef[]) {
   }, [scenes]);
   const [pos, setPos] = useState<Pos>(initial);
   const [shown, setShown] = useState<Shown[]>(() =>
-    scenes.map((_, i) => ({ idx: i === initial.scene ? initial.step : -1, instant: true })),
+    scenes.map((_, i) => ({ idx: i === initial.scene ? initial.step : -1, instant: true, anim: false })),
   );
   const [cut, setCut] = useState(true);
   const posRef = useRef(pos);
   posRef.current = pos;
   const token = useRef(0);
 
-  const settle = useCallback((scene: number, idx: number) => {
+  const settle = useCallback((scene: number, idx: number, anim = false) => {
     const t = ++token.current;
     requestAnimationFrame(() =>
       requestAnimationFrame(() => {
         if (t !== token.current) return;
-        setShown((s) => s.map((x, i) => (i === scene ? { idx: x.idx === -1 ? idx : x.idx, instant: false } : x)));
+        setShown((s) => s.map((x, i) => (i === scene ? (x.idx === -1 ? { idx, instant: false, anim } : { ...x, instant: false }) : x)));
         setCut(false);
       }),
     );
@@ -62,13 +64,13 @@ export function useDeck(scenes: SceneDef[]) {
       const from = posRef.current;
       setPos(to);
       if (mode === 'forward' && to.scene === from.scene) {
-        setShown((s) => s.map((x, i) => (i === to.scene ? { idx: to.step, instant: false } : x)));
+        setShown((s) => s.map((x, i) => (i === to.scene ? { idx: to.step, instant: false, anim: true } : x)));
       } else if (mode === 'forward') {
         // entering the next scene: start blank, then animate step 0 in
-        setShown((s) => s.map((x, i) => (i === to.scene ? { idx: -1, instant: true } : x)));
-        settle(to.scene, to.step);
+        setShown((s) => s.map((x, i) => (i === to.scene ? { idx: -1, instant: true, anim: false } : x)));
+        settle(to.scene, to.step, true);
       } else {
-        setShown((s) => s.map((x, i) => (i === to.scene ? { idx: to.step, instant: true } : x)));
+        setShown((s) => s.map((x, i) => (i === to.scene ? { idx: to.step, instant: true, anim: false } : x)));
         setCut(to.scene !== from.scene);
         settle(to.scene, to.step);
       }

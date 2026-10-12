@@ -1,0 +1,24 @@
+/* ---------- shared vault rig (beats 4 to 7) ---------- */
+.rig-in{opacity:0;transform:translateY(8px);transition:opacity 420ms ease var(--d,0ms),transform 480ms var(--ease) var(--d,0ms)}
+.r-base .rig-in,.r-v1 .rig-in,.r-start .rig-in{opacity:1;transform:none}
+.drawer{left:680px;top:266px;width:360px;height:484px}
+.treas .coins2{display:flex;justify-content:center;gap:14px;top:200px}
+.dest{position:absolute;left:1480px;width:344px;height:108px;padding:18px}
+.dest .addr{font:700 20px/1 var(--mono);margin-top:12px}
+.dest .rcv{font:400 14px/1 var(--mono);color:var(--ink2);margin-top:12px}
+.dest.redd{border-color:var(--red)}
+.dest.redd::before{border-color:rgba(179,36,42,.22)}
+.dest.redd>.lbl{color:var(--red)}
+.card .hexv{display:block;font-weight:400;font-size:13px;line-height:1.5;letter-spacing:.01em;margin:-1px -3px;padding:1px 3px;
+  background:linear-gradient(rgba(31,58,147,.16),rgba(31,58,147,.16)) no-repeat 0 0/0% 100%;transition:background-size 450ms var(--ease) var(--d,0ms)}
+.card .hexv.redhex{background-image:linear-gradient(rgba(179,36,42,.14),rgba(179,36,42,.14))}
+.card .hexv.lit{background-size:100% 100%}
+.chipw{position:absolute;left:1296px;top:622px;z-index:4;opacity:0}
+.chipw .chip{display:flex;align-items:center;gap:6px;padding:4px 10px 4px 5px}
+.chipw .chip svg{display:block}
+.tagred{position:absolute;font:700 15px/1 var(--mono);letter-spacing:.12em;color:var(--red);border:2px solid var(--red);padding:7px 10px 6px;background:var(--paper-hi);
+  transform:rotate(-4deg);box-shadow:0 6px 12px -8px rgba(60,20,10,.5)}
+.flight{position:absolute;left:226px;top:236px;width:400px;font:400 12px/1 var(--mono);letter-spacing:.18em;color:var(--blue)}
+.cells i.x7::after{content:"";position:absolute;inset:-1px;
+  background:linear-gradient(45deg,transparent 40%,var(--ink) 40% 60%,transparent 60%),linear-gradient(-45deg,transparent 40%,var(--ink) 40% 60%,transparent 60%);
+  opacity:0;transition:opacity 220ms ease var(--d,0ms)}

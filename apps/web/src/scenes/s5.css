@@ -1,0 +1,49 @@
+/* ---------- Beat 5: version two, robbed (ported from mockup scene B) ---------- */
+#s-v2 .drawer .cells.big{transform-origin:50% 30%;transition:transform 520ms var(--ease) 120ms,opacity 300ms ease 320ms}
+#s-v2.r-fold .drawer .cells.big{transform:scale(.6,.04);opacity:0}
+#s-v2 .ix-a{transition:opacity 200ms}
+#s-v2.r-fold .ix-a{opacity:0}
+.rootbox{position:absolute;left:21px;top:84px;width:318px;height:84px;border:1.5px solid var(--blue);background:var(--paper-hi);padding:14px 16px;
+  opacity:0;transform:scale(1.06);transition:opacity 360ms ease 560ms,transform 400ms var(--ease) 560ms}
+.rootbox .h{font:700 20px/1 var(--mono);margin-top:12px}
+#s-v2.r-fold .rootbox{opacity:1;transform:none}
+.minibox{position:absolute;left:21px;top:192px;width:318px;height:180px;opacity:0;transition:opacity 360ms ease 700ms}
+#s-v2.r-fold .minibox{opacity:1}
+.mini i.r2{background:rgba(31,58,147,.18);transition:background 200ms ease 1700ms}
+#s-v2.r-robbed .mini i.r2{background:var(--red)}
+.root-eq{position:absolute;left:21px;top:370px;display:flex;align-items:center;gap:12px;opacity:0;transition:opacity 300ms ease 900ms}
+#s-v2.r-fold .root-eq{opacity:1}
+
+.flight{opacity:0;transition:opacity 400ms ease 350ms}
+#s-v2.r-flight .flight{opacity:1}
+#s-v2.r-robbed .flight{opacity:0;transition-delay:0ms}
+#u2{left:96px;top:262px;opacity:0;transition:transform 600ms var(--ease),opacity 300ms ease var(--d,0ms)}
+#s-v2.r-flight #u2{opacity:1;transform:translateX(130px)}
+#s-v2.r-robbed #u2{opacity:.42;--d:1400ms}
+.agent5{left:96px;top:522px;opacity:0;transform:translateY(14px);transition:opacity 400ms ease,transform 400ms var(--ease)}
+#s-v2.r-copy .agent5{opacity:1;transform:none}
+#c2w{position:absolute;left:226px;top:262px;width:400px;transition:transform 520ms var(--ease) 1000ms;z-index:3}
+#s-v2.r-copy #c2w{transform:translateY(260px)}
+#c2{left:0;top:0;opacity:0;transition:opacity 220ms ease 900ms}
+#s-v2.r-copy #c2{opacity:1}
+.ed{display:inline-flex;gap:.4em}
+.kx{display:inline-grid}
+.kx small{grid-area:1/1;transition:opacity 160ms ease 1820ms}
+.kx .k2{opacity:0;color:var(--red)!important}
+#s-v2.r-copy .kx .k1{opacity:0}
+#s-v2.r-copy .kx .k2{opacity:1}
+.ed .was{position:relative}
+.ed .was::after{content:"";position:absolute;left:-2px;right:-2px;top:50%;height:2px;background:var(--red);transform:scaleX(0);transform-origin:0 50%;transition:transform 200ms ease 1600ms}
+#s-v2.r-copy .ed .was::after{transform:none}
+.ed .now{color:var(--red);clip-path:inset(0 100% 0 0);transition:clip-path 120ms steps(1,end) 1820ms}
+#s-v2.r-copy .ed .now{clip-path:inset(0 -10% 0 0)}
+#dB5{opacity:0;transition:opacity 400ms ease 2000ms}
+#s-v2.r-copy #dB5{opacity:1}
+.refused2{position:absolute;left:240px;top:500px;font:700 13px/1 var(--mono);letter-spacing:.06em;color:var(--red);opacity:0;transition:opacity 300ms ease 1450ms}
+#s-v2.r-robbed .refused2{opacity:1}
+#s-v2 .chip-b{left:1296px;top:622px}
+#s-v2.a-robbed .chip-b{animation:s5-chip 760ms var(--ease) 600ms both}
+@keyframes s5-chip{0%{opacity:0;transform:none}15%{opacity:1}85%{opacity:1;transform:translate(176px,-14px)}100%{opacity:0;transform:translate(182px,-16px)}}
+.line-b{position:absolute;left:0;right:0;top:852px;text-align:center;font:700 31px/1 var(--mono);color:var(--ink);letter-spacing:-.005em}
+.line-b .type{--n:49;--t:900ms}
+#s-v2.r-line .line-b .type{clip-path:inset(0 -2% 0 0)}

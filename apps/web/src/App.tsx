@@ -5,7 +5,7 @@ import { stepsFor, useDeck, useFit, useInput } from './engine';
 import { SCENES } from './scenes';
 import type { Route, SceneDef } from './types';
 
-function SceneFrame({ def, num, total, idx, instant, active, cut, route }: { def: SceneDef; num: number; total: number; idx: number; instant: boolean; active: boolean; cut: boolean; route: Route }) {
+function SceneFrame({ def, num, total, idx, instant, anim, active, cut, route }: { def: SceneDef; num: number; total: number; idx: number; instant: boolean; anim: boolean; active: boolean; cut: boolean; route: Route }) {
   const steps = stepsFor(def, route);
   const reached = steps.slice(0, idx + 1).map((s) => s.id);
   const set = useMemo(() => new Set(reached), [reached.join(' ')]);
@@ -13,7 +13,7 @@ function SceneFrame({ def, num, total, idx, instant, active, cut, route }: { def
   return (
     <section
       id={`s-${def.key}`}
-      className={cx('scene', active && 'active', instant && 'instant', cut && 'cut', route === 'technical' && 'route-t', ...reached.map((r) => `r-${r}`), cur && `cur-${cur}`)}
+      className={cx('scene', active && 'active', instant && 'instant', cut && 'cut', route === 'technical' && 'route-t', ...reached.map((r) => `r-${r}`), cur && `cur-${cur}`, cur && anim && `a-${cur}`)}
     >
       <div className="content">
         {!def.bare && <Header exhibit={def.exhibit} title={def.title} sheet={`Sheet ${String(num).padStart(2, '0')} / ${String(total).padStart(2, '0')}`} />}
@@ -61,7 +61,7 @@ export function App() {
       <div className="paper grain" />
       <div className="paper vig" />
       {SCENES.map((def, i) => (
-        <SceneFrame key={def.key} def={def} num={i} total={SCENES.length - 1} idx={shown[i].idx} instant={shown[i].instant} active={i === pos.scene} cut={cut} route={pos.route} />
+        <SceneFrame key={def.key} def={def} num={i} total={SCENES.length - 1} idx={shown[i].idx} instant={shown[i].instant} anim={shown[i].anim} active={i === pos.scene} cut={cut} route={pos.route} />
       ))}
       <div className={cx('tab', pos.route === 'technical' && 'tech')}>
         BEAT {pos.scene} · STEP {pos.step + 1} OF {n}

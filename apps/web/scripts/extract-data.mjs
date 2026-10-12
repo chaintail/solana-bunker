@@ -30,7 +30,7 @@ const priorWork = L(chart.prior_work_timeline.records).map((r) => ({
   name: r.name,
   org: r.organization,
   category: r.category,
-  description: r.description,
+  description: r.description.replace(/([a-z])([A-Z][a-z])/g, '$1 $2'),
   url: r.original_url,
   date: r.source_date,
   status: r.status,

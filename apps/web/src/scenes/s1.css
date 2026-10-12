@@ -14,13 +14,16 @@
 .caption{position:absolute;left:0;width:1080px;top:650px;margin:0;text-align:center;font:italic 400 34px/1.2 var(--serif);color:var(--ink)}
 .jd-arrow{position:absolute;left:-382px;top:250px;width:480px;height:300px;overflow:visible;transition:opacity 300ms ease}
 .jd-arrow .pen{fill:none;stroke:var(--red);stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;filter:url(#pen);
-  stroke-dasharray:1;stroke-dashoffset:1;animation:s1-draw 520ms var(--ease) 380ms forwards}
-.jd-arrow .pen+.pen{animation-delay:860ms;animation-duration:160ms}
-@keyframes s1-draw{to{stroke-dashoffset:0}}
+  stroke-dasharray:1;stroke-dashoffset:1}
+.r-debate .jd-arrow .pen{stroke-dashoffset:0}
+.a-debate .jd-arrow .pen{animation:s1-draw 520ms var(--ease) 380ms both}
+.a-debate .jd-arrow .pen+.pen{animation-delay:860ms;animation-duration:160ms}
+@keyframes s1-draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
 .jd-name{position:absolute;left:-330px;top:470px;transition:opacity 300ms ease;font:700 30px/1 var(--mono);color:var(--red);letter-spacing:.02em;white-space:nowrap;
-  opacity:0;animation:s1-in 300ms ease 300ms forwards}
-@keyframes s1-in{to{opacity:1}}
-.scene:not(.r-debate) .jd-arrow .pen,.scene:not(.r-debate) .jd-name{animation:none}
+  opacity:0}
+.r-debate .jd-name{opacity:1}
+.a-debate .jd-name{animation:s1-in 300ms ease 300ms both}
+@keyframes s1-in{from{opacity:0}to{opacity:1}}
 
 /* the tweet clipping */
 .tweet{position:absolute;left:868px;top:236px;width:956px;padding:36px 44px 42px;background:var(--paper-hi);transform-origin:100% 0;

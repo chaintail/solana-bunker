@@ -1,0 +1,23 @@
+/* ---------- Beat 4: version one ---------- */
+#s-v1 .rig-pin{opacity:0;transition:opacity 400ms ease 300ms}
+#s-v1.r-v1 .rig-pin{opacity:1}
+#cw,#cr{left:226px;top:262px;opacity:0;transform:translateX(-130px);transition:opacity 300ms ease,transform 520ms var(--ease)}
+#s-v1.r-wrong #cw{opacity:.55;transform:none}
+#s-v1.a-wrong #cw{animation:s4-bounce 1100ms var(--ease) both}
+@keyframes s4-bounce{
+  0%{opacity:0;transform:translateX(-130px)}
+  30%{opacity:1;transform:translateX(0)}
+  48%{opacity:1;transform:translateX(46px)}
+  56%{opacity:1;transform:translateX(30px) rotate(-1.2deg)}
+  78%{opacity:1;transform:translateX(-12px) rotate(.4deg)}
+  100%{opacity:.55;transform:none}}
+.refused1{left:250px;top:470px;opacity:0;transition:opacity 260ms ease}
+#s-v1.r-wrong .refused1{opacity:1;transition-delay:620ms}
+#s-v1.r-right #cw,#s-v1.r-right .refused1{opacity:0;transform:translateX(-60px);transition:opacity 260ms ease,transform 300ms ease;animation:none}
+#s-v1.r-right #cr{opacity:1;transform:none;transition-delay:200ms}
+#s-v1.r-right .cells i.x7::after{opacity:1;--d:900ms}
+#s-v1.r-right .cells i.s7{background:transparent;border-color:rgba(31,58,147,.32);transition:background 300ms ease 900ms}
+#s-v1 .chip-a{left:1290px;top:540px}
+#s-v1.a-right .chip-a{animation:s4-chip 900ms var(--ease) 1000ms both}
+@keyframes s4-chip{0%{opacity:0;transform:none}15%{opacity:1}85%{opacity:1;transform:translate(200px,-196px)}100%{opacity:0;transform:translate(210px,-200px)}}
+#cr .hexv{--d:500ms}

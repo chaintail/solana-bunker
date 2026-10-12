@@ -1,7 +1,8 @@
 /* Beat 0: deliberately ugly. Plain system monospace, no styling, hard cuts. */
 .op-warn{position:absolute;left:0;right:0;top:404px;text-align:center;font-family:monospace;font-size:150px;font-weight:400;line-height:1;
   color:#000;letter-spacing:0;-webkit-font-smoothing:none;font-smooth:never;text-rendering:optimizeSpeed;opacity:0}
-.r-warn .op-warn{animation:op-flash 900ms linear both}
+.r-warn .op-warn{opacity:1}
+.a-warn .op-warn{animation:op-flash 900ms linear both}
 @keyframes op-flash{
   0%{opacity:1} 19.9%{opacity:1} 20%{opacity:0} 39.9%{opacity:0}
   40%{opacity:1} 59.9%{opacity:1} 60%{opacity:0} 79.9%{opacity:0} 80%{opacity:1} 100%{opacity:1}}

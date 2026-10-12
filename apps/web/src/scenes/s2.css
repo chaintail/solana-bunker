@@ -1,0 +1,60 @@
+/* ---------- Beat 2: the conspiracy ---------- */
+#s-conspiracy .hl{opacity:1}
+.field-wrap{position:absolute;left:96px;top:226px;width:880px;height:690px;transform-origin:0 0;
+  transform:translate(372px,6px) scale(1.12);transition:transform 720ms var(--ease)}
+.r-fission .field-wrap{transform:none}
+.field{position:absolute;left:0;top:0;width:880px;height:600px;overflow:visible}
+.dot{fill:var(--ink);opacity:0;transform-box:fill-box;transform-origin:50% 50%;transform:scale(0);
+  transition:opacity 200ms ease calc(var(--ci) * 55ms + var(--k) * 3ms),transform 320ms cubic-bezier(.3,1.6,.5,1) calc(var(--ci) * 55ms + var(--k) * 3ms)}
+.r-dots .dot{opacity:.86;transform:none}
+.cl-l{font:400 13px var(--mono);fill:var(--ink2);opacity:0;transition:opacity 300ms ease calc(var(--ci) * 55ms + 380ms)}
+.r-dots .cl-l{opacity:1}
+.crypto-c{fill:none;stroke:var(--red);stroke-width:2;stroke-dasharray:.035 .025;opacity:0;transform-box:fill-box;transform-origin:50% 50%;transform:scale(.6);
+  transition:opacity 260ms ease 120ms,transform 520ms cubic-bezier(.3,1.5,.55,1) 120ms}
+.crypto-l{font:700 15px var(--mono);fill:var(--red);opacity:0;transition:opacity 300ms ease 420ms}
+.r-crypto0 .crypto-c{opacity:1;transform:none}
+.r-crypto0 .crypto-l{opacity:1}
+.cap{position:absolute;font:400 17px/1.25 var(--mono);color:var(--ink)}
+.cap .fig{display:block;font-size:12px;letter-spacing:.22em;color:var(--ink3);margin-bottom:7px}
+.capL{left:64px;top:612px;opacity:0;transition:opacity 400ms ease 500ms}
+.r-dots .capL{opacity:1}
+
+.fission{position:absolute;left:1000px;top:226px;width:824px;height:690px;opacity:0;transform:translateX(120px);
+  transition:opacity 420ms ease 120ms,transform 640ms var(--ease) 120ms}
+.r-fission .fission{opacity:1;transform:none}
+.fission .chart{position:absolute;left:0;top:0;width:824px;height:580px;overflow:visible}
+.chart text{font-family:var(--mono)}
+.ax{stroke:var(--ink);stroke-width:1.25}
+.gl{stroke:rgba(28,26,23,.22);stroke-width:1;stroke-dasharray:2 5}
+.tk{font-size:14px;fill:var(--ink3)}
+.yr{font-size:15px;fill:var(--ink2)}
+.vb{font-size:15px;fill:var(--ink);font-weight:700;opacity:0;transition:opacity 300ms ease calc(var(--d) + 300ms)}
+.vb.z{fill:var(--ink3);font-weight:400}
+.fbar{fill:var(--ink);transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0);transition:transform 640ms var(--ease) calc(var(--d) + 300ms)}
+.r-fission .fbar{transform:none}
+.r-fission .vb{opacity:1}
+.band{opacity:0;transition:opacity 500ms ease 900ms}
+.r-fission .band{opacity:1}
+.zl{font-size:13px;fill:var(--red);letter-spacing:.06em}
+.capR{left:64px;top:612px}
+.fission .foot{position:absolute;left:64px;top:668px;font:400 14px/1 var(--mono);color:var(--ink2)}
+.fission .foot i{font-style:normal;color:var(--red);margin-right:.5em}
+.st-pu{line-height:1.02;padding:.32em .42em .26em}
+.st-pu big{display:block;font-size:1.75em;line-height:.95;letter-spacing:.02em}
+.st-pu sup{font-size:.32em;vertical-align:1.6em;margin-left:.08em}
+
+/* "I had my agents check" flashes, then the tally settles */
+.telegram{position:absolute;left:0;right:0;top:470px;display:flex;justify-content:center;z-index:65;pointer-events:none;opacity:0}
+.telegram span{display:inline-block;padding:26px 46px 22px;background:var(--paper-hi);border:1.5px solid var(--ink);
+  box-shadow:0 30px 60px -20px rgba(40,25,5,.55);font:700 54px/1 var(--mono);color:var(--ink);letter-spacing:-.01em;
+  clip-path:inset(0 100% 0 0)}
+.a-checked .telegram{animation:s2-tg 2300ms linear both}
+.a-checked .telegram span{animation:s2-type 700ms steps(34,end) 120ms both}
+@keyframes s2-tg{0%{opacity:1}82%{opacity:1}100%{opacity:0}}
+@keyframes s2-type{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 -4% 0 0)}}
+.tally{position:absolute;left:0;right:0;top:960px;margin:0;text-align:center;font:700 25px/1 var(--mono);color:var(--ink);
+  opacity:0;transform:translateY(8px);transition:opacity 500ms ease,transform 500ms var(--ease)}
+.r-checked .tally{opacity:1;transform:none;transition-delay:2050ms}
+.conclude{position:absolute;left:0;right:0;text-align:center;top:1004px;margin:0;font:italic 400 26px/1 var(--serif);color:var(--ink2);
+  opacity:0;transition:opacity 900ms ease}
+.r-conclude .conclude{opacity:1}
