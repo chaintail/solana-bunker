@@ -1,0 +1,14 @@
+{
+  "name": "solana-bunker",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "dependencies": {
+    "@solana/kit": "8.4.0",
+    "@solana/web3.js": "1.99.0",
+    "@solana/spl-token": "0.4.15"
+  },
+  "scripts": {
+    "probe:v1": "node scripts/infrastructure-v1-probe.mjs"
+  }
+}

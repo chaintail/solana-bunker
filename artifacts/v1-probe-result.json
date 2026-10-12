@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "observed_at_utc": "2026-10-12T13:41:16.829Z",
+  "sdk": "@solana/kit 8.4.0",
+  "cluster": "devnet",
+  "rpc_url": "https://api.devnet.solana.com",
+  "public_address": "AxQBVSbA3tEc8RsMhn3D4gPLBLnEu3XD84Zd9yy3pmnQ",
+  "resource_config": {
+    "computeUnitLimit": 1000000,
+    "loadedAccountsDataSizeLimit": 1048576,
+    "heapSize": 32768
+  },
+  "stage": "rpc_submit",
+  "runtime": {
+    "jsonrpc": "2.0",
+    "result": {
+      "feature-set": 1855282951,
+      "solana-core": "4.4.0-beta.0"
+    },
+    "id": 1
+  },
+  "balance": {
+    "jsonrpc": "2.0",
+    "result": {
+      "context": {
+        "apiVersion": "4.4.0-beta.0",
+        "slot": 510282125
+      },
+      "value": 0
+    },
+    "id": 1
+  },
+  "blockhash_response": {
+    "jsonrpc": "2.0",
+    "result": {
+      "context": {
+        "apiVersion": "4.4.0-beta.0",
+        "slot": 510282161
+      },
+      "value": {
+        "blockhash": "7PE24RZvyqFAXjRf7K1cQ6DupQfPwDLMinpgb29huj82",
+        "lastValidBlockHeight": 497508605
+      }
+    },
+    "id": 1
+  },
+  "transaction_bytes": 2029,
+  "instruction_data_bytes": 1843,
+  "transaction_signature": "3aC3ezVM1rkCZfnkzeG1NZUs4wwDD16FFFWCAukvW3BmRERinKuhbLujvJ4ZRaXS6TEkzdCzWHcUs5cUxsSva6At",
+  "local_decode_success": true,
+  "simulation": {
+    "jsonrpc": "2.0",
+    "result": {
+      "context": {
+        "apiVersion": "4.4.0-beta.0",
+        "slot": 510282191
+      },
+      "value": {
+        "accounts": null,
+        "err": "AccountNotFound",
+        "fee": null,
+        "innerInstructions": null,
+        "loadedAccountsDataSize": 0,
+        "loadedAddresses": {
+          "readonly": [],
+          "writable": []
+        },
+        "logs": [],
+        "postBalances": [
+          0,
+          41509609334
+        ],
+        "postTokenBalances": [],
+        "preBalances": [
+          0,
+          41509609334
+        ],
+        "preTokenBalances": [],
+        "replacementBlockhash": null,
+        "returnData": null,
+        "unitsConsumed": 0
+      }
+    },
+    "id": 1
+  },
+  "submission": {
+    "jsonrpc": "2.0",
+    "error": {
+      "code": -32002,
+      "message": "Transaction simulation failed: Attempt to debit an account but found no record of a prior credit.",
+      "data": {
+        "accounts": null,
+        "err": "AccountNotFound",
+        "fee": null,
+        "innerInstructions": null,
+        "loadedAccountsDataSize": 0,
+        "loadedAddresses": null,
+        "logs": [],
+        "postBalances": null,
+        "postTokenBalances": null,
+        "preBalances": null,
+        "preTokenBalances": null,
+        "replacementBlockhash": null,
+        "returnData": null,
+        "unitsConsumed": 0
+      }
+    },
+    "id": 1
+  },
+  "status": "blocked"
+}

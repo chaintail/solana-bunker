@@ -1,0 +1,16 @@
+{
+  "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+  "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)",
+  "solana": "4.3.0",
+  "cargo-build-sbf": "4.3.0",
+  "platform-tools_target": "1.57",
+  "node": "v24.19.0",
+  "python": "Python 3.12.14",
+  "python_solders": "0.29.0",
+  "npm_dependencies": {
+    "@solana/kit": "8.4.0",
+    "@solana/web3.js": "1.99.0",
+    "@solana/spl-token": "0.4.15"
+  },
+  "local_svm_import": "solders.litesvm.LiteSVM"
+}
