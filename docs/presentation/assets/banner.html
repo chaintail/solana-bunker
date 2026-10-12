@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Solana Bunker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#efe7d4; --paper-hi:#f7f1e3; --manila:#e2d3ac;
+  --ink:#1c1a17; --ink2:#4c463d; --ink3:#8a8170;
+  --blue:#1f3a93; --blue2:rgba(31,58,147,.5); --blue3:rgba(31,58,147,.2);
+  --red:#b3242a; --stamp:#c0262c;
+  --serif-d:'Libre Caslon Display','Libre Caslon Text',Georgia,serif;
+  --serif:'Libre Caslon Text',Georgia,serif;
+  --mono:'Courier Prime','Courier New',monospace;
+  --stampf:'Archivo','Arial Narrow',sans-serif;
+  --ease:cubic-bezier(.2,.75,.2,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:1600px;height:400px;overflow:hidden;background:var(--paper)}
+body{-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+#stage{position:absolute;left:0;top:0;width:1600px;height:400px;background:var(--paper);overflow:hidden;color:var(--ink)}
+/* paper */
+.paper{position:absolute;inset:0;pointer-events:none}
+.paper.mottle{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='960' height='540'><filter id='m'><feTurbulence type='fractalNoise' baseFrequency='0.0035 0.006' numOctaves='4' seed='7' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.33 0 0 0 0 0.14 0 0 0 1.5 -0.62'/></filter><rect width='100%25' height='100%25' filter='url(%23m)'/></svg>");background-size:1920px 1080px;opacity:.38}
+.paper.grain{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' seed='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.25 0 0 0 0 0.19 0 0 0 0 0.1 0 0 0 1.1 -0.42'/></filter><rect width='100%25' height='100%25' filter='url(%23g)'/></svg>");opacity:.5;mix-blend-mode:multiply}
+.paper.vig{background:radial-gradient(ellipse 75% 70% at 50% 46%,transparent 60%,rgba(110,80,30,.16) 100%)}
+.stamp{position:absolute;left:0;top:0;color:var(--stamp);font-family:var(--stampf);font-stretch:72%;font-weight:850;
+  text-transform:uppercase;letter-spacing:.035em;line-height:.95;text-align:center;white-space:nowrap;
+  border:.075em solid currentColor;border-radius:.14em;padding:.16em .38em .12em;
+  box-shadow:inset 0 0 0 .05em var(--paper),inset 0 0 0 .085em currentColor;
+  mix-blend-mode:multiply;filter:url(#ink);pointer-events:none;z-index:60;}
+.stamp{opacity:.88;transform:translate(-50%,-50%) rotate(var(--r,-6deg))}
+.door{position:absolute;left:60px;top:20px;width:360px;height:360px}
+.wm{position:absolute;left:470px;top:150px;font:700 118px/1 var(--mono);letter-spacing:.04em;color:var(--ink);white-space:nowrap}
+.st{left:1330px;top:290px;font-size:56px;--r:-7deg}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <filter id="ink" x="-8%" y="-12%" width="116%" height="124%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="4" result="warp"/>
+      <feDisplacementMap in="SourceGraphic" in2="warp" scale="5" xChannelSelector="R" yChannelSelector="G" result="rough"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="2" seed="9" result="speck"/>
+      <feColorMatrix in="speck" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -4.2 2.95" result="speckA"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="3" seed="21" result="blot"/>
+      <feColorMatrix in="blot" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 2.4 -0.35" result="blotA"/>
+      <feComposite in="speckA" in2="blotA" operator="in" result="mask"/>
+      <feComposite in="rough" in2="mask" operator="in"/>
+    </filter>
+    <filter id="inkbold" x="-6%" y="-12%" width="112%" height="124%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="6" result="warp"/>
+      <feDisplacementMap in="SourceGraphic" in2="warp" scale="7" xChannelSelector="R" yChannelSelector="G" result="rough"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.32" numOctaves="2" seed="13" result="speck"/>
+      <feColorMatrix in="speck" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -4.6 3.45" result="speckA"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.006" numOctaves="3" seed="2" result="blot"/>
+      <feColorMatrix in="blot" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 2.2 -0.1" result="blotA"/>
+      <feComposite in="speckA" in2="blotA" operator="in" result="mask"/>
+      <feComposite in="rough" in2="mask" operator="in"/>
+    </filter>
+    <filter id="bar" x="-4%" y="-20%" width="108%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="2" seed="5" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+</defs></svg>
+<div id="stage">
+  <div class="paper mottle"></div><div class="paper grain"></div><div class="paper vig"></div>
+  <svg class="door" viewBox="40 50 560 560" aria-hidden="true">
+      <g fill="none" stroke="#1f3a93" stroke-width="1.2">
+        <line x1="40" y1="330" x2="600" y2="330" stroke-dasharray="14 4 2 4" opacity=".55"/>
+        <line x1="320" y1="50" x2="320" y2="610" stroke-dasharray="14 4 2 4" opacity=".55"/>
+        <circle cx="320" cy="330" r="250"/><circle cx="320" cy="330" r="236"/>
+        <circle cx="320" cy="330" r="176"/><circle cx="320" cy="330" r="168" opacity=".5"/>
+        <circle cx="320" cy="330" r="62"/><circle cx="320" cy="330" r="24"/>
+        <g id="hs"><line x1="320" y1="268" x2="320" y2="170"/><line x1="314" y1="268" x2="314" y2="176" opacity=".5"/><circle cx="320" cy="158" r="12"/></g>
+        <use href="#hs" transform="rotate(120 320 330)"/><use href="#hs" transform="rotate(240 320 330)"/>
+        <rect x="52" y="230" width="22" height="58" rx="3"/><rect x="52" y="372" width="22" height="58" rx="3"/>
+        <rect x="262" y="96" width="116" height="34" rx="2"/>
+      </g>
+      <g fill="#1f3a93" id="bolts"></g>
+    </svg>
+  <div class="wm">SOLANA BUNKER</div>
+  <div class="stamp st">Contains math</div>
+</div>
+<script>(function(){const g=document.getElementById('bolts');let h='';for(let k=0;k<36;k++){const a=k/36*Math.PI*2;h+=`<circle cx="${(320+243*Math.cos(a)).toFixed(1)}" cy="${(330+243*Math.sin(a)).toFixed(1)}" r="2.6"/>`;}g.innerHTML=h;})();</script>
+</body></html>
