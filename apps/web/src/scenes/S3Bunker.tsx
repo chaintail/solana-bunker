@@ -15,7 +15,7 @@ const COINS = Array.from({ length: 16 }, (_, i) => {
     kind: (i % 3 === 1 ? 'usdc' : 'sol') as 'sol' | 'usdc',
     x: -80 - (i % 5) * 46,
     y: 330 + row * 120 + ((i * 37) % 50),
-    d: i * 85,
+    d: i * 20,
   };
 });
 

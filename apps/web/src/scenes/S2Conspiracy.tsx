@@ -6,8 +6,8 @@ import './s2.css';
 /* ---------- 719 manuscripts as dots, clustered by discipline ---------- */
 const FW = 880,
   FH = 600; // field, local coords
-const DOT = 3.1,
-  SP = 7.2; // dot radius, sunflower spacing
+const DOT = 2.9,
+  SP = 6.4; // dot radius, sunflower spacing
 const GOLD = Math.PI * (3 - Math.sqrt(5));
 const CH = 7.9; // mono char width at 13px
 
@@ -25,42 +25,67 @@ function wrap(s: string, max = 19) {
 }
 
 type Cl = { name: string; n: number; x: number; y: number; R: number; lines: string[]; dots: [number, number][] };
-const CRYPTO = { x: 812, y: 470, R: 34 };
 
-const CLUSTERS: Cl[] = (() => {
-  const placed: { x0: number; y0: number; x1: number; y1: number }[] = [];
-  // the empty cryptography slot sits at the edge; reserve it first
-  placed.push({ x0: CRYPTO.x - 80, y0: CRYPTO.y - CRYPTO.R - 8, x1: FW, y1: CRYPTO.y + CRYPTO.R + 46 });
-  const res: Cl[] = [];
+/*
+ * Shelf packing: clusters sorted by size fill rows left to right, each row is
+ * centred, rows are spread over the field height. Every discipline is placed
+ * (no silent drops); the empty cryptography slot closes the last row, at the edge.
+ */
+const PACK = (() => {
   const cats = [...story.categories].sort((a, b) => b.n - a.n);
-  for (const c of cats) {
+  type Item = { name: string; n: number; R: number; lines: string[]; w: number; h: number; crypto?: boolean };
+  const items: Item[] = cats.map((c) => {
     const R = SP * Math.sqrt(c.n) + DOT + 2;
-    const lines = wrap(c.name, 20);
+    const lines = wrap(c.name, 18);
     lines[lines.length - 1] += ` · ${c.n}`;
     const lw = Math.max(...lines.map((l) => l.length)) * CH;
-    const bw = Math.max(2 * R, lw) + 16,
-      bh = 2 * R + 10 + lines.length * 16 + 12;
-    let done = false;
-    for (let t = 0; t < 4000 && !done; t += 0.35) {
-      const r = 3.6 * t;
-      const x = FW * 0.47 + r * Math.cos(t),
-        y = FH * 0.47 + r * Math.sin(t) * 0.7;
-      const box = { x0: x - bw / 2, y0: y - R - 6, x1: x + bw / 2, y1: y - R - 6 + bh };
-      if (box.x0 < 0 || box.y0 < 0 || box.x1 > FW || box.y1 > FH) continue;
-      if (placed.some((p) => !(box.x1 < p.x0 || box.x0 > p.x1 || box.y1 < p.y0 || box.y0 > p.y1))) continue;
-      placed.push(box);
-      const dots: [number, number][] = [];
-      for (let k = 0; k < c.n; k++) {
-        const rr = SP * Math.sqrt(k + 0.5),
-          a = k * GOLD;
-        dots.push([x + rr * Math.cos(a), y + rr * Math.sin(a)]);
-      }
-      res.push({ name: c.name, n: c.n, x, y, R, lines, dots });
-      done = true;
+    return { name: c.name, n: c.n, R, lines, w: Math.max(2 * R, lw) + 14, h: 2 * R + lines.length * 16 + 22 };
+  });
+  items.push({ name: 'cryptography', n: 0, R: 34, lines: [], w: 150, h: 68 + 38, crypto: true });
+  const rows: Item[][] = [];
+  let row: Item[] = [],
+    rw = 0;
+  for (const it of items) {
+    if (row.length && rw + it.w > FW) {
+      rows.push(row);
+      row = [];
+      rw = 0;
     }
+    row.push(it);
+    rw += it.w;
   }
-  return res;
+  rows.push(row);
+  const heights = rows.map((r) => Math.max(...r.map((i) => i.h)));
+  const gapY = Math.max(0, (FH - heights.reduce((s, h) => s + h, 0)) / (rows.length + 1));
+  const res: Cl[] = [];
+  let crypto = { x: FW - 70, y: FH - 80, R: 34 };
+  let y0 = gapY;
+  rows.forEach((r, ri) => {
+    const used = r.reduce((s, i) => s + i.w, 0);
+    const gapX = (FW - used) / (r.length + 1);
+    let x0 = gapX;
+    for (const it of r) {
+      const x = x0 + it.w / 2,
+        y = y0 + it.R + 4;
+      if (it.crypto) crypto = { x: FW - it.w / 2, y, R: it.R };
+      else {
+        const dots: [number, number][] = [];
+        for (let k = 0; k < it.n; k++) {
+          const rr = SP * Math.sqrt(k + 0.5),
+            a = k * GOLD;
+          dots.push([x + rr * Math.cos(a), y + rr * Math.sin(a)]);
+        }
+        res.push({ name: it.name, n: it.n, x, y, R: it.R, lines: it.lines, dots });
+      }
+      x0 += it.w + gapX;
+    }
+    y0 += heights[ri] + gapY;
+  });
+  return { clusters: res, crypto, overflow: y0 - gapY > FH + 0.5 };
 })();
+const CLUSTERS = PACK.clusters;
+const CRYPTO = PACK.crypto;
+if (CLUSTERS.length !== story.categories.length || PACK.overflow) console.error('beat 2 cluster packing failed', CLUSTERS.length, PACK.overflow);
 
 /* ---------- Physical Review fission chart (ported from the mockup's Fig. A-1) ---------- */
 function FissionChart() {

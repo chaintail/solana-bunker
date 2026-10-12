@@ -9,19 +9,19 @@
 .door3 circle,.door3 line,.door3 path,.door3 rect{stroke-dasharray:none}
 .vault3 .door3{opacity:0;transform:scale(.96);transition:opacity 600ms ease,transform 700ms var(--ease)}
 .r-vault .vault3 .door3{opacity:1;transform:none}
-.door-wheel{transform-origin:320px 330px;transition:transform 1400ms cubic-bezier(.3,.1,.2,1) 300ms}
+.door-wheel{transform-origin:320px 330px;transition:transform 700ms cubic-bezier(.3,.1,.2,1) 150ms}
 .r-coins .door-wheel{transform:rotate(240deg)}
 .pin3{opacity:0;transform:translateY(-14px);transition:opacity 300ms ease 650ms,transform 420ms cubic-bezier(.3,1.5,.55,1) 650ms}
 .r-vault .pin3{opacity:1;transform:none}
 .contents{position:absolute;left:482px;top:520px;display:flex;align-items:center;gap:10px;opacity:0;transition:opacity 400ms ease}
 .contents span{font:400 13px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--blue);margin-left:6px}
-.r-coins .contents{opacity:1;transition-delay:1700ms}
+.r-coins .contents{opacity:1;transition-delay:750ms}
 
 /* coin stream: only animates when stepped into */
 .stream{position:absolute;inset:0;pointer-events:none;z-index:5}
 .coin-fly{position:absolute;left:0;top:0;width:58px;height:58px;opacity:0;transform:translate(var(--x),var(--y))}
 .coin-fly svg{display:block}
-.a-coins .coin-fly{animation:s3-fly 1150ms cubic-bezier(.5,0,.3,1) var(--d) both}
+.a-coins .coin-fly{animation:s3-fly 600ms cubic-bezier(.5,0,.3,1) var(--d) both}
 @keyframes s3-fly{
   0%{opacity:0;transform:translate(var(--x),var(--y)) scale(1)}
   8%{opacity:1}

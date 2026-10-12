@@ -64,14 +64,14 @@ function V2({ at, instant }: SceneProps) {
             storage <Counter on={fold} from={33126} to={390} instant={instant} ms={1100} delay={500} /> bytes
           </span>
           <span>
-            used <Swap value={robbed ? 1 : 0} options={['8', '9']} d={1750} /> / 1,024
+            used <Swap value={robbed ? 1 : 0} options={['8', '9']} d={400} /> / 1,024
           </span>
         </div>
       </div>
 
       <Treasury />
       <Dest id="dA5" label="Destination A" addr={DEST_A} top={296} received="nothing" />
-      <Dest id="dB5" label="Destination B" addr={DEST_B} top={560} received={<Swap value={robbed ? 1 : 0} options={['nothing', 'SOL']} d={2000} />} className="redd" />
+      <Dest id="dB5" label="Destination B" addr={DEST_B} top={560} received={<Swap value={robbed ? 1 : 0} options={['nothing', 'SOL']} d={550} />} className="redd" />
 
       <svg className="wires" viewBox="0 0 1920 1080">
         <path className="wire" d="M1040,560 L1080,560" markerEnd="url(#ah)" />
@@ -79,7 +79,7 @@ function V2({ at, instant }: SceneProps) {
         <path className={cx('wire dash fade wB', at('copy') && 'go')} d="M1340,650 C1400,650 1420,614 1478,614" markerEnd="url(#ahr)" style={{ stroke: '#b3242a', ['--d' as string]: '2000ms' }} />
         <path className={cx('wire dash fade wfl', at('flight') && !robbed && 'go')} d="M628,347 L676,347" style={{ ['--d' as string]: '400ms' }} />
         <path className={cx('wire draw wcopy2', robbed && 'go')} pathLength={1} d="M628,607 C700,607 770,540 817,483" style={{ ['--d' as string]: '0ms', stroke: '#b3242a', strokeWidth: 2 }} />
-        <path className={cx('wire draw wuser2', robbed && 'go')} pathLength={1} d="M628,347 C700,347 780,420 815,470" style={{ ['--d' as string]: '900ms', strokeWidth: 2, opacity: 0.6 }} />
+        <path className={cx('wire draw wuser2', robbed && 'go')} pathLength={1} d="M628,347 C700,347 780,420 815,470" style={{ ['--d' as string]: '300ms', strokeWidth: 2, opacity: 0.6 }} />
       </svg>
 
       <div className="flight">In flight · readable before it lands</div>
@@ -136,7 +136,7 @@ function V2({ at, instant }: SceneProps) {
       <div className="line-b">
         <span className="type">We didn’t break the hash. We copied the password.</span>
       </div>
-      <Stamp on={robbed} instant={instant} x={1010} y={518} size={156} r={-9} d={1650}>
+      <Stamp on={robbed} instant={instant} x={1010} y={518} size={156} r={-9} d={380}>
         Robbed
       </Stamp>
     </>

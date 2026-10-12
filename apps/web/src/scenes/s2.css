@@ -48,13 +48,13 @@
 .telegram span{display:inline-block;padding:26px 46px 22px;background:var(--paper-hi);border:1.5px solid var(--ink);
   box-shadow:0 30px 60px -20px rgba(40,25,5,.55);font:700 54px/1 var(--mono);color:var(--ink);letter-spacing:-.01em;
   clip-path:inset(0 100% 0 0)}
-.a-checked .telegram{animation:s2-tg 2300ms linear both}
-.a-checked .telegram span{animation:s2-type 700ms steps(34,end) 120ms both}
-@keyframes s2-tg{0%{opacity:1}82%{opacity:1}100%{opacity:0}}
+.a-checked .telegram{animation:s2-tg 1000ms linear both}
+.a-checked .telegram span{animation:s2-type 320ms steps(34,end) 40ms both}
+@keyframes s2-tg{0%{opacity:1}80%{opacity:1}100%{opacity:0}}
 @keyframes s2-type{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 -4% 0 0)}}
 .tally{position:absolute;left:0;right:0;top:960px;margin:0;text-align:center;font:700 25px/1 var(--mono);color:var(--ink);
   opacity:0;transform:translateY(8px);transition:opacity 500ms ease,transform 500ms var(--ease)}
-.r-checked .tally{opacity:1;transform:none;transition-delay:2050ms}
+.r-checked .tally{opacity:1;transform:none;transition-delay:900ms}
 .conclude{position:absolute;left:0;right:0;text-align:center;top:1004px;margin:0;font:italic 400 26px/1 var(--serif);color:var(--ink2);
   opacity:0;transition:opacity 900ms ease}
 .r-conclude .conclude{opacity:1}
