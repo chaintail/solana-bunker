@@ -12,5 +12,8 @@
     "@solana/web3.js": "1.99.0",
     "@solana/spl-token": "0.4.15"
   },
-  "local_svm_import": "solders.litesvm.LiteSVM"
+  "local_svm_import": "solders.litesvm.LiteSVM",
+  "sbf_rustc": "rustc 1.95.0-dev (ae660768a 2026-08-17)",
+  "sbf_architecture": "v0",
+  "build_dependency_resolution": "committed Cargo.lock; --locked"
 }
