@@ -1,0 +1,39 @@
+# Solana Bunker research: findings and presentation handoff
+
+Research snapshot: 2026-10-12 UTC. This completes the time-boxed research brief within the explicitly stated scope. Program implementation and benchmarking are separate workstreams.
+
+## Main findings
+
+**VERIFIED — inventory, not theorem correctness.** The pinned [OpenAI catalogue](https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb) contains **719 active manuscript links in 372 families**, compared with **722 links in 372 families** in the captured launch catalogue at `adc7f1241b42e322a6451854ab7e4b4c146bf78a`. These are indexed-link and family counts, not counts of independently verified theorems: 719 links have 718 distinct exact titles because two dated entries share one title; content-equivalence deduplication was not attempted. The official overview assigns the 372 families to 17 disciplines. All 719 indexed abstracts are present; author metadata is missing for 718 records (family 279 has verified title-page attribution), and independent proof review is not established by this census. See [OpenAI findings](openai_math_findings.md), [classification method](../methods/openai_classification.md) and [raw-source reconciliation](../data/raw_source_reconciliation.json).
+
+**INFERRED — cryptography relevance depends on the definition.** Under a narrow definition requiring an explicit cryptographic objective, the review identifies **0 direct and 5 adjacent manuscripts across 4 adjacent families**. Under an inclusive definition treating quantum integer factoring as direct cryptanalysis, the same corpus has **1 direct and 4 adjacent manuscripts**. The union remains 5/719 manuscripts (0.70%) and 4/372 families (1.08%). The factoring manuscript therefore prevents a definition-independent claim of “no cryptography.” Review covers 237 manually inspected catalogue records, including 129 keyword candidates, complete theoretical-computer-science/number-theory coverage through 78 additional records, and 30 deterministic negatives from other disciplines. Full-text review is selective; mathematical correctness has not been audited.
+
+**UNVERIFIED — anomaly, deliberate withholding or government intervention.** No defensible matched comparison population establishes that the measured crypto share is unusually low. This curated evaluation release is not a random sample of mathematics. Low observed share and classification ambiguity do not show suppression. The “cryptography-publication anomaly” is not substantiated by these data. Show the definition sensitivity and examples beside the distribution; do not present a dramatic zero as an established omission.
+
+**VERIFIED within this journal and method — wartime fission-title decline.** The historical dataset comprises **9,923 unique DOI records from Physical Review, 1920–1947**, with 112 annual observations across four overlapping title proxies. Manually reviewed nuclear-fission title matches decline from **54/1,598 records (3.38%) in 1939–1941** to **0/543 in 1942–1944**. Including 1945 gives **2/686 (0.29%)**; both 1945 positives were published after the war. The raw broad nuclear proxy also declines, but the atomic proxy's share is broadly stable. Only 1/9,923 records has affiliation metadata, so the analysis cannot establish a US-affiliated aggregate. Title matches are incomplete subject proxies, and the denominator includes deposited journal-record types. See [historical findings](historical_findings.md), [method](../methods/historical_method.md), [manual positive audit](../data/historical_fission_audit.csv), and [sensitivity data](../data/historical_sensitivity.csv).
+
+**VERIFIED — specific wartime withholding.** The publication history of plutonium papers independently documents delayed release, including a paper received in 1941 and published in 1946. [Properties of 94(239)](https://doi.org/10.1103/PhysRev.70.555) and [Radioactive Element 94 from Deuterons on Uranium](https://doi.org/10.1103/PhysRev.69.367) support specific withholding claims. Their history does not identify the causal magnitude of the journal-wide decline, prove a nationwide atomic/nuclear publication collapse, or substantiate a present-day AI secrecy analogy. **QUALIFY** the historical chart as “Physical Review fission-title matches,” and state that secrecy has independent documentary evidence.
+
+## Technical presentation and prior art
+
+Use [the claim ledger](../data/claim_ledger.csv) and [fact-check report](factcheck_and_prior_work.md) for slide copy and qualifications. Solana Bunker should acknowledge existing hash-signature PDA custody work, including Solana Winternitz Vault and Winterwallet, and distinguish its educational progression and research goals from prior inventions. RFC 8391, NIST SP 800-208 and FIPS 205 are the standards anchors; signature sizes require named parameters. Stateful signing requires reliable one-time-key state, and a PDA does not by itself make the entire network quantum secure.
+
+Current Solana transaction-version claims require access-date context: the official docs reviewed in this sprint describe v1 with a **4,096-byte whole-transaction limit**, versus **1,232 bytes for legacy/v0**. These are whole serialized transaction limits, not usable application payload sizes; do not infer the implementation's working support from documentation alone. Proposal status must also be stated: the Falcon SIMD-0461 proposal was closed/paused, and a documented implementation is not equivalent to an activated native precompile. Consult exact sources and dates in the ledger before presenting.
+
+The exact original Justin Drake post text/date are UNVERIFIED: the candidate original URL returned HTTP 403. Show a sourced paraphrase with an explicit secondary-attribution caveat or omit the quote. Do not fabricate original wording, selected reactions, or the earliest historical anecdote.
+
+## What to use in the short pitch
+
+1. Address/key exposure contrast with ordinary-wallet/EOA/PDA qualifications.
+2. The 719-manuscript inventory and official discipline chart, with the 722 launch snapshot clearly separated.
+3. A brief investigation result: operationally relevant papers exist, classification affects the “zero” claim, and no suppression conclusion follows.
+4. Optional qualified historical chart paired with the documentary withholding example; omit a nationwide or causal interpretation.
+5. Progressive vault demonstration and a prior-art acknowledgement. Implementation evidence belongs to the implementation team.
+
+Suggested narration: “We tested the publication story rather than assuming it. The OpenAI catalogue has 719 active manuscripts, including a quantum factoring paper whose classification changes the answer. We cannot establish a cryptography anomaly or suppression. Historically, Physical Review's fission-title matches did fall sharply during the war, and specific papers were withheld—but those are separate kinds of evidence.”
+
+## Deliverables and verification
+
+The bundle contains the brief, finished track reports, CSVs, visualization-ready JSON, captured source snapshots, methods, and offline reproduction scripts. `data/visualizations.json` supplies the four stable chart IDs with source registry, denominators, sensitivity, limitations and dates. `data/validation_results.json` records contract/completeness checks and independently recomputed SQL totals. `data/raw_source_reconciliation.json` independently reconciles catalogue links, official categories, and historical DOI/title pairs and annual counts with captured raw sources.
+
+Validation does not certify mathematical proofs, every topic classification, third-party audits or on-chain deployment. Unresolved primary-source and baseline questions are explicitly recorded as UNVERIFIED rather than filled with guesses. The source files are preserved and hash-manifested for inspectable follow-up.
