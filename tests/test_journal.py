@@ -59,10 +59,10 @@ class JournalTests(unittest.TestCase):
     def test_history_rejects_root_or_generation_reuse(self):
         history=AuthorityHistory(self.path)
         try:
-            history.install(bytes(64),"generation-1")
-            for public,generation in [(bytes(64),"generation-2"),(bytes([1])*64,"generation-1")]:
+            history.install(bytes(64),1)
+            for public,generation in [(bytes(64),2),(bytes([1])*64,1)]:
                 with self.assertRaises(JournalError):
                     history.install(public,generation)
-            history.install(bytes([1])*64,"generation-2")
+            history.install(bytes([1])*64,2)
         finally:
             history.close()

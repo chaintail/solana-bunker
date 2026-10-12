@@ -192,7 +192,7 @@ class Harness:
         if staged:metas=[*metas,meta(stage)]
         ix=Instruction(PROGRAM,bytes([3 if staged else 2])+struct.pack('<H',len(wire))+wire+(b''if staged else witness),metas)
         before=self.snapshot_public()
-        result=self.send([ix],experiment={'scenario':scenario,'asset':asset},expected=expected,operation=op,index=4 if staged else 0,total=5 if staged else 1,witness_bytes=len(witness),proof_bytes=len(witness)-36 if self.mode==2 else None,verifier_reached=verifier_reached)
+        result=self.send([ix],experiment={'scenario':scenario,'asset':asset},expected=expected,operation=op,index=4 if staged else 0,total=5 if staged else 1,witness_bytes=len(witness),proof_bytes=max(0,len(witness)-36) if self.mode==2 else None,verifier_reached=verifier_reached)
         after=self.snapshot_public()
         if expected=='rejection':
             assert before==after,'Failed transaction persisted vault state or movement'
