@@ -1,6 +1,6 @@
 # Early update E3 — XMSS feasibility
 
-**Status:** Partial — host interoperability passed; SVM compilation/measurement underway.
+**Status:** Ready — reference interoperability and actual SBF verifier feasibility passed.
 **Worker:** cryptography
 
 ## Exact target and host result
@@ -20,4 +20,10 @@ Native SHA256 backend calls for the six tested messages were respectively1790,18
 
 ## SVM and integration continuation
 
-Infrastructure is building the SBF probe with Agave4.3.0/platform-tools1.57. Actual local SVM valid/invalid outcomes, CUs and binary digest remain unmeasured at this update. A2500-byte signature needs direct v1 or staged storage; the standalone fixture-account probe separates compute from public-cluster transport. Client has reference signing API; program has generic verifier interface. No funding wait blocks this path.
+SBF build Agave4.3.0/platform-tools1.57 and execution solders0.29.0 LiteSVM: all42cases pass (6valid,36invalid). Valid CU counts by indices0,1,511,512,1022,1023:475220,496608,475248,464546,496643,464559. Changed message, authentication path, public seed and WOTS bytes reject after verification; out-of-range index rejects495CU and short fixture rejects466CU. The short fixture is rejected by the probe framing; other cryptographic mutations reach the verifier.
+
+Binary SHA256: `21088f9ef0f6add41231e5ef7b19eb8ab3272f17fc493fe104df44b612c8f700`. Source commit: `ad9ccd6d33a2732fb4f8c97b5a7fb8ab2c0690a2`. Raw metadata, serialized transaction sizes, logs, fees and failures: artifacts/crypto-svm-probe.json. Fixture accounts are deliberately preinstalled; this is standalone cryptographic execution, not upload/custody/devnet evidence. The42case preliminary binary before microbench dispatch used16CU less for valid cases; quote this final recorded binary only.
+
+Twenty repetitions per valid fixture (120SVMexecutions) all pass with identical per-fixture CUs: artifacts/crypto-svm-repeat-profile.json. SHA256microbenchmark48rows covers64/96/128byte inputs,1/512/1024/2048calls,1/3slices and deliberately separate loop-only baselines: artifacts/crypto-hash-microbench.json. The baseline workload differs and cannot be subtracted as an exact syscall-only cost model.
+
+Recommendation: integrate full RFC8391 verifier now. Observed standalone valid budget remains below1.4millionCU, with heap workspace2144bytes and standard entrypoint32KiBheap. Do not extrapolate these fixtures to every possible intent or treat standalone success as complete custody validation. A2500-byte signature still needs verified v1 or staged storage. Client reference signing and program hashv adapter are ready; integrated SOL/token/burn/rotation tests continue independently.
