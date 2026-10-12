@@ -1,0 +1,4 @@
+.c0-warn{position:absolute;left:0;right:0;top:290px;text-align:center;font:700 200px/1 Arial,Helvetica,sans-serif;color:#ff0000;opacity:0}
+.r-warn .c0-warn{opacity:1}
+.a-warn .c0-warn{animation:c0-flash 900ms linear both}
+@keyframes c0-flash{0%{opacity:1}19.9%{opacity:1}20%{opacity:0}39.9%{opacity:0}40%{opacity:1}59.9%{opacity:1}60%{opacity:0}79.9%{opacity:0}80%{opacity:1}100%{opacity:1}}

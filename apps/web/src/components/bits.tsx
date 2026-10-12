@@ -120,3 +120,12 @@ export function short(addr: string, a = 4, b = 4) {
 
 export const explorerTx = (sig: string) => `https://explorer.solana.com/tx/${sig}?cluster=devnet`;
 export const explorerAddr = (a: string) => `https://explorer.solana.com/address/${a}?cluster=devnet`;
+
+/** cheap deck stamp: plain red outlined box, nearly horizontal, no ink filter */
+export function CStamp({ on, x, y, size, r = -1.5, d = 0, className, children }: { on: boolean; x: number; y: number; size: number; r?: number; d?: number; className?: string; children: ReactNode }) {
+  return (
+    <div className={cx('cstamp', on && 'on', className)} style={{ left: x, top: y, fontSize: size, ['--r' as string]: `${r}deg`, ['--d' as string]: `${d}ms` }}>
+      {children}
+    </div>
+  );
+}

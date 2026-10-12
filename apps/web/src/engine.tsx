@@ -19,25 +19,28 @@ interface Shown {
   anim: boolean;
 }
 
-function parseHash(scenes: SceneDef[]): Pos | null {
+export type Decks = Record<Route, SceneDef[]>;
+
+function parseHash(decks: Decks): Pos | null {
   const m = location.hash.match(/^#(\d+)-(\d+)(-t)?$/);
   if (!m) return null;
   const route: Route = m[3] ? 'technical' : 'pitch';
+  const scenes = decks[route];
   const scene = Math.min(+m[1], scenes.length - 1);
   const n = stepsFor(scenes[scene], route).length;
   return { scene, step: Math.min(+m[2], n - 1), route };
 }
 
-export function useDeck(scenes: SceneDef[]) {
+export function useDeck(decks: Decks) {
   const initial = useMemo<Pos>(() => {
-    const h = parseHash(scenes);
+    const h = parseHash(decks);
     if (h) return h;
     const r = (sessionStorage.getItem('sb-route') as Route) || 'pitch';
     return { scene: 0, step: 0, route: r === 'technical' ? 'technical' : 'pitch' };
-  }, [scenes]);
+  }, [decks]);
   const [pos, setPos] = useState<Pos>(initial);
   const [shown, setShown] = useState<Shown[]>(() =>
-    scenes.map((_, i) => ({ idx: i === initial.scene ? initial.step : -1, instant: true, anim: false })),
+    decks.pitch.map((_, i) => ({ idx: i === initial.scene ? initial.step : -1, instant: true, anim: false })),
   );
   const [cut, setCut] = useState(true);
   const posRef = useRef(pos);
@@ -80,29 +83,33 @@ export function useDeck(scenes: SceneDef[]) {
 
   const next = useCallback(() => {
     const p = posRef.current;
+    const scenes = decks[p.route];
     const n = stepsFor(scenes[p.scene], p.route).length;
     if (p.step < n - 1) go({ ...p, step: p.step + 1 }, 'forward');
     else if (p.scene < scenes.length - 1) go({ ...p, scene: p.scene + 1, step: 0 }, 'forward');
-  }, [go, scenes]);
+  }, [go, decks]);
 
   const prev = useCallback(() => {
     const p = posRef.current;
+    const scenes = decks[p.route];
     if (p.step > 0) go({ ...p, step: p.step - 1 }, 'jump');
     else if (p.scene > 0) {
       const n = stepsFor(scenes[p.scene - 1], p.route).length;
       go({ ...p, scene: p.scene - 1, step: n - 1 }, 'jump');
     }
-  }, [go, scenes]);
+  }, [go, decks]);
 
   const setRoute = useCallback(
     (route: Route) => {
       const p = posRef.current;
       if (route === p.route) return;
-      const sc = scenes[p.scene];
+      const sc = decks[p.route][p.scene];
       const id = stepsFor(sc, p.route)[p.step].id;
-      const list = stepsFor(sc, route);
+      const target = decks[route][p.scene];
+      const list = stepsFor(target, route);
       let step = list.findIndex((s) => s.id === id);
-      if (step < 0) {
+      if (step < 0 && target !== sc) step = 0;
+      else if (step < 0) {
         // leaving a technical-only step: fall back to the nearest earlier pitch step
         const all = sc.steps;
         let k = all.findIndex((s) => s.id === id);
@@ -112,7 +119,7 @@ export function useDeck(scenes: SceneDef[]) {
       sessionStorage.setItem('sb-route', route);
       go({ scene: p.scene, step, route }, 'jump');
     },
-    [go, scenes],
+    [go, decks],
   );
 
   const home = useCallback(() => go({ ...posRef.current, scene: 0, step: 0 }, 'jump'), [go]);
@@ -124,13 +131,13 @@ export function useDeck(scenes: SceneDef[]) {
 
   useEffect(() => {
     const onHash = () => {
-      const h = parseHash(scenes);
+      const h = parseHash(decks);
       const p = posRef.current;
       if (h && (h.scene !== p.scene || h.step !== p.step || h.route !== p.route)) go(h, 'jump');
     };
     addEventListener('hashchange', onHash);
     return () => removeEventListener('hashchange', onHash);
-  }, [go, scenes]);
+  }, [go, decks]);
 
   return { pos, shown, cut, next, prev, setRoute, home };
 }
@@ -139,19 +146,15 @@ export function useDeck(scenes: SceneDef[]) {
 export function useFit(ref: React.RefObject<HTMLDivElement | null>) {
   useLayoutEffect(() => {
     const fit = () => {
-      const vv = window.visualViewport;
-      const w = vv ? vv.width : innerWidth;
-      const h = vv ? vv.height : innerHeight;
+      // layout viewport (not visualViewport) so pinch zoom is not undone
+      const w = document.documentElement.clientWidth || innerWidth;
+      const h = document.documentElement.clientHeight || innerHeight;
       const s = Math.min(w / 1920, h / 1080);
       if (ref.current) ref.current.style.transform = `scale(${s})`;
     };
     fit();
     addEventListener('resize', fit);
-    window.visualViewport?.addEventListener('resize', fit);
-    return () => {
-      removeEventListener('resize', fit);
-      window.visualViewport?.removeEventListener('resize', fit);
-    };
+    return () => removeEventListener('resize', fit);
   }, [ref]);
 }
 
@@ -188,7 +191,7 @@ export function useInput(h: {
       down = false,
       blocked = false;
     const onDown = (e: PointerEvent) => {
-      if (e.button !== 0) return;
+      if (e.button !== 0 || e.pointerType === 'touch') return;
       down = true;
       blocked = !!(e.target as Element).closest?.(NOADV);
       sx = e.clientX;
@@ -196,7 +199,7 @@ export function useInput(h: {
       st = performance.now();
     };
     const onUp = (e: PointerEvent) => {
-      if (!down) return;
+      if (!down || e.pointerType === 'touch') return;
       down = false;
       if (blocked) return;
       const dx = e.clientX - sx,
@@ -210,11 +213,50 @@ export function useInput(h: {
         else hr.current.prev();
       }
     };
+    let tx = 0,
+      ty = 0,
+      tt = 0,
+      multi = false,
+      tblocked = false;
+    const onTS = (e: TouchEvent) => {
+      if (e.touches.length > 1) {
+        multi = true;
+        return;
+      }
+      multi = false;
+      const t = e.touches[0];
+      tblocked = !!(e.target as Element).closest?.(NOADV);
+      tx = t.clientX;
+      ty = t.clientY;
+      tt = performance.now();
+    };
+    const onTE = (e: TouchEvent) => {
+      if (multi || tblocked || e.touches.length > 0) return;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - tx,
+        dy = t.clientY - ty,
+        dist = Math.hypot(dx, dy);
+      const zoomed = (window.visualViewport?.scale ?? 1) > 1.05;
+      if (!zoomed && dist > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+        if (dx < 0) hr.current.next();
+        else hr.current.prev();
+      } else if (dist < 12 && performance.now() - tt < 600) {
+        const vv = window.visualViewport;
+        const x = vv ? t.clientX - vv.offsetLeft : t.clientX;
+        const w = vv ? vv.width : innerWidth;
+        if (x >= w / 2) hr.current.next();
+        else hr.current.prev();
+      }
+    };
+    addEventListener('touchstart', onTS, { passive: true });
+    addEventListener('touchend', onTE, { passive: true });
     addEventListener('keydown', onKey);
     addEventListener('pointerdown', onDown);
     addEventListener('pointerup', onUp);
     addEventListener('pointercancel', () => (down = false));
     return () => {
+      removeEventListener('touchstart', onTS);
+      removeEventListener('touchend', onTE);
       removeEventListener('keydown', onKey);
       removeEventListener('pointerdown', onDown);
       removeEventListener('pointerup', onUp);

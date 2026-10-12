@@ -12,7 +12,7 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:#1a1917;overflow:hidden;overscroll-behavior:none}
-body{-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+body{-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 #root{position:fixed;inset:0;overflow:hidden}
 #stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;margin:-540px 0 0 -960px;
   transform-origin:50% 50%;background:var(--paper);overflow:hidden;color:var(--ink);

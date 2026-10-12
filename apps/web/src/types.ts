@@ -27,4 +27,6 @@ export interface SceneDef {
   C: FC<SceneProps>;
   /** hide the chrome (tab / route switch) on this scene */
   bare?: boolean;
+  /** cheap pitch deck slide: no dossier header */
+  cheap?: boolean;
 }

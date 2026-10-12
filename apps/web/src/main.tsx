@@ -2,6 +2,7 @@ import './styles/base.css';
 import './styles/explore.css';
 import './styles/scenes.css';
 import './styles/rig.css';
+import './styles/cheap.css';
 import { createRoot } from 'react-dom/client';
 import { App } from './App';
 import { bakeTextures } from './textures';

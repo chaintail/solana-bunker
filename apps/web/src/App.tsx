@@ -2,7 +2,7 @@ import { useMemo, useRef } from 'react';
 import { Defs } from './components/Defs';
 import { cx, Header } from './components/bits';
 import { stepsFor, useDeck, useFit, useInput } from './engine';
-import { SCENES } from './scenes';
+import { DECKS } from './scenes';
 import type { Route, SceneDef } from './types';
 
 function SceneFrame({ def, num, total, idx, instant, anim, active, cut, route }: { def: SceneDef; num: number; total: number; idx: number; instant: boolean; anim: boolean; active: boolean; cut: boolean; route: Route }) {
@@ -16,7 +16,7 @@ function SceneFrame({ def, num, total, idx, instant, anim, active, cut, route }:
       className={cx('scene', active && 'active', instant && 'instant', cut && 'cut', route === 'technical' && 'route-t', ...reached.map((r) => `r-${r}`), cur && `cur-${cur}`, cur && anim && `a-${cur}`)}
     >
       <div className="content">
-        {!def.bare && <Header exhibit={def.exhibit} title={def.title} sheet={`Sheet ${String(num).padStart(2, '0')} / ${String(total).padStart(2, '0')}`} />}
+        {!def.bare && !def.cheap && <Header exhibit={def.exhibit} title={def.title} sheet={`Sheet ${String(num).padStart(2, '0')} / ${String(total).padStart(2, '0')}`} />}
         <def.C at={(id) => set.has(id)} cur={cur} instant={instant} active={active} route={route} />
       </div>
     </section>
@@ -29,7 +29,7 @@ declare global {
   }
 }
 window.__deck = {
-  plan: () => SCENES.map((s, i) => ({ i, pitch: stepsFor(s, 'pitch').length, technical: stepsFor(s, 'technical').length })),
+  plan: () => DECKS.pitch.map((s, i) => ({ i, pitch: stepsFor(s, 'pitch').length, technical: stepsFor(DECKS.technical[i], 'technical').length })),
   overflow: () => {
     const st = document.getElementById('stage')!.getBoundingClientRect();
     const bad: string[] = [];
@@ -44,7 +44,7 @@ window.__deck = {
 export function App() {
   const stage = useRef<HTMLDivElement>(null);
   useFit(stage);
-  const deck = useDeck(SCENES);
+  const deck = useDeck(DECKS);
   const { pos, shown, cut } = deck;
   useInput({
     next: deck.next,
@@ -52,20 +52,29 @@ export function App() {
     home: deck.home,
     toggleRoute: () => deck.setRoute(pos.route === 'pitch' ? 'technical' : 'pitch'),
   });
-  const sc = SCENES[pos.scene];
+  const scenes = DECKS[pos.route];
+  const sc = scenes[pos.scene];
   const n = stepsFor(sc, pos.route).length;
+  const cheap = !!sc.cheap;
   return (
-    <div id="stage" ref={stage} className={cx(sc.bare && 'chrome-hide')} data-scene={sc.key}>
+    <div id="stage" ref={stage} className={cx(sc.bare && 'chrome-hide', cheap && 'cheap')} data-scene={sc.key}>
       <Defs />
-      <div className="paper mottle" />
-      <div className="paper grain" />
-      <div className="paper vig" />
-      {SCENES.map((def, i) => (
-        <SceneFrame key={def.key} def={def} num={i} total={SCENES.length - 1} idx={shown[i].idx} instant={shown[i].instant} anim={shown[i].anim} active={i === pos.scene} cut={cut} route={pos.route} />
+      {!cheap && (
+        <>
+          <div className="paper mottle" />
+          <div className="paper grain" />
+          <div className="paper vig" />
+        </>
+      )}
+      {scenes.map((def, i) => (
+        <SceneFrame key={`${pos.route}-${def.key}`} def={def} num={i} total={scenes.length - 1} idx={shown[i].idx} instant={shown[i].instant} anim={shown[i].anim} active={i === pos.scene} cut={cut} route={pos.route} />
       ))}
-      <div className={cx('tab', pos.route === 'technical' && 'tech')}>
-        BEAT {pos.scene} · STEP {pos.step + 1} OF {n}
-      </div>
+      {cheap && !sc.bare && <div className="slide-no">SLIDE {pos.scene + 1}</div>}
+      {pos.route === 'technical' && (
+        <div className="tab tech">
+          BEAT {pos.scene} · STEP {pos.step + 1} OF {n}
+        </div>
+      )}
       <div
         className="route"
         data-noadvance

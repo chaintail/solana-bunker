@@ -68,7 +68,7 @@ for (const [w, h] of sizes) {
   for (const route of ['pitch', 'technical']) {
     for (const sc of JSON.parse(plan)) {
       const n = route === 'pitch' ? sc.pitch : sc.technical;
-      if (route === 'technical' && sc.pitch === sc.technical) continue;
+      if (process.env.ROUTES && !process.env.ROUTES.includes(route)) continue;
       for (let s = 0; s < n; s++) {
         const name = `${w}x${h}_${route === 'technical' ? 't' : 'p'}_${String(sc.i).padStart(2, '0')}-${String(s).padStart(2, '0')}`;
         if (filter && !filter.test(name)) continue;
