@@ -22,3 +22,7 @@ The exact 2,029-byte official SDK serialization also executed successfully in so
 A separately constructed solders MessageV1 probe serialized to2,035bytes and also executed successfully with2,062CUs (`artifacts/v1-local-result.json`; `python scripts/infrastructure-local-v1.py`). Inline settings are serialized, but LiteSVM logs its default200,000CU execution budget; enforcement of those v1 configuration limits is not established by this local run.
 
 Agave4.3.0 local-validator startup is blocked by the environment's unsupported `io_uring`: `Operation not permitted` followed by `assertion failed: io_uring_supported()`. No security settings were changed. LiteSVM is the working local execution harness.
+
+## Inline resource enforcement limitation
+
+An explicit four-case control experiment establishes that this LiteSVM path **does not enforce the serialized v1 inline resource limits**: the same memo succeeds consuming287CUs with a requested inline compute limit1 and with loaded-account-data limit1byte. A legacy transaction with a ComputeBudget instruction requesting1CU correctly fails with `ComputationalBudgetExceeded`. Therefore the oversized v1 local execution result establishes decode/execution compatibility only. Application compute measurements use legacy transactions with explicit ComputeBudget instructions, whose enforcement is demonstrated here. Raw: `artifacts/v1-resource-enforcement.json`; command `python scripts/infrastructure-v1-resource-check.py`.
