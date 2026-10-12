@@ -207,7 +207,8 @@ class Harness:
         # Supplying an existing sealed stage is also an explicit fallback choice
         # (used by stage-integrity and exact staged-retry tests).
         staged=self.mode==3 and (self.xmss_transport=="staged" or stage is not None) and len(witness)==2500
-        if staged and stage is None:
+        create_stage=staged and stage is None
+        if create_stage:
             pair=Keypair();stage=pair.pubkey()
             self.stages.append(stage)
             init=Instruction(PROGRAM,b'\x04'+struct.pack('<H',len(wire))+wire+struct.pack('<I',len(witness)),[meta(self.relayer.pubkey(),True,True),meta(stage,True,True),meta(self.state),meta(SYSTEM)])
@@ -220,7 +221,7 @@ class Harness:
         if staged:metas=[*metas,meta(stage)]
         ix=Instruction(PROGRAM,b'\x03'+struct.pack('<H',len(wire))+wire,metas) if staged else execute_instruction(value,witness,metas,program_id=PROGRAM)
         before=self.snapshot_public()
-        result=self.send([ix],experiment={'scenario':scenario,'asset':asset},expected=expected,operation=op,index=4 if staged else 0,total=5 if staged else 1,witness_bytes=len(witness),proof_bytes=max(0,len(witness)-36) if self.mode==2 else None,verifier_reached=verifier_reached)
+        result=self.send([ix],experiment={'scenario':scenario,'asset':asset},expected=expected,operation=op,index=4 if create_stage else 0,total=5 if create_stage else 1,witness_bytes=len(witness),proof_bytes=max(0,len(witness)-36) if self.mode==2 else None,verifier_reached=verifier_reached)
         after=self.snapshot_public()
         if expected=='rejection':
             assert before==after,'Failed transaction persisted vault state or movement'
