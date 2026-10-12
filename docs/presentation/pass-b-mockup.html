@@ -1,0 +1,811 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Solana Bunker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#efe7d4; --paper-hi:#f7f1e3; --manila:#e2d3ac;
+  --ink:#1c1a17; --ink2:#4c463d; --ink3:#8a8170;
+  --blue:#1f3a93; --blue2:rgba(31,58,147,.5); --blue3:rgba(31,58,147,.2);
+  --red:#b3242a; --stamp:#c0262c;
+  --serif-d:'Libre Caslon Display','Libre Caslon Text',Georgia,serif;
+  --serif:'Libre Caslon Text',Georgia,serif;
+  --mono:'Courier Prime','Courier New',monospace;
+  --stampf:'Archivo','Arial Narrow',sans-serif;
+  --ease:cubic-bezier(.2,.75,.2,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#1a1917;overflow:hidden}
+body{-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;margin:-540px 0 0 -960px;
+  transform-origin:50% 50%;background:var(--paper);overflow:hidden;color:var(--ink);
+  box-shadow:0 30px 80px rgba(0,0,0,.5)}
+/* paper */
+.paper{position:absolute;inset:0;pointer-events:none}
+.paper.mottle{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='960' height='540'><filter id='m'><feTurbulence type='fractalNoise' baseFrequency='0.0035 0.006' numOctaves='4' seed='7' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.33 0 0 0 0 0.14 0 0 0 1.5 -0.62'/></filter><rect width='100%25' height='100%25' filter='url(%23m)'/></svg>");background-size:1920px 1080px;opacity:.38}
+.paper.grain{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' seed='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.25 0 0 0 0 0.19 0 0 0 0 0.1 0 0 0 1.1 -0.42'/></filter><rect width='100%25' height='100%25' filter='url(%23g)'/></svg>");opacity:.5;mix-blend-mode:multiply}
+.paper.vig{background:radial-gradient(ellipse 75% 70% at 50% 46%,transparent 60%,rgba(110,80,30,.16) 100%)}
+
+/* scenes */
+.scene{position:absolute;inset:0;z-index:1;opacity:0;visibility:hidden;transition:opacity 450ms ease,visibility 0s linear 450ms}
+.scene.active{opacity:1;visibility:visible;transition:opacity 650ms ease 180ms,visibility 0s}
+.content{position:absolute;inset:0}
+.scene.instant *{transition:none!important}
+
+/* header */
+.hdr{position:absolute;left:96px;right:96px;top:46px;display:flex;justify-content:space-between;align-items:flex-end;
+  font:400 14px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--ink2);padding-bottom:13px;
+  border-bottom:1px solid var(--ink)}
+.hdr::after{content:"";position:absolute;left:0;right:0;bottom:-5px;border-bottom:1px solid var(--ink)}
+.hdr b{font-weight:700;color:var(--ink)}
+.hdr .sep{margin:0 .9em;color:var(--ink3)}
+.hl{position:absolute;left:94px;top:100px;margin:0;font:400 74px/1 var(--serif-d);letter-spacing:-.012em;color:var(--ink)}
+.hl em{font-family:var(--serif);font-style:italic;font-size:.9em}
+.mono{font-family:var(--mono)}
+.lbl{font:400 12px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--ink3)}
+
+/* stamp */
+.stamp{position:absolute;left:0;top:0;color:var(--stamp);font-family:var(--stampf);font-stretch:72%;font-weight:850;
+  text-transform:uppercase;letter-spacing:.035em;line-height:.95;text-align:center;white-space:nowrap;
+  border:.075em solid currentColor;border-radius:.14em;padding:.16em .38em .12em;
+  box-shadow:inset 0 0 0 .05em var(--paper),inset 0 0 0 .085em currentColor;
+  mix-blend-mode:multiply;filter:url(#ink);pointer-events:none;z-index:60;
+  opacity:0;transform:translate(-50%,-50%) rotate(var(--r,-6deg)) scale(1.75);
+  transition:transform 430ms cubic-bezier(.3,1.5,.55,1) var(--d,0ms),opacity 140ms linear var(--d,0ms)}
+.stamp.on,.stamp.land{opacity:.88;transform:translate(-50%,-50%) rotate(var(--r,-6deg)) scale(1)}
+.stamp .rl{display:block;height:.06em;background:currentColor;margin:.14em .1em .12em}
+.redact{display:inline-block;background:#141311;filter:url(#bar);vertical-align:middle}
+
+/* blueprint bits */
+.bp-grid{position:absolute;left:96px;right:96px;top:222px;height:560px;pointer-events:none;
+  background-image:linear-gradient(var(--blue3) 1px,transparent 1px),linear-gradient(90deg,var(--blue3) 1px,transparent 1px),
+  linear-gradient(rgba(31,58,147,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(31,58,147,.07) 1px,transparent 1px);
+  background-size:120px 120px,120px 120px,24px 24px,24px 24px;background-position:-1px -1px;opacity:.55;
+  -webkit-mask-image:radial-gradient(ellipse 60% 70% at 50% 50%,#000 40%,transparent 100%);mask-image:radial-gradient(ellipse 60% 70% at 50% 50%,#000 40%,transparent 100%)}
+.group{position:absolute;border:1.25px dashed var(--blue2);border-radius:2px}
+.group>.lbl{position:absolute;left:14px;top:-7px;background:var(--paper);padding:0 8px;color:var(--blue)}
+.box{position:absolute;border:1.5px solid var(--blue);background:rgba(247,241,227,.75)}
+.box::before{content:"";position:absolute;inset:4px;border:.75px solid var(--blue3);pointer-events:none}
+.box>.lbl{position:absolute;left:18px;top:18px;color:var(--blue)}
+.sub{position:absolute;left:18px;top:38px;font:400 16px/1.1 var(--mono);color:var(--ink)}
+.wires{position:absolute;inset:0;width:1920px;height:1080px;pointer-events:none;overflow:visible}
+.wire{fill:none;stroke:var(--blue);stroke-width:1.5}
+.wire.dash{stroke-dasharray:5 6}
+.draw{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 420ms var(--ease) var(--d,0ms)}
+.draw.head{stroke-linecap:round;stroke-linejoin:round;transition:stroke-dashoffset 120ms linear var(--d,0ms)}
+.fade{opacity:0;transition:opacity 400ms ease var(--d,0ms)}
+
+/* cards */
+.card{position:absolute;width:400px;background:var(--paper-hi);border:1.5px solid var(--blue);
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 12px 26px -16px rgba(55,38,10,.55);font:400 14px/1 var(--mono);color:var(--ink)}
+.card-h{display:flex;justify-content:space-between;padding:11px 14px 10px;border-bottom:1px solid var(--blue2);
+  font-size:12px;letter-spacing:.17em;color:var(--blue);text-transform:uppercase}
+.card dl{display:grid;grid-template-columns:84px 1fr;row-gap:10px;margin:0;padding:13px 14px 15px}
+.card dt{color:var(--ink3);font-size:13px;padding-top:1px}
+.card dd{margin:0;font-weight:700;font-size:15px}
+.card dd small{font-weight:400;font-size:12px;color:var(--ink3);margin-left:.6em}
+.hex{font-weight:400!important;font-size:13px!important;line-height:1.5;letter-spacing:.01em;
+  background:linear-gradient(rgba(31,58,147,.16),rgba(31,58,147,.16)) no-repeat 0 0/0% 100%;
+  transition:background-size 450ms var(--ease) var(--d,0ms);margin:-1px -3px!important;padding:1px 3px}
+.red{color:var(--red)!important}
+.blue{color:var(--blue)!important}
+
+/* swaps (values that change by beat) */
+.sw{display:inline-grid;vertical-align:baseline;overflow:hidden}
+.sw>span{grid-area:1/1;opacity:0;transform:translateY(.55em);transition:opacity 260ms ease var(--d,0ms),transform 260ms var(--ease) var(--d,0ms)}
+.sw>span.up{opacity:1;transform:none}
+.sw>span.gone{opacity:0;transform:translateY(-.55em)}
+
+/* typing */
+.type{display:inline-block;clip-path:inset(0 100% 0 0);transition:clip-path var(--t,600ms) steps(var(--n,30),end) var(--d,0ms)}
+.type.up{clip-path:inset(0 -2% 0 0)}
+
+/* ---------------- COVER ---------------- */
+#s-cover .ttl{position:absolute;left:132px;top:258px;margin:0;font:400 214px/.86 var(--serif-d);letter-spacing:.01em;color:var(--ink)}
+#s-cover .ttl span{display:block}
+#s-cover .ttl span+span{margin-left:.03em}
+#s-cover .deck{position:absolute;left:140px;top:676px;font:italic 400 30px/1.3 var(--serif);color:var(--ink2);margin:0}
+#s-cover .form{position:absolute;left:140px;top:760px;display:grid;grid-template-columns:170px auto;row-gap:12px;font:400 17px/1 var(--mono);color:var(--ink)}
+#s-cover .form dt{color:var(--ink3);letter-spacing:.18em;font-size:13px;padding-top:3px}
+#s-cover .form dd{margin:0}
+#s-cover .begin{position:absolute;left:140px;top:944px;font:400 18px/1 var(--mono);letter-spacing:.14em;color:var(--ink2);display:flex;align-items:center;gap:12px}
+.key{display:inline-flex;align-items:center;justify-content:center;width:40px;height:30px;border:1.25px solid var(--ink2);border-radius:5px;box-shadow:0 2px 0 var(--ink2)}
+.caret{display:inline-block;width:.6em;height:2px;background:var(--ink2);margin-left:2px;align-self:flex-end;margin-bottom:4px;animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+#s-cover .door{position:absolute;left:1180px;top:196px;width:640px;height:700px;overflow:visible}
+#s-cover .st-cover{left:1478px;top:540px;font-size:66px;--r:-12deg;--d:650ms}
+
+/* ---------------- SCENE A ---------------- */
+#s-papers .divider{position:absolute;left:959px;top:236px;height:640px;border-left:1px dashed rgba(28,26,23,.3)}
+.chart{position:absolute;top:236px;width:824px;height:580px;overflow:visible}
+#chL{left:96px} #chR{left:1000px}
+.chart text{font-family:var(--mono)}
+.ax{stroke:var(--ink);stroke-width:1.25}
+.gl{stroke:rgba(28,26,23,.22);stroke-width:1;stroke-dasharray:2 5}
+.tk{font-size:14px;fill:var(--ink3)}
+.yr{font-size:15px;fill:var(--ink2)}
+.vb{font-size:15px;fill:var(--ink);font-weight:700;opacity:0;transition:opacity 300ms ease var(--d)}
+.bar{fill:var(--ink);transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0);transition:transform 640ms var(--ease) var(--d)}
+.hbar{fill:#5b554b;transform-box:fill-box;transform-origin:0 50%;transform:scaleX(0);transition:transform 560ms var(--ease) var(--d)}
+.hbar.hi{fill:var(--blue)}
+.cat{font-size:15px;fill:var(--ink2)}
+.cat.hi{fill:var(--blue);font-weight:700}
+.hv{font-size:15px;fill:var(--ink);opacity:0;transition:opacity 300ms ease var(--d)}
+.hv.hi{fill:var(--blue);font-weight:700}
+.b1 .bar,.b1 .hbar{transform:none}
+.b1 .vb,.b1 .hv{opacity:1}
+.band{opacity:0;transition:opacity 500ms ease 120ms}
+.b2 .band{opacity:1}
+.zl{font-size:13px;fill:var(--red);letter-spacing:.06em}
+.cap{position:absolute;top:846px;font:400 17px/1.25 var(--mono);color:var(--ink)}
+.cap .fig{display:block;font-size:12px;letter-spacing:.22em;color:var(--ink3);margin-bottom:7px}
+#capL{left:160px} #capR{left:1000px}
+.foot{position:absolute;left:160px;top:904px;font:400 14px/1 var(--mono);color:var(--ink2)}
+.foot{opacity:0;transition:opacity 400ms ease 650ms}.b2 .foot{opacity:1}
+.foot i{font-style:normal;color:var(--red);margin-right:.5em}
+#s-papers .st-pu{left:648px;top:470px;font-size:30px;--r:-7deg;--d:250ms;line-height:1.02;padding:.32em .42em .26em}
+#s-papers .st-pu big{display:block;font-size:1.75em;line-height:.95;letter-spacing:.02em}
+.b2 .st-pu{opacity:.88;transform:translate(-50%,-50%) rotate(var(--r)) scale(1)}
+.fin{opacity:0;transition:opacity 300ms ease var(--d)}
+.b3 .fin{opacity:1}
+.circ{fill:none;stroke:var(--red);stroke-width:2.2;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 520ms var(--ease) 900ms}
+.b3 .circ{stroke-dashoffset:0}
+.zero{font:700 26px var(--mono);fill:var(--red);opacity:0;transform-box:fill-box;transform-origin:50% 50%;transform:scale(1.8);transition:opacity 160ms linear 620ms,transform 380ms cubic-bezier(.3,1.5,.55,1) 620ms}
+.b3 .zero{opacity:1;transform:none}
+#capR .tail{--d:1250ms;--t:620ms;--n:24}
+.b3 #capR .tail{clip-path:inset(0 -2% 0 0)}
+.last{position:absolute;left:0;right:0;top:968px;text-align:center;margin:0;font:italic 400 40px/1 var(--serif);color:var(--ink);
+  opacity:0;transform:translateY(8px);transition:opacity 700ms ease,transform 700ms var(--ease)}
+.b4 .last{opacity:1;transform:none}
+
+/* ---------------- shared vault ---------------- */
+#pin{position:absolute;left:1078px;top:286px;width:264px;height:84px;z-index:20;pointer-events:none;
+  opacity:0;transition:opacity 450ms ease}
+#stage[data-scene="s-attack"] #pin,#stage[data-scene="s-lock"] #pin{opacity:1;transition:opacity 650ms ease 180ms}
+#pin .tagp{position:absolute;inset:0;background:var(--paper-hi);transform:rotate(-1.4deg);
+  box-shadow:0 1px 1px rgba(60,40,10,.25),0 8px 14px -8px rgba(60,40,10,.5);
+  background-image:linear-gradient(rgba(31,58,147,.06) 1px,transparent 1px);background-size:100% 14px;padding:22px 18px 0}
+#pin .tagp .lbl{color:var(--ink2);font-size:11px}
+#pin .addr{font:700 22px/1 var(--mono);margin-top:10px;letter-spacing:.01em}
+#pin .tack{position:absolute;left:50%;top:-9px;width:20px;height:20px;margin-left:-10px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#ef8d84 0,#c22c2c 38%,#7d1414 100%);box-shadow:2px 4px 4px rgba(50,20,10,.35)}
+.treas{left:1080px;top:408px;width:260px;height:304px}
+.treas .door{position:absolute;left:62px;top:48px;width:136px;height:136px}
+.treas .bal{position:absolute;left:0;right:0;top:204px;text-align:center;font:700 28px/1 var(--mono)}
+.treas .bal2{position:absolute;left:0;right:0;top:246px;text-align:center;font:400 16px/1 var(--mono);color:var(--ink2)}
+.drawer{left:680px;top:266px;width:360px;height:484px}
+.cells{position:absolute;display:grid;grid-template-columns:repeat(32,8px);grid-auto-rows:8px;gap:2px}
+.cells i{display:block;border:1px solid rgba(31,58,147,.32);position:relative}
+.cells i.x::after,.cells i.xr::after{content:"";position:absolute;inset:-1px;
+  background:linear-gradient(45deg,transparent 40%,var(--ink) 40% 60%,transparent 60%),linear-gradient(-45deg,transparent 40%,var(--ink) 40% 60%,transparent 60%);
+  transition:opacity 220ms ease var(--d,0ms)}
+.cells i.xr::after{background:linear-gradient(45deg,transparent 34%,var(--red) 34% 66%,transparent 66%),linear-gradient(-45deg,transparent 34%,var(--red) 34% 66%,transparent 66%);opacity:0}
+.cells i.tg{border-color:var(--blue);background:rgba(31,58,147,.25)}
+.mini{grid-template-columns:repeat(32,4px);grid-auto-rows:4px;gap:1px}
+.mini i{border:none;background:rgba(31,58,147,.18)}
+.mini i.c{background:var(--ink)}
+.mini i.r{background:var(--red)}
+.mini i.r2{background:rgba(31,58,147,.18);transition:background 200ms ease var(--d,0ms)}
+.ix{position:absolute;font:400 12px/1 var(--mono);color:var(--ink3)}
+.ftr{position:absolute;left:18px;right:18px;bottom:16px;display:flex;justify-content:space-between;font:400 13px/1 var(--mono);color:var(--ink2)}
+
+/* ---------------- SCENE B ---------------- */
+#u1{left:96px;top:262px;transition:transform 600ms var(--ease),opacity 300ms ease var(--d,0ms)}
+.b1 #u1{transform:translateX(130px)}
+.flight{position:absolute;left:226px;top:236px;width:400px;font:400 12px/1 var(--mono);letter-spacing:.18em;color:var(--blue);opacity:0;transition:opacity 400ms ease 350ms}
+.b1 .flight{opacity:1}
+.b2 #u1 .hex{background-size:100% 100%;--d:450ms}
+.agent{position:absolute;left:96px;top:522px;width:112px;height:186px;border:1px solid var(--ink2);background:var(--paper-hi);
+  opacity:0;transform:translateY(14px);transition:opacity 400ms ease,transform 400ms var(--ease);padding:8px}
+.agent svg{display:block;width:94px;height:104px;margin:0 auto}
+.agent .lbl{margin:10px 0 7px;font-size:10px}
+.b2 .agent{opacity:1;transform:none}
+#c1{left:226px;top:262px;opacity:0;transition:opacity 220ms ease 900ms,transform 520ms var(--ease) 1000ms;border-color:var(--red);z-index:3}
+#c1 .card-h{color:var(--red);border-color:rgba(179,36,42,.45)}
+#c1 .hex{background-image:linear-gradient(rgba(179,36,42,.14),rgba(179,36,42,.14));background-size:100% 100%}
+.b2 #c1{opacity:1;transform:translateY(260px)}
+.ed{display:inline-flex;gap:.4em}
+.kx{display:inline-grid}.kx small{grid-area:1/1;transition:opacity 160ms ease 1820ms}
+.kx .k2{opacity:0;color:var(--red)!important}
+.b2 .kx .k1{opacity:0}.b2 .kx .k2{opacity:1}
+.ed .was{position:relative}
+.ed .was::after{content:"";position:absolute;left:-2px;right:-2px;top:50%;height:2px;background:var(--red);transform:scaleX(0);transform-origin:0 50%;transition:transform 200ms ease 1600ms}
+.b2 .ed .was::after{transform:none}
+.ed .now{color:var(--red);clip-path:inset(0 100% 0 0);transition:clip-path 120ms steps(1,end) 1820ms}
+.b2 .ed .now{clip-path:inset(0 -10% 0 0)}
+.dest{position:absolute;left:1480px;width:344px;height:108px;padding:18px}
+.dest .addr{font:700 20px/1 var(--mono);margin-top:12px}
+.dest .rcv{font:400 14px/1 var(--mono);color:var(--ink2);margin-top:12px}
+#dA{top:296px}
+#dB{top:560px;border-color:var(--red);opacity:0;transition:opacity 400ms ease 2000ms}
+#dB::before{border-color:rgba(179,36,42,.22)}
+#dB>.lbl{color:var(--red)}
+.b2 #dB{opacity:1}
+.wB{stroke:var(--red)}
+.b2 .wB{opacity:1;--d:2100ms}
+.b3 .wcopy{stroke-dashoffset:0}
+.b1 .wfl{opacity:1}
+.wcopy{stroke:var(--red);stroke-width:2}
+.wuser{stroke-width:2}
+.b3 .wuser{stroke-dashoffset:0}
+.b3 .s7::after{opacity:1}
+.chipw{position:absolute;left:1296px;top:622px;z-index:4;transition:transform 520ms var(--ease) var(--d),opacity 220ms ease calc(var(--d) + 540ms)}
+.chipw.go{transform:translate(170px,-16px);opacity:0}
+.chipw.go .chip{opacity:1}
+.chip{position:relative;font:700 14px/1 var(--mono);color:var(--red);background:var(--paper-hi);border:1.5px solid var(--red);border-radius:20px;padding:6px 10px;
+  opacity:0;transition:opacity 150ms linear var(--d)}
+.refused{position:absolute;left:240px;top:452px;font:700 13px/1 var(--mono);letter-spacing:.06em;color:var(--red);opacity:0;transition:opacity 300ms ease 1450ms}
+.b3 #u1{opacity:.42;--d:1400ms}
+.b3 .refused{opacity:1}
+#s-attack .st-robbed{left:1010px;top:518px;font-size:156px;--r:-9deg;--d:1650ms}
+.b3 .st-robbed{opacity:.88;transform:translate(-50%,-50%) rotate(var(--r)) scale(1)}
+.line-b{position:absolute;left:0;right:0;top:852px;text-align:center;font:700 31px/1 var(--mono);color:var(--ink);letter-spacing:-.005em}
+.line-b .type{--n:49;--t:900ms}
+.b4 .line-b .type{clip-path:inset(0 -2% 0 0)}
+/* beat 5 */
+.b5 #u1,.b5 #c1,.b5 .wcopy,.b5 .wuser,.b5 .flight,.b5 .wfl,.b5 .refused{opacity:0;transition:opacity 280ms ease 0ms}
+.b5 .st-robbed{opacity:.26;transition:opacity 400ms ease 0ms}
+.drawer .cells.big{left:21px;top:84px;transform-origin:50% 30%;transition:transform 520ms var(--ease) 120ms,opacity 300ms ease 320ms}
+.b5 .drawer .cells.big{transform:scale(.6,.04);opacity:0}
+.b5 .drawer .ix{opacity:0;transition:opacity 200ms}
+.rootbox{position:absolute;left:21px;top:84px;width:318px;height:84px;border:1.5px solid var(--blue);background:var(--paper-hi);padding:14px 16px;
+  opacity:0;transform:scale(1.06);transition:opacity 360ms ease 560ms,transform 400ms var(--ease) 560ms}
+.rootbox .h{font:700 20px/1 var(--mono);margin-top:12px}
+.b5 .rootbox{opacity:1;transform:none}
+.minibox{position:absolute;left:21px;top:192px;width:318px;opacity:0;transition:opacity 360ms ease 700ms}
+.b5 .minibox{opacity:1}
+.minibox .cells{left:79px;top:22px}
+#u2{left:226px;top:262px;opacity:0;transform:translateX(-24px);transition:opacity 260ms ease 760ms,transform 360ms var(--ease) 760ms}
+.b5 #u2{opacity:1;transform:none}
+#c2w{position:absolute;left:226px;top:262px;width:400px;transition:transform 360ms var(--ease) 1250ms;z-index:3}
+.b5 #c2w{transform:translateY(260px)}
+#c2{left:0;top:0;opacity:0;border-color:var(--red);transition:opacity 160ms ease 1180ms}
+#c2 .card-h{color:var(--red);border-color:rgba(179,36,42,.45)}
+.b5 #c2{opacity:1}
+.wcopy2{stroke:var(--red);stroke-width:2}.wuser2{stroke-width:2}
+.b5 .wcopy2{stroke-dashoffset:0}
+.b5 .wuser2{stroke-dashoffset:0}
+.b5 .r2{background:var(--red)!important}
+#s-attack .st-smaller{left:846px;top:596px;font-size:54px;--r:5deg;--d:2350ms}
+.b5 .st-smaller{opacity:.9;transform:translate(-50%,-50%) rotate(var(--r)) scale(1)}
+
+/* ---------------- SCENE C ---------------- */
+.verif{left:490px;top:296px;width:160px;height:176px;padding:16px}
+.verif .lbl{position:static;color:var(--blue)}
+.verif .rd{margin-top:16px;font:400 15px/1.25 var(--mono);color:var(--ink)}
+.verif .st{display:block;margin-top:12px;font:700 34px/1 var(--mono)}
+.verif .why{display:block;margin-top:8px;font:400 13px/1.2 var(--mono);color:var(--red)}
+#i1{left:96px;top:270px;width:360px;opacity:0;transform:translateX(-140px);transition:opacity 380ms ease,transform 560ms var(--ease)}
+.b1 #i1{opacity:1;transform:none}
+#i1 .done{position:absolute;left:14px;bottom:-26px;font:400 13px/1 var(--mono);color:var(--blue);opacity:0;transition:opacity 300ms ease 1300ms}
+.b1 #i1 .done{opacity:1}
+#o1{left:96px;top:540px;width:360px;opacity:0;transform:translateX(-140px);transition:opacity 380ms ease,transform 560ms var(--ease)}
+.b3 #o1{opacity:1;transform:none}
+.b1 .wi{stroke-dashoffset:0}
+.b3 .wo{stroke-dashoffset:0}
+.wo{stroke:var(--red);stroke-width:2}
+#s-lock .st-rej{left:286px;top:640px;font-size:60px;--r:-7deg;--d:1150ms}
+.b3 .st-rej{opacity:.9;transform:translate(-50%,-50%) rotate(var(--r)) scale(1)}
+.authC .kv{position:absolute;top:78px;font:400 11px/1 var(--mono);letter-spacing:.2em;color:var(--ink3)}
+.authC .kv b{display:block;margin-top:8px;font:700 19px/1 var(--mono);letter-spacing:0;color:var(--ink)}
+.authC .cells{left:21px;top:150px}
+.authC .used{position:absolute;left:18px;right:18px;top:128px;display:flex;justify-content:space-between;font:400 11px/1 var(--mono);letter-spacing:.18em;color:var(--ink3)}
+.authC .used .sw>span{justify-self:end}
+.authC .used b{font-weight:700;color:var(--ink);letter-spacing:.02em;font-size:13px}
+.cells i.l37::after{opacity:0}
+.b1 .cells i.l37{--d:1050ms}.b2 .cells i.l37{--d:370ms}
+.b1 .cells i.l37::after{opacity:1}
+.b2 .cells i.x::after{opacity:0}
+.cells i.l37{transition:background 300ms ease 1000ms}
+.b1 .cells i.l37{background:transparent;border-color:rgba(31,58,147,.32)}
+.rec{position:absolute;left:1404px;top:330px;width:420px;font:400 15px/1 var(--mono);opacity:0;transform:translateY(8px);transition:opacity 450ms ease 1350ms,transform 450ms var(--ease) 1350ms}
+.b1 .rec{opacity:1;transform:none}
+.rec .lbl{color:var(--blue);display:block;padding-bottom:12px;border-bottom:1.5px solid var(--blue)}
+.rec table{width:100%;border-collapse:collapse;margin-top:2px}
+.rec th{font:400 11px/1 var(--mono);letter-spacing:.2em;color:var(--ink3);text-align:left;padding:12px 0 10px;font-weight:400}
+.rec td{padding:10px 0;border-top:1px solid rgba(31,58,147,.18);white-space:nowrap}
+.rec td:first-child{color:var(--ink3);font-size:13px;width:96px}
+.rec td.ch{color:var(--red);font-weight:700}
+.rec td.eq{color:var(--blue);font-weight:700}
+.rec .type{--n:12;--t:300ms}
+.b2 .rec .type{clip-path:inset(0 -6% 0 0)}
+.reg{position:absolute;left:1066px;top:274px;width:288px;height:108px;pointer-events:none;opacity:0;transition:opacity 450ms ease 700ms;z-index:57}
+.reg i{position:absolute;width:16px;height:16px;border:0 solid var(--blue)}
+.reg i:nth-child(1){left:0;top:0;border-width:1.5px 0 0 1.5px}
+.reg i:nth-child(2){right:0;top:0;border-width:1.5px 1.5px 0 0}
+.reg i:nth-child(3){left:0;bottom:0;border-width:0 0 1.5px 1.5px}
+.reg i:nth-child(4){right:0;bottom:0;border-width:0 1.5px 1.5px 0}
+.reg span{position:absolute;right:0;top:-20px;font:700 12px/1 var(--mono);letter-spacing:.18em;color:var(--blue);text-transform:uppercase}
+.b2 .reg{opacity:1}
+.tre-ok{position:absolute;left:0;right:0;top:276px;text-align:center;font:700 11px/1 var(--mono);letter-spacing:.2em;color:var(--blue);opacity:0;transition:opacity 400ms ease 900ms}
+.b2 .tre-ok{opacity:1}
+/* beat 4 words */
+.words{position:absolute;left:248px;top:796px;display:flex;gap:16px}
+.words .w{width:104px;text-align:center;opacity:0;transform:translateY(6px);transition:opacity 300ms ease var(--d),transform 300ms var(--ease) var(--d)}
+.words .w .redact{width:104px;height:26px;display:block}
+.words .w span{display:block;margin-top:7px;font:400 12px/1 var(--mono);letter-spacing:.12em;color:var(--ink2)}
+.b4 .words .w{opacity:1;transform:none}
+.brk{position:absolute;left:0;top:0;width:1920px;height:1080px;pointer-events:none}
+.b4 .wbrk{stroke-dashoffset:0}
+.b4 .derives{opacity:1}
+.gen{position:absolute;top:904px;font:400 17px/1 var(--mono);letter-spacing:.06em;transform:translateX(-50%);opacity:0;transition:opacity 350ms ease var(--d)}
+.b4 .gen{opacity:1}
+.gen.g0{left:770px;color:var(--ink3);--d:1150ms}
+.gen.g0::after{content:"";position:absolute;left:-6px;right:-6px;top:50%;height:2px;background:var(--red);transform:scaleX(0);transform-origin:0 50%;transition:transform 260ms ease 1500ms}
+.b4 .gen.g0::after{transform:none}
+.gen.g1{left:1150px;color:var(--blue);font-weight:700;border:1.5px solid var(--blue);padding:7px 12px;top:896px;--d:1350ms}
+.line-c{position:absolute;left:0;right:0;top:972px;text-align:center;font:700 29px/1 var(--mono)}
+.line-c .type{--n:49;--t:900ms;--d:1750ms}
+.b4 .line-c .type{clip-path:inset(0 -2% 0 0)}
+.wash{position:absolute;inset:0;background:rgba(239,231,212,.8);opacity:0;transition:opacity 520ms ease;z-index:55;pointer-events:none}
+.b5 .wash{opacity:1}
+#s-lock .st-final{left:960px;top:575px;font-size:112px;--r:-4deg;--d:520ms;padding:.22em .5em .16em;line-height:1.02}
+.b5 .st-final{opacity:.9;transform:translate(-50%,-50%) rotate(var(--r)) scale(1)}
+
+/* chrome */
+#tab{position:absolute;left:56px;bottom:0;height:46px;padding:2px 24px 0;display:flex;align-items:center;gap:14px;z-index:40;
+  background:var(--manila);border:1px solid rgba(70,52,20,.35);border-bottom:none;border-radius:7px 7px 0 0;
+  font:400 15px/1 var(--mono);letter-spacing:.16em;color:var(--ink);box-shadow:0 -3px 10px -6px rgba(60,40,10,.4)}
+#tab::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--stamp);opacity:.85}
+#nav{position:absolute;right:56px;bottom:16px;display:flex;gap:10px;z-index:40}
+#nav button{all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;padding:9px 14px;border:1px solid rgba(28,26,23,.35);
+  font:400 13px/1 var(--mono);letter-spacing:.2em;color:var(--ink2);opacity:.55;transition:opacity 200ms,background 200ms}
+#nav button:hover{opacity:1;background:rgba(255,255,255,.35)}
+#nav button:disabled{opacity:.2;cursor:default}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="ink" x="-8%" y="-12%" width="116%" height="124%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="4" result="warp"/>
+      <feDisplacementMap in="SourceGraphic" in2="warp" scale="5" xChannelSelector="R" yChannelSelector="G" result="rough"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="2" seed="9" result="speck"/>
+      <feColorMatrix in="speck" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -4.2 2.95" result="speckA"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="3" seed="21" result="blot"/>
+      <feColorMatrix in="blot" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 2.4 -0.35" result="blotA"/>
+      <feComposite in="speckA" in2="blotA" operator="in" result="mask"/>
+      <feComposite in="rough" in2="mask" operator="in"/>
+    </filter>
+    <filter id="inkbold" x="-6%" y="-12%" width="112%" height="124%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="6" result="warp"/>
+      <feDisplacementMap in="SourceGraphic" in2="warp" scale="7" xChannelSelector="R" yChannelSelector="G" result="rough"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.32" numOctaves="2" seed="13" result="speck"/>
+      <feColorMatrix in="speck" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -4.6 3.45" result="speckA"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.006" numOctaves="3" seed="2" result="blot"/>
+      <feColorMatrix in="blot" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 2.2 -0.1" result="blotA"/>
+      <feComposite in="speckA" in2="blotA" operator="in" result="mask"/>
+      <feComposite in="rough" in2="mask" operator="in"/>
+    </filter>
+    <filter id="bar" x="-4%" y="-20%" width="108%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="2" seed="5" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="7" stroke="#b3242a" stroke-width="1.2" opacity=".32"/>
+    </pattern>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M1,1 L9,5 L1,9" fill="none" stroke="#1f3a93" stroke-width="1.6"/>
+    </marker>
+    <marker id="ahr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M1,1 L9,5 L1,9" fill="none" stroke="#b3242a" stroke-width="1.6"/>
+    </marker>
+    <symbol id="vault" viewBox="0 0 120 120">
+      <g fill="none" stroke="#1f3a93" stroke-width="1.3">
+        <circle cx="60" cy="60" r="56"/><circle cx="60" cy="60" r="46"/>
+        <circle cx="60" cy="60" r="11"/><circle cx="60" cy="60" r="5" />
+        <g id="spk"><line x1="60" y1="49" x2="60" y2="24"/><circle cx="60" cy="21" r="3.5"/></g>
+        <use href="#spk" transform="rotate(120 60 60)"/><use href="#spk" transform="rotate(240 60 60)"/>
+        <line x1="2" y1="60" x2="14" y2="60" stroke-dasharray="3 2"/><line x1="106" y1="60" x2="118" y2="60" stroke-dasharray="3 2"/>
+      </g>
+      <g fill="#1f3a93"><circle cx="60" cy="8.5" r="1.8"/><circle cx="60" cy="111.5" r="1.8"/><circle cx="8.5" cy="60" r="1.8"/><circle cx="111.5" cy="60" r="1.8"/>
+        <circle cx="96.4" cy="23.6" r="1.8"/><circle cx="23.6" cy="23.6" r="1.8"/><circle cx="96.4" cy="96.4" r="1.8"/><circle cx="23.6" cy="96.4" r="1.8"/></g>
+    </symbol>
+    <symbol id="agent" viewBox="0 0 112 124">
+      <g fill="#1c1a17">
+        <path d="M14,124 C15,92 32,78 56,78 C80,78 97,92 98,124 Z"/>
+        <path d="M56,78 L46,104 L56,124 L66,104 Z" fill="#f7f1e3" opacity=".9"/>
+        <circle cx="56" cy="56" r="17"/>
+        <path d="M37,40 C37,22 42,13 56,13 C70,13 75,22 75,40 Z"/>
+        <path d="M44,17 C50,22 62,22 68,17" stroke="#f7f1e3" stroke-width="1.6" fill="none" opacity=".5"/>
+        <ellipse cx="56" cy="41" rx="34" ry="6"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<div id="stage" data-scene="s-cover">
+  <div class="paper mottle"></div><div class="paper grain"></div><div class="paper vig"></div>
+
+  <!-- ============ COVER ============ -->
+  <section class="scene" id="s-cover" data-num="1" data-beats="0">
+   <div class="content">
+    <div class="hdr"><div><b>Solana Bunker</b><span class="sep">/</span>Research file SB-01<span class="sep">/</span>Hash-based custody</div><div>Sheet 01 / 15</div></div>
+    <svg class="door" viewBox="0 0 640 700" aria-hidden="true">
+      <g fill="none" stroke="#1f3a93" stroke-width="1.2">
+        <line x1="40" y1="330" x2="600" y2="330" stroke-dasharray="14 4 2 4" opacity=".55"/>
+        <line x1="320" y1="40" x2="320" y2="620" stroke-dasharray="14 4 2 4" opacity=".55"/>
+        <circle cx="320" cy="330" r="250"/><circle cx="320" cy="330" r="236"/>
+        <circle cx="320" cy="330" r="176"/><circle cx="320" cy="330" r="168" opacity=".5"/>
+        <circle cx="320" cy="330" r="62"/><circle cx="320" cy="330" r="24"/>
+        <g id="hs"><line x1="320" y1="268" x2="320" y2="170"/><line x1="314" y1="268" x2="314" y2="176" opacity=".5"/><circle cx="320" cy="158" r="12"/></g>
+        <use href="#hs" transform="rotate(120 320 330)"/><use href="#hs" transform="rotate(240 320 330)"/>
+        <rect x="52" y="230" width="22" height="58" rx="3"/><rect x="52" y="372" width="22" height="58" rx="3"/>
+        <rect x="262" y="96" width="116" height="34" rx="2"/>
+        <line x1="70" y1="620" x2="570" y2="620"/><line x1="70" y1="610" x2="70" y2="630"/><line x1="570" y1="610" x2="570" y2="630"/>
+        <path d="M378,113 L470,70 L600,70" opacity=".8"/><path d="M344,330 L470,470 L600,470" opacity=".8"/>
+      </g>
+      <g fill="#1f3a93" id="bolts"></g>
+      <g font-family="Courier Prime, monospace" fill="#1f3a93" font-size="13" letter-spacing="2.2">
+        <text x="470" y="62">A  ADDRESS PLATE</text><text x="470" y="88" fill="#4c463d" letter-spacing="1">fixed</text>
+        <text x="470" y="462">B  LOCK ASSEMBLY</text><text x="470" y="488" fill="#4c463d" letter-spacing="1">replaceable</text>
+        <text x="320" y="652" text-anchor="middle">DOOR, FRONT ELEVATION  ·  NOT TO SCALE</text>
+      </g>
+    </svg>
+    <h1 class="ttl"><span>SOLANA</span><span>BUNKER</span></h1>
+    <p class="deck">One permanent treasury address. A spending lock you can replace.</p>
+    <dl class="form">
+      <dt>SUBJECT</dt><dd>One address, three generations of lock</dd>
+      <dt>METHODS</dt><dd>SHA-256 &nbsp;·&nbsp; Merkle trees &nbsp;·&nbsp; XMSS</dd>
+      <dt>CLEARED FOR</dt><dd><span class="redact" style="width:252px;height:17px"></span></dd>
+    </dl>
+    <div class="begin">Press <span class="key"><svg width="18" height="12" viewBox="0 0 18 12"><path d="M1 6h15M11 1l5 5-5 5" fill="none" stroke="#4c463d" stroke-width="1.6"/></svg></span> to begin<span class="caret"></span></div>
+    <div class="stamp st-cover">Contains mathematics</div>
+   </div>
+  </section>
+
+  <!-- ============ SCENE A ============ -->
+  <section class="scene" id="s-papers" data-num="2" data-beats="4">
+   <div class="content">
+    <div class="hdr"><div><b>Solana Bunker</b><span class="sep">/</span>Exhibit A<span class="sep">/</span>Publication record</div><div>Sheet 02 / 15</div></div>
+    <h1 class="hl">The curious case of the missing papers</h1>
+    <div class="divider"></div>
+    <svg class="chart" id="chL" viewBox="0 0 824 580"></svg>
+    <svg class="chart" id="chR" viewBox="0 0 824 580"></svg>
+    <div class="cap" id="capL"><span class="fig">FIG. A-1 &nbsp;·&nbsp; SHARE OF RECORDS PER YEAR, 1935–1947</span>Physical Review, fission in the title</div>
+    <div class="foot"><i>†</i>Properties of 94(239), Phys. Rev. 70, 555</div>
+    <div class="cap" id="capR"><span class="fig">FIG. A-2 &nbsp;·&nbsp; OPENAI MATHEMATICS CORPUS, BY PRIMARY DISCIPLINE</span>719 manuscripts · 17 disciplines<span class="type tail">&nbsp;· <b class="red">0</b> about cryptography</span></div>
+    <div class="stamp st-pu" data-beat="2">Received<big>1941</big><span class="rl"></span>Published<big>1946<sup style="font-size:.32em;vertical-align:1.6em;margin-left:.08em">†</sup></big></div>
+    <p class="last">We checked. The silence is real. Draw your own conclusions.</p>
+   </div>
+  </section>
+
+  <!-- ============ SCENE B ============ -->
+  <section class="scene" id="s-attack" data-num="8" data-beats="5">
+   <div class="content">
+    <div class="hdr"><div><b>Solana Bunker</b><span class="sep">/</span>Exhibit B<span class="sep">/</span>Versions one and two</div><div>Sheet 08 / 15</div></div>
+    <h1 class="hl">The attacker doesn’t break the hash</h1>
+    <div class="bp-grid"></div>
+    <div class="group" style="left:660px;top:236px;width:700px;height:534px"><span class="lbl">Bunker program</span></div>
+
+    <div class="box drawer"><span class="lbl">Authorization account</span>
+      <div class="sub"><span class="sw"><span class="up gone-b5" data-d="420">1,024 SHA-256 commitments</span><span class="in-b5" data-d="420">1 Merkle root + usage bitmap</span></span></div>
+      <span class="ix" style="left:21px;top:66px">#0000</span>
+      <span class="ix" style="left:79px;top:66px;color:var(--blue)">#0007 &nbsp;next</span>
+      <span class="ix" style="right:21px;top:410px">#1023</span>
+      <div class="cells big" id="gridB"></div>
+      <div class="rootbox"><span class="lbl" style="color:var(--blue)">Merkle root · 32 bytes</span><div class="h">a7c3e910…5b41f02d</div></div>
+      <div class="minibox"><span class="lbl" style="position:absolute;left:0;top:0;color:var(--blue)">Usage bitmap · 128 bytes</span><div class="cells mini" id="miniB"></div></div>
+      <div class="ftr"><span>storage <span class="sw"><span class="up gone-b5" data-d="620">32,768 bytes</span><span class="in-b5" data-d="620">160 bytes</span></span></span><span>used <span class="sw"><span class="up gone-b3" data-d="450">7</span><span class="in-b3 gone-b5" data-d="450" data-dout="1750">8</span><span class="in-b5" data-d="1750">9</span></span> / 1,024</span></div>
+    </div>
+
+    <div class="box treas"><span class="lbl">Treasury · PDA</span>
+      <svg class="door"><use href="#vault"/></svg>
+      <div class="bal"><span class="sw"><span class="up gone-b3">12.000</span><span class="in-b3 gone-b5">11.000</span><span class="in-b5">10.000</span></span> SOL</div>
+      <div class="bal2">2,500.00 USDC</div>
+    </div>
+
+    <div class="box dest" id="dA"><span class="lbl">Destination A</span><div class="addr" style="margin-top:22px">4Nd1sWq…Zq7e</div><div class="rcv">received 0.000 SOL</div></div>
+    <div class="box dest" id="dB"><span class="lbl">Destination B</span><div class="addr red" style="margin-top:22px">9gHt3Rk…Vb2c</div><div class="rcv">received <span class="sw"><span class="up gone-b3">0.000</span><span class="in-b3 gone-b5">1.000</span><span class="in-b5">2.000</span></span> SOL</div></div>
+
+    <svg class="wires" viewBox="0 0 1920 1080">
+      <path class="wire" d="M1040,560 L1080,560" marker-end="url(#ah)"/>
+      <path class="wire dash" d="M1340,452 C1400,452 1420,350 1478,350" marker-end="url(#ah)" opacity=".7"/>
+      <path class="wire dash wB fade" d="M1340,650 C1400,650 1420,614 1478,614" marker-end="url(#ahr)" style="stroke:#b3242a"/>
+      <path class="wire dash fade wfl" d="M628,347 L676,347" style="--d:400ms"/>
+      <path class="wire draw wcopy" pathLength="1" d="M628,607 C700,607 742,470 771,362" data-head="r" style="--d:0ms"/>
+      <path class="wire draw wuser" pathLength="1" d="M628,347 L766,352" data-head="b" style="--d:1050ms"/>
+      <path class="wire draw wcopy2" pathLength="1" d="M628,607 C700,607 770,540 817,483" data-head="r" style="--d:1650ms"/>
+      <path class="wire draw wuser2" pathLength="1" d="M628,347 C700,347 780,420 815,470" data-head="b" style="--d:2150ms;opacity:.6"/>
+    </svg>
+
+    <div class="flight">In flight · readable before it lands</div>
+    <div class="card" id="u1">
+      <div class="card-h"><span>Pending withdrawal</span><span>tx 1 of 1</span></div>
+      <dl><dt>withdraw</dt><dd>1.000 SOL</dd>
+        <dt>to</dt><dd>address A<small>4Nd1…Zq7e</small></dd>
+        <dt>slot</dt><dd>#0007</dd>
+        <dt>secret</dt><dd class="hex">3f9c41a0 7be2d915 c0e84f6a 29d3b710<br>5ea8c6f4 127d9b3e 8a05c1f7 d64e2b93</dd></dl>
+    </div>
+    <div class="refused">Refused · slot #0007 already used</div>
+    <div class="agent"><svg><use href="#agent"/></svg><div class="lbl">Name</div><span class="redact" style="width:92px;height:13px"></span></div>
+    <div class="card" id="c1">
+      <div class="card-h"><span>Pending withdrawal</span><span>priority fee ×10</span></div>
+      <dl><dt>withdraw</dt><dd>1.000 SOL</dd>
+        <dt>to</dt><dd>address <span class="ed"><span class="was">A</span><span class="now">B</span></span><span class="kx"><small class="k1">4Nd1…Zq7e</small><small class="k2">9gHt…Vb2c</small></span></dd>
+        <dt>slot</dt><dd>#0007</dd>
+        <dt>secret</dt><dd class="hex">3f9c41a0 7be2d915 c0e84f6a 29d3b710<br>5ea8c6f4 127d9b3e 8a05c1f7 d64e2b93</dd></dl>
+    </div>
+
+    <div class="card" id="u2">
+      <div class="card-h"><span>Pending withdrawal</span><span>tx 1 of 1</span></div>
+      <dl><dt>withdraw</dt><dd>1.000 SOL</dd>
+        <dt>to</dt><dd>address A<small>4Nd1…Zq7e</small></dd>
+        <dt>leaf</dt><dd>#0008</dd>
+        <dt>secret</dt><dd class="hex" style="background-size:100% 100%">e21b07c4 9a3f58d0 66c1b2e9 04f7a8d3<br>b95e0c21 7fd4a630 c8e2915b 3a06f7e4</dd>
+        <dt>proof</dt><dd>10 hashes · 320 bytes</dd></dl>
+    </div>
+    <div id="c2w"><div class="card" id="c2">
+      <div class="card-h"><span>Pending withdrawal</span><span>priority fee ×10</span></div>
+      <dl><dt>withdraw</dt><dd>1.000 SOL</dd>
+        <dt>to</dt><dd class="red">address B<small>9gHt…Vb2c</small></dd>
+        <dt>leaf</dt><dd>#0008</dd>
+        <dt>secret</dt><dd class="hex" style="background-image:linear-gradient(rgba(179,36,42,.14),rgba(179,36,42,.14));background-size:100% 100%">e21b07c4 9a3f58d0 66c1b2e9 04f7a8d3<br>b95e0c21 7fd4a630 c8e2915b 3a06f7e4</dd>
+        <dt>proof</dt><dd>10 hashes · 320 bytes</dd></dl>
+    </div></div>
+
+    <div class="chipw" id="chip1" style="--d:600ms"><div class="chip">1 SOL</div></div>
+    <div class="chipw" id="chip2" style="--d:1950ms"><div class="chip">1 SOL</div></div>
+
+    <div class="line-b"><span class="type">We didn’t break the hash. We copied the password.</span></div>
+    <div class="stamp st-robbed" data-beat="3">Robbed</div>
+    <div class="stamp st-smaller" data-beat="5">Smaller.<br>Still robbed.</div>
+   </div>
+  </section>
+
+  <!-- ============ SCENE C ============ -->
+  <section class="scene" id="s-lock" data-num="12" data-beats="5">
+   <div class="content">
+    <div class="hdr"><div><b>Solana Bunker</b><span class="sep">/</span>Exhibit C<span class="sep">/</span>Version three · XMSS</div><div>Sheet 12 / 15</div></div>
+    <h1 class="hl">Same address. <em>New lock.</em></h1>
+    <div class="bp-grid"></div>
+    <div class="group" style="left:470px;top:236px;width:890px;height:534px"><span class="lbl">Bunker program</span></div>
+
+    <div class="box verif"><span class="lbl">Verifier</span>
+      <div class="rd">XMSS verify
+        <span class="st"><span class="sw"><span class="up gone-b1" style="color:var(--ink3)">—</span><span class="in-b1 gone-b3 blue">OK</span><span class="in-b3 red">FAIL</span></span></span>
+        <span class="why"><span class="sw"><span class="up gone-b3">&nbsp;</span><span class="in-b3">unknown root</span></span></span>
+      </div>
+    </div>
+
+    <div class="box drawer authC"><span class="lbl">Authorization account</span>
+      <div class="sub">XMSS tree · 1,024 one-time keys</div>
+      <div class="kv" style="left:18px">ROOT<b><span class="sw"><span class="up gone-b2">9f3a1c6e…0b7dc2e1</span><span class="in-b2 blue">d41c88a2…e5f307ab</span></span></b></div>
+      <div class="kv" style="left:252px">EPOCH<b><span class="sw"><span class="up gone-b2">0</span><span class="in-b2 blue">1</span></span></b></div>
+      <div class="used"><span>LEAVES USED</span><b><span class="sw"><span class="up gone-b1">37</span><span class="in-b1 gone-b2">38</span><span class="in-b2">0</span></span> / 1,024</b></div>
+      <div class="cells" id="gridC"></div>
+    </div>
+
+    <div class="box treas"><span class="lbl">Treasury · PDA</span>
+      <svg class="door"><use href="#vault"/></svg>
+      <div class="bal">12.000 SOL</div>
+      <div class="bal2">2,500.00 USDC</div>
+      <div class="tre-ok">Balances unchanged</div>
+    </div>
+    <div class="reg"><i></i><i></i><i></i><i></i><span>Not moved</span></div>
+
+    <div class="rec"><span class="lbl">Change record · rotation</span>
+      <table>
+        <tr><th>FIELD</th><th>BEFORE</th><th>AFTER</th></tr>
+        <tr><td>address</td><td>BnKr…4yTe</td><td class="eq"><span class="type" style="--d:900ms">BnKr…4yTe</span></td></tr>
+        <tr><td>SOL</td><td>12.000</td><td class="eq"><span class="type" style="--d:1000ms">12.000</span></td></tr>
+        <tr><td>USDC</td><td>2,500.00</td><td class="eq"><span class="type" style="--d:1100ms">2,500.00</span></td></tr>
+        <tr><td>root</td><td>9f3a…c2e1</td><td class="ch"><span class="type" style="--d:1200ms">d41c…07ab</span></td></tr>
+        <tr><td>epoch</td><td>0</td><td class="ch"><span class="type" style="--d:1300ms">1</span></td></tr>
+        <tr><td>leaves used</td><td>38</td><td class="ch"><span class="type" style="--d:1400ms">0</span></td></tr>
+      </table>
+    </div>
+
+    <svg class="wires" viewBox="0 0 1920 1080">
+      <path class="wire draw wi" pathLength="1" d="M458,372 L486,372" data-head="b" style="--d:500ms"/>
+      <path class="wire draw wi" pathLength="1" d="M652,372 L676,372" data-head="b" style="--d:800ms"/>
+      <path class="wire" d="M1040,580 L1080,580" marker-end="url(#ah)"/>
+      <path class="wire draw wo" pathLength="1" d="M458,632 C520,632 566,560 570,476" data-head="r" style="--d:560ms"/>
+    </svg>
+
+    <div class="card" id="i1">
+      <div class="card-h"><span>Signed intent</span><span>epoch 0</span></div>
+      <dl><dt>action</dt><dd>rotate root</dd>
+        <dt>new root</dt><dd>→ d41c88a2…e5f307ab</dd>
+        <dt>signer</dt><dd>leaf 37 of 1,024</dd>
+        <dt>signature</dt><dd style="font-weight:400">XMSS · 2,500 bytes</dd></dl>
+      <div class="done">Executed · leaf 37 retired</div>
+    </div>
+    <div class="card" id="o1">
+      <div class="card-h"><span class="red">Signed intent</span><span class="red">epoch 0</span></div>
+      <dl><dt>action</dt><dd>withdraw 1.000 SOL</dd>
+        <dt>root</dt><dd>9f3a1c6e…0b7dc2e1</dd>
+        <dt>signer</dt><dd>leaf 38 of 1,024</dd>
+        <dt>signature</dt><dd style="font-weight:400">XMSS · 2,500 bytes</dd></dl>
+    </div>
+    <div class="stamp st-rej" data-beat="3">Rejected</div>
+
+    <div class="words" id="words"></div>
+    <svg class="brk" viewBox="0 0 1920 1080">
+      <path class="wire draw wbrk" pathLength="1" d="M248,850 L248,860 L1672,860 L1672,850 M960,860 L960,884 M770,884 L1150,884 M770,884 L770,892 M1150,884 L1150,892" style="--d:700ms"/>
+      <text x="970" y="877" font-family="Courier Prime, monospace" font-size="12" letter-spacing="2" fill="#1f3a93" class="fade derives" style="--d:1000ms">DERIVES</text>
+    </svg>
+    <div class="gen g0">generation 0</div>
+    <div class="gen g1">generation 1 · active</div>
+    <div class="line-c"><span class="type">Same twelve words. Next generation. Same address.</span></div>
+
+    <div class="wash"></div>
+    <div class="stamp st-final" data-beat="5" style="filter:url(#inkbold)">The address stays.<br>The lock changes.</div>
+   </div>
+  </section>
+
+  <div id="pin"><div class="tagp"><div class="lbl">Treasury address</div><div class="addr">BnKr7vQ2…pX4yTe</div></div><div class="tack"></div></div>
+
+  <div id="tab"><span id="tabtxt">SCENE 1 · COVER</span></div>
+  <div id="nav">
+    <button id="back" aria-label="Back"><svg width="16" height="10" viewBox="0 0 16 10"><path d="M15 5H2M6 1L2 5l4 4" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>BACK</button>
+    <button id="next" aria-label="Next">NEXT<svg width="16" height="10" viewBox="0 0 16 10"><path d="M1 5h13M10 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></button>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+const NS='http://www.w3.org/2000/svg';
+const stage=document.getElementById('stage');
+function fit(){const s=Math.min(innerWidth/1920,innerHeight/1080);stage.style.transform='scale('+s+')';}
+addEventListener('resize',fit);fit();
+
+/* ---------- cover bolts ---------- */
+(function(){const g=document.getElementById('bolts');let h='';for(let k=0;k<36;k++){const a=k/36*Math.PI*2;h+=`<circle cx="${(320+243*Math.cos(a)).toFixed(1)}" cy="${(330+243*Math.sin(a)).toFixed(1)}" r="2.6"/>`;}g.innerHTML=h;})();
+
+/* ---------- Scene A, left chart: Physical Review, fission_title share ---------- */
+// [year, matched records, all records] from visualizations.json -> historical_publication_trend, subject fission_title
+const PR=[[1935,0,486],[1936,0,472],[1937,0,539],[1938,0,497],[1939,17,609],[1940,22,550],[1941,17,439],[1942,0,252],[1943,0,147],[1944,0,144],[1945,2,143],[1946,6,409],[1947,18,638]];
+(function(){
+  const X0=70,X1=812,BASE=468,PX=84,w=(X1-X0)/PR.length;let h='';
+  h+=`<text x="${X0-12}" y="26" class="tk" text-anchor="start" style="letter-spacing:.14em">% OF RECORDS</text>`;
+  for(let k=1;k<=4;k++){const y=BASE-k*PX;h+=`<line class="gl" x1="${X0}" x2="${X1}" y1="${y}" y2="${y}"/><text class="tk" x="${X0-12}" y="${y+5}" text-anchor="end">${k}</text>`;}
+  const bx0=X0+7*w,bx1=X0+10*w;
+  h+=`<g class="band"><rect x="${bx0}" y="44" width="${bx1-bx0}" height="${BASE-44}" fill="url(#hatch)"/>
+      <path d="M${bx0+4},${BASE+46} v8 H${bx1-4} v-8" fill="none" stroke="#b3242a" stroke-width="1.4"/>
+      <text class="zl" x="${(bx0+bx1)/2}" y="${BASE+78}" text-anchor="middle">0 of 543 records</text></g>`;
+  PR.forEach(([y,c,d],i)=>{
+    const s=c/d*100,cx=X0+(i+.5)*w,bw=32,hgt=s*PX,dl=80+i*45;
+    if(c>0) h+=`<rect class="bar" style="--d:${dl}ms" x="${cx-bw/2}" y="${BASE-hgt}" width="${bw}" height="${hgt}"/>`;
+    h+=`<text class="vb" style="--d:${dl+380}ms${c?'':';fill:#8a8170;font-weight:400'}" x="${cx}" y="${c?BASE-hgt-10:BASE-9}" text-anchor="middle">${c?s.toFixed(1):'0'}</text>`;
+    h+=`<text class="yr" x="${cx}" y="${BASE+28}" text-anchor="middle">${y}</text>`;
+  });
+  h+=`<line class="ax" x1="${X0-6}" x2="${X1}" y1="${BASE}" y2="${BASE}"/>`;
+  document.getElementById('chL').innerHTML=h;
+})();
+
+/* ---------- Scene A, right chart: OpenAI manuscripts by category ---------- */
+// visualizations.json -> openai_math_categories (sum 719); direct-crypto row from openai_crypto_subset (relevance "direct" = 0)
+const CAT=[["Probability and statistical mechanics",105],["Algebraic and complex geometry",86],["Theoretical computer science",73],["Mathematical physics",59],["Number theory",58],["Combinatorics",50],["Differential geometry",49],["Operator algebras",31],["Convex and metric geometry",30],["Algebra",29],["Partial differential equations",29],["Real and complex analysis",26],["Topology",26],["Group theory",22],["Dynamical systems and ergodic theory",19],["Functional analysis",19],["Mathematical logic",8]];
+(function(){
+  const LX=344,BX=358,MAXW=388,RH=26.5,T=44;let h='';
+  h+=`<text class="tk" x="${BX}" y="26" style="letter-spacing:.14em">MANUSCRIPTS</text>`;
+  CAT.sort((a,b)=>b[1]-a[1]).forEach(([n,v],i)=>{
+    const hi=(n==='Number theory'||n==='Theoretical computer science')?' hi':'';
+    const y=T+i*RH,bw=v/105*MAXW,dl=360+i*38;
+    h+=`<text class="cat${hi}" x="${LX}" y="${y+15}" text-anchor="end">${n}</text>`;
+    h+=`<rect class="hbar${hi}" style="--d:${dl}ms" x="${BX}" y="${y+3}" width="${bw}" height="14"/>`;
+    h+=`<text class="hv${hi}" style="--d:${dl+300}ms" x="${BX+bw+10}" y="${y+15}">${v}</text>`;
+  });
+  const yL=T+17*RH+22;
+  h+=`<line class="fin" style="--d:0ms;stroke:#1c1a17;stroke-dasharray:2 5" x1="10" x2="812" y1="${yL-10}" y2="${yL-10}"/>`;
+  h+=`<line class="ax" x1="${BX}" x2="${BX}" y1="${T-6}" y2="${T+17*RH}"/>`;
+  h+=`<text class="cat fin" style="--d:250ms;fill:#b3242a;font-weight:700" x="${LX}" y="${yL+18}" text-anchor="end">Explicit cryptographic objective</text>`;
+  h+=`<text class="zero" x="${BX+16}" y="${yL+22}" text-anchor="middle">0</text>`;
+  const cx=BX+16,cy=yL+13;
+  h+=`<path class="circ" pathLength="1" d="M${cx+16},${cy-15} C${cx+2},${cy-24} ${cx-24},${cy-16} ${cx-24},${cy+1} C${cx-24},${cy+18} ${cx+2},${cy+22} ${cx+19},${cy+11} C${cx+28},${cy+3} ${cx+25},${cy-12} ${cx+6},${cy-17}"/>`;
+  document.getElementById('chR').innerHTML=h;
+})();
+
+/* ---------- arrowheads for drawn paths (appear when the line arrives) ---------- */
+document.querySelectorAll('path.draw[data-head]').forEach(p=>{
+  const L=p.getTotalLength(),a=p.getPointAtLength(L),b=p.getPointAtLength(Math.max(0,L-8));
+  const ang=Math.atan2(a.y-b.y,a.x-b.x)*180/Math.PI;
+  const d=parseFloat(getComputedStyle(p).getPropertyValue('--d'))||0;
+  const h=document.createElementNS(NS,'path');
+  h.setAttribute('d','M-8,-5 L0,0 L-8,5');h.setAttribute('pathLength','1');
+  h.setAttribute('transform',`translate(${a.x.toFixed(1)},${a.y.toFixed(1)}) rotate(${ang.toFixed(1)})`);
+  h.setAttribute('class',p.getAttribute('class')+' head');
+  h.setAttribute('style',(p.getAttribute('style')||'').replace(/--d:[^;]*/,'')+';--d:'+(d+400)+'ms');
+  p.parentNode.appendChild(h);
+});
+/* ---------- grids ---------- */
+function grid(el,n,fn){let h='';for(let k=0;k<n;k++)h+='<i'+(fn(k)||'')+'></i>';el.innerHTML=h;}
+grid(document.getElementById('gridB'),1024,k=>k<7?' class="x"':k===7?' class="tg xr s7" style="--d:420ms"':'');
+grid(document.getElementById('miniB'),1024,k=>k<7?' class="c"':k===7?' class="r"':k===8?' class="r2" style="--d:1700ms"':'');
+grid(document.getElementById('gridC'),1024,k=>k<37?` class="x" style="--d:${300+(k%32)*14}ms"`:k===37?' class="x l37 tg"':'');
+(function(){let h='';for(let k=1;k<=12;k++)h+=`<div class="w" style="--d:${(k-1)*45}ms"><span class="redact"></span><span>word ${k}</span></div>`;document.getElementById('words').innerHTML=h;})();
+
+/* ---------- beat-driven value swaps ---------- */
+// spans tagged in-bN appear at beat N; gone-bN leave at beat N. Delays per scene/beat.
+const SWAPD={'s-attack':{3:900,5:1900},'s-lock':{1:1000,2:150,3:880}};
+const SWAPD_EL={'s-attack':{},'s-lock':{}};
+function swaps(s,b){
+  s.querySelectorAll('.sw>span').forEach(sp=>{
+    let st='pre';
+    const ins=[...sp.classList].filter(c=>c.startsWith('in-b')).map(c=>+c.slice(4));
+    const gos=[...sp.classList].filter(c=>c.startsWith('gone-b')).map(c=>+c.slice(6));
+    const inB=ins.length?ins[0]:0, goB=gos.length?gos[0]:99;
+    if(b>=goB) st='gone'; else if(b>=inB) st='up';
+    sp.classList.toggle('up',st==='up');sp.classList.toggle('gone',st==='gone');
+    const key=st==='gone'?goB:inB;
+    let d=sp.dataset.d?+sp.dataset.d:((SWAPD[s.id]&&SWAPD[s.id][key])||0);
+    if(st==='gone'&&sp.dataset.dout)d=+sp.dataset.dout;
+    sp.style.setProperty('--d',d+'ms');
+  });
+}
+
+/* ---------- navigation ---------- */
+const scenes=[...document.querySelectorAll('.scene')];
+const tab=document.getElementById('tabtxt');
+let si=0,beat=0,timers=[];
+function clearT(){timers.forEach(clearTimeout);timers=[];}
+function shake(s){const c=s.querySelector('.content');c.animate([{transform:'translate(0,0)'},{transform:'translate(2px,-1.5px)'},{transform:'translate(-1.5px,1px)'},{transform:'translate(.5px,0)'},{transform:'translate(0,0)'}],{duration:170,easing:'linear'});}
+function apply(s,b,instant){
+  if(instant)s.classList.add('instant');
+  const n=+s.dataset.beats;
+  for(let k=1;k<=Math.max(n,5);k++)s.classList.toggle('b'+k,k<=b);
+  swaps(s,b);
+  // chips (coin travel), state-driven
+  const c1=s.querySelector('#chip1'),c2=s.querySelector('#chip2');
+  if(c1){c1.classList.toggle('go',b>=3&&b<5);c2.classList.toggle('go',b>=5);}
+  if(instant){void s.offsetWidth;requestAnimationFrame(()=>requestAnimationFrame(()=>s.classList.remove('instant')));}
+  else{
+    s.querySelectorAll('.stamp[data-beat="'+b+'"]').forEach(st=>{
+      const cs=getComputedStyle(st);const d=parseFloat(cs.getPropertyValue('--d'))||0;
+      timers.push(setTimeout(()=>shake(s),d+230));
+    });
+  }
+}
+function render(instantAll){
+  const s=scenes[si];
+  scenes.forEach(x=>x.classList.toggle('active',x===s));
+  stage.dataset.scene=s.id;
+  const n=+s.dataset.beats;
+  tab.textContent=n?`SCENE ${s.dataset.num} · BEAT ${beat} OF ${n}`:`SCENE ${s.dataset.num} · COVER`;
+  document.getElementById('back').disabled=(si===0&&beat===0);
+  document.getElementById('next').disabled=(si===scenes.length-1&&beat===n);
+  history.replaceState(null,'','#'+si+'-'+beat);
+}
+function cover(){document.querySelector('.st-cover').classList.add('land');}
+function go(i,b,instant){
+  clearT();
+  const changed=i!==si;
+  si=i;beat=b;
+  apply(scenes[si],beat,changed||instant);
+  if(si===0)cover();
+  render();
+}
+function next(){const n=+scenes[si].dataset.beats;
+  if(beat<n)go(si,beat+1,false);else if(si<scenes.length-1)go(si+1,0,false);}
+function prev(){
+  if(beat>0)go(si,beat-1,true);else if(si>0)go(si-1,+scenes[si-1].dataset.beats,true);}
+addEventListener('keydown',e=>{
+  if(e.repeat)return;
+  if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();next();}
+  else if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();prev();}
+  else if(e.key==='Home'){go(0,0,true);}
+  else if(e.key==='f'||e.key==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();}
+});
+document.getElementById('next').addEventListener('click',e=>{next();e.currentTarget.blur();});
+document.getElementById('back').addEventListener('click',e=>{prev();e.currentTarget.blur();});
+
+/* initial state: #scene-beat */
+const m=location.hash.match(/^#(\d+)-(\d+)$/);
+let i0=0,b0=0;
+if(m){i0=Math.min(+m[1],scenes.length-1);b0=Math.min(+m[2],+scenes[i0].dataset.beats);}
+si=-1;
+scenes.forEach(s=>apply(s,0,true));
+si=i0;beat=b0;apply(scenes[si],beat,true);render();
+if(m)cover();else setTimeout(cover,600);
+if(/advance/.test(location.search))setTimeout(next,300);
+})();
+</script>
+</body>
+</html>
