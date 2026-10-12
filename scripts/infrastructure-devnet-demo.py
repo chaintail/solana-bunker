@@ -143,7 +143,9 @@ class Demonstrations:
                 'recipient_lamports': account(self.recipient.pubkey())['lamports'],
                 'recipient_token_base_units': int.from_bytes(base64.b64decode(account(self.token_recipient.pubkey())['data'][0])[64:72], 'little'),
                 'epoch': int.from_bytes(data[203:211], 'little'),
-                'nonce': int.from_bytes(data[211:219], 'little'), 'consumed': [i for i in range(1024 if self.mode == 3 else 16) if data[230 + i // 8] & (1 << (i % 8))]}
+                'nonce': int.from_bytes(data[211:219], 'little'),
+                'authority_hex': data[358:358 + int.from_bytes(data[221:225], 'little')].hex(),
+                'consumed': [i for i in range(1024 if self.mode == 3 else 16) if data[230 + i // 8] & (1 << (i % 8))]}
 
     def intent(self, action, leaf, **fields):
         data = self.state_data()
@@ -231,6 +233,9 @@ class Demonstrations:
             'before': before})
         after = self.snapshot()
         assert after['nonce'] == before['nonce'] + 1
+        if action != 4:
+            assert leaf in after['consumed'] and after['epoch'] == before['epoch']
+            assert after['authority_hex'] == before['authority_hex']
         if action == 1:
             assert before['treasury_lamports'] - after['treasury_lamports'] == value['amount']
             assert after['recipient_lamports'] - before['recipient_lamports'] == value['amount']
@@ -248,6 +253,7 @@ class Demonstrations:
                             journal.retire(target)
         else:
             assert after['epoch'] == before['epoch'] + 1 and after['consumed'] == []
+            assert after['authority_hex'] == self.private['new_public'] != before['authority_hex']
             for field in ('treasury', 'token_source', 'treasury_lamports', 'token_base_units'):
                 assert before[field] == after[field]
         row['after'] = after
