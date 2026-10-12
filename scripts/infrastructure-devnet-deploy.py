@@ -1,53 +1,84 @@
-"""Single-writer devnet deployment and six-decimal mock-mint bootstrap.
-
-Requires explicit devnet genesis, funded fresh developer, and private keys.
-Never changes CLI global config; no mainnet path exists here.
-"""
-import hashlib,json,os,subprocess,urllib.request
+"""Single writer: deploy pinned custody SBF and create a six-decimal devnet mint."""
+import hashlib
+import json
+import os
 from pathlib import Path
-from datetime import datetime,timezone
-from solders.keypair import Keypair
+import subprocess
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from solders.compute_budget import set_compute_unit_limit
+from solders.instruction import Instruction, AccountMeta
+from solders.pubkey import Pubkey
+from solders.system_program import create_account, CreateAccountParams
+from solders.transaction import Transaction
+from infrastructure_devnet import ROOT, RPC, PRIVATE, DEVELOPER_PATH, keypair, account, rpc, environment, blockhash, send, write_json, explorer
 
-ROOT=Path(__file__).resolve().parents[1]
-RPC='https://api.devnet.solana.com'
-DEVNET_GENESIS='EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG'
-TOKEN='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
-BIN=Path(os.getenv('BUNKER_SOLANA_BIN','/workspace/scratch/1a48031fefb9/toolchains/solana-release/bin'))
-def rpc(method,params):
-    q=urllib.request.Request(RPC,data=json.dumps({'jsonrpc':'2.0','id':1,'method':method,'params':params}).encode(),headers={'Content-Type':'application/json'})
-    with urllib.request.urlopen(q,timeout=25) as r:
-        d=json.load(r)
-    if 'error' in d: raise RuntimeError(str(d['error']))
-    return d['result']
-def address(role):
-    return str(Keypair.from_bytes(bytes(json.loads((ROOT/'.private'/f'{role}-keypair.json').read_text()))).pubkey())
-def run(command):
-    # All keys are pre-created; the CLI never creates a recoverable random buffer.
-    p=subprocess.run(command,cwd=ROOT,capture_output=True,text=True,timeout=240)
-    if p.returncode: raise RuntimeError('CLI failed; exit='+str(p.returncode)+'; '+p.stderr[-1500:])
-    try:return json.loads(p.stdout)
-    except json.JSONDecodeError:return {'cli_output':p.stdout[-1500:]}
+BIN = Path(os.environ.get('BUNKER_SOLANA_BIN', str(Path.home() / '.local/share/solana/install/releases/4.3.0/solana-release/bin')))
+TOKEN = Pubkey.from_string('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
 
-env=json.loads((ROOT/'reports/environment.json').read_text())
-developer=env['developer_public_address'];program=address('program');mint=address('mint')
-binary=ROOT/'program/target/deploy/bunker_program.so';raw=binary.read_bytes()
-manifest={'schema_version':1,'observed_at_utc':datetime.now(timezone.utc).isoformat(),'cluster':'devnet','rpc_url':RPC,'genesis_hash':rpc('getGenesisHash',[]),'developer_public_address':developer,'program_id':program,'program_deployed':False,'program_binary_bytes':len(raw),'program_binary_sha256':hashlib.sha256(raw).hexdigest(),'upgrade_authority':developer,'mock_mint':mint,'mock_mint_created':False,'mock_token_label':'Mock USDC — test token, no real value','decimals':6,'token_program':TOKEN,'mint_authority':developer,'freeze_authority':None,'status':'preparing','confirmed_transactions':[]}
-assert manifest['genesis_hash']==DEVNET_GENESIS,'Wrong development cluster'
-manifest['developer_balance_lamports']=rpc('getBalance',[developer,{'commitment':'confirmed'}])['value']
-output=ROOT/'artifacts/public-deployment.json'
-try:
-    if manifest['developer_balance_lamports'] < 1_300_000_000:
-        raise RuntimeError('Funding pending: estimated peak deployment needs about1.3devnet SOL; recommend2SOL')
-    key=str(ROOT/'.private/developer-keypair.json')
-    if rpc('getAccountInfo',[program,{'encoding':'base64'}])['value'] is None:
-        manifest['program_deployment_result']=run([str(BIN/'solana'),'program','deploy',str(binary),'--url',RPC,'--keypair',key,'--fee-payer',key,'--upgrade-authority',key,'--program-id',str(ROOT/'.private/program-keypair.json'),'--buffer',str(ROOT/'.private/deployment-buffer-keypair.json'),'--max-len',str(len(raw)),'--use-rpc','--max-sign-attempts','2','--output','json'])
-    manifest['program_deployed']=rpc('getAccountInfo',[program,{'encoding':'base64'}])['value'] is not None
-    if rpc('getAccountInfo',[mint,{'encoding':'base64'}])['value'] is None:
-        manifest['mint_creation_result']=run([str(BIN/'spl-token'),'--url',RPC,'--owner',key,'--fee-payer',key,'--program-id',TOKEN,'--output','json','create-token','--decimals','6',str(ROOT/'.private/mint-keypair.json')])
-    manifest['mock_mint_created']=rpc('getAccountInfo',[mint,{'encoding':'base64'}])['value'] is not None
-    manifest['status']='deployed_and_mint_created'
-except Exception as e:
-    manifest['status']='blocked';manifest['blocker']=str(e)
-finally:
-    output.write_text(json.dumps(manifest,indent=2)+'\n')
-    print(json.dumps(manifest,indent=2))
+
+def main():
+    manifest = environment()
+    developer, program, mint = keypair(), keypair('program'), keypair('mint')
+    binary = ROOT / 'program/target/deploy/bunker_program.so'
+    raw = binary.read_bytes()
+    manifest.update(schema_version=2, developer_public_address=str(developer.pubkey()), program_id=str(program.pubkey()), program_deployed=False,
+        program_binary_bytes=len(raw), program_binary_sha256=hashlib.sha256(raw).hexdigest(), upgrade_authority=str(developer.pubkey()),
+        mock_mint=str(mint.pubkey()), mock_mint_created=False, mock_token_label='Mock USDC — test token, no real value',
+        decimals=6, token_program=str(TOKEN), mint_authority=str(developer.pubkey()), freeze_authority=None,
+        status='preparing', confirmed_transactions=[], vaults=[])
+    try:
+        manifest['developer_balance_lamports'] = rpc('getBalance', [str(developer.pubkey()), {'commitment': 'confirmed'}])['value']
+        if manifest['developer_balance_lamports'] < 2_000_000_000:
+            raise RuntimeError('Funding pending: require at least 2 devnet SOL before bootstrap')
+        keypair('deployment-buffer')
+        command = [str(BIN / 'solana'), 'program', 'deploy', str(binary), '--url', RPC,
+                   '--keypair', str(DEVELOPER_PATH), '--fee-payer', str(DEVELOPER_PATH), '--upgrade-authority', str(DEVELOPER_PATH),
+                   '--program-id', str(PRIVATE / 'program.json'), '--buffer', str(PRIVATE / 'deployment-buffer.json'),
+                   '--max-len', str(len(raw)), '--use-rpc', '--max-sign-attempts', '5', '--output', 'json']
+        result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=600)
+        if result.returncode:
+            raise RuntimeError('Deployment failed: ' + result.stderr[-3000:])
+        deployed = json.loads(result.stdout)
+        manifest['program_deployment_result'] = deployed
+        manifest['program_deployed'] = bool(account(program.pubkey())['executable'])
+        dump = PRIVATE / 'deployed-program.so'
+        subprocess.run([str(BIN / 'solana'), 'program', 'dump', str(program.pubkey()), str(dump), '--url', RPC], check=True, capture_output=True, timeout=120)
+        manifest['deployed_binary_sha256'] = hashlib.sha256(dump.read_bytes()).hexdigest()
+        assert manifest['deployed_binary_sha256'] == manifest['program_binary_sha256']
+        signature = deployed.get('signature')
+        deployment_signatures = {}
+        for address in (program.pubkey(), keypair('deployment-buffer').pubkey()):
+            for entry in rpc('getSignaturesForAddress', [str(address), {'commitment': 'confirmed', 'limit': 1000}]):
+                deployment_signatures[entry['signature']] = entry
+        if signature and signature not in deployment_signatures:
+            status = rpc('getSignatureStatuses', [[signature], {'searchTransactionHistory': True}])['value'][0]
+            assert status and status['confirmationStatus'] in ('confirmed', 'finalized') and status['err'] is None
+            deployment_signatures[signature] = {'signature': signature, **status}
+        for index, (txid, status) in enumerate(deployment_signatures.items()):
+            manifest['confirmed_transactions'].append({'operation': 'deploy_program' if txid == signature else f'deployment_buffer_{index:04d}',
+                'transaction_signature': txid, 'explorer_url': explorer(txid), 'confirmed': True, 'slot': status['slot'], 'success': status['err'] is None})
+        manifest['deployment_buffer_address'] = str(keypair('deployment-buffer').pubkey())
+        if account(mint.pubkey()) is None:
+            rent = rpc('getMinimumBalanceForRentExemption', [82])
+            create = create_account(CreateAccountParams(from_pubkey=developer.pubkey(), to_pubkey=mint.pubkey(), lamports=rent, space=82, owner=TOKEN))
+            initialize = Instruction(TOKEN, b'\x14\x06' + bytes(developer.pubkey()) + b'\x00', [AccountMeta(mint.pubkey(), False, True)])
+            tx = Transaction.new_signed_with_payer([set_compute_unit_limit(100_000), create, initialize], developer.pubkey(), [developer, mint], blockhash())
+            manifest['confirmed_transactions'].append(send(tx, 'create_mock_mint'))
+        mint_account = account(mint.pubkey())
+        assert mint_account and mint_account['owner'] == str(TOKEN)
+        import base64
+        mint_data = base64.b64decode(mint_account['data'][0])
+        assert mint_data[44] == 6 and mint_data[45] == 1 and mint_data[46:50] == b'\0' * 4
+        manifest.update(mock_mint_created=True, status='deployed_and_mint_created')
+    except Exception as error:
+        manifest.update(status='blocked', blocker=str(error))
+        raise
+    finally:
+        for filename in ('devnet-deployment.json', 'public-deployment.json'):
+            write_json(ROOT / 'artifacts' / filename, manifest)
+        print(json.dumps({key: manifest.get(key) for key in ('status', 'program_id', 'mock_mint', 'blocker')}, indent=2))
+
+
+if __name__ == '__main__':
+    main()
