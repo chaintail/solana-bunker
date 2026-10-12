@@ -12,9 +12,13 @@
 | D08 | Public checkpoint and confidential continuation packages are separate | Public exports exclude developer keys and live signer state. Preserve private continuity without public publication. | Packaging pending validated checkpoint |
 | D09 | UI and final slides deferred | Produce structured event/API contract and narrative only. | Adopted |
 | D10 | SLH-DSA remains optional | Core three modes, both assets, burn and authenticated rotation have priority. | Deferred |
-| D11 | Raw Solana SDK for program; staged witness path prepared | Framework avoids Anchor dependency; staging separates transport and verifier gates. | Adopted; direct v1 probe partial |
+| D11 | Raw Solana SDK; actual custody uses legacy envelopes with explicit ComputeBudget plus staged witnesses | LiteSVM0.29 executes v1 but does not enforce inline compute/loaded-account limits; legacy explicit controls verified. Staging separates transport and verifier gates. | Adopted; public v1 submit/read remains partial |
 | D12 | Burn targets sorted, unique, 1..32; reject consumed, out-of-range and authorizing leaf targets | Exact canonical intent contract in reports/interfaces.md. | Adopted |
 | D13 | Strict versioned binary intent with little-endian application integers | Independent host encoder checks lengths 230/327/203/259; XMSS encoding remains standardized big endian. | Host validated; integration pending |
 
 Routine development choices are authorized. No mainnet, real USDC, unrelated project changes, repository publication, or submission is authorized.
 
+
+## E2 runtime caveat
+
+Infrastructure resource-control run at45aba47 shows local LiteSVM v1 requests of1CU and1loaded-account byte still succeed, whereas equivalent legacy explicit1CU rejects. Local v1 results establish decode/execution only, not enforcement of message resource settings. Custody measurements use legacy explicit ComputeBudget and are unaffected by that v1 control limitation. Devnet remains unconfirmed.

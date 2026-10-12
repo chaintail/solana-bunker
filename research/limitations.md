@@ -9,3 +9,5 @@
 - Storage allocation, rent deposits, fees and transfer amounts are separate quantities. Additional witness staging changes operation transaction count and temporary storage.
 - No production recovery, multidevice support, protected upgrade governance, audit/formal-verification claim or final UI is included.
 
+
+The local LiteSVM0.29 binding executes v1 but failed resource-limit control checks:1CU/1loaded-byte inline settings did not reject execution. This is a local harness compatibility limitation, not evidence of cluster behavior. Application CU benchmarks use legacy explicit ComputeBudget; v1 public transport/confirmation remains a separate unfinished gate.

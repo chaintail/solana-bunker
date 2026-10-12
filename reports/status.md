@@ -35,3 +35,5 @@ Read this file, reports/decisions.md, reports/interfaces.md when available, and 
 
 
 Actual integrated custody smoke: local LiteSVM12cases pass all3modes/bothassets exact100base-unit transfers plus replay rejection, custody binary a84a81cd97e78dd1090acaaaae22d5f103e3c258eab248ad1ef2e47f84301020. Extended copied-witness/account/burn/rotation scenarios are already running.
+
+Transport caveat: LiteSVM0.29 local v1 does not enforce inline CU/loaded limits (resource-control commit45aba47). Custody uses legacy explicit ComputeBudget, independently verified. Staged XMSS currently costs5transactions per logical operation (create,3uploads,execute); temporary stage rent is retained, no refund claimed.
