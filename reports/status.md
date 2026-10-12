@@ -8,7 +8,9 @@ Start: **2026-10-12T13:36:06.597515Z**. Target end: **2026-10-13T13:36:06.597515
 
 E1 delivered: dedicated developer address `AxQBVSbA3tEc8RsMhn3D4gPLBLnEu3XD84Zd9yy3pmnQ`; selected cluster **devnet**; last measured balance **0 SOL**. Initial budget is an estimated 5 devnet SOL pending actual build/storage sizing. The permitted 2-SOL faucet request returned RPC -32603; public deployment is pending funding. This is not a blocker for local work.
 
-Only the initial repository scaffold commit `009cc06a9f6df69dc3a9a6469eab057e8e182e6d` is presently referenced. No custody, SVM verification, public deployment or benchmark is declared complete by this checkpoint.
+Initial validation reports 17/17 host contract/schema tests passed at scaffold commit `009cc06a9f6df69dc3a9a6469eab057e8e182e6d` with a dirty-tree SHA-256 file manifest. Canonical encoded lengths are 230 bytes SOL, 327 bytes token, 203 bytes three-target burn and 259 bytes rotation. These results validate host encodings/oracles, not custody execution. All 31 core acceptance IDs still require integration evidence. No custody, SVM verification or public deployment is declared complete by this checkpoint.
+
+E2 is partial: @solana/kit 8.4.0 produced a 2,029-byte v1 transaction and decoded it locally. Devnet RPC 4.4.0-beta.0 reached simulation, which failed `AccountNotFound` for the unfunded payer; submission returned -32002. The locally derived transaction signature is not a confirmed transaction, and submit/read is unfinished. Raw record: `artifacts/v1-probe-result.json`.
 
 ## Workers and ownership
 
