@@ -4,7 +4,7 @@ A development-cluster research proof of concept comparing SHA-256 secret arrays,
 
 **Implementation underway.** No final deployment/onchain verification result is claimed here yet. Start with [reports/status.md](reports/status.md), [research/results-summary.md](research/results-summary.md) and the [handoff](handoff/00_START_HERE.md). Reproducible commands will be finalized against independently validated worker runs.
 
-Dedicated developer public address: `AxQBVSbA3tEc8RsMhn3D4gPLBLnEu3XD84Zd9yy3pmnQ`. Selected public cluster: **devnet**. Initial deployment budget: estimated 5 devnet SOL; funding and final sizing pending. Never send real assets.
+Dedicated developer public address: `AxQBVSbA3tEc8RsMhn3D4gPLBLnEu3XD84Zd9yy3pmnQ`. Selected public cluster: **devnet**. Current deployment recommendation: 2 devnet SOL, with about1.3SOL estimated peak rent plus fixtures/fees; funding pending. Never send real assets.
 
 The source and evidence package excludes live credentials and signer state. Explicit deterministic public vectors are disposable only and must never back funded shared-cluster vaults.
 

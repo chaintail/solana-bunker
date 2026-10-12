@@ -6,7 +6,7 @@
 |---|---|---|
 | Fresh developer wallet; selected development network | E1 and reports/environment.json; address AxQBVSbA3tEc8RsMhn3D4gPLBLnEu3XD84Zd9yy3pmnQ; devnet, balance 0 | Measured environment |
 | XMSS reference selected | Pinned revision 171ccbd26f098542a67eb5d2b128281c80bd71a6 | Selection only |
-| Stable custody for SOL/mock USDC | Program work active | Not yet validated |
+| Stable state/treasury custody, SOL/mock USDC | Actual LiteSVM12smoke cases: all3modes/bothassets exact100unit transfers plus replay rejection; real account init/SPL checked CPI | Local SVM; broader coverage pending |
 | Copied-witness attacks in primitive modes | Validation fixtures being prepared | Not yet validated |
 | Standalone SVM XMSS verifier | 6 valid + 36 invalid local LiteSVM cases passed; success cases 464,546–496,643 CUs; directly installed fixture account | Verifier feasibility only |
 | Integrated XMSS custody, burns, root rotation | Crypto/program/client work active | Not yet validated |

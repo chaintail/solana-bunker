@@ -11,11 +11,11 @@ Separate state/treasury, custody plumbing for SOL and six-decimal mock USDC.
 
 ## Experimental findings
 
-Contract specifies stable PDA seeds, modes/actions and canonical intent. Independent host encoder/Merkle/schema checks pass 17/17. No SVM custody transfer or mock mint is yet validated. Measurements are not filled from theoretical estimates.
+Actual local LiteSVM custody smoke passes12cases: six principal transfers (all three modes, SOL and mock USDC) plus six replays. Each transfer moves exactly100base units. Harness initializes real state/treasury/token accounts, a six-decimal SPL mint and checked token CPI; developer/demo, mint and relayer roles are separate. Validated custody binary SHA-256 `a84a81cd97e78dd1090acaaaae22d5f103e3c258eab248ad1ef2e47f84301020`, run `validation-20261012T134723`. Extended account/privilege coverage remains underway. Measurements are not filled from theoretical estimates.
 
 ## Validation
 
-F01–F06 pending actual program harness. Initial host commands/evidence: `python3 tests/run_host.py`, `artifacts/test-results.json`, `artifacts/acceptance-matrix.json`.
+F01/F03/F04 now have actual local-SVM initialization/asset-transfer evidence. F02/F05/F06 and complete acceptance mapping await extended harness. Raw records: `artifacts/validation-svm-results.json`, `artifacts/validation-benchmarks.jsonl`, `artifacts/validation-benchmark-summary.csv`. Initial host commands/evidence: `python3 tests/run_host.py`, `artifacts/test-results.json`, `artifacts/acceptance-matrix.json`.
 
 ## Public deployment
 
