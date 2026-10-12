@@ -1,0 +1,56 @@
+{
+  "environment": {
+    "observed_at_utc": "2026-10-12T18:46:04.615429+00:00",
+    "cluster": "devnet",
+    "rpc_url": "https://api.devnet.solana.com",
+    "genesis_hash": "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG",
+    "rpc_version": {
+      "feature-set": 1855282951,
+      "solana-core": "4.4.0-beta.0"
+    },
+    "commit": "e4d20bff4eb589f97fcdf84a9d668c2cbc46b67f"
+  },
+  "transaction_bytes": 2036,
+  "inline_compute_limit": 1,
+  "result": {
+    "context": {
+      "apiVersion": "4.4.0-beta.0",
+      "slot": 510358552
+    },
+    "value": {
+      "accounts": null,
+      "err": {
+        "InstructionError": [
+          0,
+          "ProgramFailedToComplete"
+        ]
+      },
+      "fee": 5000,
+      "innerInstructions": null,
+      "loadedAccountsDataSize": 74928,
+      "loadedAddresses": {
+        "readonly": [],
+        "writable": []
+      },
+      "logs": [
+        "Program MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr invoke [1]",
+        "Program MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr consumed 1 of 1 compute units",
+        "Program MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr failed: exceeded CUs meter at BPF instruction"
+      ],
+      "postBalances": [
+        4999995000,
+        41509609334
+      ],
+      "postTokenBalances": [],
+      "preBalances": [
+        5000000000,
+        41509609334
+      ],
+      "preTokenBalances": [],
+      "replacementBlockhash": null,
+      "returnData": null,
+      "unitsConsumed": 1
+    }
+  },
+  "network_confirmation": false
+}

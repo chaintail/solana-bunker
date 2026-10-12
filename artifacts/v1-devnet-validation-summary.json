@@ -1,0 +1,278 @@
+{
+  "status": "deployed_and_demonstrated",
+  "cluster": "devnet",
+  "deployment_environment": {
+    "commit": "d4e854806e74933e3279d7574d578fd39358a102",
+    "rpc_version": {
+      "feature-set": 1855282951,
+      "solana-core": "4.4.0-beta.0"
+    },
+    "genesis_hash": "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG"
+  },
+  "demonstration_environment": {
+    "observed_at_utc": "2026-10-12T19:14:04.746778+00:00",
+    "cluster": "devnet",
+    "rpc_url": "https://api.devnet.solana.com",
+    "genesis_hash": "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG",
+    "rpc_version": {
+      "feature-set": 1855282951,
+      "solana-core": "4.4.0-beta.0"
+    },
+    "commit": "8b2fc08b077990afc4fcb81a18d3ee5642e1a9bb"
+  },
+  "program_id": "HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V",
+  "mock_mint": "41BK2eVZsGdua58DFz3U7ydMd7bBqZbumTNbv61RpZgS",
+  "binary_sha256": "48e2e324abcdcfd7e4c7cb601765da374595b922ed94e29d5ec168d37c06de79",
+  "vaults": [
+    {
+      "mode": "array",
+      "vault_id": "a8866199e24c075a0ba97a031a8f41e20170ccecd89537723322fcef63e42cd6",
+      "state": "42FviRigMXDQrpe6VjDd6htSU2uiomYrLCUgjBQb88pu",
+      "treasury": "CZws1WQuBbDGKNmfyQBQr2dh96J29kMaySP4CW9MrAru",
+      "token_source": "EhYdR2pcWssWtuEWos62NWKNuj6u9jPhZH2TTDXq8avz",
+      "initialized": true,
+      "leaf_capacity": 16,
+      "merkle_authentication_path_height": null,
+      "explorer_url": "https://explorer.solana.com/address/CZws1WQuBbDGKNmfyQBQr2dh96J29kMaySP4CW9MrAru?cluster=devnet",
+      "recipient_sol": "ADLw7WkPsqngneGqoCKmGR17w16kmgA9q1WnxURt9Wod",
+      "recipient_token": "EQwuQZSxaUTmZbBxoAiy2nnKsuvEC5SwVb84SGWASEwx",
+      "final_snapshot": {
+        "treasury": "CZws1WQuBbDGKNmfyQBQr2dh96J29kMaySP4CW9MrAru",
+        "token_source": "EhYdR2pcWssWtuEWos62NWKNuj6u9jPhZH2TTDXq8avz",
+        "treasury_lamports": 10680880,
+        "token_base_units": 990000,
+        "recipient_lamports": 1010000,
+        "recipient_token_base_units": 10000,
+        "epoch": 0,
+        "nonce": 2,
+        "authority_hex": "4639a34916ff106ad371afdc151df35e5db14633de58a9bb87082ac322e15362fd3b3e4b21ee0115f63373f3e5b8fd2c088510bf39ce324fd5376420c9699276316f4118fae39e4e174cdb6babe2fe8323d874cbe8fb25ca795119e51d378435059db99719b040f59a924939166bdde4d67801fc8a92403864ec5e1c72041e3179cf10467ae3cb2b1a912336f78e46d705bfa091852131f5f379f2eb38f179e9f4e36378724b0d79dae6b3e4ddb323181a2a352c8ddcc985c617f3e1e0d22cdfe44eae854dc2435dbde524b097dcf85c42da048cc4d64d596277876675640edc6ea6333fb15f6a77d235ffe756697ce8dc29c7a5aebbbc48f6e0445045b3615c80456792b729a7c0894089e5e2131e15b006a27b8c573247e4f501b24faf9d3168574ec65e6401189dd75e7023b6e77b1fd5eb5ff1fea3fed2d70efc1f2a05e0d8c75004e7aeda1b8782689f49f556bad891a618590a0617926732dd11df1c8a2b876f039907a15c42ee101f8ca7f5da6061c2c6dc070f2cd080c55a64e0d6a18258a01540de114928bbf4227f5344c2d9d569f15fec900bb49c4ec9500a8b8092c7ec7954809936a3dbdc51bd2423cf56b03bbd543c2d7983fe0f89e9dbb43ffc9a98dc4fb4d9880d37176d16fb8e02153245047ec8f19583f7ce79ea3fc820a974991fb313b6a68bbb923e65c3e92fe38b4bb3a060000660faa0f7b3419072",
+        "consumed": [
+          0,
+          1
+        ]
+      },
+      "explorer_links": {
+        "state": "https://explorer.solana.com/address/42FviRigMXDQrpe6VjDd6htSU2uiomYrLCUgjBQb88pu?cluster=devnet",
+        "treasury": "https://explorer.solana.com/address/CZws1WQuBbDGKNmfyQBQr2dh96J29kMaySP4CW9MrAru?cluster=devnet",
+        "token_source": "https://explorer.solana.com/address/EhYdR2pcWssWtuEWos62NWKNuj6u9jPhZH2TTDXq8avz?cluster=devnet",
+        "recipient_sol": "https://explorer.solana.com/address/ADLw7WkPsqngneGqoCKmGR17w16kmgA9q1WnxURt9Wod?cluster=devnet",
+        "recipient_token": "https://explorer.solana.com/address/EQwuQZSxaUTmZbBxoAiy2nnKsuvEC5SwVb84SGWASEwx?cluster=devnet"
+      }
+    },
+    {
+      "mode": "merkle",
+      "vault_id": "afbfb3b1548fa4b40eae08fd0110c473135b2f6c0a8484773a91844645890a81",
+      "state": "AnWeB6VGu8JEtYQhUiYqsTkV67yzgUcc3dmsB43RNtHK",
+      "treasury": "EfKbhDHzpKRHCUU57NvJMdiNcesHkzAbr7xYfMgViwK8",
+      "token_source": "H61ZX58hFXsnmGCYPLHx5TrHmQFXVyuzrpPYQ75tGDdt",
+      "initialized": true,
+      "leaf_capacity": 16,
+      "merkle_authentication_path_height": 4,
+      "explorer_url": "https://explorer.solana.com/address/EfKbhDHzpKRHCUU57NvJMdiNcesHkzAbr7xYfMgViwK8?cluster=devnet",
+      "recipient_sol": "ADLw7WkPsqngneGqoCKmGR17w16kmgA9q1WnxURt9Wod",
+      "recipient_token": "EQwuQZSxaUTmZbBxoAiy2nnKsuvEC5SwVb84SGWASEwx",
+      "final_snapshot": {
+        "treasury": "EfKbhDHzpKRHCUU57NvJMdiNcesHkzAbr7xYfMgViwK8",
+        "token_source": "H61ZX58hFXsnmGCYPLHx5TrHmQFXVyuzrpPYQ75tGDdt",
+        "treasury_lamports": 10680880,
+        "token_base_units": 990000,
+        "recipient_lamports": 1020000,
+        "recipient_token_base_units": 20000,
+        "epoch": 0,
+        "nonce": 2,
+        "authority_hex": "a9df83287874fa2732329dc19fc07d98c6858cdb3858b8221bad56ae106ad428",
+        "consumed": [
+          0,
+          1
+        ]
+      },
+      "explorer_links": {
+        "state": "https://explorer.solana.com/address/AnWeB6VGu8JEtYQhUiYqsTkV67yzgUcc3dmsB43RNtHK?cluster=devnet",
+        "treasury": "https://explorer.solana.com/address/EfKbhDHzpKRHCUU57NvJMdiNcesHkzAbr7xYfMgViwK8?cluster=devnet",
+        "token_source": "https://explorer.solana.com/address/H61ZX58hFXsnmGCYPLHx5TrHmQFXVyuzrpPYQ75tGDdt?cluster=devnet",
+        "recipient_sol": "https://explorer.solana.com/address/ADLw7WkPsqngneGqoCKmGR17w16kmgA9q1WnxURt9Wod?cluster=devnet",
+        "recipient_token": "https://explorer.solana.com/address/EQwuQZSxaUTmZbBxoAiy2nnKsuvEC5SwVb84SGWASEwx?cluster=devnet"
+      }
+    },
+    {
+      "mode": "xmss",
+      "vault_id": "f9430f92d23700cb15b136d672314dd55781fb1ba74713bcf774552dd3fec9d3",
+      "state": "2XKaDsFdizBjutyRD2BLxNd2wF2J11Do5CbcxSbCG7dj",
+      "treasury": "ExUjnwyEprLp2oMppaTca8zN6Ae7qqF5eeMJm5MTRFco",
+      "token_source": "EZ6aP4ekd8uCW1VP8YrnJZf9W7gwBZcgH7zwPv45D4oJ",
+      "initialized": true,
+      "leaf_capacity": 1024,
+      "merkle_authentication_path_height": null,
+      "explorer_url": "https://explorer.solana.com/address/ExUjnwyEprLp2oMppaTca8zN6Ae7qqF5eeMJm5MTRFco?cluster=devnet",
+      "recipient_sol": "ADLw7WkPsqngneGqoCKmGR17w16kmgA9q1WnxURt9Wod",
+      "recipient_token": "EQwuQZSxaUTmZbBxoAiy2nnKsuvEC5SwVb84SGWASEwx",
+      "final_snapshot": {
+        "treasury": "ExUjnwyEprLp2oMppaTca8zN6Ae7qqF5eeMJm5MTRFco",
+        "token_source": "EZ6aP4ekd8uCW1VP8YrnJZf9W7gwBZcgH7zwPv45D4oJ",
+        "treasury_lamports": 10670880,
+        "token_base_units": 980000,
+        "recipient_lamports": 1040000,
+        "recipient_token_base_units": 40000,
+        "epoch": 1,
+        "nonce": 6,
+        "authority_hex": "487b68a336a6bd6e020ef23315ba36038d067b5c5d779d6dba34f947766540a2232ec6bd94df725a93986e8141b42f05b3318229ad23975595ee1aaaa01f9077",
+        "consumed": [
+          0,
+          1
+        ]
+      },
+      "explorer_links": {
+        "state": "https://explorer.solana.com/address/2XKaDsFdizBjutyRD2BLxNd2wF2J11Do5CbcxSbCG7dj?cluster=devnet",
+        "treasury": "https://explorer.solana.com/address/ExUjnwyEprLp2oMppaTca8zN6Ae7qqF5eeMJm5MTRFco?cluster=devnet",
+        "token_source": "https://explorer.solana.com/address/EZ6aP4ekd8uCW1VP8YrnJZf9W7gwBZcgH7zwPv45D4oJ?cluster=devnet",
+        "recipient_sol": "https://explorer.solana.com/address/ADLw7WkPsqngneGqoCKmGR17w16kmgA9q1WnxURt9Wod?cluster=devnet",
+        "recipient_token": "https://explorer.solana.com/address/EQwuQZSxaUTmZbBxoAiy2nnKsuvEC5SwVb84SGWASEwx?cluster=devnet"
+      }
+    }
+  ],
+  "confirmed_transaction_count": 140,
+  "unconfirmed_attempt_count": 1,
+  "custody_operations": [
+    {
+      "operation": "v1-live-20261012-array-withdraw-sol",
+      "mode": "array",
+      "action": 1,
+      "transaction_bytes": 677,
+      "transaction_version": "legacy",
+      "compute_units": 7101,
+      "transaction_signature": "5mHxtbGLuEhxVCDhRRc6A1pdpQzn3KgQyfvzSoUS4GzySBZ2AkDJQgKbwb3UrNaZ4rMEzJ2syQb3yvWw35TMhwjr",
+      "explorer_url": "https://explorer.solana.com/tx/5mHxtbGLuEhxVCDhRRc6A1pdpQzn3KgQyfvzSoUS4GzySBZ2AkDJQgKbwb3UrNaZ4rMEzJ2syQb3yvWw35TMhwjr?cluster=devnet",
+      "evidence_path": "artifacts/devnet-transactions/v1-live-20261012-array-withdraw-sol.json",
+      "balance_assertions_passed": true
+    },
+    {
+      "operation": "v1-live-20261012-array-withdraw-mock-usdc",
+      "mode": "array",
+      "action": 2,
+      "transaction_bytes": 774,
+      "transaction_version": "legacy",
+      "compute_units": 9512,
+      "transaction_signature": "3gY1NgZpSmEaa3TVhoTjAuhf6m5tYn4nkahqGrTEZn2izrbPMaWNjvodF4LGXnt4c6QtEKUYLiMkT34PJrJ6XSmg",
+      "explorer_url": "https://explorer.solana.com/tx/3gY1NgZpSmEaa3TVhoTjAuhf6m5tYn4nkahqGrTEZn2izrbPMaWNjvodF4LGXnt4c6QtEKUYLiMkT34PJrJ6XSmg?cluster=devnet",
+      "evidence_path": "artifacts/devnet-transactions/v1-live-20261012-array-withdraw-mock-usdc.json",
+      "balance_assertions_passed": true
+    },
+    {
+      "operation": "v1-live-20261012-merkle-withdraw-sol",
+      "mode": "merkle",
+      "action": 1,
+      "transaction_bytes": 805,
+      "transaction_version": "legacy",
+      "compute_units": 8003,
+      "transaction_signature": "5XPHXjBKRvZJ5vNkEqDF5TXtk88ZZd96R92MuSxf7uAYRXTVER6AnYgDyqZoqEMe8Tn8zwez3hSRme1VZv9BaKBw",
+      "explorer_url": "https://explorer.solana.com/tx/5XPHXjBKRvZJ5vNkEqDF5TXtk88ZZd96R92MuSxf7uAYRXTVER6AnYgDyqZoqEMe8Tn8zwez3hSRme1VZv9BaKBw?cluster=devnet",
+      "evidence_path": "artifacts/devnet-transactions/v1-live-20261012-merkle-withdraw-sol.json",
+      "balance_assertions_passed": true
+    },
+    {
+      "operation": "v1-live-20261012-merkle-withdraw-mock-usdc",
+      "mode": "merkle",
+      "action": 2,
+      "transaction_bytes": 902,
+      "transaction_version": "legacy",
+      "compute_units": 10413,
+      "transaction_signature": "gfA5rq9xAa8JxHX14FwpegzjiDdK1oT7jmwLx5bM7dBbEWcTXgu6Ciy2xN1yJGQ5dWav3x4oEuCKcBLq5ebNAhh",
+      "explorer_url": "https://explorer.solana.com/tx/gfA5rq9xAa8JxHX14FwpegzjiDdK1oT7jmwLx5bM7dBbEWcTXgu6Ciy2xN1yJGQ5dWav3x4oEuCKcBLq5ebNAhh?cluster=devnet",
+      "evidence_path": "artifacts/devnet-transactions/v1-live-20261012-merkle-withdraw-mock-usdc.json",
+      "balance_assertions_passed": true
+    },
+    {
+      "operation": "v1-live-20261012-xmss-withdraw-sol",
+      "mode": "xmss",
+      "action": 1,
+      "transaction_bytes": 3117,
+      "transaction_version": 1,
+      "compute_units": 518509,
+      "transaction_signature": "CiZmcGsaX4G7upT1ECscLUr1vVrX1htShX4Q2y8K4wd1hJcsVpfZEQc9GZtod8MxVSmP4Hy6mbVqiM75QiAJdBM",
+      "explorer_url": "https://explorer.solana.com/tx/CiZmcGsaX4G7upT1ECscLUr1vVrX1htShX4Q2y8K4wd1hJcsVpfZEQc9GZtod8MxVSmP4Hy6mbVqiM75QiAJdBM?cluster=devnet",
+      "evidence_path": "artifacts/devnet-transactions/v1-live-20261012-xmss-withdraw-sol.json",
+      "balance_assertions_passed": true
+    },
+    {
+      "operation": "v1-live-20261012-xmss-withdraw-mock-usdc",
+      "mode": "xmss",
+      "action": 2,
+      "transaction_bytes": 3214,
+      "transaction_version": 1,
+      "compute_units": 532564,
+      "transaction_signature": "VveVy2HNqacHi8L7CR683XeGjdViy5qsCaBzyFanjVyGqJfd1RxU2EjkHuWpHEDSb9h8awNz4iMmiZNzQTG7yHd",
+      "explorer_url": "https://explorer.solana.com/tx/VveVy2HNqacHi8L7CR683XeGjdViy5qsCaBzyFanjVyGqJfd1RxU2EjkHuWpHEDSb9h8awNz4iMmiZNzQTG7yHd?cluster=devnet",
+      "evidence_path": "artifacts/devnet-transactions/v1-live-20261012-xmss-withdraw-mock-usdc.json",
+      "balance_assertions_passed": true
+    },
+    {
+      "operation": "v1-live-20261012-xmss-burn-leaves",
+      "mode": "xmss",
+      "action": 3,
+      "transaction_bytes": 3086,
+      "transaction_version": 1,
+      "compute_units": 529687,
+      "transaction_signature": "4jW1PJwKdSDW1bDRM5T2CrRRPDwisX4K2UAFZTWxZqYupP3vuoXmcPnCyD71xtRsNohAUWWRJB1zUfRS1fVbSdNg",
+      "explorer_url": "https://explorer.solana.com/tx/4jW1PJwKdSDW1bDRM5T2CrRRPDwisX4K2UAFZTWxZqYupP3vuoXmcPnCyD71xtRsNohAUWWRJB1zUfRS1fVbSdNg?cluster=devnet",
+      "evidence_path": "artifacts/devnet-transactions/v1-live-20261012-xmss-burn-leaves.json",
+      "balance_assertions_passed": true
+    },
+    {
+      "operation": "v1-live-20261012-xmss-rotate-root",
+      "mode": "xmss",
+      "action": 4,
+      "transaction_bytes": 3146,
+      "transaction_version": 1,
+      "compute_units": 483319,
+      "transaction_signature": "5U4B7zhgQ38cyUztvxUK5tYCJ2uHMweKjePJ14gYJGv2X42mDwWGqWreiQi9KYtYkkoWskS8pykD2Fab8RjML5iy",
+      "explorer_url": "https://explorer.solana.com/tx/5U4B7zhgQ38cyUztvxUK5tYCJ2uHMweKjePJ14gYJGv2X42mDwWGqWreiQi9KYtYkkoWskS8pykD2Fab8RjML5iy?cluster=devnet",
+      "evidence_path": "artifacts/devnet-transactions/v1-live-20261012-xmss-rotate-root.json",
+      "balance_assertions_passed": true
+    },
+    {
+      "operation": "v1-live-20261012-xmss-post-rotation-withdraw-sol",
+      "mode": "xmss",
+      "action": 1,
+      "transaction_bytes": 3117,
+      "transaction_version": 1,
+      "compute_units": 506910,
+      "transaction_signature": "3bGS1Mhx5dAF2K7W38eB6Jb3LUfYuBNR5st7NZQDtePz3vZtQPBuWo15x8eG7z7si63jNDyhHASz8QUkmRvcuCmR",
+      "explorer_url": "https://explorer.solana.com/tx/3bGS1Mhx5dAF2K7W38eB6Jb3LUfYuBNR5st7NZQDtePz3vZtQPBuWo15x8eG7z7si63jNDyhHASz8QUkmRvcuCmR?cluster=devnet",
+      "evidence_path": "artifacts/devnet-transactions/v1-live-20261012-xmss-post-rotation-withdraw-sol.json",
+      "balance_assertions_passed": true
+    },
+    {
+      "operation": "v1-live-20261012-xmss-post-rotation-withdraw-mock-usdc",
+      "mode": "xmss",
+      "action": 2,
+      "transaction_bytes": 3214,
+      "transaction_version": 1,
+      "compute_units": 578944,
+      "transaction_signature": "3H343RTxDLz4h1RLZxxUeQkF4gKD7pz9yboKMz2RMc9b7i3JGc4Z7MgbeatL22C89GkDtuJWTvi5rkRjaZ7Fx5Wr",
+      "explorer_url": "https://explorer.solana.com/tx/3H343RTxDLz4h1RLZxxUeQkF4gKD7pz9yboKMz2RMc9b7i3JGc4Z7MgbeatL22C89GkDtuJWTvi5rkRjaZ7Fx5Wr?cluster=devnet",
+      "evidence_path": "artifacts/devnet-transactions/v1-live-20261012-xmss-post-rotation-withdraw-mock-usdc.json",
+      "balance_assertions_passed": true
+    }
+  ],
+  "inline_resource_enforcement": {
+    "evidence_level": "devnet_simulation_and_confirmed_execution",
+    "same_canonical_intent_verified": true,
+    "same_xmss_witness_verified": true,
+    "low_cu_error": {
+      "InstructionError": [
+        0,
+        "ProgramFailedToComplete"
+      ]
+    },
+    "low_cu_units_consumed": 1,
+    "low_loaded_data_error": "MaxLoadedAccountsDataSizeExceeded",
+    "accepted_signature": "CiZmcGsaX4G7upT1ECscLUr1vVrX1htShX4Q2y8K4wd1hJcsVpfZEQc9GZtod8MxVSmP4Hy6mbVqiM75QiAJdBM",
+    "accepted_compute_units": 518509,
+    "accepted_requested_limits": {
+      "compute_unit_limit": 1400000,
+      "loaded_accounts_data_size_limit": 1048576,
+      "heap_size": 32768
+    }
+  },
+  "local_runtime_caveat": "LiteSVM uses a 1,400,000-CU runtime override; inline limits are not enforced locally."
+}

@@ -1,0 +1,101 @@
+{
+  "operation": "v1-live-20261012-merkle-deposit-sol",
+  "observed_at_utc": "2026-10-12T19:15:13.572109+00:00",
+  "transaction_bytes": 255,
+  "transaction_version": "legacy",
+  "transaction_signature": "5djKPbdyzhKkbWUjDn7j61nWZeYJVC6Tm23T2NcPcfrYZ6JCHd2eT1Q4HFbX6aD1Bwx2CibXas1x256Wq9qsF98A",
+  "confirmed": true,
+  "simulation": {
+    "context": {
+      "apiVersion": "4.4.0-beta.0",
+      "slot": 510365881
+    },
+    "value": {
+      "accounts": null,
+      "err": null,
+      "fee": 5000,
+      "innerInstructions": null,
+      "loadedAccountsDataSize": 300,
+      "loadedAddresses": {
+        "readonly": [],
+        "writable": []
+      },
+      "logs": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program 11111111111111111111111111111111 invoke [1]",
+        "Program 11111111111111111111111111111111 success"
+      ],
+      "postBalances": [
+        4307257320,
+        10690880,
+        1,
+        1
+      ],
+      "postTokenBalances": [],
+      "preBalances": [
+        4317262320,
+        690880,
+        1,
+        1
+      ],
+      "preTokenBalances": [],
+      "replacementBlockhash": null,
+      "returnData": null,
+      "unitsConsumed": 300
+    }
+  },
+  "confirmation_status": "finalized",
+  "slot": 510365887,
+  "error": null,
+  "explorer_url": "https://explorer.solana.com/tx/5djKPbdyzhKkbWUjDn7j61nWZeYJVC6Tm23T2NcPcfrYZ6JCHd2eT1Q4HFbX6aD1Bwx2CibXas1x256Wq9qsF98A?cluster=devnet",
+  "network_transaction": {
+    "blockTime": 1791832515,
+    "meta": {
+      "computeUnitsConsumed": 300,
+      "costUnits": 1632,
+      "err": null,
+      "fee": 5000,
+      "innerInstructions": [],
+      "loadedAddresses": {
+        "readonly": [],
+        "writable": []
+      },
+      "logMessages": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program 11111111111111111111111111111111 invoke [1]",
+        "Program 11111111111111111111111111111111 success"
+      ],
+      "postBalances": [
+        4307257320,
+        10690880,
+        1,
+        1
+      ],
+      "postTokenBalances": [],
+      "preBalances": [
+        4317262320,
+        690880,
+        1,
+        1
+      ],
+      "preTokenBalances": [],
+      "rewards": [],
+      "status": {
+        "Ok": null
+      }
+    },
+    "slot": 510365887,
+    "transaction": [
+      "Aee+AX3P5OxlTkn+gAmx60Lz3st+apRcCdeHq1LSsDrFm6Fs0HasevBchUje3kTDK5naALXmy3UEAIRXAEHQ5Q8BAAIEBWTfgEpHe1Y+tdHq7C/mXH+5aNEuCvaNpbj9xJoOvNbK+Qegncbb6zP6y0/31Wn87UJftAUbYgyQts5dG6P0OwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwZGb+UhFzL/7K26csOb57yM5bvF9xJrLEObOkAAAACn9OFmXuS3/a5go03MoGgu5wqcd/TVNWR0pPVoUvc9hwIDAAUCwFwVAAICAAEMAgAAAICWmAAAAAAA",
+      "base64"
+    ],
+    "transactionIndex": 0,
+    "version": "legacy"
+  },
+  "network_decoded_version": "legacy",
+  "compute_units": 300,
+  "fee_lamports": 5000,
+  "success": true
+}

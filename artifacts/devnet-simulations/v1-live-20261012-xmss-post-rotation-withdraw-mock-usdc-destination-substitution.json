@@ -1,0 +1,118 @@
+{
+  "operation": "v1-live-20261012-xmss-post-rotation-withdraw-mock-usdc-destination-substitution",
+  "observed_at_utc": "2026-10-12T19:17:11.245416+00:00",
+  "evidence_level": "devnet_simulation",
+  "network_confirmation": false,
+  "transaction_bytes": 3214,
+  "transaction_version": 1,
+  "result": {
+    "context": {
+      "apiVersion": "4.4.0-beta.0",
+      "slot": 510366368
+    },
+    "value": {
+      "accounts": null,
+      "err": {
+        "InstructionError": [
+          0,
+          {
+            "Custom": 12
+          }
+        ]
+      },
+      "fee": 5000,
+      "innerInstructions": null,
+      "loadedAccountsDataSize": 234708,
+      "loadedAddresses": {
+        "readonly": [],
+        "writable": []
+      },
+      "logs": [
+        "Program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V invoke [1]",
+        "Program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V consumed 518698 of 1400000 compute units",
+        "Program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V failed: custom program error: 0xc"
+      ],
+      "postBalances": [
+        19950000,
+        2794000,
+        1488440,
+        1488440,
+        10670880,
+        20369267856,
+        1066800,
+        833120
+      ],
+      "postTokenBalances": [
+        {
+          "accountIndex": 2,
+          "mint": "41BK2eVZsGdua58DFz3U7ydMd7bBqZbumTNbv61RpZgS",
+          "owner": "2895pMQXiEdD3xtZ6JSJBJnUsXVE2dRfSgy65Y9zxQEA",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 6,
+            "uiAmount": 0.0,
+            "uiAmountString": "0"
+          }
+        },
+        {
+          "accountIndex": 3,
+          "mint": "41BK2eVZsGdua58DFz3U7ydMd7bBqZbumTNbv61RpZgS",
+          "owner": "ExUjnwyEprLp2oMppaTca8zN6Ae7qqF5eeMJm5MTRFco",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "990000",
+            "decimals": 6,
+            "uiAmount": 0.99,
+            "uiAmountString": "0.99"
+          }
+        }
+      ],
+      "preBalances": [
+        19955000,
+        2794000,
+        1488440,
+        1488440,
+        10670880,
+        20369267856,
+        1066800,
+        833120
+      ],
+      "preTokenBalances": [
+        {
+          "accountIndex": 2,
+          "mint": "41BK2eVZsGdua58DFz3U7ydMd7bBqZbumTNbv61RpZgS",
+          "owner": "2895pMQXiEdD3xtZ6JSJBJnUsXVE2dRfSgy65Y9zxQEA",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 6,
+            "uiAmount": 0.0,
+            "uiAmountString": "0"
+          }
+        },
+        {
+          "accountIndex": 3,
+          "mint": "41BK2eVZsGdua58DFz3U7ydMd7bBqZbumTNbv61RpZgS",
+          "owner": "ExUjnwyEprLp2oMppaTca8zN6Ae7qqF5eeMJm5MTRFco",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "990000",
+            "decimals": 6,
+            "uiAmount": 0.99,
+            "uiAmountString": "0.99"
+          }
+        }
+      ],
+      "replacementBlockhash": null,
+      "returnData": null,
+      "unitsConsumed": 518698
+    }
+  },
+  "expected_success": false,
+  "compute_limit": 1400000,
+  "loaded_accounts_bytes_limit": 1048576,
+  "message_commitment": "8ff69f0e9139c5ee13b3bbf276da55f7275425530a1bef7e0bc6912bba7eb73d",
+  "witness_sha256": "a4341812611eb0c30c76c366e2e56058219335bbea43a05eec6728797e44aeb7",
+  "expected_error_verified": "\"Custom\": 12"
+}

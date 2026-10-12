@@ -1,0 +1,15 @@
+{
+  "source_commit": "912537badf94776849a5068aa44b5e30c6c2114c",
+  "integrated_commit": "84fc798",
+  "command": "cargo test --locked --manifest-path program/Cargo.toml",
+  "environment": {
+    "rustc": "1.96.1",
+    "cargo": "1.96.1",
+    "target": "host"
+  },
+  "unit_tests_passed": 10,
+  "unit_tests_failed": 0,
+  "doc_tests": 0,
+  "evidence_path": "artifacts/logs/v1-native-program-tests.log",
+  "network_confirmation": false
+}

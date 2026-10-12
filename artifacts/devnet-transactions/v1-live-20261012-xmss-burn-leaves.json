@@ -1,0 +1,196 @@
+{
+  "operation": "v1-live-20261012-xmss-burn-leaves",
+  "observed_at_utc": "2026-10-12T19:16:34.142155+00:00",
+  "transaction_bytes": 3086,
+  "transaction_version": 1,
+  "transaction_signature": "4jW1PJwKdSDW1bDRM5T2CrRRPDwisX4K2UAFZTWxZqYupP3vuoXmcPnCyD71xtRsNohAUWWRJB1zUfRS1fVbSdNg",
+  "confirmed": true,
+  "mode": "xmss",
+  "action": 3,
+  "witness_bytes": 2500,
+  "instruction_data_bytes": 2702,
+  "transaction_count_for_operation": 1,
+  "message_commitment": "a7b3c5341149641f286e11393915dd4a04f100339c6d72fe2bc25efe9d4e7d04",
+  "witness_sha256": "45d1c1fd5784b6fd64a130386e590c1ffc22051e133deabb2f0191ccaf1d7427",
+  "inline_resources": {
+    "compute_unit_limit": 1400000,
+    "loaded_accounts_data_size_limit": 1048576,
+    "heap_size": 32768
+  },
+  "before": {
+    "treasury": "ExUjnwyEprLp2oMppaTca8zN6Ae7qqF5eeMJm5MTRFco",
+    "token_source": "EZ6aP4ekd8uCW1VP8YrnJZf9W7gwBZcgH7zwPv45D4oJ",
+    "treasury_lamports": 10680880,
+    "token_base_units": 990000,
+    "recipient_lamports": 1030000,
+    "recipient_token_base_units": 30000,
+    "epoch": 0,
+    "nonce": 2,
+    "authority_hex": "08d8a75ce8b2e43cbe9510674b766911d55c54854e741347221077e130d6c931cf737efe3154c2af6514afe30bbd2110db2638e270e990b6d35390b6c63f0f84",
+    "consumed": [
+      0,
+      1
+    ]
+  },
+  "simulation": {
+    "context": {
+      "apiVersion": "4.4.0-beta.0",
+      "slot": 510366217
+    },
+    "value": {
+      "accounts": null,
+      "err": null,
+      "fee": 5000,
+      "innerInstructions": null,
+      "loadedAccountsDataSize": 234543,
+      "loadedAddresses": {
+        "readonly": [],
+        "writable": []
+      },
+      "logs": [
+        "Program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V invoke [1]",
+        "Program log: leaves_burned",
+        "Program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V consumed 529687 of 1400000 compute units",
+        "Program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V success"
+      ],
+      "postBalances": [
+        19965000,
+        2794000,
+        1030000,
+        1488440,
+        10680880,
+        20369267856,
+        1066800,
+        833120
+      ],
+      "postTokenBalances": [
+        {
+          "accountIndex": 3,
+          "mint": "41BK2eVZsGdua58DFz3U7ydMd7bBqZbumTNbv61RpZgS",
+          "owner": "ExUjnwyEprLp2oMppaTca8zN6Ae7qqF5eeMJm5MTRFco",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "990000",
+            "decimals": 6,
+            "uiAmount": 0.99,
+            "uiAmountString": "0.99"
+          }
+        }
+      ],
+      "preBalances": [
+        19970000,
+        2794000,
+        1030000,
+        1488440,
+        10680880,
+        20369267856,
+        1066800,
+        833120
+      ],
+      "preTokenBalances": [
+        {
+          "accountIndex": 3,
+          "mint": "41BK2eVZsGdua58DFz3U7ydMd7bBqZbumTNbv61RpZgS",
+          "owner": "ExUjnwyEprLp2oMppaTca8zN6Ae7qqF5eeMJm5MTRFco",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "990000",
+            "decimals": 6,
+            "uiAmount": 0.99,
+            "uiAmountString": "0.99"
+          }
+        }
+      ],
+      "replacementBlockhash": null,
+      "returnData": null,
+      "unitsConsumed": 529687
+    }
+  },
+  "confirmation_status": "finalized",
+  "slot": 510366223,
+  "error": null,
+  "explorer_url": "https://explorer.solana.com/tx/4jW1PJwKdSDW1bDRM5T2CrRRPDwisX4K2UAFZTWxZqYupP3vuoXmcPnCyD71xtRsNohAUWWRJB1zUfRS1fVbSdNg?cluster=devnet",
+  "network_transaction": {
+    "blockTime": 1791832595,
+    "meta": {
+      "computeUnitsConsumed": 529687,
+      "costUnits": 532646,
+      "err": null,
+      "fee": 5000,
+      "innerInstructions": [],
+      "loadedAddresses": {
+        "readonly": [],
+        "writable": []
+      },
+      "logMessages": [
+        "Program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V invoke [1]",
+        "Program log: leaves_burned",
+        "Program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V consumed 529687 of 1400000 compute units",
+        "Program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V success"
+      ],
+      "postBalances": [
+        19965000,
+        2794000,
+        1030000,
+        1488440,
+        10680880,
+        20369267856,
+        1066800,
+        833120
+      ],
+      "postTokenBalances": [
+        {
+          "accountIndex": 3,
+          "mint": "41BK2eVZsGdua58DFz3U7ydMd7bBqZbumTNbv61RpZgS",
+          "owner": "ExUjnwyEprLp2oMppaTca8zN6Ae7qqF5eeMJm5MTRFco",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "990000",
+            "decimals": 6,
+            "uiAmount": 0.99,
+            "uiAmountString": "0.99"
+          }
+        }
+      ],
+      "preBalances": [
+        19970000,
+        2794000,
+        1030000,
+        1488440,
+        10680880,
+        20369267856,
+        1066800,
+        833120
+      ],
+      "preTokenBalances": [
+        {
+          "accountIndex": 3,
+          "mint": "41BK2eVZsGdua58DFz3U7ydMd7bBqZbumTNbv61RpZgS",
+          "owner": "ExUjnwyEprLp2oMppaTca8zN6Ae7qqF5eeMJm5MTRFco",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "990000",
+            "decimals": 6,
+            "uiAmount": 0.99,
+            "uiAmountString": "0.99"
+          }
+        }
+      ],
+      "rewards": [],
+      "status": {
+        "Ok": null
+      }
+    },
+    "slot": 510366223,
+    "transaction": [
+      "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",
+      "base64"
+    ],
+    "transactionIndex": 7,
+    "version": 1
+  },
+  "network_decoded_version": 1,
+  "compute_units": 529687,
+  "fee_lamports": 5000,
+  "success": true
+}

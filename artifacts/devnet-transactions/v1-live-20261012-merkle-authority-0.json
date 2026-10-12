@@ -1,0 +1,109 @@
+{
+  "operation": "v1-live-20261012-merkle-authority-0",
+  "observed_at_utc": "2026-10-12T19:15:09.653764+00:00",
+  "transaction_bytes": 313,
+  "transaction_version": "legacy",
+  "transaction_signature": "261a1GQaUi8BSVgJCNv85bshTgV1UfxLxHdcMsW2kG7gP8n5kQ6fA28gHWhB55JTjDqM9xiuMhRrEkqcFpGQXQoS",
+  "confirmed": true,
+  "simulation": {
+    "context": {
+      "apiVersion": "4.4.0-beta.0",
+      "slot": 510365865
+    },
+    "value": {
+      "accounts": null,
+      "err": null,
+      "fee": 5000,
+      "innerInstructions": null,
+      "loadedAccountsDataSize": 125355,
+      "loadedAddresses": {
+        "readonly": [],
+        "writable": []
+      },
+      "logs": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V invoke [1]",
+        "Program log: authority_finalized",
+        "Program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V consumed 3992 of 1399850 compute units",
+        "Program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V success"
+      ],
+      "postBalances": [
+        4317262320,
+        2631440,
+        1,
+        1,
+        833120
+      ],
+      "postTokenBalances": [],
+      "preBalances": [
+        4317267320,
+        2631440,
+        1,
+        1,
+        833120
+      ],
+      "preTokenBalances": [],
+      "replacementBlockhash": null,
+      "returnData": null,
+      "unitsConsumed": 4142
+    }
+  },
+  "confirmation_status": "finalized",
+  "slot": 510365870,
+  "error": null,
+  "explorer_url": "https://explorer.solana.com/tx/261a1GQaUi8BSVgJCNv85bshTgV1UfxLxHdcMsW2kG7gP8n5kQ6fA28gHWhB55JTjDqM9xiuMhRrEkqcFpGQXQoS?cluster=devnet",
+  "network_transaction": {
+    "blockTime": 1791832511,
+    "meta": {
+      "computeUnitsConsumed": 4142,
+      "costUnits": 5504,
+      "err": null,
+      "fee": 5000,
+      "innerInstructions": [],
+      "loadedAddresses": {
+        "readonly": [],
+        "writable": []
+      },
+      "logMessages": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V invoke [1]",
+        "Program log: authority_finalized",
+        "Program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V consumed 3992 of 1399850 compute units",
+        "Program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V success"
+      ],
+      "postBalances": [
+        4317262320,
+        2631440,
+        1,
+        1,
+        833120
+      ],
+      "postTokenBalances": [],
+      "preBalances": [
+        4317267320,
+        2631440,
+        1,
+        1,
+        833120
+      ],
+      "preTokenBalances": [],
+      "rewards": [],
+      "status": {
+        "Ok": null
+      }
+    },
+    "slot": 510365870,
+    "transaction": [
+      "ATZWV0g5OlgL03h1pHng+Jrr8UIPo/XI+qlduZIbQO+fuQfhM1RvxaZtPAU8y5cuSeqAa3/P5VprAZ+fhqHkGgEBAAMFBWTfgEpHe1Y+tdHq7C/mXH+5aNEuCvaNpbj9xJoOvNaRYdV3dJTlyQDz2x5FvsNzkgZn3hnsbfPdCvjmPfoBpgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwZGb+UhFzL/7K26csOb57yM5bvF9xJrLEObOkAAAAD6wsElSuEBv4pM3h2wdUuLaKpyR1+7eoLJ4kOSWb/dDsjNMAv3v720p2gWCjFDHT+qAGTle13C36w7VXkLib//AgMABQLAXBUABAMAAQIlAQAAAACp34MoeHT6JzIyncGfwH2YxoWM2zhYuCIbrVauEGrUKA==",
+      "base64"
+    ],
+    "transactionIndex": 10,
+    "version": "legacy"
+  },
+  "network_decoded_version": "legacy",
+  "compute_units": 4142,
+  "fee_lamports": 5000,
+  "success": true
+}

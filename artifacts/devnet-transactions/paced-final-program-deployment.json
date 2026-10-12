@@ -1,0 +1,148 @@
+{
+  "operation": "paced-final-program-deployment",
+  "observed_at_utc": "2026-10-12T19:13:42.642381+00:00",
+  "transaction_bytes": 542,
+  "transaction_version": "legacy",
+  "transaction_signature": "4RstPT79ifVUkbV1EzRf5xCuyumfipdw16gTmga4VNrG7qC1iYHNj3KsgV6Y2vBmpvSTfC3G7tzGE4yssN9upyrw",
+  "confirmed": true,
+  "purpose": "paced_official_upgradeable_loader_deployment",
+  "simulation": {
+    "context": {
+      "apiVersion": "4.4.0-beta.0",
+      "slot": 510365499
+    },
+    "value": {
+      "accounts": null,
+      "err": null,
+      "fee": 10000,
+      "innerInstructions": null,
+      "loadedAccountsDataSize": 125079,
+      "loadedAddresses": {
+        "readonly": [],
+        "writable": []
+      },
+      "logs": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program 11111111111111111111111111111111 invoke [1]",
+        "Program 11111111111111111111111111111111 success",
+        "Program BPFLoaderUpgradeab1e11111111111111111111111 invoke [1]",
+        "Program 11111111111111111111111111111111 invoke [2]",
+        "Program 11111111111111111111111111111111 success",
+        "Deployed program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V",
+        "Program BPFLoaderUpgradeab1e11111111111111111111111 success"
+      ],
+      "postBalances": [
+        4365440920,
+        833120,
+        633155960,
+        0,
+        1,
+        1,
+        1,
+        1169280,
+        1009200
+      ],
+      "postTokenBalances": [],
+      "preBalances": [
+        4366284040,
+        0,
+        0,
+        633155960,
+        1,
+        1,
+        1,
+        1169280,
+        1009200
+      ],
+      "preTokenBalances": [],
+      "replacementBlockhash": null,
+      "returnData": null,
+      "unitsConsumed": 2820
+    }
+  },
+  "confirmation_status": "finalized",
+  "slot": 510365504,
+  "error": null,
+  "explorer_url": "https://explorer.solana.com/tx/4RstPT79ifVUkbV1EzRf5xCuyumfipdw16gTmga4VNrG7qC1iYHNj3KsgV6Y2vBmpvSTfC3G7tzGE4yssN9upyrw?cluster=devnet",
+  "network_transaction": {
+    "blockTime": 1791832424,
+    "meta": {
+      "computeUnitsConsumed": 2820,
+      "costUnits": 5509,
+      "err": null,
+      "fee": 10000,
+      "innerInstructions": [
+        {
+          "index": 2,
+          "instructions": [
+            {
+              "accounts": [
+                0,
+                2,
+                3
+              ],
+              "data": "11115Qixq1N3s9SqisDghGahpiKWznHrfs22Xiueyct1wuH1oseGtsMy1cj2JtaMa7wvCX",
+              "programIdIndex": 4,
+              "stackHeight": 2
+            }
+          ]
+        }
+      ],
+      "loadedAddresses": {
+        "readonly": [],
+        "writable": []
+      },
+      "logMessages": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program 11111111111111111111111111111111 invoke [1]",
+        "Program 11111111111111111111111111111111 success",
+        "Program BPFLoaderUpgradeab1e11111111111111111111111 invoke [1]",
+        "Program 11111111111111111111111111111111 invoke [2]",
+        "Program 11111111111111111111111111111111 success",
+        "Deployed program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V",
+        "Program BPFLoaderUpgradeab1e11111111111111111111111 success"
+      ],
+      "postBalances": [
+        4365440920,
+        833120,
+        633155960,
+        0,
+        1,
+        1,
+        1,
+        1169280,
+        1009200
+      ],
+      "postTokenBalances": [],
+      "preBalances": [
+        4366284040,
+        0,
+        0,
+        633155960,
+        1,
+        1,
+        1,
+        1169280,
+        1009200
+      ],
+      "preTokenBalances": [],
+      "rewards": [],
+      "status": {
+        "Ok": null
+      }
+    },
+    "slot": 510365504,
+    "transaction": [
+      "AquBGAVG899Cmz8iUBjCqjF9gYpEfo5PBIYnlKlsQghizeq2+lcJO0SLQifFbjmOkrLpfA5hrswVjgvZA7NngwiUJ7qcV5C3OjaJpwBhwdw/rUYZ+JiMuztaZKD+TM4c2Q+jHF7RX3tf6+kct+u0sabJt9lvN2ECI3tcAAoBMyUNAgAFCQVk34BKR3tWPrXR6uwv5lx/uWjRLgr2jaW4/cSaDrzW+sLBJUrhAb+KTN4dsHVLi2iqckdfu3qCyeJDklm/3Q6OSOpQTnTUndJXc8/4Ge9kzgvUKGEzR3HuN0OdiDtsRrcSU761K0UUM787eIoxBf0Zrx/JlWqRgx2NMzzjppgtAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACqPaRToihsOIQFT73Y64rAMK5PRbBJNLAU3oQBIAAAAMGRm/lIRcy/+ytunLDm+e8jOW7xfcSayxDmzpAAAAABqfVFxjHdMkoVmOYaR1etoteuKObS21cc1VbIQAAAAAGp9UXGSxcUSGMyUw9SvF/WNruCJuh/UTj29mKAAAAAG46Z2fd0y1Gwt2HWSOkN8RuyLTUfPMM5RPE9D2jB0WvAwYABQLAXBUABAIAATQAAAAAYLYMAAAAAAAkAAAAAAAAAAKo9pFOiKGw4hAVPvdjrisAwrk9FsEk0sBTehAEgAAABQgAAgEDCAcEAAwCAAAAMOYBAAAAAAA=",
+      "base64"
+    ],
+    "transactionIndex": 16,
+    "version": "legacy"
+  },
+  "network_decoded_version": "legacy",
+  "compute_units": 2820,
+  "fee_lamports": 10000,
+  "success": true
+}

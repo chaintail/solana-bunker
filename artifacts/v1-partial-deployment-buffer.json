@@ -1,0 +1,35 @@
+{
+  "environment": {
+    "observed_at_utc": "2026-10-12T19:00:41.585020+00:00",
+    "cluster": "devnet",
+    "rpc_url": "https://api.devnet.solana.com",
+    "genesis_hash": "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG",
+    "rpc_version": {
+      "feature-set": 1855282951,
+      "solana-core": "4.4.0-beta.0"
+    },
+    "commit": "99728c7252a6c66ffeca504557a249a2f932344e"
+  },
+  "accounts": {
+    "program": {
+      "address": "HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V",
+      "exists": false
+    },
+    "deployment-buffer": {
+      "address": "DKdpQPEGMeWahnHAhCS9tdUQwBw6ScUmnnzmDGFVHSDr",
+      "exists": true,
+      "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "lamports": 633155960,
+      "executable": false,
+      "bytes": 124501,
+      "header_hex": "01000000010564df804a477b563eb5d1eaec2fe65c7fb968d12e0af68da5b8fdc49a0ebcd6",
+      "matching_bytes": 80737,
+      "expected_binary_bytes": 124464,
+      "matching_3500byte_chunks": 2
+    },
+    "mint": {
+      "address": "41BK2eVZsGdua58DFz3U7ydMd7bBqZbumTNbv61RpZgS",
+      "exists": false
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "environment": {
+    "observed_at_utc": "2026-10-12T18:47:00.968068+00:00",
+    "cluster": "devnet",
+    "rpc_url": "https://api.devnet.solana.com",
+    "genesis_hash": "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG",
+    "rpc_version": {
+      "feature-set": 1855282951,
+      "solana-core": "4.4.0-beta.0"
+    },
+    "commit": "29faf0138f2875ee33018cbcde7b329842d554a7"
+  },
+  "result": {
+    "operation": "v1-funded-transport-probe",
+    "observed_at_utc": "2026-10-12T18:46:55.466324+00:00",
+    "transaction_bytes": 2036,
+    "transaction_version": 1,
+    "transaction_signature": "4iG3KScZ3yC1UhjNKtc57pfz7XtFs5bJAwYdfUcNWoDEhS8GoEgqvb3s5xiCVoWuerwGVR9H2safCFdqyp3MPMC7",
+    "confirmed": true,
+    "instruction_data_bytes": 1850,
+    "inline_compute_limit": 1400000,
+    "confirmation_status": "finalized",
+    "slot": 510358774,
+    "error": null,
+    "explorer_url": "https://explorer.solana.com/tx/4iG3KScZ3yC1UhjNKtc57pfz7XtFs5bJAwYdfUcNWoDEhS8GoEgqvb3s5xiCVoWuerwGVR9H2safCFdqyp3MPMC7?cluster=devnet",
+    "network_decoded_version": 1,
+    "compute_units": 649988,
+    "fee_lamports": 5000,
+    "success": true,
+    "evidence_path": "artifacts/devnet-transactions/v1-funded-transport-probe.json"
+  },
+  "low_compute_limit_rejected": true,
+  "low_compute_evidence": "artifacts/v1-devnet-low-compute-probe.json"
+}

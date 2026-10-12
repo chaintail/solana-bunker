@@ -1,0 +1,101 @@
+{
+  "operation": "v1-live-20261012-fund-attacker",
+  "observed_at_utc": "2026-10-12T19:14:13.296439+00:00",
+  "transaction_bytes": 255,
+  "transaction_version": "legacy",
+  "transaction_signature": "5MFYLav6sYXpBjLPz57CyA8xuhAyrAhSVGHKmVY8AL73AdFvFm6gnezKCkHKr82SGUbgtmtQRQmaRYhYeKuQWqX1",
+  "confirmed": true,
+  "simulation": {
+    "context": {
+      "apiVersion": "4.4.0-beta.0",
+      "slot": 510365628
+    },
+    "value": {
+      "accounts": null,
+      "err": null,
+      "fee": 5000,
+      "innerInstructions": null,
+      "loadedAccountsDataSize": 228,
+      "loadedAddresses": {
+        "readonly": [],
+        "writable": []
+      },
+      "logs": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program 11111111111111111111111111111111 invoke [1]",
+        "Program 11111111111111111111111111111111 success"
+      ],
+      "postBalances": [
+        4342349120,
+        1000000,
+        1,
+        1
+      ],
+      "postTokenBalances": [],
+      "preBalances": [
+        4343354120,
+        0,
+        1,
+        1
+      ],
+      "preTokenBalances": [],
+      "replacementBlockhash": null,
+      "returnData": null,
+      "unitsConsumed": 300
+    }
+  },
+  "confirmation_status": "finalized",
+  "slot": 510365633,
+  "error": null,
+  "explorer_url": "https://explorer.solana.com/tx/5MFYLav6sYXpBjLPz57CyA8xuhAyrAhSVGHKmVY8AL73AdFvFm6gnezKCkHKr82SGUbgtmtQRQmaRYhYeKuQWqX1?cluster=devnet",
+  "network_transaction": {
+    "blockTime": 1791832454,
+    "meta": {
+      "computeUnitsConsumed": 300,
+      "costUnits": 1632,
+      "err": null,
+      "fee": 5000,
+      "innerInstructions": [],
+      "loadedAddresses": {
+        "readonly": [],
+        "writable": []
+      },
+      "logMessages": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program 11111111111111111111111111111111 invoke [1]",
+        "Program 11111111111111111111111111111111 success"
+      ],
+      "postBalances": [
+        4342349120,
+        1000000,
+        1,
+        1
+      ],
+      "postTokenBalances": [],
+      "preBalances": [
+        4343354120,
+        0,
+        1,
+        1
+      ],
+      "preTokenBalances": [],
+      "rewards": [],
+      "status": {
+        "Ok": null
+      }
+    },
+    "slot": 510365633,
+    "transaction": [
+      "AdmIC2lk7dJmjSrSRC4BJYcS8rup3fIGSVcqwpKL+qplOGIB/nnycCae+OX+BZiz3ksB6tQLMZcCfTbOuZ4NFQQBAAIEBWTfgEpHe1Y+tdHq7C/mXH+5aNEuCvaNpbj9xJoOvNYQr+RhlyW44P+KbYmn3M+Cc2pIc7y1jmDXexfX7PsKHwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwZGb+UhFzL/7K26csOb57yM5bvF9xJrLEObOkAAAADP/ff7KilYW2wgIIoB6wS/tfP7LbEloaYON3RwLRfs2gIDAAUCwFwVAAICAAEMAgAAAEBCDwAAAAAA",
+      "base64"
+    ],
+    "transactionIndex": 16,
+    "version": "legacy"
+  },
+  "network_decoded_version": "legacy",
+  "compute_units": 300,
+  "fee_lamports": 5000,
+  "success": true
+}

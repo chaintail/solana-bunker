@@ -1,0 +1,92 @@
+{
+  "operation": "v1-live-20261012-xmss-inline-compute-limit-1",
+  "observed_at_utc": "2026-10-12T19:16:08.769810+00:00",
+  "evidence_level": "devnet_simulation",
+  "network_confirmation": false,
+  "transaction_bytes": 3117,
+  "transaction_version": 1,
+  "result": {
+    "context": {
+      "apiVersion": "4.4.0-beta.0",
+      "slot": 510366108
+    },
+    "value": {
+      "accounts": null,
+      "err": {
+        "InstructionError": [
+          0,
+          "ProgramFailedToComplete"
+        ]
+      },
+      "fee": 5000,
+      "innerInstructions": null,
+      "loadedAccountsDataSize": 234543,
+      "loadedAddresses": {
+        "readonly": [],
+        "writable": []
+      },
+      "logs": [
+        "Program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V invoke [1]",
+        "Program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V consumed 1 of 1 compute units",
+        "Program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V failed: exceeded CUs meter at BPF instruction"
+      ],
+      "postBalances": [
+        19975000,
+        2794000,
+        1020000,
+        1488440,
+        10690880,
+        20369267856,
+        1066800,
+        833120
+      ],
+      "postTokenBalances": [
+        {
+          "accountIndex": 3,
+          "mint": "41BK2eVZsGdua58DFz3U7ydMd7bBqZbumTNbv61RpZgS",
+          "owner": "ExUjnwyEprLp2oMppaTca8zN6Ae7qqF5eeMJm5MTRFco",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "1000000",
+            "decimals": 6,
+            "uiAmount": 1.0,
+            "uiAmountString": "1"
+          }
+        }
+      ],
+      "preBalances": [
+        19980000,
+        2794000,
+        1020000,
+        1488440,
+        10690880,
+        20369267856,
+        1066800,
+        833120
+      ],
+      "preTokenBalances": [
+        {
+          "accountIndex": 3,
+          "mint": "41BK2eVZsGdua58DFz3U7ydMd7bBqZbumTNbv61RpZgS",
+          "owner": "ExUjnwyEprLp2oMppaTca8zN6Ae7qqF5eeMJm5MTRFco",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "1000000",
+            "decimals": 6,
+            "uiAmount": 1.0,
+            "uiAmountString": "1"
+          }
+        }
+      ],
+      "replacementBlockhash": null,
+      "returnData": null,
+      "unitsConsumed": 1
+    }
+  },
+  "expected_success": false,
+  "compute_limit": 1,
+  "loaded_accounts_bytes_limit": 1048576,
+  "message_commitment": "7411e3d6f889c1a2e79fd71cf27c6384fe7a94d506b01f66c90c114ada5387e4",
+  "witness_sha256": "a3a9d3c2e42ee630c38bb401cd471dc6234b8ffa6f99a8042434cb9b2edaf00e",
+  "expected_error_verified": "compute_budget_exhausted"
+}

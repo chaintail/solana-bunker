@@ -1,0 +1,51 @@
+{
+  "operation": "paced-write-buffer-007000",
+  "observed_at_utc": "2026-10-12T19:04:49.708632+00:00",
+  "transaction_bytes": 3736,
+  "transaction_version": 1,
+  "transaction_signature": "25hLum1a94vwhoGxNmeG4A7phoeA7Kg7LrjhDrjbW9c4eAyBhsLyPZMm3v6q5za1PKozxn6EdtMJq7g3opJ9aFgq",
+  "confirmed": false,
+  "purpose": "paced_official_upgradeable_loader_deployment",
+  "simulation": {
+    "context": {
+      "apiVersion": "4.4.0-beta.0",
+      "slot": 510363260
+    },
+    "value": {
+      "accounts": null,
+      "err": {
+        "InstructionError": [
+          0,
+          "InvalidInstructionData"
+        ]
+      },
+      "fee": 5000,
+      "innerInstructions": null,
+      "loadedAccountsDataSize": 124730,
+      "loadedAddresses": {
+        "readonly": [],
+        "writable": []
+      },
+      "logs": [
+        "Program BPFLoaderUpgradeab1e11111111111111111111111 invoke [1]",
+        "Program BPFLoaderUpgradeab1e11111111111111111111111 failed: invalid instruction data"
+      ],
+      "postBalances": [
+        4366754040,
+        633155960,
+        1
+      ],
+      "postTokenBalances": [],
+      "preBalances": [
+        4366759040,
+        633155960,
+        1
+      ],
+      "preTokenBalances": [],
+      "replacementBlockhash": null,
+      "returnData": null,
+      "unitsConsumed": 2370
+    }
+  },
+  "failure": "{\"code\": -32002, \"message\": \"Transaction simulation failed: Error processing Instruction 0: invalid instruction data\", \"data\": {\"accounts\": null, \"err\": {\"InstructionError\": [0, \"InvalidInstructionData\"]}, \"fee\": 5000, \"innerInstructions\": null, \"loadedAccountsDataSize\": 124730, \"loadedAddresses\": null, \"logs\": [\"Program BPFLoaderUpgradeab1e11111111111111111111111 invoke [1]\", \"Program BPFLoaderUpgradeab1e11111111111111111111111 failed: invalid instruction data\"], \"postBalances\": null, \"postTokenBalances\": null, \"preBalances\": null, \"preTokenBalances\": null, \"replacementBlockhash\": null, \"returnData\": null, \"unitsConsumed\": 2370}}"
+}

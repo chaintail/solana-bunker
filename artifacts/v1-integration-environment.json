@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "observed_at_utc": "2026-10-12T18:49:03.404085+00:00",
+  "source_commit": "ba97a3067629dd6ffd9fb5693475c7ac5150f79c",
+  "python": "3.13.5",
+  "solders": "0.29.0",
+  "cryptography": "50.0.1",
+  "solana_cli": "solana-cli 4.3.0 (src:825efd18; feat:c9ad34d2, client:Agave)",
+  "cargo_build_sbf": "cargo-build-sbf 4.3.0\nplatform-tools v1.57\nrustc 1.95.0",
+  "host_cargo": "cargo 1.96.1 (356927216 2026-06-26)",
+  "platform_tools": "1.57",
+  "toolchain_release_url": "https://github.com/anza-xyz/agave/releases/download/v4.3.0/solana-release-x86_64-unknown-linux-gnu.tar.bz2",
+  "toolchain_release_archive_sha256": "c97289a8abb1d0efb497d8b5cb285baabd9b7f8ea6647f5d145c5dc8ff3611e8",
+  "genesis_hash": "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG",
+  "rpc_url": "https://api.devnet.solana.com",
+  "developer_public_address": "N4FZnqmfXWoGhofuJAYnDdnYF8ows635ZAw2omFCtW1",
+  "build_status": "passed",
+  "dependencies": {
+    "requirements.txt": "e356d71e6e83456c3a6f29d0a83251173193674ed328c4dc86206a3f1d9ae3ec",
+    "program/Cargo.lock": "cf9d706674c4d3de633f800f0def17316f9c6fe6754f584dafcaf965d91248d2",
+    "crypto/svm-probe/Cargo.lock": "b2d728a79e5d0c15ee512f5cdc8d3edf85e8430df67bb054002265fcfd4a68b5"
+  },
+  "build_log": "artifacts/logs/v1-pinned-build.log",
+  "built_programs": {
+    "program/target/deploy/bunker_program.so": {
+      "bytes": 124464,
+      "sha256": "48e2e324abcdcfd7e4c7cb601765da374595b922ed94e29d5ec168d37c06de79"
+    },
+    "target/deploy/bunker_xmss_probe.so": {
+      "bytes": 33864,
+      "sha256": "21088f9ef0f6add41231e5ef7b19eb8ab3272f17fc493fe104df44b612c8f700"
+    }
+  },
+  "custody_source_sha256": {
+    "program/src/lib.rs": "851e4ac79e8b061454235e7a59222a851175f26c8a39041c9386f9cf3187e62d",
+    "crypto/xmss-verifier/src/lib.rs": "6c937d73957f8825ed09d4bdeb20b3a11396de57631e157793735489e2cae413"
+  }
+}

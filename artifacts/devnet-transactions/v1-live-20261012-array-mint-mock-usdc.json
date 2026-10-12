@@ -1,0 +1,159 @@
+{
+  "operation": "v1-live-20261012-array-mint-mock-usdc",
+  "observed_at_utc": "2026-10-12T19:14:39.255850+00:00",
+  "transaction_bytes": 285,
+  "transaction_version": "legacy",
+  "transaction_signature": "5NvJxRk5PMBqQUNst9ogVtDXCohh9VRcoQ3q7wxqU4hane2kNNGiDDEVUL5dNA5JpnxhT6Whb2UsiSMqF84rGrhF",
+  "confirmed": true,
+  "simulation": {
+    "context": {
+      "apiVersion": "4.4.0-beta.0",
+      "slot": 510365737
+    },
+    "value": {
+      "accounts": null,
+      "err": null,
+      "fee": 5000,
+      "innerInstructions": null,
+      "loadedAccountsDataSize": 109334,
+      "loadedAddresses": {
+        "readonly": [],
+        "writable": []
+      },
+      "logs": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [1]",
+        "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 120 of 1399850 compute units",
+        "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success"
+      ],
+      "postBalances": [
+        4322083080,
+        1066800,
+        1488440,
+        1,
+        20369267856
+      ],
+      "postTokenBalances": [
+        {
+          "accountIndex": 2,
+          "mint": "41BK2eVZsGdua58DFz3U7ydMd7bBqZbumTNbv61RpZgS",
+          "owner": "CZws1WQuBbDGKNmfyQBQr2dh96J29kMaySP4CW9MrAru",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "1000000",
+            "decimals": 6,
+            "uiAmount": 1.0,
+            "uiAmountString": "1"
+          }
+        }
+      ],
+      "preBalances": [
+        4322088080,
+        1066800,
+        1488440,
+        1,
+        20369267856
+      ],
+      "preTokenBalances": [
+        {
+          "accountIndex": 2,
+          "mint": "41BK2eVZsGdua58DFz3U7ydMd7bBqZbumTNbv61RpZgS",
+          "owner": "CZws1WQuBbDGKNmfyQBQr2dh96J29kMaySP4CW9MrAru",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 6,
+            "uiAmount": 0.0,
+            "uiAmountString": "0"
+          }
+        }
+      ],
+      "replacementBlockhash": null,
+      "returnData": null,
+      "unitsConsumed": 270
+    }
+  },
+  "confirmation_status": "finalized",
+  "slot": 510365743,
+  "error": null,
+  "explorer_url": "https://explorer.solana.com/tx/5NvJxRk5PMBqQUNst9ogVtDXCohh9VRcoQ3q7wxqU4hane2kNNGiDDEVUL5dNA5JpnxhT6Whb2UsiSMqF84rGrhF?cluster=devnet",
+  "network_transaction": {
+    "blockTime": 1791832480,
+    "meta": {
+      "computeUnitsConsumed": 270,
+      "costUnits": 1925,
+      "err": null,
+      "fee": 5000,
+      "innerInstructions": [],
+      "loadedAddresses": {
+        "readonly": [],
+        "writable": []
+      },
+      "logMessages": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [1]",
+        "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 120 of 1399850 compute units",
+        "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success"
+      ],
+      "postBalances": [
+        4322083080,
+        1066800,
+        1488440,
+        1,
+        20369267856
+      ],
+      "postTokenBalances": [
+        {
+          "accountIndex": 2,
+          "mint": "41BK2eVZsGdua58DFz3U7ydMd7bBqZbumTNbv61RpZgS",
+          "owner": "CZws1WQuBbDGKNmfyQBQr2dh96J29kMaySP4CW9MrAru",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "1000000",
+            "decimals": 6,
+            "uiAmount": 1.0,
+            "uiAmountString": "1"
+          }
+        }
+      ],
+      "preBalances": [
+        4322088080,
+        1066800,
+        1488440,
+        1,
+        20369267856
+      ],
+      "preTokenBalances": [
+        {
+          "accountIndex": 2,
+          "mint": "41BK2eVZsGdua58DFz3U7ydMd7bBqZbumTNbv61RpZgS",
+          "owner": "CZws1WQuBbDGKNmfyQBQr2dh96J29kMaySP4CW9MrAru",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 6,
+            "uiAmount": null,
+            "uiAmountString": "0"
+          }
+        }
+      ],
+      "rewards": [],
+      "status": {
+        "Ok": null
+      }
+    },
+    "slot": 510365743,
+    "transaction": [
+      "Adr4YFNfH7/XLdbSukNpW+w1N9wpCn0/DcxVynrMOsUAWoaE0IerliDBp/WMiLC/d9mOxkIx37Gsdr0sbmrMuQoBAAIFBWTfgEpHe1Y+tdHq7C/mXH+5aNEuCvaNpbj9xJoOvNYsnrgigW41bCfRmE99HS54zgYAEESn/k5IIZaeqPlMB8uK7JKF4qQ7a1eU4zRlPZpPYPICRoGiQey/AIl69UC3AwZGb+UhFzL/7K26csOb57yM5bvF9xJrLEObOkAAAAAG3fbh12Whk9nL4UbO63msHLSF7V9bN5E6jPWFfv8AqUSWGXxprxtzJ6skZKU8PVjDdbLE279E5DHNTSgp2VjsAgMABQLAXBUABAMBAgAJB0BCDwAAAAAA",
+      "base64"
+    ],
+    "transactionIndex": 11,
+    "version": "legacy"
+  },
+  "network_decoded_version": "legacy",
+  "compute_units": 270,
+  "fee_lamports": 5000,
+  "success": true
+}

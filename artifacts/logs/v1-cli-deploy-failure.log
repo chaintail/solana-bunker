@@ -1,0 +1,3 @@
+Explicit private buffer signer supplied. CLI exited after bounded retries.
+Error: Data writes to account failed: Custom error: Max retries exceeded
+Public RPC account lookup during upload returned HTTP429 Too Many Requests.

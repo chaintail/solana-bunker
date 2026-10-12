@@ -1,0 +1,94 @@
+{
+  "operation": "paced-write-buffer-1200-106800",
+  "observed_at_utc": "2026-10-12T19:12:39.724517+00:00",
+  "transaction_bytes": 1436,
+  "transaction_version": 1,
+  "transaction_signature": "39w2CKSassYFzEbf6aaDY7fgbmKVhkgTh6dcCNq3e7dUHD6DGDWSjqh6PKQobdTR4QYBTr3q6cxvfzznyEhyXRPu",
+  "confirmed": true,
+  "purpose": "paced_official_upgradeable_loader_deployment",
+  "simulation": {
+    "context": {
+      "apiVersion": "4.4.0-beta.0",
+      "slot": 510365233
+    },
+    "value": {
+      "accounts": null,
+      "err": null,
+      "fee": 5000,
+      "innerInstructions": null,
+      "loadedAccountsDataSize": 124730,
+      "loadedAddresses": {
+        "readonly": [],
+        "writable": []
+      },
+      "logs": [
+        "Program BPFLoaderUpgradeab1e11111111111111111111111 invoke [1]",
+        "Program BPFLoaderUpgradeab1e11111111111111111111111 success"
+      ],
+      "postBalances": [
+        4366354040,
+        633155960,
+        1
+      ],
+      "postTokenBalances": [],
+      "preBalances": [
+        4366359040,
+        633155960,
+        1
+      ],
+      "preTokenBalances": [],
+      "replacementBlockhash": null,
+      "returnData": null,
+      "unitsConsumed": 2370
+    }
+  },
+  "confirmation_status": "finalized",
+  "slot": 510365238,
+  "error": null,
+  "explorer_url": "https://explorer.solana.com/tx/39w2CKSassYFzEbf6aaDY7fgbmKVhkgTh6dcCNq3e7dUHD6DGDWSjqh6PKQobdTR4QYBTr3q6cxvfzznyEhyXRPu?cluster=devnet",
+  "network_transaction": {
+    "blockTime": 1791832361,
+    "meta": {
+      "computeUnitsConsumed": 2370,
+      "costUnits": 4026,
+      "err": null,
+      "fee": 5000,
+      "innerInstructions": [],
+      "loadedAddresses": {
+        "readonly": [],
+        "writable": []
+      },
+      "logMessages": [
+        "Program BPFLoaderUpgradeab1e11111111111111111111111 invoke [1]",
+        "Program BPFLoaderUpgradeab1e11111111111111111111111 success"
+      ],
+      "postBalances": [
+        4366354040,
+        633155960,
+        1
+      ],
+      "postTokenBalances": [],
+      "preBalances": [
+        4366359040,
+        633155960,
+        1
+      ],
+      "preTokenBalances": [],
+      "rewards": [],
+      "status": {
+        "Ok": null
+      }
+    },
+    "slot": 510365238,
+    "transaction": [
+      "gQEAARwAAABbq8z+hN4TubbAhwUekunnDf/qFH1GgCiK+xdh2GtcKwEDBWTfgEpHe1Y+tdHq7C/mXH+5aNEuCvaNpbj9xJoOvNa3ElO+tStFFDO/O3iKMQX9Ga8fyZVqkYMdjTM846aYLQKo9pFOiKGw4hAVPvdjrisAwrk9FsEk0sBTehAEgAAAwFwVAAAAEAAAgAAAAgLABAEAAQAAADChAQCwBAAAAAAAAL8gAAAAAAAADxAAAAAAAAAFAAEAAAAAAL8gAAAAAAAAlQAAAAAAAAAVBdn/AAAAABUA2P8AAAAAtwkAAAAAAAAYAgAAAAAAAAAAAAAAABAAPSUzAAAAAAAVAywAAAAAAL80AAAAAAAAdwQAAAEAAAC/MgAAAAAAAE9CAAAAAAAAvyQAAAAAAAB3BAAAAgAAAE9CAAAAAAAAvyQAAAAAAAB3BAAABAAAAE9CAAAAAAAAvyQAAAAAAAB3BAAACAAAAE9CAAAAAAAAvyQAAAAAAAB3BAAAEAAAAE9CAAAAAAAAvyQAAAAAAAB3BAAAIAAAAE9CAAAAAAAApwIAAP////8YBAAAVVVVVQAAAABVVVVVvyUAAAAAAAB3BQAAAQAAAF9FAAAAAAAAH1IAAAAAAAAYBAAAMzMzMwAAAAAzMzMzvyUAAAAAAABfRQAAAAAAAHcCAAACAAAAX0IAAAAAAAAPJQAAAAAAAL9SAAAAAAAAdwIAAAQAAAAPJQAAAAAAABgCAAAPDw8PAAAAAA8PDw9fJQAAAAAAABgCAAABAQEBAAAAAAEBAQEvJQAAAAAAAHcFAAA4AAAABQABAAAAAAC3BQAAQAAAALcJAAAMAAAAH1kAAAAAAAAHBQAANQAAAFcFAAA/AAAAb1MAAAAAAAAYAgAA/////wAAAAD//w8Ae2r4/wAAAAAtIC0AAAAAABUBLgAAAAAAvxQAAAAAAAB3BAAAAQAAAL8SAAAAAAAAT0IAAAAAAAC/JAAAAAAAAHcEAAACAAAAT0IAAAAAAAC/JAAAAAAAAHcEAAAEAAAAT0IAAAAAAAC/JAAAAAAAAHcEAAAIAAAAT0IAAAAAAAC/JAAAAAAAAHcEAAAQAAAAT0IAAAAAAAC/JAAAAAAAAHcEAAAgAAAAT0IAAAAAAACnAgAA/////xgEAABVVVVVAAAAAFVVVVW/JQAAAAAAAHcFAAABAAAAX0UAAAAAAAAfUgAAAAAAABgFAAAzMzMzAAAAADMzMzO/JAAAAAAAAF9UAAAAAAAAdwIAAAIAAABfUgAAAAAAAA8kAAAAAAAAv0IAAAAAAAB3AgAABAAAAA8kAAAAAAAAGAIAAA8PDw8AAAAADw8PD18kAAAAAAAAGAIAAAEBAQEAAAAAAQEBAS8kAAAAAAAAdwQAADgAAAAFAAMAAAAAAL+WAAAAAAAABQAn/wAAAAC3BAAAQAAAAB9JAAAAAAAABwQAADUAAABXBAAAPwAAAG9BAAAAAAAABwkAAAwAAAC/lgAAAAAAAAUAH/8AAAAAtwMAAAMAAAAYAAAA/////wAAAAD///9/vxQAAAAAAABfBAAAAAAAABgGAAAAAAAAAAAAAAAA8H8tZBIAAAAAAL8lAAAAAAAAXwUAAAAAAAAtZQ8AAAAAAE9FAAAAAAAAFQUGAAAAAAC/IwAAAAAAAF8TAAAAAAAA1QMFAP////+3AwAAAAAAAH0hBQAAAAAABQAHAAAAAAC3AwAAAQAAAAUABQAAAAAAtwMAAAAAAABtIQMAAAAAALcDAAABAAAAHSEBAAAAAAC3AwAAAgAAAGcDAAADAAAAGAEAAMCnAQAAAAAAAAAAAGu8cEfYTYulbMzoc90MrrQEz+WpltYj03VYSfRVoNF5E85jwiiYS1NjkDy7EOn3vKCpsmSzeOaxPYaJjdm15gA=",
+      "base64"
+    ],
+    "transactionIndex": 15,
+    "version": 1
+  },
+  "network_decoded_version": 1,
+  "compute_units": 2370,
+  "fee_lamports": 5000,
+  "success": true
+}
