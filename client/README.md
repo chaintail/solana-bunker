@@ -14,12 +14,56 @@ These commands use `tests/svm_harness.py`, the built program binary at
 SBF custody and SPL-token CPIs, check balances, demonstrate both asset attacks,
 burning, signed root rotation and exact durable retry. Each run has fresh
 disposable local signing keysets and emits separate `artifacts/client-svm-*`
-event/benchmark files. XMSS staging consumes five actual transactions per
-logical operation; temporary accounts are retained and no refunds are claimed.
+event/benchmark files. XMSS defaults to one `MessageV1` transaction per
+logical operation, containing the canonical intent and complete 2,500-byte
+signature inline. SOL/token withdrawals, leaf burns, root rotation, attacks,
+replay and exact retry all use this same transport. Array/Merkle retain their
+legacy transport.
 Runtime CUs and full serialized transaction bytes come from real metadata.
 There is no devnet confirmation in these commands. Small 16-leaf benchmarks
 use five successful samples per asset to leave room for attacks and burning;
 256/1024-leaf and XMSS cases can use twenty.
+
+The v1 message explicitly requests 1,400,000 CUs, 1,048,576 loaded account-data
+bytes and a 32,768-byte heap. It contains no legacy ComputeBudget instruction.
+The builder measures the fully signed serialization and rejects envelopes over
+4,096 bytes. **LiteSVM 0.29.0 does not enforce those serialized inline limits.**
+The local XMSS fixture explicitly sets LiteSVM's execution budget to 1,400,000
+CUs; each raw log and benchmark row records that runtime override separately
+from the serialized configuration and measured consumed CUs. Local execution
+does not establish devnet resource enforcement or confirmation.
+
+To select the sealed-account legacy fallback explicitly:
+
+```sh
+python -m client.cli --adapter svm --xmss-transport staged demo-xmss
+python tests/svm_harness.py --demo xmss --full --xmss-transport staged
+```
+
+Staged XMSS consumes five transactions per logical operation: initialization,
+three bounded uploads and execution. Temporary accounts remain allocated;
+no refunds are claimed. The transport choice does not change canonical intent
+bytes or authorize signing the same leaf again. An exact retry reuses the
+durably recorded signature and can refresh only the outer transaction.
+
+The shared devnet transaction assembly API is:
+
+```python
+from client.transport import execute_instruction, build_xmss_transaction
+
+# intent and signature were already reserved/signed by SigningJournal.
+# accounts: state W, treasury W, mint, source W for tokens,
+# destination W for withdrawals, Token Program.
+instruction = execute_instruction(intent, signature, accounts)
+transaction = build_xmss_transaction(payer.pubkey(), [payer], [instruction], blockhash)
+serialized = bytes(transaction)
+```
+
+Submission uses base64 encoding; retrieving a v1 transaction requires
+`maxSupportedTransactionVersion: 1`. The public-cluster runner owns submission
+and confirmation; local signatures must not be labeled confirmed network
+transactions. Shared-cluster signers require fresh private keys and durable
+journals, never the disposable harness vectors.
 
 From the repository root, the standalone disposable host demonstrations are:
 
@@ -31,7 +75,7 @@ python -m client.cli --adapter host benchmark
 python -m unittest discover -s client/tests -v
 ```
 
-XMSS commands require `sh crypto/build_reference.sh` first. The signer is the
+XMSS commands require `bash crypto/build_reference.sh` first. The signer is the
 pinned C reference wrapper; custody is explicitly the Python host model here.
 Host commands do not provide evidence of SVM execution or network transactions.
 Output JSON labels every event `host_reference`; missing CUs/transaction IDs are

@@ -115,6 +115,7 @@ def benchmark():
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--adapter",choices=("host","svm"),default="host")
+    parser.add_argument("--xmss-transport",choices=("inline-v1","staged"),default="inline-v1",help="SVM XMSS transport; default is one inline v1 transaction")
     parser.add_argument("--state-file",default=".private/client/host-fixture.json")
     parser.add_argument("--journal-dir",default=".private/client/journals")
     subs=parser.add_subparsers(dest="command",required=True)
@@ -134,8 +135,8 @@ def main():
     if args.adapter=="svm":
         from . import svm
         if args.command.startswith("demo-"):
-            emit(svm.run({"demo-array":1,"demo-merkle":2,"demo-xmss":3}[args.command],args.samples));return
-        if args.command=="benchmark":emit(svm.benchmark(args.samples));return
+            emit(svm.run({"demo-array":1,"demo-merkle":2,"demo-xmss":3}[args.command],args.samples,xmss_transport=args.xmss_transport));return
+        if args.command=="benchmark":emit(svm.benchmark(args.samples,xmss_transport=args.xmss_transport));return
         parser.error("SVM adapter currently supports isolated demo and benchmark commands; persistent commands use --adapter host")
     if args.command.startswith("demo-"):
         result=demo({"demo-array":1,"demo-merkle":2,"demo-xmss":3}[args.command]);emit(result);return

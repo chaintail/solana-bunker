@@ -22,10 +22,12 @@ from solders.keypair import Keypair
 from solders.pubkey import Pubkey
 from solders.instruction import Instruction, AccountMeta
 from solders.system_program import create_account, CreateAccountParams, transfer, TransferParams
-from solders.compute_budget import set_compute_unit_limit
+from solders.compute_budget import ComputeBudget, set_compute_unit_limit
 from solders.transaction import Transaction
 from solders.transaction_metadata import FailedTransactionMetadata
 from client.actions import encode_intent
+from client.transport import (XMSS_TRANSPORTS, COMPUTE_UNIT_LIMIT, build_xmss_transaction,
+                              config_values, execute_instruction, inline_config)
 from client.merkle import SecretTree
 from crypto.xmss import keygen, sign_at
 from evidence_schema import FIELDS, validate, summarize
@@ -43,7 +45,9 @@ def meta(key,writable=False,signer=False):
 
 
 class Harness:
-    def __init__(self,run_id):
+    def __init__(self,run_id,xmss_transport="inline-v1"):
+        if xmss_transport not in XMSS_TRANSPORTS:raise ValueError("unknown XMSS transport")
+        self.xmss_transport=xmss_transport
         self.run_id=run_id
         self.binary_bytes=BINARY.read_bytes()
         self.binary_digest=hashlib.sha256(self.binary_bytes).hexdigest()
@@ -63,7 +67,17 @@ class Harness:
         payer=payer or self.relayer
         signers=signers or [payer]
         self.svm.expire_blockhash()  # Fresh outer envelope for exact inner retries.
-        tx=Transaction.new_signed_with_payer([set_compute_unit_limit(1400000),*ixs],payer.pubkey(),signers,self.svm.latest_blockhash())
+        inline=self.mode==3 and self.xmss_transport=="inline-v1" and any(ix.program_id==PROGRAM and ix.data[:1]==b'\x02' for ix in ixs)
+        config=inline_config() if inline else None
+        if inline:
+            if not self.runtime_budget_override:
+                # A trusted demo transition can enter XMSS after setup.
+                budget=ComputeBudget(True);budget.compute_unit_limit=COMPUTE_UNIT_LIMIT
+                self.svm.with_compute_budget(budget)
+                self.runtime_budget_override=True
+            tx=build_xmss_transaction(payer.pubkey(),signers,ixs,self.svm.latest_blockhash(),config=config)
+        else:
+            tx=Transaction.new_signed_with_payer([set_compute_unit_limit(COMPUTE_UNIT_LIMIT),*ixs],payer.pubkey(),signers,self.svm.latest_blockhash())
         storage_before=self.storage_snapshot()
         result=self.svm.send_transaction(tx)
         failed=isinstance(result,FailedTransactionMetadata)
@@ -73,7 +87,7 @@ class Harness:
         self.seq+=1
         op=operation or f'{self.run_id}-{self.seq}'
         path=f'artifacts/logs/validation-svm/{self.run_id}/{self.seq:05d}.json'
-        raw={'run_id':self.run_id,'operation_id':op,'observed_at_utc':NOW(),'result':json.loads(result.to_json()),'serialized_transaction_hex':bytes(tx).hex(),'transaction_bytes':len(bytes(tx)),'accounts_after':self.snapshot_public(),'attacker_scope':'ordinary dedicated relayer credential plus disclosed bearer witness; admin, upgrade, mint authority, and XMSS seeds excluded'}
+        raw={'run_id':self.run_id,'operation_id':op,'observed_at_utc':NOW(),'result':json.loads(result.to_json()),'serialized_transaction_hex':bytes(tx).hex(),'transaction_bytes':len(bytes(tx)),'transaction_version':1 if inline else 'legacy','inline_configuration':config_values(config) if inline else None,'inline_limits_enforced':False if inline else None,'runtime_compute_budget_source':'litesvm_override' if self.runtime_budget_override else 'legacy_compute_budget_instruction','runtime_compute_unit_limit':COMPUTE_UNIT_LIMIT,'accounts_after':self.snapshot_public(),'attacker_scope':'ordinary dedicated relayer credential plus disclosed bearer witness; admin, upgrade, mint authority, and XMSS seeds excluded'}
         absolute=ROOT/path;absolute.parent.mkdir(parents=True,exist_ok=True);absolute.write_text(json.dumps(raw,indent=2)+'\n')
         if experiment:
             r={'schema_version':1,'run_id':self.run_id,'operation_id':op,'observed_at_utc':NOW(),'commit':self.commit,'source_sha256':self.source_sha256,'program_binary_sha256':self.binary_digest,'evidence_paths':[path]}
@@ -81,7 +95,7 @@ class Harness:
             r['environment'].update(evidence_level='local_svm',cluster='LiteSVM isolated fixture',runtime_version='solders0.29.0/litesvm',toolchain_manifest='reports/environment.json')
             r['experiment'].update(mode={1:'SECRET_ARRAY_V1',2:'MERKLE_SECRET_V1',3:'XMSS_SHA2_10_256_V1'}[self.mode],parameter_set='XMSS-SHA2_10_256' if self.mode==3 else None,asset=experiment.get('asset'),mint=str(self.mint.pubkey()),leaf_count=self.count,scenario=experiment['scenario'],fixture_id=self.fixture_id,command='python3 tests/svm_harness.py')
             r['outcome'].update(expected=expected,observed=observed,test_passed=expected==observed,error_code=str(result.err()) if failed else None,failure_stage='program_execution' if failed else None,verifier_reached=verifier_reached)
-            r['transport'].update(version='legacy',transaction_index=index,transaction_count_for_operation=total,transaction_bytes=len(bytes(tx)),instruction_data_bytes=sum(len(ix.data) for ix in ixs),signature_or_witness_bytes=witness_bytes,merkle_proof_bytes=proof_bytes,transaction_signature=str(metadata.signature()),confirmation_status=None)
+            r['transport'].update(version='v1' if inline else 'legacy',transaction_index=index,transaction_count_for_operation=total,transaction_bytes=len(bytes(tx)),instruction_data_bytes=sum(len(ix.data) for ix in ixs),signature_or_witness_bytes=witness_bytes,merkle_proof_bytes=proof_bytes,transaction_signature=str(metadata.signature()),confirmation_status=None)
             state=self.svm.get_account(self.state)
             source=self.svm.get_account(self.source)
             treasury=self.svm.get_account(self.treasury)
@@ -89,7 +103,11 @@ class Harness:
             deposit=sum(max(value-storage_before.get(address,0),0) for address,value in storage_after.items())
             refund=sum(max(value-storage_after.get(address,0),0) for address,value in storage_before.items())
             temporary_bytes=sum(len(self.svm.get_account(address).data) for address in self.stages if self.svm.get_account(address))
-            r['resources'].update(compute_limit=1400000,compute_consumed=metadata.compute_units_consumed(),allocated_account_bytes=sum(len(a.data) for a in (state,source,treasury) if a),logical_authority_bytes=self.authority_len,actual_transaction_fee_lamports=str(metadata.fee()),storage_deposit_lamports=str(deposit),storage_refund_lamports=str(refund),temporary_account_bytes=temporary_bytes,usage_bitmap_bytes=128)
+            r['resources'].update(compute_limit=COMPUTE_UNIT_LIMIT,compute_consumed=metadata.compute_units_consumed(),allocated_account_bytes=sum(len(a.data) for a in (state,source,treasury) if a),logical_authority_bytes=self.authority_len,actual_transaction_fee_lamports=str(metadata.fee()),storage_deposit_lamports=str(deposit),storage_refund_lamports=str(refund),temporary_account_bytes=temporary_bytes,usage_bitmap_bytes=128)
+            r['transport']['inline_configuration']=config_values(config) if inline else None
+            r['resources'].update(inline_limits_enforced=False if inline else None,
+                runtime_compute_budget_source='litesvm_override' if self.runtime_budget_override else 'legacy_compute_budget_instruction',
+                runtime_compute_unit_limit=COMPUTE_UNIT_LIMIT)
             assert not validate(r,ROOT),validate(r,ROOT)
             self.records.append(r)
         if observed!=expected:
@@ -99,6 +117,13 @@ class Harness:
     def setup(self,mode,count=16):
         self.mode=mode;self.count=1024 if mode==3 else count
         self.svm=LiteSVM()
+        self.runtime_budget_override=mode==3 and self.xmss_transport=="inline-v1"
+        if self.runtime_budget_override:
+            # solders0.29 ignores v1 inline limits. Explicitly disclose this local
+            # execution override; it does not demonstrate v1 limit enforcement.
+            budget=ComputeBudget(True)
+            budget.compute_unit_limit=COMPUTE_UNIT_LIMIT
+            self.svm.with_compute_budget(budget)
         self.stages=[]
         self.svm.add_program(PROGRAM,self.binary_bytes)
         self.admin=Keypair();self.relayer=Keypair();self.mint=Keypair();self.owner=Keypair();self.attacker=Keypair();self.owner_token=Keypair();self.attacker_token=Keypair()
@@ -178,7 +203,7 @@ class Harness:
         wire=encode_intent(value)
         asset='SOL' if value['action']==1 else 'MOCK_USDC' if value['action']==2 else None
         op=f'{self.run_id}-logical-{uuid.uuid4().hex[:12]}'
-        staged=self.mode==3 and len(witness)==2500
+        staged=self.mode==3 and self.xmss_transport=="staged" and len(witness)==2500
         if staged and stage is None:
             pair=Keypair();stage=pair.pubkey()
             self.stages.append(stage)
@@ -190,7 +215,7 @@ class Harness:
         destination=Pubkey.from_bytes(value['destination']) if 'destination'in value else self.owner.pubkey()
         metas=accounts or [meta(self.state,True),meta(self.treasury,True),meta(self.mint.pubkey()),meta(self.source,True),meta(destination,True),meta(TOKEN)]
         if staged:metas=[*metas,meta(stage)]
-        ix=Instruction(PROGRAM,bytes([3 if staged else 2])+struct.pack('<H',len(wire))+wire+(b''if staged else witness),metas)
+        ix=Instruction(PROGRAM,b'\x03'+struct.pack('<H',len(wire))+wire,metas) if staged else execute_instruction(value,witness,metas,program_id=PROGRAM)
         before=self.snapshot_public()
         result=self.send([ix],experiment={'scenario':scenario,'asset':asset},expected=expected,operation=op,index=4 if staged else 0,total=5 if staged else 1,witness_bytes=len(witness),proof_bytes=max(0,len(witness)-36) if self.mode==2 else None,verifier_reached=verifier_reached)
         after=self.snapshot_public()
@@ -203,7 +228,7 @@ class Harness:
         output=ROOT/'artifacts/validation-benchmarks.jsonl'
         output.write_text(''.join(json.dumps(r)+'\n'for r in self.records))
         summarize(self.records,ROOT/'artifacts/validation-benchmark-summary.csv')
-        (ROOT/'artifacts/validation-svm-results.json').write_text(json.dumps({'schema_version':1,'run_id':self.run_id,'commit':self.commit,'source_sha256':self.source_sha256,'program_binary_sha256':self.binary_digest,'evidence_level':'local_svm','test_cases':self.results,'measured_attempts':len(self.records),'scope':'Runtime execution in LiteSVM; no network confirmation. Distinct admin/mint vs relayer. Deterministic test keysets deliberately reset/reused only inside isolated no-value fixtures for adversarial tests; never fund on shared cluster and never emulate this signing bypass with a real key. Exact transaction envelopes/raw runtime metadata in evidence paths. Temporary stage accounts retained and included in logical-operation setup; no refunds implemented.'},indent=2)+'\n')
+        (ROOT/'artifacts/validation-svm-results.json').write_text(json.dumps({'schema_version':1,'run_id':self.run_id,'commit':self.commit,'source_sha256':self.source_sha256,'program_binary_sha256':self.binary_digest,'evidence_level':'local_svm','test_cases':self.results,'measured_attempts':len(self.records),'xmss_transport':self.xmss_transport,'scope':'Inline v1 uses an explicit local 1.4M CU runtime override; LiteSVM does not enforce serialized inline resource limits. Runtime execution in LiteSVM; no network confirmation. Distinct admin/mint vs relayer. Deterministic test keysets deliberately reset/reused only inside isolated no-value fixtures for adversarial tests; never fund on shared cluster and never emulate this signing bypass with a real key. Exact transaction envelopes/raw runtime metadata in evidence paths. Temporary stage accounts retained and included in logical-operation setup; no refunds implemented.'},indent=2)+'\n')
 
 
 def full_correctness(h,modes):
@@ -324,9 +349,10 @@ def main():
     parser.add_argument('--demo',choices=['array','merkle','xmss'])
     parser.add_argument('--samples',type=int,default=1)
     parser.add_argument('--full',action='store_true')
+    parser.add_argument('--xmss-transport',choices=XMSS_TRANSPORTS,default='inline-v1')
     args=parser.parse_args()
     modes=[{'array':1,'merkle':2,'xmss':3}[args.demo]] if args.demo else [1,2,3]
-    h=Harness('validation-'+datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%S'))
+    h=Harness('validation-'+datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%S'),xmss_transport=args.xmss_transport)
     try:
         for mode in modes:
             for action in (1,2):
