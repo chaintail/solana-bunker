@@ -8,6 +8,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from solders.transaction import VersionedTransaction
 from infrastructure_devnet import ROOT, write_json
+from tests.evidence_schema import validate
 
 
 def main():
@@ -72,6 +73,7 @@ def main():
         'native_tests': 'artifacts/v1-native-program-test-results.json',
         'build_environment': 'artifacts/v1-integration-environment.json',
         'initial_cli_failure': 'artifacts/logs/v1-cli-deploy-failure.log',
+        'devnet_benchmarks': 'artifacts/v1-devnet-benchmarks.jsonl',
     }
     operations = [row for row in manifest['confirmed_transactions'] if row.get('mode')]
     assert len(operations) == 10
@@ -89,6 +91,42 @@ def main():
     assert first['message_commitment'] == low['message_commitment'] == loaded['message_commitment']
     assert first['witness_sha256'] == low['witness_sha256'] == loaded['witness_sha256']
     assert first['compute_units'] > 200_000
+    benchmarks = []
+    for row in operations:
+        mode, action = row['mode'], row['action']
+        vault = next(value for value in manifest['vaults'] if value['mode'] == mode)
+        benchmark = {
+            'schema_version': 1, 'run_id': manifest['demo_run_id'], 'operation_id': row['operation'],
+            'observed_at_utc': row['observed_at_utc'], 'commit': manifest['demo_environment']['commit'],
+            'program_binary_sha256': manifest['deployed_binary_sha256'], 'evidence_paths': [row['evidence_path']],
+            'environment': {'evidence_level': 'devnet_confirmed', 'cluster': 'devnet',
+                'genesis_hash': manifest['genesis_hash'], 'runtime_version': manifest['demo_environment']['rpc_version']['solana-core'],
+                'toolchain_manifest': 'artifacts/v1-integration-environment.json'},
+            'experiment': {'mode': {'array': 'SECRET_ARRAY_V1', 'merkle': 'MERKLE_SECRET_V1', 'xmss': 'XMSS_SHA2_10_256_V1'}[mode],
+                'parameter_set': 'XMSS-SHA2_10_256' if mode == 'xmss' else None,
+                'asset': 'SOL' if action == 1 else 'MOCK_USDC' if action == 2 else None,
+                'mint': manifest['mock_mint'], 'leaf_count': vault['leaf_capacity'],
+                'scenario': row['operation'].removeprefix(manifest['demo_run_id'] + '-'), 'fixture_id': vault['state'],
+                'command': 'python scripts/infrastructure-devnet-demo.py --run-id ' + manifest['demo_run_id']},
+            'outcome': {'expected': 'success', 'observed': 'success', 'test_passed': True,
+                'error_code': None, 'failure_stage': None, 'verifier_reached': True},
+            'transport': {'version': 'v1' if mode == 'xmss' else 'legacy', 'transaction_index': 0,
+                'transaction_count_for_operation': 1, 'transaction_bytes': row['transaction_bytes'],
+                'instruction_data_bytes': row['instruction_data_bytes'], 'signature_or_witness_bytes': row['witness_bytes'],
+                'merkle_proof_bytes': 32 * vault['merkle_authentication_path_height'] if mode == 'merkle' else None,
+                'transaction_signature': row['transaction_signature'], 'confirmation_status': row['confirmation_status'],
+                'inline_configuration': row.get('network_decoded_inline_resources')},
+            'resources': {'compute_limit': 1_400_000, 'compute_consumed': row['compute_units'],
+                'sha256_syscall_count': None, 'allocated_account_bytes': None,
+                'logical_authority_bytes': len(bytes.fromhex(row['before']['authority_hex'])),
+                'storage_deposit_lamports': None, 'storage_refund_lamports': None,
+                'actual_transaction_fee_lamports': str(row['fee_lamports']),
+                'inline_limits_enforced': True if mode == 'xmss' else None,
+                'temporary_account_bytes': 0, 'usage_bitmap_bytes': 128},
+        }
+        assert not validate(benchmark, ROOT), validate(benchmark, ROOT)
+        benchmarks.append(benchmark)
+    (artifact / 'v1-devnet-benchmarks.jsonl').write_text(''.join(json.dumps(row) + '\n' for row in benchmarks))
     summary = {
         'status': manifest['status'], 'cluster': 'devnet',
         'deployment_environment': {key: manifest[key] for key in ('commit', 'rpc_version', 'genesis_hash')},
