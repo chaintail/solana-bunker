@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "description": "Host construction timings and measured raw serialized commitments/proofs; no SVM/account/rent/transaction measurements",
+  "rows": [
+    {
+      "leaf_count": 16,
+      "evidence_level": "host_reference",
+      "array_build_ns": 10976,
+      "merkle_build_ns": 53891,
+      "measured_serialized_array_commitment_bytes": 512,
+      "measured_serialized_merkle_root_bytes": 32,
+      "measured_merkle_witness_bytes": 164,
+      "measured_merkle_sibling_bytes": 128,
+      "actual_allocated_account_bytes": null,
+      "rent_lamports": null,
+      "compute_units": null,
+      "transaction_bytes": null
+    },
+    {
+      "leaf_count": 256,
+      "evidence_level": "host_reference",
+      "array_build_ns": 109756,
+      "merkle_build_ns": 693234,
+      "measured_serialized_array_commitment_bytes": 8192,
+      "measured_serialized_merkle_root_bytes": 32,
+      "measured_merkle_witness_bytes": 292,
+      "measured_merkle_sibling_bytes": 256,
+      "actual_allocated_account_bytes": null,
+      "rent_lamports": null,
+      "compute_units": null,
+      "transaction_bytes": null
+    },
+    {
+      "leaf_count": 1024,
+      "evidence_level": "host_reference",
+      "array_build_ns": 477358,
+      "merkle_build_ns": 2009285,
+      "measured_serialized_array_commitment_bytes": 32768,
+      "measured_serialized_merkle_root_bytes": 32,
+      "measured_merkle_witness_bytes": 356,
+      "measured_merkle_sibling_bytes": 320,
+      "actual_allocated_account_bytes": null,
+      "rent_lamports": null,
+      "compute_units": null,
+      "transaction_bytes": null
+    }
+  ]
+}
