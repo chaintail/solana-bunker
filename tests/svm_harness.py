@@ -78,6 +78,7 @@ class Harness:
             tx=build_xmss_transaction(payer.pubkey(),signers,ixs,self.svm.latest_blockhash(),config=config)
         else:
             tx=Transaction.new_signed_with_payer([set_compute_unit_limit(COMPUTE_UNIT_LIMIT),*ixs],payer.pubkey(),signers,self.svm.latest_blockhash())
+        serialized_transaction=bytes(tx)
         storage_before=self.storage_snapshot()
         result=self.svm.send_transaction(tx)
         failed=isinstance(result,FailedTransactionMetadata)
@@ -87,7 +88,7 @@ class Harness:
         self.seq+=1
         op=operation or f'{self.run_id}-{self.seq}'
         path=f'artifacts/logs/validation-svm/{self.run_id}/{self.seq:05d}.json'
-        raw={'run_id':self.run_id,'operation_id':op,'observed_at_utc':NOW(),'result':json.loads(result.to_json()),'serialized_transaction_hex':bytes(tx).hex(),'transaction_bytes':len(bytes(tx)),'transaction_version':1 if inline else 'legacy','inline_configuration':config_values(config) if inline else None,'inline_limits_enforced':False if inline else None,'runtime_compute_budget_source':'litesvm_override' if self.runtime_budget_override else 'legacy_compute_budget_instruction','runtime_compute_unit_limit':COMPUTE_UNIT_LIMIT,'accounts_after':self.snapshot_public(),'attacker_scope':'ordinary dedicated relayer credential plus disclosed bearer witness; admin, upgrade, mint authority, and XMSS seeds excluded'}
+        raw={'run_id':self.run_id,'operation_id':op,'observed_at_utc':NOW(),'result':json.loads(result.to_json()),'serialized_transaction_hex':serialized_transaction.hex(),'transaction_bytes':len(serialized_transaction),'transaction_version':1 if inline else 'legacy','inline_configuration':config_values(config) if inline else None,'inline_limits_enforced':False if inline else None,'runtime_compute_budget_source':'litesvm_override' if self.runtime_budget_override else 'legacy_compute_budget_instruction','runtime_compute_unit_limit':COMPUTE_UNIT_LIMIT,'accounts_after':self.snapshot_public(),'attacker_scope':'ordinary dedicated relayer credential plus disclosed bearer witness; admin, upgrade, mint authority, and XMSS seeds excluded'}
         absolute=ROOT/path;absolute.parent.mkdir(parents=True,exist_ok=True);absolute.write_text(json.dumps(raw,indent=2)+'\n')
         if experiment:
             r={'schema_version':1,'run_id':self.run_id,'operation_id':op,'observed_at_utc':NOW(),'commit':self.commit,'source_sha256':self.source_sha256,'program_binary_sha256':self.binary_digest,'evidence_paths':[path]}
@@ -95,7 +96,7 @@ class Harness:
             r['environment'].update(evidence_level='local_svm',cluster='LiteSVM isolated fixture',runtime_version='solders0.29.0/litesvm',toolchain_manifest='reports/environment.json')
             r['experiment'].update(mode={1:'SECRET_ARRAY_V1',2:'MERKLE_SECRET_V1',3:'XMSS_SHA2_10_256_V1'}[self.mode],parameter_set='XMSS-SHA2_10_256' if self.mode==3 else None,asset=experiment.get('asset'),mint=str(self.mint.pubkey()),leaf_count=self.count,scenario=experiment['scenario'],fixture_id=self.fixture_id,command='python3 tests/svm_harness.py')
             r['outcome'].update(expected=expected,observed=observed,test_passed=expected==observed,error_code=str(result.err()) if failed else None,failure_stage='program_execution' if failed else None,verifier_reached=verifier_reached)
-            r['transport'].update(version='v1' if inline else 'legacy',transaction_index=index,transaction_count_for_operation=total,transaction_bytes=len(bytes(tx)),instruction_data_bytes=sum(len(ix.data) for ix in ixs),signature_or_witness_bytes=witness_bytes,merkle_proof_bytes=proof_bytes,transaction_signature=str(metadata.signature()),confirmation_status=None)
+            r['transport'].update(version='v1' if inline else 'legacy',transaction_index=index,transaction_count_for_operation=total,transaction_bytes=len(serialized_transaction),instruction_data_bytes=sum(len(ix.data) for ix in ixs),signature_or_witness_bytes=witness_bytes,merkle_proof_bytes=proof_bytes,transaction_signature=str(metadata.signature()),confirmation_status=None)
             state=self.svm.get_account(self.state)
             source=self.svm.get_account(self.source)
             treasury=self.svm.get_account(self.treasury)
@@ -203,7 +204,9 @@ class Harness:
         wire=encode_intent(value)
         asset='SOL' if value['action']==1 else 'MOCK_USDC' if value['action']==2 else None
         op=f'{self.run_id}-logical-{uuid.uuid4().hex[:12]}'
-        staged=self.mode==3 and self.xmss_transport=="staged" and len(witness)==2500
+        # Supplying an existing sealed stage is also an explicit fallback choice
+        # (used by stage-integrity and exact staged-retry tests).
+        staged=self.mode==3 and (self.xmss_transport=="staged" or stage is not None) and len(witness)==2500
         if staged and stage is None:
             pair=Keypair();stage=pair.pubkey()
             self.stages.append(stage)
