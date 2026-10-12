@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from 'react';
+import { useEffect, useId, useState, type CSSProperties } from 'react';
 import { FORMULAS, type FormulaId } from '../formulas';
 import { cx } from './bits';
 
@@ -8,7 +8,16 @@ import { cx } from './bits';
  */
 export function Redact({ eq, w, h = 24, style, className, align = 'left', drop = 'down' }: { eq: FormulaId; w: number; h?: number; style?: CSSProperties; className?: string; align?: 'left' | 'right'; drop?: 'down' | 'up' }) {
   const [open, setOpen] = useState(false);
+  const me = useId();
   const f = FORMULAS[eq];
+  // one declassified slip at a time
+  useEffect(() => {
+    const onOther = (e: Event) => {
+      if ((e as CustomEvent).detail !== me) setOpen(false);
+    };
+    addEventListener('sb-declassify', onOther);
+    return () => removeEventListener('sb-declassify', onOther);
+  }, [me]);
   return (
     <span
       className={cx('redact-x', open && 'open', className)}
@@ -16,7 +25,8 @@ export function Redact({ eq, w, h = 24, style, className, align = 'left', drop =
       data-noadvance
       onClick={(e) => {
         e.stopPropagation();
-        setOpen((o) => !o);
+        if (!open) dispatchEvent(new CustomEvent('sb-declassify', { detail: me }));
+        setOpen(!open);
       }}
       title={open ? '' : 'Declassify'}
     >

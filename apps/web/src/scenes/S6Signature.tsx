@@ -108,7 +108,7 @@ function Signature({ at, instant }: SceneProps) {
           ))}
         </div>
         <div className="msgbit">
-          message bit <b>1</b> → reveal x₁, keep x₀ sealed
+          message bit <b>1</b> → reveal x₁ only
         </div>
         <div className="peq">
           <span className="lbl">definition</span>
