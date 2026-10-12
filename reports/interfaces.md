@@ -69,6 +69,10 @@ and abandons every uncertain reservation. `SigningJournal` uses a nonblocking
 OS writer lock and SQLite FULL synchronization; the journal is never a public
 artifact. Back up state independently of mnemonic; onchain-unused does not mean
 offchain-unexposed. Local `AuthorityHistory` rejects repeated roots/generations.
+Generation identifiers are uint64 integers. `next_generation(active_generation)`
+skips every historical reservation, including failed rotations;
+`generation_for(public64)` recovers the original generation for exact retries.
+Arbitrary textual generation labels are rejected.
 
 ## Public vectors and execution adapter
 
@@ -79,7 +83,11 @@ fixture seeds are never funded on shared clusters. No live seed or journal
 belongs in exported events. Benchmark records use the handoff contract, with
 null for unmeasured SVM CUs, real transaction serialization and fees.
 
-The dependency-free CLI explicitly selects `host` adapter. An unavailable
-`svm` adapter fails loudly; host model execution never produces network-confirmed
-or local-SVM labels. The future network adapter must supply real serialization,
-RPC submission/confirmation, token account plumbing, and runtime measurements.
+The dependency-free CLI defaults to the `host` adapter. Explicit `--adapter svm`
+supports isolated demonstration and benchmark commands using the independent
+LiteSVM harness and the compiled SBF binary. It performs real SPL CPIs, measures
+runtime CUs and full serialized transactions, and emits `local_svm` labels.
+Persistent fixture commands currently use `host`; unsupported SVM commands fail
+loudly. Host execution never produces network-confirmed or local-SVM labels.
+The future network adapter must supply RPC submission/confirmation; no existing
+CLI demonstration claims devnet confirmation.
