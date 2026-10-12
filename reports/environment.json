@@ -1,0 +1,7 @@
+{
+  "developer_public_address": "AxQBVSbA3tEc8RsMhn3D4gPLBLnEu3XD84Zd9yy3pmnQ",
+  "cluster": "devnet",
+  "rpc_url": "https://api.devnet.solana.com",
+  "sprint_start_utc": "2026-10-12T13:36:06.597515+00:00",
+  "sprint_target_end_utc": "2026-10-13T13:36:06.597515+00:00"
+}
