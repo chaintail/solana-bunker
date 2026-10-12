@@ -32,6 +32,18 @@ def main():
             assert (fetched['meta']['err'] is None) == receipt['success']
             assert fetched['meta']['computeUnitsConsumed'] == receipt['compute_units']
             compact['wire_sha256'] = hashlib.sha256(raw).hexdigest()
+            if receipt.get('mode') == 'xmss':
+                assert transaction.version() == 1
+                message = transaction.message
+                assert len(message.instructions) == 1
+                instruction = message.instructions[0]
+                assert str(message.account_keys[instruction.program_id_index]) == manifest['program_id']
+                assert instruction.data[0] == 2
+                resources = {key: getattr(message.config, key) for key in
+                             ('compute_unit_limit', 'loaded_accounts_data_size_limit', 'heap_size')}
+                assert resources == receipt['inline_resources']
+                compact['network_decoded_inline_resources'] = resources
+                compact['network_custody_instruction_count'] = 1
             receipts[signature] = compact
         attempts.append(compact)
     # Retain CLI-discovered signatures and enrich them with exact wire receipts
@@ -41,6 +53,9 @@ def main():
             receipt = receipts[row['transaction_signature']]
             for key in ('transaction_bytes', 'compute_units', 'transaction_version',
                         'network_decoded_version', 'wire_sha256', 'evidence_path'):
+                if key in receipt:
+                    row[key] = receipt[key]
+            for key in ('network_decoded_inline_resources', 'network_custody_instruction_count'):
                 if key in receipt:
                     row[key] = receipt[key]
     manifest['transaction_attempts'] = attempts
