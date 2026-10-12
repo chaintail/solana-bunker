@@ -40,5 +40,6 @@ Liam (solo). Location: [Liam to fill].
 - Program (devnet): https://explorer.solana.com/address/HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V?cluster=devnet
 - Presentation app: [publish-shared URL when the build lands]
 - Pitch video: [upload]
-- Technical video: [upload]
-- Logo/graphic: [image to generate with the README header]
+- Technical video (3 min): [upload]
+- Full technical walkthrough (about 11 min, YouTube, linked from the README): [upload]
+- Logo/graphic: docs/presentation/assets/logo-1024.png (banner: banner-1600x400.png)
