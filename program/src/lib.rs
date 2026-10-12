@@ -4,12 +4,17 @@ use solana_program::{account_info::{next_account_info, AccountInfo}, entrypoint:
     hash::hashv, msg, program::{invoke, invoke_signed}, program_error::ProgramError,
     program_pack::Pack, pubkey::Pubkey, rent::Rent, system_instruction, sysvar::Sysvar};
 use spl_token::state::{Account as TokenAccount, AccountState, Mint};
-use bunker_xmss_verifier::{verify, Sha256};
+use bunker_xmss_verifier::{verify, Sha256, SIGNATURE_BYTES};
 #[cfg(not(feature="no-entrypoint"))]
 solana_program::entrypoint!(process_instruction);
 
 pub const HEADER: usize = 358;
 pub const STAGE_HEADER: usize = 125;
+/// intent_len:u16LE || exact canonical intent || mode-specific witness.
+/// XMSS uses the complete raw RFC signature inline, with no extra wrapper.
+pub const EXECUTE_INLINE: u8 = 2;
+/// Same canonical execution path, with the witness borrowed from a sealed account.
+pub const EXECUTE_STAGED: u8 = 3;
 const STATE_MAGIC: &[u8;8] = b"BUNKST01";
 const STAGE_MAGIC: &[u8;8] = b"BUNKW001";
 const ARRAY: u8=1; const MERKLE: u8=2; const XMSS: u8=3;
@@ -110,7 +115,7 @@ fn auth(d:&[u8],intent:&[u8],w:&[u8],index:u32)->ProgramResult{
         let secret_hash=hashv(&[&w[4..36]]);let mut node=hashv(&[b"BUNKER-LEAF-V1\0",&w[..4],secret_hash.as_ref()]).to_bytes();
         for level in 0..depth {let sibling=&w[36+32*level..68+32*level];node=if index&(1<<level)==0 {hashv(&[b"BUNKER-NODE-V1\0",&node,sibling]).to_bytes()}else{hashv(&[b"BUNKER-NODE-V1\0",sibling,&node]).to_bytes()};}
         check(node.as_ref()==authority,Error::InvalidSignature)},
-      XMSS=>{check(w.len()==2500,Error::Witness)?;let public:&[u8;64]=authority.try_into().map_err(|_|err(Error::Malformed))?;
+      XMSS=>{check(w.len()==SIGNATURE_BYTES,Error::Witness)?;let public:&[u8;64]=authority.try_into().map_err(|_|err(Error::Malformed))?;
         let actual=verify(public,intent,w,&mut RuntimeHash).map_err(|_|err(Error::InvalidSignature))?;check(actual==index,Error::Witness)},
       _=>Err(err(Error::InactiveMode))
     }
@@ -164,7 +169,7 @@ fn execute(program:&Pubkey,a:&[AccountInfo],p:&[u8],staged:bool)->ProgramResult{
 fn stage_init(program:&Pubkey,a:&[AccountInfo],p:&[u8])->ProgramResult{
     check(p.len()>=2,Error::Malformed)?;let n=u16at(p,0)as usize;check(n>=190 && p.len()==2+n+4,Error::Malformed)?;let intent=&p[2..2+n];
     check(&intent[..8]==b"BUNKER\0\x01" && keyat(intent,8)==*program && intent[168]==XMSS,Error::Domain)?;
-    let len=u32at(p,2+n)as usize;check(len==2500,Error::Stage)?;
+    let len=u32at(p,2+n)as usize;check(len==SIGNATURE_BYTES,Error::Stage)?;
     let mut it=a.iter();let payer=next_account_info(&mut it)?;let stage=next_account_info(&mut it)?;let state=next_account_info(&mut it)?;let sys=next_account_info(&mut it)?;
     valid_state(program,state)?;check(*state.key==keyat(intent,104),Error::Domain)?;
     create(payer,stage,sys,program,STAGE_HEADER+len,None)?;
@@ -186,5 +191,8 @@ fn demo_mode(program:&Pubkey,a:&[AccountInfo],p:&[u8])->ProgramResult{
 }
 pub fn process_instruction(program:&Pubkey,accounts:&[AccountInfo],data:&[u8])->ProgramResult{
     check(!data.is_empty(),Error::Malformed)?;
-    match data[0]{0=>init(program,accounts,&data[1..]),1=>write_authority(program,accounts,&data[1..]),2=>execute(program,accounts,&data[1..],false),3=>execute(program,accounts,&data[1..],true),4=>stage_init(program,accounts,&data[1..]),5=>stage_write(program,accounts,&data[1..]),6=>demo_mode(program,accounts,&data[1..]),_=>Err(err(Error::Malformed))}
+    match data[0]{0=>init(program,accounts,&data[1..]),1=>write_authority(program,accounts,&data[1..]),EXECUTE_INLINE=>execute(program,accounts,&data[1..],false),EXECUTE_STAGED=>execute(program,accounts,&data[1..],true),4=>stage_init(program,accounts,&data[1..]),5=>stage_write(program,accounts,&data[1..]),6=>demo_mode(program,accounts,&data[1..]),_=>Err(err(Error::Malformed))}
 }
+
+#[cfg(test)]
+mod tests;

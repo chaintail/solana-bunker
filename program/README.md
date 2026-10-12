@@ -81,7 +81,24 @@ Canonical action bytes are defined in `client/actions.py` and
 `reports/interfaces.md`. The native parser independently checks lengths and
 fields. Array witness is index u32LE + secret32. Merkle adds exactly one sibling
 per tree level; index bits supply directions. XMSS is the exact raw RFC
-2500-byte signature (its index remains big endian).
+2500-byte signature (its index remains big endian). Opcode 2 supports this full
+XMSS witness inline as well as array/Merkle witnesses; its verifier, intent
+checks, replay state and custody effects are shared with opcode 3. No new
+instruction or change to the signed intent is needed for v1 transport.
+
+An inline XMSS instruction is `02 || intent_len:u16LE || intent || signature`.
+Instruction data is 2,733 bytes for SOL, 2,830 for tokens, 2,698–2,822 for a
+1–32-target burn, or 2,762 for rotation. These are instruction-data sizes,
+**not full serialized transaction measurements**. A transport must serialize
+and measure its complete signed envelope and enforce resource limits. Legacy
+packet limits require staged XMSS; v1 can carry inline XMSS where the selected
+runtime supports it. Opcode 3 remains the explicit staged fallback.
+
+`cargo test --locked --manifest-path program/Cargo.toml` checks the native
+program's inline/staged parity with public pinned-reference signatures, exact
+encoding lengths, signature and replay rejection, leaf burning and root
+rotation. These are host program checks; SVM tests establish transaction
+rollback, actual token CPI, resource consumption and transport acceptance.
 
 ## Immutable signature transport
 
