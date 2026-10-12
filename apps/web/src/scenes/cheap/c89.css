@@ -1,0 +1,19 @@
+.c8-tx{left:60px;top:190px;width:1080px;font-size:44px;line-height:1.35;opacity:0;transition:opacity 250ms linear}
+#s-c-devnet.r-tx .c8-tx{opacity:1}
+.c8-sig{font-size:40px;word-break:break-all;line-height:1.25;margin-bottom:8px}
+.c8-ok{background:#00b050;color:#fff;font-weight:700;padding:0 14px}
+.c8-link{display:inline-block;margin-top:10px;color:#0000ff;text-decoration:underline;font-weight:700}
+.c8-store{left:1200px;top:190px;width:660px;font-size:44px;opacity:0;transform:translateX(40px);transition:opacity 250ms linear,transform 300ms ease-out}
+#s-c-devnet.r-storage .c8-store{opacity:1;transform:none}
+.c8-row{margin-top:24px}
+.c8-row span{display:block;white-space:nowrap}
+.c8-row i{display:block;height:34px;margin-top:8px;background:#0000ff;transform-origin:0 50%;transform:scaleX(0);transition:transform 400ms ease-out 250ms}
+.c8-row:nth-of-type(1) i{background:#ff0000}
+#s-c-devnet.r-storage .c8-row i{transform:none}
+.c8-links{position:absolute;left:60px;top:800px;display:flex;flex-direction:column;gap:22px;opacity:0;transition:opacity 250ms linear}
+#s-c-devnet.r-links .c8-links{opacity:1}
+.c8-links a{font:700 48px/1 Arial,Helvetica,sans-serif;color:#0000ff;text-decoration:underline}
+.c9-qr{position:absolute;left:110px;top:200px;width:600px;height:600px;border:8px solid #000;display:block}
+.c9-qr svg{display:block;width:100%;height:100%}
+.c9-url{position:absolute;left:790px;top:330px;font:700 54px/1 Arial,Helvetica,sans-serif;color:#0000ff;text-decoration:underline}
+.c9-name{position:absolute;left:790px;top:470px;font:700 180px/1 Arial,Helvetica,sans-serif;color:#000}

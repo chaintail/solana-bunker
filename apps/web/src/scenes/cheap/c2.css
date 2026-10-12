@@ -1,0 +1,33 @@
+.c2-field{position:absolute;left:60px;top:190px;width:858px;height:570px;overflow:visible}
+.c2-cl circle{fill:#0000ff;opacity:0;transition:opacity 200ms linear calc(var(--ci) * 30ms)}
+.r-dots .c2-cl circle{opacity:1}
+.c2-crypto circle{fill:none;stroke:#ff0000;stroke-width:6;stroke-dasharray:14 10}
+.c2-crypto text{font:700 56px Arial,Helvetica,sans-serif;fill:#ff0000}
+.c2-crypto{opacity:0;transition:opacity 250ms linear}
+.r-crypto0 .c2-crypto{opacity:1}
+.c2-capL{left:60px;top:790px;opacity:0;transition:opacity 250ms linear}
+.r-dots .c2-capL{opacity:1}
+.c2-list{position:absolute;left:990px;top:178px;width:880px;margin:0;padding:0;list-style:none;font:400 40px/44px Arial,Helvetica,sans-serif;color:#000;opacity:0;transition:opacity 250ms linear}
+.c2-list li{white-space:nowrap}
+.c2-list b{color:#0000ff}
+.r-dots .c2-list{opacity:1}
+.c2-cryptoli{color:#ff0000;font-weight:700;opacity:0;transition:opacity 250ms linear 200ms}
+.c2-cryptoli b{color:#ff0000!important}
+.r-crypto0 .c2-cryptoli{opacity:1}
+.c2-fission{position:absolute;left:1000px;top:200px;width:860px;height:700px;opacity:0;transform:translateX(80px);transition:opacity 250ms linear 200ms,transform 350ms ease-out 200ms}
+.r-fission .c2-fission{opacity:1;transform:none}
+.c2-chart{display:block;width:860px;height:560px;overflow:visible}
+.c2-bar{fill:#0000ff;transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0);transition:transform 400ms ease-out calc(var(--i) * 30ms + 300ms)}
+.r-fission .c2-bar{transform:none}
+.c2-yr{font:400 40px Arial,Helvetica,sans-serif;fill:#000}
+.c2-zero{font:700 64px Arial,Helvetica,sans-serif;fill:#ff0000}
+.c2-capR{left:0;top:572px;font-size:40px}
+.c2-zl{left:0;top:622px;font-size:40px;color:#ff0000;font-weight:700}
+.c2-flash{position:absolute;left:50%;top:420px;transform:translateX(-50%);z-index:70;white-space:nowrap;padding:30px 50px;background:#ffff00;border:8px solid #000;
+  font:700 80px/1 Arial,Helvetica,sans-serif;color:#000;opacity:0;pointer-events:none}
+.a-checked .c2-flash{animation:c2-flash 1000ms linear both}
+@keyframes c2-flash{0%{opacity:1;transform:translateX(-50%) scale(.6)}15%{transform:translateX(-50%) scale(1)}80%{opacity:1}100%{opacity:0;transform:translateX(-50%) scale(1)}}
+.c2-tally{top:896px;font-size:50px;opacity:0;transition:opacity 250ms linear}
+.r-checked .c2-tally{opacity:1;transition-delay:900ms}
+.c2-conc{top:972px;font-style:italic;font-weight:400;font-size:52px;opacity:0;transition:opacity 400ms linear}
+.r-conclude .c2-conc{opacity:1}

@@ -1,0 +1,15 @@
+.c3-list{left:80px;top:210px}
+.c3-vault{position:absolute;left:1360px;top:200px;width:380px;text-align:center}
+.c3-vault svg{display:block}
+.c3-addr{margin-top:20px;font:700 44px/1 Arial,Helvetica,sans-serif;color:#0000ff;white-space:nowrap;margin-left:-60px;margin-right:-60px}
+.c3-vault .wheel{transform-origin:100px 100px;transition:transform 600ms ease-in-out}
+.r-coins .c3-vault .wheel{transform:rotate(240deg)}
+.c3-coin{position:absolute;left:0;top:0;opacity:0;transform:translate(-120px,var(--y))}
+.a-coins .c3-coin{animation:c3-fly 600ms ease-in var(--d) both}
+@keyframes c3-fly{0%{opacity:1;transform:translate(-120px,var(--y)) rotate(0)}100%{opacity:0;transform:translate(1500px,340px) rotate(360deg) scale(.4)}}
+.c3-ticker{position:absolute;left:0;right:0;top:960px;height:72px;overflow:hidden;background:#ffff00;border-top:4px solid #000;border-bottom:4px solid #000;opacity:0}
+.r-disclaimer .c3-ticker{opacity:1}
+.c3-run{display:flex;white-space:nowrap;width:max-content}
+.c3-run span{padding:12px 80px 0 0;font:400 44px/1 Arial,Helvetica,sans-serif;color:#000}
+.r-disclaimer .c3-run{animation:c3-tick 9s linear infinite}
+@keyframes c3-tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}

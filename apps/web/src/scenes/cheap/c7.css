@@ -1,0 +1,35 @@
+.c7-five{position:absolute;inset:0;transition:opacity 250ms linear}
+.c7-tx{left:calc(100px + var(--i) * 70px);top:calc(190px + var(--i) * 110px);width:1100px;padding:16px 24px;opacity:0;transform:translateY(-30px);
+  transition:opacity 150ms linear calc(var(--i) * 90ms),transform 250ms ease-out calc(var(--i) * 90ms)}
+#s-c-rekey.r-five .c7-tx{opacity:1;transform:none}
+.c7-fivecap{left:100px;top:790px;opacity:0;transition:opacity 200ms linear 500ms}
+#s-c-rekey.r-five .c7-fivecap{opacity:1}
+#s-c-rekey.r-one .c7-five{opacity:0}
+.c7-one{left:110px;top:400px;width:1700px;text-align:center;font-size:72px;padding:40px 20px;opacity:0;transform:scale(.6);transition:opacity 150ms linear 200ms,transform 300ms cubic-bezier(.3,1.4,.55,1) 200ms}
+#s-c-rekey.r-one .c7-one{opacity:1;transform:none}
+#s-c-rekey.r-bitmap .c7-one{opacity:0;transition-delay:0ms}
+.c7-rig{position:absolute;inset:0;opacity:0;transition:opacity 250ms linear 150ms}
+#s-c-rekey.r-bitmap .c7-rig{opacity:1}
+.c7-grid{position:absolute;left:80px;top:190px}
+.cgrid i.sp{transition:background 250ms linear 300ms,border-color 250ms linear 300ms}
+#s-c-rekey.r-rotate .cgrid i.sp{background:#fff;border-color:#0000ff}
+.c7-used{left:80px;top:752px;font-size:48px}
+.c7-info{left:720px;top:190px;width:1140px;font-size:48px;line-height:1.45}
+.c7-nm{color:#0000ff;font-weight:700;opacity:0;transition:opacity 200ms linear 300ms}
+.c7-nm.on{opacity:1}
+.c7-rotcap{left:720px;top:470px;font-size:40px;opacity:0;transition:opacity 200ms linear 400ms}
+.c7-rotcap.on{opacity:1}
+.c7-old{left:720px;top:560px;font-size:48px;opacity:0;transform:translateX(-40px);transition:opacity 200ms linear,transform 300ms ease-out}
+#s-c-rekey.r-oldroot .c7-old{opacity:1;transform:none}
+.c7-words{position:absolute;left:80px;top:840px;display:flex;gap:26px}
+.c7-w{width:122px;text-align:center;opacity:0;transform:translateY(10px);transition:opacity 150ms linear calc(var(--k) * 40ms),transform 200ms ease-out calc(var(--k) * 40ms)}
+.c7-w i{display:block;height:44px;background:#000}
+.c7-w span{display:block;margin-top:6px;font:400 40px/1 Arial,Helvetica,sans-serif}
+#s-c-rekey.r-words .c7-w{opacity:1;transform:none}
+.c7-gen{position:absolute;top:976px;font:700 48px/1 Arial,Helvetica,sans-serif;opacity:0;transition:opacity 200ms linear 500ms}
+.c7-gen.g0{left:420px;color:#888;text-decoration:line-through;text-decoration-color:#ff0000;text-decoration-thickness:6px}
+.c7-gen.g1{left:1000px;color:#0000ff;border:5px solid #0000ff;padding:6px 14px;top:966px}
+#s-c-rekey.r-words .c7-gen{opacity:1}
+.c7-wash{position:absolute;inset:0;background:rgba(255,255,255,.88);z-index:58;opacity:0;transition:opacity 250ms linear}
+.c7-wash.on{opacity:1}
+.c7-rk{z-index:62}

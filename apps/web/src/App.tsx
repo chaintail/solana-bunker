@@ -33,7 +33,7 @@ window.__deck = {
   overflow: () => {
     const st = document.getElementById('stage')!.getBoundingClientRect();
     const bad: string[] = [];
-    document.querySelectorAll('.scene.active .stamp.on').forEach((el) => {
+    document.querySelectorAll('.scene.active .stamp.on, .scene.active .cstamp.on').forEach((el) => {
       const r = el.getBoundingClientRect();
       if (r.left < st.left - 1 || r.top < st.top - 1 || r.right > st.right + 1 || r.bottom > st.bottom + 1) bad.push((el.textContent || '').trim());
     });
