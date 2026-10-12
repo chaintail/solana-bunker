@@ -35,10 +35,24 @@ fn writable(a:&AccountInfo)->ProgramResult {check(a.is_writable,Error::Privilege
 fn system(a:&AccountInfo)->ProgramResult {check(*a.key==solana_program::system_program::id(),Error::Accounts)}
 fn create<'a>(payer:&AccountInfo<'a>,a:&AccountInfo<'a>,sys:&AccountInfo<'a>,owner:&Pubkey,len:usize,seeds:Option<&[&[u8]]>)->ProgramResult{
     signer(payer)?;writable(payer)?;writable(a)?;system(sys)?;
-    check(a.data_is_empty() && a.lamports()==0,Error::Initialized)?;
-    let ix=system_instruction::create_account(payer.key,a.key,Rent::get()?.minimum_balance(len),len as u64,owner);
+    check(a.data_is_empty() && *a.owner==solana_program::system_program::id() && !a.executable,Error::Initialized)?;
+    if seeds.is_none(){signer(a)?;}
+    let rent=Rent::get()?.minimum_balance(len);
     let infos=[payer.clone(),a.clone(),sys.clone()];
-    match seeds {Some(s)=>invoke_signed(&ix,&infos,&[s]),None=>{signer(a)?;invoke(&ix,&infos)}}
+    let call=|ix:&solana_program::instruction::Instruction|->ProgramResult{
+        match seeds {Some(s)=>invoke_signed(ix,&infos,&[s]),None=>invoke(ix,&infos)}
+    };
+    if a.lamports()==0 {
+        call(&system_instruction::create_account(payer.key,a.key,rent,len as u64,owner))
+    } else {
+        // A public PDA can receive SOL before bootstrap. Preserve that deposit;
+        // canonical PDA signer privileges permit allocation/assignment, while
+        // the system owner + empty-data check forbids initialized re-use.
+        let topup=rent.saturating_sub(a.lamports());
+        if topup>0 {invoke(&system_instruction::transfer(payer.key,a.key,topup),&infos)?;}
+        call(&system_instruction::allocate(a.key,len as u64))?;
+        call(&system_instruction::assign(a.key,owner))
+    }
 }
 fn valid_state(program:&Pubkey,s:&AccountInfo)->ProgramResult{
     check(s.owner==program,Error::Accounts)?;
