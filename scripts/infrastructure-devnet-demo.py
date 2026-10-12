@@ -190,7 +190,13 @@ class Demonstrations:
         write_json(ROOT / 'artifacts/devnet-simulations' / (row['operation'] + '.json'), row)
         assert (result['value']['err'] is None) == expect_success, row
         if expected_error is not None:
-            assert expected_error in json.dumps(result['value']['err']), row
+            error = result['value']['err']
+            if expected_error == 'compute_budget_exhausted':
+                ordinary = 'ComputationalBudgetExceeded' in json.dumps(error)
+                sbf_meter = error == {'InstructionError': [0, 'ProgramFailedToComplete']} and any('exceeded CUs meter' in line for line in result['value'].get('logs', [])) and result['value']['unitsConsumed'] == config.compute_unit_limit
+                assert ordinary or sbf_meter, row
+            else:
+                assert expected_error in json.dumps(error), row
             row['expected_error_verified'] = expected_error
         write_json(ROOT / 'artifacts/devnet-simulations' / (row['operation'] + '.json'), row)
         self.manifest['simulations'].append(row)
@@ -220,8 +226,7 @@ class Demonstrations:
             saved_tx = VersionedTransaction.from_bytes(base64.b64decode(saved['transaction_base64']))
             already_landed = rpc('getSignatureStatuses', [[str(saved_tx.signatures[0])], {'searchTransactionHistory': True}])['value'][0] is not None
         if controls and not already_landed:
-            low = self.simulate('xmss-inline-compute-limit-1', value, witness, TransactionConfig(compute_unit_limit=1, loaded_accounts_data_size_limit=1_048_576, heap_size=32_768), expected_error='ComputationalBudgetExceeded')
-            assert 'ComputationalBudgetExceeded' in json.dumps(low['result'])
+            low = self.simulate('xmss-inline-compute-limit-1', value, witness, TransactionConfig(compute_unit_limit=1, loaded_accounts_data_size_limit=1_048_576, heap_size=32_768), expected_error='compute_budget_exhausted')
             self.simulate('xmss-inline-loaded-limit-1', value, witness, TransactionConfig(compute_unit_limit=1_400_000, loaded_accounts_data_size_limit=1, heap_size=32_768), expected_error='MaxLoadedAccountsDataSizeExceeded')
         if self.mode == 3 and action in (1, 2) and not already_landed:
             altered = value | {'destination': bytes(self.attacker.pubkey() if action == 1 else self.token_attacker.pubkey())}
