@@ -1,0 +1,25 @@
+Today I call upon the blockchain industry to calmly begin planning for "bunker mode". My personal recommendation is to set in motion a controlled mass migration of assets to fresh addresses, i.e. addresses whose pubkeys remain hidden behind a hash.
+
+Holders, starting with large and sophisticated ones, should consider moving the bulk of their funds to addresses that have never signed a transaction. And when they do sign one, they should also move remaining funds to a new address (possibly generated from the same seed phrase).
+
+Don't rush. While I believe there is cause for action a rushed migration would do more harm than good. Don't panic either. Moving assets to protected addresses is a simple, preventative step which does not require new cryptography or new wallets.
+
+IMO it is now reasonable to brace for the possibility that ECDSA breaks before qday, in the worst case in months not years. By "break" I mean fast private key recovery (e.g. in one week) on available hardware (e.g. a large GPU cluster).
+
+Recent days have been humbling for human mathematical intuition. Long-held, unquestioned hypotheses have fallen. This includes the n log(n) bound for integer multiplication and the 3SUM conjecture. In hindsight, May's unexpected disproof of the Erdős unit distance conjecture was our warning shot.
+
+Yesterday's OpenAI drop made it clear that mathematical superintelligence is upon us. They say there are weeks where decades happen. We are about to live through weeks where centuries of mathematical progress happen. Could our magic 64-byte ECDSA signatures be too good to be true? Was it just security through obscurity all this time?
+
+Elliptic curves feel especially vulnerable to superintelligence. Curves carry rich structure, with room for fancy tricks like Schoof, Frobenius, pairings. (By contrast, hashes are designed to minimise algebraic structure.)
+
+Separately, as Ewin Tang can attest, an efficient quantum algorithm sometimes foreshadows an efficient classical one. We should be open to the possibility of a classical counterpart to Shor that breaks elliptic curves and RSA at once.
+
+Also noteworthy is the striking under-representation of cryptographic breakthroughs among the 722 mathematical results OpenAI published. I've witnessed first-hand the US government censoring academic quantum cryptanalysis results. Backroom interventionism is my base case.
+
+I urge large, sophisticated actors to lead by example. Project11's "risq list" (bitcoin-risq-list.projecteleven[.]com) is a great tracker of exposed BTC pubkeys. Binance, Bitbank, Robinhood, Bitfinex, and Tether have an opportunity to harden their cold storage. Next month I'll address institutions in London in a live Q&A (forum.ethereuminstitutional[.]org/london-2026).
+
+Again, please do not rush. Wallets holding under 50 BTC enjoy partial cover from "Satoshi's shield", i.e. his 20K exposed addresses that hold 50 BTC each. Load-bearing signers like oracles and L2 security councils should consider rotating ECDSA pubkeys with every signed message and/or multi-signing with a hash-based schemes like SPHINCS.
+
+Exiting bunker mode safely will require post-AI cryptography. My inclination is to go all-in on hash-based cryptography and avoid structured mathematical assumptions entirely, whether from curves, lattices, or isogenies. A single battle-tested hash (e.g. from the SHA or BLAKE families) yields plausible post-AI security.
+
+The Ethereum roadmap on strawmap[.]org fully embraces hash-based cryptography with end-to-end formal verification as a response to the quantum threat. Those timelines must now be revisited and accelerated in light of mathematical superintelligence. I'll be pushing for maximum defensive acceleration.
