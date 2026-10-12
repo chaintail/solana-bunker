@@ -1,0 +1,11 @@
+signed_action_SOL_to_valid_burn PASS
+changed_signed_mint_policy PASS
+wrong_network_namespace PASS
+wrong_vault_identity PASS
+stale_authority_epoch PASS
+replacement_root_substitution PASS
+same_current_authority_rotation PASS
+replacement_mode_substitution PASS
+sealed_stage_bound_to_different_intent PASS
+inactive_xmss_after_merkle_transition PASS
+{"case_count": 16, "actual_runtime_case_count": 15, "host_crypto_case_count": 1, "measured_transactions": 59, "all_assertions_passed": true, "run_id": "supplemental-intent-20261012T140527-7b2175"}

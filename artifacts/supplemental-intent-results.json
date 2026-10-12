@@ -1,0 +1,257 @@
+{
+  "schema_version": 1,
+  "run_id": "supplemental-intent-20261012T140527-7b2175",
+  "commit": "ffd6c8c9f7cef0f1ad0afd6be4fd5d843f3f8c8b",
+  "source_sha256": {
+    "tests/__init__.py": "4e4720d6a6277b1e4c94f6a0edc56bd0e9f4472709e56bb6c4e1c00f04fdfd8f",
+    "tests/evidence_schema.py": "56cff731845709600c245b05f7d176c507a3d20526f47fcacc2f425a822c6326",
+    "tests/run_host.py": "9eb9c1b76f462f77bb635dd3a362e7f498940f8810927a6c75373f0e4221932c",
+    "tests/supplemental_intent.py": "3a48db40413e2c79e6fe37cd650bea92c59ffb3d11189927e60f6885895ae0d3",
+    "tests/supplemental_program.py": "667f2749d87266d1fd0147c21e10c3bd49f0be6c02dd09bcf9de85b891b1093a",
+    "tests/svm_harness.py": "f3ebf74eea39b6c1c9500877dab05f3875b05ecb437e33fc95d6d8c632d1e5c1",
+    "tests/test_client_contract.py": "807074cd58f8815e69c552164dae6dd11628216d4b5698a44149c97abb9d7973",
+    "tests/test_evidence_schema.py": "67c90d0ba953922a4d5ce20a79c2420e6230a5ae0819881ecd9080fefd351736",
+    "tests/test_journal.py": "a0e2774697c294b1952c463dab48da676c187a89746b2b55f223e0a4bb7224b4",
+    "tests/test_model_acceptance.py": "77b6d27d05d1be2f546b09aa5056110d2d76fee5d57375e426ac125d82593a45",
+    "tests/test_xmss_reference.py": "450bfce29a10411826b8d0a4456dcfae9a0ebf4d898b5df64738c4f0d6e24842",
+    "client/__init__.py": "7e3a86e7ced9d8b59f15e171477829b1ae1b9c76f61ef3d5a605dbfe2fdf7f64",
+    "client/actions.py": "9c369347ad340bc24181f32923a30eb6ca008d5ce4475aea2e1f4b014df2f06a",
+    "client/cli.py": "4ca777ae2958b6838a65bc20de6436d7f1ae3617b8ee50d68373310beb2bd6a2",
+    "client/host.py": "aac525f0f3841cfccd8d262f2e4c77b2e014565d9f3fa75bd2c4839cb41db289",
+    "client/journal.py": "ed56ad777fd1c49f2f5b686029072ecdd2aedf914678cd6c46e2127652dbe972",
+    "client/kdf.py": "1acc13addd9721ca7ac96a53399fa0ca2aa8b010f788d69f4000c2774c5460a8",
+    "client/merkle.py": "d7a5d117cba00f3c1dcd92b6a1d9cbd0a4156b3cce14db97b6bb4727e842f28b",
+    "client/svm.py": "d72cd373fff2065de589962d59d588218e24441be06410ba1f6a3a124d3df8d1",
+    "client/tests/test_client.py": "036962bca6f533f2e368f0e808218d88be7166ae3cb1d4eab3d6a71b15be3dbf",
+    "program/src/lib.rs": "4e8db919e96074592bfeb1b5021c957f14338393f8cc93b3b826c849e5006816",
+    "crypto/xmss-verifier/src/lib.rs": "6c937d73957f8825ed09d4bdeb20b3a11396de57631e157793735489e2cae413"
+  },
+  "program_binary_sha256": "8d7435ea6225ef4b09e972cef7ed3d2b99f7f4e1d1b9e9f8aa5124a0848f6e25",
+  "runtime": "solders0.29.0/LiteSVM",
+  "evidence_level": "local_svm",
+  "test_cases": [
+    {
+      "scenario": "signed_action_SOL_to_valid_burn",
+      "evidence_level": "local_svm",
+      "expected": "rejection",
+      "observed": "rejection",
+      "test_passed": true,
+      "custom_error_code": 12,
+      "verifier_reached": true,
+      "failure_stage": "signature_verifier",
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/supplemental-intent-20261012T140527-7b2175/00012.json"
+      ],
+      "notes": null
+    },
+    {
+      "scenario": "changed_signed_mint_policy",
+      "evidence_level": "local_svm",
+      "expected": "rejection",
+      "observed": "rejection",
+      "test_passed": true,
+      "custom_error_code": 15,
+      "verifier_reached": false,
+      "failure_stage": "cheap_policy_or_stage_binding",
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/supplemental-intent-20261012T140527-7b2175/00017.json"
+      ],
+      "notes": "Runtime exact mint/state/source checks intentionally reject before the XMSS verifier."
+    },
+    {
+      "scenario": "changed_signed_mint_host_crypto_binding",
+      "evidence_level": "host_reference",
+      "expected": "rejection",
+      "observed": "rejection",
+      "test_passed": true,
+      "verifier_reached": true,
+      "notes": "Direct full RFC verifier confirms cryptographic mint binding separately; runtime cheap mint policy is retained."
+    },
+    {
+      "scenario": "wrong_network_namespace",
+      "evidence_level": "local_svm",
+      "expected": "rejection",
+      "observed": "rejection",
+      "test_passed": true,
+      "custom_error_code": 6,
+      "verifier_reached": false,
+      "failure_stage": "cheap_policy_or_stage_binding",
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/supplemental-intent-20261012T140527-7b2175/00022.json"
+      ],
+      "notes": null
+    },
+    {
+      "scenario": "wrong_vault_identity",
+      "evidence_level": "local_svm",
+      "expected": "rejection",
+      "observed": "rejection",
+      "test_passed": true,
+      "custom_error_code": 6,
+      "verifier_reached": false,
+      "failure_stage": "cheap_policy_or_stage_binding",
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/supplemental-intent-20261012T140527-7b2175/00027.json"
+      ],
+      "notes": null
+    },
+    {
+      "scenario": "stale_authority_epoch",
+      "evidence_level": "local_svm",
+      "expected": "rejection",
+      "observed": "rejection",
+      "test_passed": true,
+      "custom_error_code": 8,
+      "verifier_reached": false,
+      "failure_stage": "cheap_policy_or_stage_binding",
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/supplemental-intent-20261012T140527-7b2175/00032.json"
+      ],
+      "notes": null
+    },
+    {
+      "scenario": "wrong_program_namespace_stage_init",
+      "evidence_level": "local_svm",
+      "expected": "rejection",
+      "observed": "rejection",
+      "test_passed": true,
+      "custom_error_code": 6,
+      "verifier_reached": false,
+      "failure_stage": "cheap_policy_or_stage_binding",
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/supplemental-intent-20261012T140527-7b2175/00033.json"
+      ],
+      "notes": "Program identity is checked by staging initialization before allocation; stage account remains absent."
+    },
+    {
+      "scenario": "replacement_root_substitution",
+      "evidence_level": "local_svm",
+      "expected": "rejection",
+      "observed": "rejection",
+      "test_passed": true,
+      "custom_error_code": 12,
+      "verifier_reached": true,
+      "failure_stage": "signature_verifier",
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/supplemental-intent-20261012T140527-7b2175/00038.json"
+      ],
+      "notes": null
+    },
+    {
+      "scenario": "same_current_authority_rotation",
+      "evidence_level": "local_svm",
+      "expected": "rejection",
+      "observed": "rejection",
+      "test_passed": true,
+      "custom_error_code": 14,
+      "verifier_reached": false,
+      "failure_stage": "cheap_policy_or_stage_binding",
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/supplemental-intent-20261012T140527-7b2175/00043.json"
+      ],
+      "notes": null
+    },
+    {
+      "scenario": "replacement_mode_substitution",
+      "evidence_level": "local_svm",
+      "expected": "rejection",
+      "observed": "rejection",
+      "test_passed": true,
+      "custom_error_code": 14,
+      "verifier_reached": false,
+      "failure_stage": "cheap_policy_or_stage_binding",
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/supplemental-intent-20261012T140527-7b2175/00048.json"
+      ],
+      "notes": null
+    },
+    {
+      "scenario": "sealed_stage_overwrite",
+      "evidence_level": "local_svm",
+      "expected": "rejection",
+      "observed": "rejection",
+      "test_passed": true,
+      "custom_error_code": 19,
+      "verifier_reached": false,
+      "failure_stage": "cheap_policy_or_stage_binding",
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/supplemental-intent-20261012T140527-7b2175/00053.json"
+      ],
+      "notes": null
+    },
+    {
+      "scenario": "sealed_stage_reseal",
+      "evidence_level": "local_svm",
+      "expected": "rejection",
+      "observed": "rejection",
+      "test_passed": true,
+      "custom_error_code": 19,
+      "verifier_reached": false,
+      "failure_stage": "cheap_policy_or_stage_binding",
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/supplemental-intent-20261012T140527-7b2175/00054.json"
+      ],
+      "notes": null
+    },
+    {
+      "scenario": "sealed_stage_bound_to_different_intent",
+      "evidence_level": "local_svm",
+      "expected": "rejection",
+      "observed": "rejection",
+      "test_passed": true,
+      "custom_error_code": 19,
+      "verifier_reached": false,
+      "failure_stage": "cheap_policy_or_stage_binding",
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/supplemental-intent-20261012T140527-7b2175/00055.json"
+      ],
+      "notes": null
+    },
+    {
+      "scenario": "original_sealed_stage_executes",
+      "evidence_level": "local_svm",
+      "expected": "success",
+      "observed": "success",
+      "test_passed": true,
+      "verifier_reached": true,
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/supplemental-intent-20261012T140527-7b2175/00056.json"
+      ]
+    },
+    {
+      "scenario": "inactive_xmss_after_merkle_transition",
+      "evidence_level": "local_svm",
+      "expected": "rejection",
+      "observed": "rejection",
+      "test_passed": true,
+      "custom_error_code": 7,
+      "verifier_reached": false,
+      "failure_stage": "cheap_policy_or_stage_binding",
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/supplemental-intent-20261012T140527-7b2175/00063.json"
+      ],
+      "notes": null
+    },
+    {
+      "scenario": "new_active_merkle_authorizes",
+      "evidence_level": "local_svm",
+      "expected": "success",
+      "observed": "success",
+      "test_passed": true,
+      "verifier_reached": true,
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/supplemental-intent-20261012T140527-7b2175/00064.json"
+      ],
+      "notes": "Same treasury/token source preserved across explicit trusted transition. State excess rent retained; no lamport refund."
+    }
+  ],
+  "case_count": 16,
+  "actual_runtime_case_count": 15,
+  "host_crypto_case_count": 1,
+  "measured_transactions": 59,
+  "all_assertions_passed": true,
+  "evidence_paths": [
+    "artifacts/supplemental-intent-benchmarks.jsonl"
+  ],
+  "scope": "Fresh isolated local keys/mock assets. Relayer attack excludes trusted admin/mint/upgrade credentials and hash seeds. No public network confirmation. Sealed stage and trusted transition data are real SBF execution. One current-authority signature per source intent; negatives alter submitted effects without signing changed messages."
+}
