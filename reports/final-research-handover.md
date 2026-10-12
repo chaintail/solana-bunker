@@ -1,65 +1,89 @@
-# Solana Bunker — Research handover checkpoint
+# Solana Bunker — Final research handover
 
 **Sprint start:** 2026-10-12T13:36:06.597515Z.
 **Target end:** 2026-10-13T13:36:06.597515Z.
-**Overall status:** Partial; local implementation and validation continue. This is a resumable checkpoint, not a declaration that the 24-hour sprint ran unattended.
-**Custody smoke binary SHA-256:** `a84a81cd97e78dd1090acaaaae22d5f103e3c258eab248ad1ef2e47f84301020`.
-**Standalone XMSS probe binary SHA-256:** `21088f9ef0f6add41231e5ef7b19eb8ab3272f17fc493fe104df44b612c8f700`.
+**Overall status:** Partial — core local demonstrations work; devnet deployment is blocked on funding. This is the current session checkpoint, not a claim of unattended work through the 24-hour target.
+**Custody binary:** 124,464 bytes, SHA-256 `8d7435ea6225ef4b09e972cef7ed3d2b99f7f4e1d1b9e9f8aa5124a0848f6e25`.
+**Standalone XMSS binary:** 33,864 bytes, SHA-256 `21088f9ef0f6add41231e5ef7b19eb8ab3272f17fc493fe104df44b612c8f700`.
 
 ## What a reviewer can run
 
-Current command contract (clean-export verification underway):
+Install Python 3.12 and requirements.txt, GCC/OpenSSL development headers, Rust, and Agave 4.3.0 cargo-build-sbf/platform-tools 1.57. Configure `BUNKER_SOLANA_BIN`/`BUNKER_CARGO_BIN` if needed. Dependency locks and source licenses are included.
 
 ```sh
-bash scripts/infrastructure-build.sh
-bash crypto/build_reference.sh
-python3 crypto/generate_vectors.py
-python3 tests/run_host.py
-python3 tests/svm_harness.py --full --samples 20
+bash scripts/infrastructure-replay.sh
 ```
 
-Individual actual local-SVM demonstrations use `python3 tests/svm_harness.py --demo array`, `--demo merkle`, and `--demo xmss`. Host-only client demos use `python3 -m client.cli --adapter host demo-array`, `demo-merkle`, and `demo-xmss`; do not treat host narration as chain execution.
+This builds, regenerates explicitly disposable reference vectors, runs host tests and replays the full actual local-SVM harness with 20 principal samples. No public funding or live developer credentials are required.
 
-Prerequisites: Python 3.12 and requirements.txt; GCC/OpenSSL development headers; Rust host toolchain; Agave 4.3.0 cargo-build-sbf and platform-tools 1.57. Set `BUNKER_SOLANA_BIN`/`BUNKER_CARGO_BIN` to the installed binary directories when different from this sprint environment. Optional v1 probes require `npm ci`. Public devnet deployment needs the confidential development credentials and approximately 2 devnet SOL; local fixtures use disposable credits and require no public funding.
+Individual actual local-SVM commands:
+
+```sh
+python3 -m client.cli --adapter svm demo-array
+python3 -m client.cli --adapter svm demo-merkle
+python3 -m client.cli --adapter svm demo-xmss
+python3 -m client.cli --adapter svm benchmark --samples 20
+```
+
+Small 16-leaf benchmark fixtures use five samples per asset to leave leaves for attack/burn cases. Host-only commands explicitly select `--adapter host` and produce `host_reference` events. Do not conflate those with the SVM adapter.
+
+[Clean reproduction](../artifacts/clean-reproduction-summary.json) independently runs the exported source without Git history or private credentials: 37 host tests, 195 SVM cases, 573 measured attempts, same custody digest. Its source archive is `10a96e861e087488753a43849415cbea0b1ad02b`; runtime identity `source_snapshot:65a218da0390302dc650912918306fe081f55d58b85ecefc323b9022b1e612c4` is a file snapshot hash, not a Git commit.
 
 ## Deliverable status
 
-| Deliverable | Current status | Evidence |
+| Deliverable | Status | Evidence |
 |---|---|---|
-| Separate state/treasury; both SOL and mock USDC | Local SVM smoke passed | 12 principal/replay cases, validation-20261012T134723 |
-| Array-secret copied-witness attack | Under extended validation | M2 / acceptance matrix |
-| Merkle attack and actual storage comparison | Under extended validation | M3 / acceptance matrix |
-| Reference-compatible XMSS verifier | Standalone local SVM gate passed | 42 valid/invalid cases; E3 |
-| XMSS SOL/mock-USDC withdrawals | Local SVM smoke passed | Staged witness, exact 100-base-unit transfers |
-| Leaf burning and current-root rotation | Under extended validation | M4 / acceptance matrix |
-| Independent raw benchmark/evidence package | Active; smoke results exist | artifacts/validation-* and crypto-* |
-| Public deployment | Blocked on funding | public-deployment.json; developer balance 0 |
-| Research and UI-ready narrative | Draft and contract available | research/; reports/interfaces.md |
+| Separate state/treasury; SOL and six-decimal mock USDC | Complete locally | Main SVM initialization/transfer cases |
+| Array-secret demo and copied-witness attack | Complete locally | Both assets, consumed/replay rejection |
+| Merkle-secret demo and allocated-storage comparison | Complete locally | 16/256/1,024 leaves; same bearer attack |
+| Reference-compatible SVM XMSS verification | Complete locally | Pinned reference vectors, 42 valid/invalid probe cases |
+| XMSS SOL/mock-USDC withdrawals | Complete locally | 20 principal samples per asset; sealed staging |
+| Leaf burning | Complete locally | Exact targets plus authorizing leaf consumed; bounds/mutations rejected |
+| Current-root-authorized fresh-root rotation | Complete locally | Same receiving accounts/balances; new root passes, old root fails |
+| Independent tests and raw benchmarks | Main/clean replay complete; targeted supplemental crosscheck finalizing | Main195 + program15 + intent15 SVM cases; intent also has one host-only cryptographic case |
+| Public deployment and mint | Blocked on devnet funding | public-deployment.json: zero balance, no confirmed transactions |
+| Research and UI-ready evidence | Complete | Whitepaper, results, sources, contract and runtime event feeds |
 | Optional SLH-DSA | Deferred | No implementation/performance claim |
 
-## Results presently supported
+## Results that can be quoted
 
-The complete XMSS verifier executes in local LiteSVM within the requested 1.4-million-CU legacy transaction budget for the tested boundary vectors: 464,546–496,643 CUs. This standalone fixture-account test excludes upload/custody policy. Independent integrated custody smoke separately moves exactly 100 base units for both assets under all three modes and rejects replay.
+- The main functional run `validation-20261012T135652` passes 195/195 cases across 573 measured attempts. Each principal mode/asset case has 20 samples. It is independently reproduced from a clean export (`validation-20261012T140013`).
+- For 1,024 leaves, actual array state is 33,126 bytes versus 390 bytes for Merkle state. Program initialization/authority upload requires 38 versus two transactions. Both primitive modes still accept the scripted copied-witness destination substitution for both assets.
+- XMSS authorizes exact withdrawals, leaf retirement and a fresh-root replacement while preserving receiving accounts/balances. Its tested final-execution medians are 522,160 CUs SOL / 531,758 tokens; total staged-operation medians are 534,351 / 539,497. A logical withdrawal uses five transactions, 30,000 observed fee lamports and 19,160,880 retained stage-rent lamports. These are measured local values, not worst-case guarantees.
+- Ordinary program upgrade authority and explicit demo administration remain trusted and outside simulated relayer/funding-key disclosure. No whole-system Ed25519 independence, production audit, real cryptanalytic break or first-ever-vault claim applies.
 
-The 2,029-byte official SDK v1 bytes execute locally, but LiteSVM 0.29 does not enforce inline CU/loaded-account limits in the resource-control experiment. Actual custody uses legacy explicit ComputeBudget controls and staged signature upload. No public v1 submission/retrieval or devnet application transaction is confirmed.
+Full raw evidence and calculation grouping: [results summary](../research/results-summary.md), [benchmark JSONL](../artifacts/validation-benchmarks.jsonl), [CSV](../artifacts/validation-benchmark-summary.csv), and per-attempt runtime logs.
 
-Ordinary program upgrade authority and explicit demo administration remain trusted and excluded from simulated relayer/funding-key disclosure. These results do not claim complete Ed25519 independence, an audit, production safety or real cryptanalytic attack.
+## Public account and deployment manifest
 
-## Public deployment manifest
+Developer public address: `AxQBVSbA3tEc8RsMhn3D4gPLBLnEu3XD84Zd9yy3pmnQ`.
+Cluster: **devnet**. Recommended funding: **2 devnet SOL**, against approximately 1.3 SOL peak deployment/fixture rent. Initial five-SOL estimate was provisional.
 
-[artifacts/public-deployment.json](../artifacts/public-deployment.json) distinguishes prospective program/mint public keys from deployed accounts. Developer address: `AxQBVSbA3tEc8RsMhn3D4gPLBLnEu3XD84Zd9yy3pmnQ`, cluster **devnet**. Prospective IDs are not ready receiving addresses. Mock USDC has six decimals, standard Token Program, retained test mint authority, and no freeze authority. No real USDC is used.
+[Public manifest](../artifacts/public-deployment.json) records prospective program `6pPoFS9m3ghJzz7pcebmyDY7mnPc1zmnNvGXsBD5Na2k` and mint `5NPuFsUuus2V67HwAB3z3S7AbpqgypaYAPpqmprckM9F` as **not deployed / not created**. They are not ready receiving addresses. Mock USDC uses standard Token Program, six decimals, retained test mint authority and no freeze authority.
 
-## Core gaps and next actions
+After funding, run `python3 scripts/infrastructure-devnet-deploy.py` with confidential development credentials; it checks devnet genesis and funding. Then execute confirmed application examples and record actual accounts/transaction identifiers. Local fixtures must never be funded on a shared network.
 
-Extended SVM cases, sample distributions, burn/rotation evidence, finalized clean replay and complete acceptance mapping are in progress. Devnet is gated by the unfunded developer wallet; a permitted faucet request returned RPC -32603. The next funded action is the existing devnet-genesis-checked deployment script. Optional SLH-DSA remains deferred while core work proceeds.
+## Deviations, blockers and remaining work
+
+Public deployment, confirmed devnet demonstrations and v1 submit/read await funding. The faucet returned an RPC error; local work continued. Local-validator startup is unavailable because io_uring is unsupported; LiteSVM supplies actual SBF runtime execution.
+
+The local LiteSVM v1 parser executes oversized bytes but does not enforce inline compute/loaded limits. Application measurements therefore use verified legacy ComputeBudget and sealed staging. Temporary stage accounts and excess state rent after shrinking are retained; no refund is claimed.
+
+The acceptance matrix distinguishes actual runtime policy rejection, signature-verifier rejection, host-only cryptographic checks and source inspection. Targeted supplemental records close previously missing variants; independent replay metadata will be linked before final packaging. No source guard is promoted to a runtime result. The final-index reference signer patch is disclosed and accepted by the unchanged verifier.
+
+Production recovery, protected upgrade governance, multidevice signing, final UI/slides and SLH-DSA remain outside this completed local scope.
 
 ## UI and presentation handoff
 
-[Interfaces](interfaces.md), [presentation outline](../research/presentation-outline.md), [results summary](../research/results-summary.md), and [whitepaper](../research/whitepaper.md) are the UI handoff. Show receiving-address stability, intentionally successful bearer-secret attacks, measured commitment allocation, exact-message authorization, leaf retirement and fresh-root replacement. Use actual run/event evidence; leave unmeasured quantities unknown. No UI or final slide deck is built.
+[Interfaces](interfaces.md), [presentation outline](../research/presentation-outline.md), [whitepaper](../research/whitepaper.md), [client comparison](../artifacts/client-comparison-summary.json) and [final XMSS runtime events](../artifacts/client-svm-xmss-final.json) provide the handoff. Events contain public identities, epochs/nonces, message commitments, bytes/CUs, balances and raw evidence links, with an explicit local/network evidence label.
+
+Show the same receiving address across modes/roots, expected bearer-secret attacker success, actual storage/setup costs, rejected XMSS effect substitutions, burned leaves and fresh-root rotation. Do not publish unused secrets, seed material or signer journals.
 
 ## Resume instructions
 
-The active local branch is `main`; all agents use the same repository with explicit owned paths. Read [status](status.md), [decisions](decisions.md), all early reports, milestones and acceptance matrix before continuing. The public ZIP captures committed source/evidence; a manifest explicitly labels any in-progress changes excluded from a preliminary snapshot. Reinitialize local Git if replay needs a commit identity, or preserve original checkpoint commit metadata with the resulting file hashes.
+Active branch: `main`. The parent coordinates and workers execute. Final source is frozen apart from evidence/documentation packaging. Read status.md, decisions.md, interfaces.md, all early/milestone reports and the acceptance matrix. The public checkpoint manifest pins its final source commit and file digests.
 
-Keep the confidential continuation bundle separate from every public export. It restores development credentials, not proof of signing-state freshness. Never overwrite a newer journal with an older snapshot or reuse an uncertain signing leaf. Use fresh disposable keysets for replay; preserve the actual live journal only for any funded keyset. If continuity is unavailable, create a fresh development wallet and report its new address rather than guessing/reconstructing private keys.
+Public source/evidence and confidential continuation are separate. Restore development credentials only privately with restrictive permissions. Never restore an older signer journal over a newer one, infer signing progress from the chain bitmap, or reuse an uncertain leaf. Use fresh disposable local keysets for reproduction; use a fresh root if live signing continuity is uncertain.
+
+If credentials cannot be recovered, generate a new dedicated developer wallet and report its public address before funding. Do not reuse the attached input handoff as an output identity. No publication, entry submission, mainnet or real-USDC action is included.
 
