@@ -11,11 +11,11 @@ Reference-compatible SVM withdrawals for both assets; authenticated burns/root r
 
 ## Experimental findings
 
-Reference pin and host vectors exist. Rust host agrees for six boundary indices; final index has a disclosed upstream signer control-flow fix, while the verifier reference is unchanged. Standalone LiteSVM verifier passed six valid and36invalid cases; success-case range464,546–496,643CUs. Fixture account installation bypasses witness upload and does not prove custody. No integrated XMSS custody result is yet declared. Measurements are not filled from theoretical estimates.
+Reference pin and host vectors exist. Rust host agrees for six boundary indices; final index has a disclosed upstream signer control-flow fix, while the verifier reference is unchanged. Standalone LiteSVM verifier passed six valid and36invalid cases; success-case range464,546–496,643CUs. Fixture account installation bypasses witness upload and does not prove custody. Actual local-SVM client run `client-svm-20261012T135408-743edd` at source `27f76f646136a6099f0ba6d6de3598e632188ef0` passes 15 cases / 77 transactions on custody binary `8d7435ea6225ef4b09e972cef7ed3d2b99f7f4e1d1b9e9f8aa5124a0848f6e25`: both assets, exact-message rejection, authenticated leaf burn, old-root-signed fresh-root rotation, new-root withdrawal, old-root rejection, and exact retry after insufficient-balance rollback. Independent crosscheck/final main acceptance mapping remains in progress. Measurements are not filled from theoretical estimates.
 
 ## Validation
 
-X01–X06/B01–B03/R01–R03/S01–S03/D01–D02 pending integrated evidence. CUs/memory/rent/operation counts null. Initial host commands/evidence: `python3 tests/run_host.py`, `artifacts/test-results.json`, `artifacts/acceptance-matrix.json`.
+X01/burn/rotation/retry now have actual integrated client-SVM evidence; complete acceptance IDs and negative-field coverage remain pending independent replay. XMSS uses five transactions per staged logical operation; stage rent is retained and no refund is implemented. Initial host commands/evidence: `python3 tests/run_host.py`, `artifacts/test-results.json`, `artifacts/acceptance-matrix.json`.
 
 ## Public deployment
 

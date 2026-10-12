@@ -11,11 +11,11 @@ Both assets authorized by consumed slots, with deliberately reproducible copied-
 
 ## Experimental findings
 
-Host model/client and attack fixtures are under construction. No copied-secret transfer result is declared at this checkpoint. Measurements are not filled from theoretical estimates.
+Actual local-SVM copied-witness destination substitution succeeds for SOL and mock USDC, as intended. Legitimate withdrawals and consumed-witness replay rejection also pass. Source binary SHA-256 `8d7435ea6225ef4b09e972cef7ed3d2b99f7f4e1d1b9e9f8aa5124a0848f6e25`; partial extended run `validation-20261012T135046`, and independent runnable array client run `client-svm-20261012T135221-e45bf8` (7 cases, 9 transactions). Measurements are not filled from theoretical estimates.
 
 ## Validation
 
-A01–A04 pending independent model/SVM evidence; account allocation/setup/CUs null. Initial host commands/evidence: `python3 tests/run_host.py`, `artifacts/test-results.json`, `artifacts/acceptance-matrix.json`.
+A01/A03/A04 have actual local-SVM evidence for both assets. The main full-coverage run was interrupted and is being independently replayed; complete acceptance mapping and storage comparison remain pending. Principal 256-leaf array cases currently have 20 measured attempts per asset in the partial dataset; quote only their exact run/binary group. Initial host commands/evidence: `python3 tests/run_host.py`, `artifacts/test-results.json`, `artifacts/acceptance-matrix.json`.
 
 ## Public deployment
 

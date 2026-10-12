@@ -11,11 +11,11 @@ Compress equivalent commitment sets, measure actual account allocation, preserve
 
 ## Experimental findings
 
-Independent ordered-tree oracle passed 16/256/1,024-leaf boundary proof checks at host level. Program/client domain/index mismatch was identified for reconciliation before integration. Measurements are not filled from theoretical estimates.
+Independent ordered-tree oracle passed 16/256/1,024-leaf boundary proof checks. The program/client domain mismatch was reconciled. Actual local-SVM copied-witness substitution succeeds for both assets, preserving the intended bearer-secret weakness. Runnable Merkle client run `client-svm-20261012T135250-69a888` passes 7 cases / 9 transactions on binary `8d7435ea6225ef4b09e972cef7ed3d2b99f7f4e1d1b9e9f8aa5124a0848f6e25`. Measurements are not filled from theoretical estimates.
 
 ## Validation
 
-M01–M04 pending custody attack/storage/SVM data. Canonical proof direction derives from leaf index; sibling bytes are not account-size benchmarks. Initial host commands/evidence: `python3 tests/run_host.py`, `artifacts/test-results.json`, `artifacts/acceptance-matrix.json`.
+M01/M03 have actual local-SVM custody/attack evidence. Final equivalent 16/256/1,024-leaf allocated-storage comparison and complete adversarial mapping remain under independent replay. Canonical proof direction derives from leaf index; sibling bytes are not account-size benchmarks. Initial host commands/evidence: `python3 tests/run_host.py`, `artifacts/test-results.json`, `artifacts/acceptance-matrix.json`.
 
 ## Public deployment
 

@@ -39,3 +39,5 @@ Actual integrated custody smoke: local LiteSVM12cases pass all3modes/bothassets 
 Transport caveat: LiteSVM0.29 local v1 does not enforce inline CU/loaded limits (resource-control commit45aba47). Custody uses legacy explicit ComputeBudget, independently verified. Staged XMSS currently costs5transactions per logical operation (create,3uploads,execute); temporary stage rent is retained, no refund claimed.
 
 Validation worker availability changed: the original validation worker stopped following repeated runtime safety-screening failures. Existing code/raw evidence remains; infrastructure and crypto workers are checking/replaying it. No unfinished validation is promoted to passing because a worker stopped.
+
+Actual client-SVM demonstrations are now runnable: array/merkle each7cases9transactions; XMSS final15cases77transactions at source27f76f6 and custody binary8d7435ea6225ef4b09e972cef7ed3d2b99f7f4e1d1b9e9f8aa5124a0848f6e25. XMSS includes both assets, burn, old-root-authorized rotation, new/old-root outcomes and exact retry after rollback. Independent crypto crosscheck and complete main harness replay continue.
