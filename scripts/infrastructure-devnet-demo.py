@@ -234,6 +234,7 @@ class Demonstrations:
         row = self.submit([self.instruction(value, witness)], name, v1=self.mode == 3, metadata={
             'mode': self.label, 'action': action, 'witness_bytes': len(witness), 'instruction_data_bytes': len(self.instruction(value, witness).data),
             'transaction_count_for_operation': 1, 'message_commitment': hashlib.sha256(encode_intent(value)).hexdigest(),
+            'witness_sha256': hashlib.sha256(witness).hexdigest(),
             'inline_resources': {'compute_unit_limit': 1_400_000, 'loaded_accounts_data_size_limit': 1_048_576, 'heap_size': 32_768} if self.mode == 3 else None,
             'before': before})
         after = self.snapshot()
