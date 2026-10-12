@@ -11,7 +11,7 @@ Reference-compatible SVM withdrawals for both assets; authenticated burns/root r
 
 ## Experimental findings
 
-Reference pin and host vectors exist. Rust host agrees for six boundary indices; final index has a disclosed upstream control-flow fix requiring exact provenance. No SVM verifier/custody result is yet declared. Measurements are not filled from theoretical estimates.
+Reference pin and host vectors exist. Rust host agrees for six boundary indices; final index has a disclosed upstream signer control-flow fix, while the verifier reference is unchanged. Standalone LiteSVM verifier passed six valid and36invalid cases; success-case range464,530–496,627CUs. Fixture account installation bypasses witness upload and does not prove custody. No integrated XMSS custody result is yet declared. Measurements are not filled from theoretical estimates.
 
 ## Validation
 

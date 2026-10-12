@@ -8,8 +8,9 @@
 | XMSS reference selected | Pinned revision 171ccbd26f098542a67eb5d2b128281c80bd71a6 | Selection only |
 | Stable custody for SOL/mock USDC | Program work active | Not yet validated |
 | Copied-witness attacks in primitive modes | Validation fixtures being prepared | Not yet validated |
-| Onchain XMSS, burns, root rotation | Crypto/program/client work active | Not yet validated |
-| v1 serialization/decode | @solana/kit8.4.0, 2,029-byte v1 transaction; devnet preflight reaches AccountNotFound payer error | Partial; no submit/read confirmation |
+| Standalone SVM XMSS verifier | 6 valid + 36 invalid local LiteSVM cases passed; success cases 464,530–496,627 CUs; directly installed fixture account | Verifier feasibility only |
+| Integrated XMSS custody, burns, root rotation | Crypto/program/client work active | Not yet validated |
+| v1 serialization/decode/execution | @solana/kit8.4.0, 2,029-byte SDK v1 transaction; local Memo execution2,056CUs; devnet unfunded payer AccountNotFound | Partial; no public submit/read confirmation |
 | Canonical intent and Merkle/schema independent checks | 17/17 host tests at 009cc06a dirty-tree manifest; lengths SOL230/token327/burn3-target203/rotate259 | Host only |
 | Account storage, transaction CUs, benchmark distributions | No final measured dataset yet | Null / pending |
 | Public deployment | No funded developer balance / deployment evidence yet | Pending |
