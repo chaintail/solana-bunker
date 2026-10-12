@@ -71,14 +71,17 @@ def paced_deploy(binary):
     assert existing['owner'] == str(LOADER) and not existing['executable']
     assert len(data) == 37 + len(binary) and data[:5] == struct.pack('<IB', 1, 1)
     assert data[5:37] == bytes(developer.pubkey()), 'Buffer authority differs from dedicated developer'
-    for offset in range(0, len(binary), 3500):
-        chunk = binary[offset:offset + 3500]
+    # Devnet loader preflight rejects a 3500-byte Write despite valid v1
+    # transport; controlled 1200-byte writes succeed. Keep instruction data
+    # below its built-in deserialization bound while retaining paced v1.
+    for offset in range(0, len(binary), 1200):
+        chunk = binary[offset:offset + 1200]
         if data[37 + offset:37 + offset + len(chunk)] == chunk:
             continue
         # bincode enum discriminant u32, offset u32, Vec<u8> length u64.
         instruction = Instruction(LOADER, struct.pack('<IIQ', 1, offset, len(chunk)) + chunk,
                                   [meta(buffer.pubkey(), True), meta(developer.pubkey(), False, True)])
-        receipts.append(submit([instruction], f'paced-write-buffer-{offset:06d}', [developer], v1=True))
+        receipts.append(submit([instruction], f'paced-write-buffer-1200-{offset:06d}', [developer], v1=True))
         write_json(ROOT / 'artifacts/v1-paced-deployment-receipts.json', receipts)
     uploaded = base64.b64decode(account(buffer.pubkey())['data'][0])
     assert uploaded[37:] == binary, 'Buffer payload differs before final deployment'
