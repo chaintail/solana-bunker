@@ -1,0 +1,239 @@
+{
+  "schema_version": 1,
+  "evidence_level": "local_svm",
+  "samples_per_asset": 1,
+  "rows": [
+    {
+      "mode": 1,
+      "leaf_count": 16,
+      "state_allocated_bytes": 870,
+      "persistent_total_allocated_bytes": 1043,
+      "persistent_storage_deposit_lamports": "9931920",
+      "vault_initialize_and_authority_upload_transaction_count": 2,
+      "additional_mint_and_recipient_setup_transaction_count": 3,
+      "initial_funding_transaction_count": 2,
+      "authority_bytes": 512,
+      "usage_bitmap_bytes": 128,
+      "benchmark_path": "artifacts/client-svm-20261012T135456-bc58cb-benchmarks.jsonl",
+      "withdrawals": [
+        {
+          "asset": "SOL",
+          "signature_or_witness_bytes": 36,
+          "merkle_sibling_bytes": null,
+          "final_transaction_bytes": 677,
+          "transaction_count_for_logical_operation": 1,
+          "total_serialized_transaction_bytes": 677,
+          "total_compute_consumed": 5601
+        },
+        {
+          "asset": "MOCK_USDC",
+          "signature_or_witness_bytes": 36,
+          "merkle_sibling_bytes": null,
+          "final_transaction_bytes": 774,
+          "transaction_count_for_logical_operation": 1,
+          "total_serialized_transaction_bytes": 774,
+          "total_compute_consumed": 8012
+        }
+      ]
+    },
+    {
+      "mode": 2,
+      "leaf_count": 16,
+      "state_allocated_bytes": 390,
+      "persistent_total_allocated_bytes": 563,
+      "persistent_storage_deposit_lamports": "6591120",
+      "vault_initialize_and_authority_upload_transaction_count": 2,
+      "additional_mint_and_recipient_setup_transaction_count": 3,
+      "initial_funding_transaction_count": 2,
+      "authority_bytes": 32,
+      "usage_bitmap_bytes": 128,
+      "benchmark_path": "artifacts/client-svm-20261012T135459-c810e1-benchmarks.jsonl",
+      "withdrawals": [
+        {
+          "asset": "SOL",
+          "signature_or_witness_bytes": 164,
+          "merkle_sibling_bytes": 128,
+          "final_transaction_bytes": 805,
+          "transaction_count_for_logical_operation": 1,
+          "total_serialized_transaction_bytes": 805,
+          "total_compute_consumed": 11003
+        },
+        {
+          "asset": "MOCK_USDC",
+          "signature_or_witness_bytes": 164,
+          "merkle_sibling_bytes": 128,
+          "final_transaction_bytes": 902,
+          "transaction_count_for_logical_operation": 1,
+          "total_serialized_transaction_bytes": 902,
+          "total_compute_consumed": 13413
+        }
+      ]
+    },
+    {
+      "mode": 1,
+      "leaf_count": 256,
+      "state_allocated_bytes": 8550,
+      "persistent_total_allocated_bytes": 8723,
+      "persistent_storage_deposit_lamports": "63384720",
+      "vault_initialize_and_authority_upload_transaction_count": 11,
+      "additional_mint_and_recipient_setup_transaction_count": 3,
+      "initial_funding_transaction_count": 2,
+      "authority_bytes": 8192,
+      "usage_bitmap_bytes": 128,
+      "benchmark_path": "artifacts/client-svm-20261012T135503-12d17d-benchmarks.jsonl",
+      "withdrawals": [
+        {
+          "asset": "SOL",
+          "signature_or_witness_bytes": 36,
+          "merkle_sibling_bytes": null,
+          "final_transaction_bytes": 677,
+          "transaction_count_for_logical_operation": 1,
+          "total_serialized_transaction_bytes": 677,
+          "total_compute_consumed": 8601
+        },
+        {
+          "asset": "MOCK_USDC",
+          "signature_or_witness_bytes": 36,
+          "merkle_sibling_bytes": null,
+          "final_transaction_bytes": 774,
+          "transaction_count_for_logical_operation": 1,
+          "total_serialized_transaction_bytes": 774,
+          "total_compute_consumed": 11012
+        }
+      ]
+    },
+    {
+      "mode": 2,
+      "leaf_count": 256,
+      "state_allocated_bytes": 390,
+      "persistent_total_allocated_bytes": 563,
+      "persistent_storage_deposit_lamports": "6591120",
+      "vault_initialize_and_authority_upload_transaction_count": 2,
+      "additional_mint_and_recipient_setup_transaction_count": 3,
+      "initial_funding_transaction_count": 2,
+      "authority_bytes": 32,
+      "usage_bitmap_bytes": 128,
+      "benchmark_path": "artifacts/client-svm-20261012T135506-1648a8-benchmarks.jsonl",
+      "withdrawals": [
+        {
+          "asset": "SOL",
+          "signature_or_witness_bytes": 292,
+          "merkle_sibling_bytes": 256,
+          "final_transaction_bytes": 933,
+          "transaction_count_for_logical_operation": 1,
+          "total_serialized_transaction_bytes": 933,
+          "total_compute_consumed": 8731
+        },
+        {
+          "asset": "MOCK_USDC",
+          "signature_or_witness_bytes": 292,
+          "merkle_sibling_bytes": 256,
+          "final_transaction_bytes": 1030,
+          "transaction_count_for_logical_operation": 1,
+          "total_serialized_transaction_bytes": 1030,
+          "total_compute_consumed": 11141
+        }
+      ]
+    },
+    {
+      "mode": 1,
+      "leaf_count": 1024,
+      "state_allocated_bytes": 33126,
+      "persistent_total_allocated_bytes": 33299,
+      "persistent_storage_deposit_lamports": "234433680",
+      "vault_initialize_and_authority_upload_transaction_count": 38,
+      "additional_mint_and_recipient_setup_transaction_count": 3,
+      "initial_funding_transaction_count": 2,
+      "authority_bytes": 32768,
+      "usage_bitmap_bytes": 128,
+      "benchmark_path": "artifacts/client-svm-20261012T135509-c87eeb-benchmarks.jsonl",
+      "withdrawals": [
+        {
+          "asset": "SOL",
+          "signature_or_witness_bytes": 36,
+          "merkle_sibling_bytes": null,
+          "final_transaction_bytes": 677,
+          "transaction_count_for_logical_operation": 1,
+          "total_serialized_transaction_bytes": 677,
+          "total_compute_consumed": 10101
+        },
+        {
+          "asset": "MOCK_USDC",
+          "signature_or_witness_bytes": 36,
+          "merkle_sibling_bytes": null,
+          "final_transaction_bytes": 774,
+          "transaction_count_for_logical_operation": 1,
+          "total_serialized_transaction_bytes": 774,
+          "total_compute_consumed": 12512
+        }
+      ]
+    },
+    {
+      "mode": 2,
+      "leaf_count": 1024,
+      "state_allocated_bytes": 390,
+      "persistent_total_allocated_bytes": 563,
+      "persistent_storage_deposit_lamports": "6591120",
+      "vault_initialize_and_authority_upload_transaction_count": 2,
+      "additional_mint_and_recipient_setup_transaction_count": 3,
+      "initial_funding_transaction_count": 2,
+      "authority_bytes": 32,
+      "usage_bitmap_bytes": 128,
+      "benchmark_path": "artifacts/client-svm-20261012T135512-4fd1aa-benchmarks.jsonl",
+      "withdrawals": [
+        {
+          "asset": "SOL",
+          "signature_or_witness_bytes": 356,
+          "merkle_sibling_bytes": 320,
+          "final_transaction_bytes": 997,
+          "transaction_count_for_logical_operation": 1,
+          "total_serialized_transaction_bytes": 997,
+          "total_compute_consumed": 9095
+        },
+        {
+          "asset": "MOCK_USDC",
+          "signature_or_witness_bytes": 356,
+          "merkle_sibling_bytes": 320,
+          "final_transaction_bytes": 1094,
+          "transaction_count_for_logical_operation": 1,
+          "total_serialized_transaction_bytes": 1094,
+          "total_compute_consumed": 11505
+        }
+      ]
+    },
+    {
+      "mode": 3,
+      "leaf_count": 1024,
+      "state_allocated_bytes": 422,
+      "persistent_total_allocated_bytes": 595,
+      "persistent_storage_deposit_lamports": "6813840",
+      "vault_initialize_and_authority_upload_transaction_count": 2,
+      "additional_mint_and_recipient_setup_transaction_count": 3,
+      "initial_funding_transaction_count": 2,
+      "authority_bytes": 64,
+      "usage_bitmap_bytes": 128,
+      "benchmark_path": "artifacts/client-svm-20261012T135515-9115c2-benchmarks.jsonl",
+      "withdrawals": [
+        {
+          "asset": "SOL",
+          "signature_or_witness_bytes": 2500,
+          "merkle_sibling_bytes": null,
+          "final_transaction_bytes": 674,
+          "transaction_count_for_logical_operation": 5,
+          "total_serialized_transaction_bytes": 4532,
+          "total_compute_consumed": 538441
+        },
+        {
+          "asset": "MOCK_USDC",
+          "signature_or_witness_bytes": 2500,
+          "merkle_sibling_bytes": null,
+          "final_transaction_bytes": 771,
+          "transaction_count_for_logical_operation": 5,
+          "total_serialized_transaction_bytes": 4726,
+          "total_compute_consumed": 494612
+        }
+      ]
+    }
+  ],
+  "limitations": "Persistent bytes include state, source token account, and treasury only. XMSS uses retained 2625-byte stage accounts; these early client records omit direct stage-account rent snapshots. Use final validator replay for measured stage storage deposits and temporary_account_bytes. No devnet confirmation."
+}
