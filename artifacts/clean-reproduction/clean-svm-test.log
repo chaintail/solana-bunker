@@ -1,0 +1,17 @@
+actual SVM mode1 asset1 success+replay passed
+actual SVM mode1 asset2 success+replay passed
+actual SVM mode2 asset1 success+replay passed
+actual SVM mode2 asset2 success+replay passed
+actual SVM mode3 asset1 success+replay passed
+actual SVM mode3 asset2 success+replay passed
+actual SVM mode1: attacks, accounts, burns, exact retry passed
+actual SVM mode2: attacks, accounts, burns, exact retry passed
+actual SVM mode3: attacks, accounts, burns, exact retry passed
+actual SVM XMSS fresh rotation, stable addresses/balances, old root rejection and new withdrawal passed
+actual SVM same-vault array->Merkle->XMSS transition preserves receiving accounts and balances
+actual SVM mode1 leaves16: allocated state870 bytes, both assets passed
+actual SVM mode1 leaves256: allocated state8550 bytes, both assets passed
+actual SVM mode1 leaves1024: allocated state33126 bytes, both assets passed
+actual SVM mode2 leaves16: allocated state390 bytes, both assets passed
+actual SVM mode2 leaves256: allocated state390 bytes, both assets passed
+actual SVM mode2 leaves1024: allocated state390 bytes, both assets passed

@@ -1,16 +1,16 @@
 {
-  "observed_at_utc": "2026-10-12T13:46:18.165601+00:00",
+  "observed_at_utc": "2026-10-12T14:00:56.457138+00:00",
   "cluster": "devnet",
-  "program_binary_bytes": 122848,
-  "program_binary_sha256": "a84a81cd97e78dd1090acaaaae22d5f103e3c258eab248ad1ef2e47f84301020",
-  "deployment_max_len": 122848,
+  "program_binary_bytes": 124464,
+  "program_binary_sha256": "8d7435ea6225ef4b09e972cef7ed3d2b99f7f4e1d1b9e9f8aa5124a0848f6e25",
+  "deployment_max_len": 124464,
   "estimate_only": true,
   "balance": {
     "jsonrpc": "2.0",
     "result": {
       "context": {
         "apiVersion": "4.4.0-beta.0",
-        "slot": 510283389
+        "slot": 510287017
       },
       "value": 0
     },
@@ -23,12 +23,12 @@
   },
   "program_data_rent_lamports": {
     "jsonrpc": "2.0",
-    "result": 624946680,
+    "result": 633155960,
     "id": 1
   },
   "deployment_buffer_rent_lamports": {
     "jsonrpc": "2.0",
-    "result": 624906040,
+    "result": 633115320,
     "id": 1
   },
   "mint_rent_lamports": {
@@ -40,5 +40,6 @@
     "jsonrpc": "2.0",
     "result": 1488440,
     "id": 1
-  }
+  },
+  "funding_recommendation_lamports": 2000000000
 }

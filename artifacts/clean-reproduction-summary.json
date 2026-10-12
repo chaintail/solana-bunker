@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "source_archive_commit": "10a96e861e087488753a43849415cbea0b1ad02b",
+  "git_directory_absent": true,
+  "private_directory_absent_before_run": true,
+  "host_summary": {
+    "total": 37,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "successful": true
+  },
+  "runtime_summary": {
+    "run_id": "validation-20261012T140013",
+    "source_identity": "source_snapshot:65a218da0390302dc650912918306fe081f55d58b85ecefc323b9022b1e612c4",
+    "cases": 195,
+    "passed": 195,
+    "measured_attempts": 573,
+    "binary_sha256": "8d7435ea6225ef4b09e972cef7ed3d2b99f7f4e1d1b9e9f8aa5124a0848f6e25"
+  },
+  "commands": [
+    "bash crypto/build_reference.sh",
+    "python tests/run_host.py",
+    "python tests/svm_harness.py --full --samples 20"
+  ],
+  "binary_build_evidence": "artifacts/clean-build-origin.json",
+  "artifact_directory": "artifacts/clean-reproduction"
+}
