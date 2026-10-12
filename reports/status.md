@@ -22,7 +22,7 @@ E3 standalone verifier gate: six valid and 36 invalid cases passed in actual loc
 | Program/custody | Account model, both assets, selected authorization modes | programs/ |
 | Cryptography | Pinned XMSS reference, host vectors, actual SVM verification and E3 | crypto/, early E3 |
 | Client | Canonical intent, Merkle proofs, signer journal, CLI and event contract | client/, interfaces |
-| Validation | Independent adversarial cases, raw results and benchmark checking | tests/, validation artifacts |
+| Validation | Original worker stopped by runtime capability failure; infrastructure independently replays existing harness, crypto reviewer crosschecks | tests/, validation artifacts |
 | Documentation | Checkpoints, research, final public package and confidential continuation | reports/status, decisions, milestones, research/, README |
 
 ## Dependencies and continuation
@@ -37,3 +37,5 @@ Read this file, reports/decisions.md, reports/interfaces.md when available, and 
 Actual integrated custody smoke: local LiteSVM12cases pass all3modes/bothassets exact100base-unit transfers plus replay rejection, custody binary a84a81cd97e78dd1090acaaaae22d5f103e3c258eab248ad1ef2e47f84301020. Extended copied-witness/account/burn/rotation scenarios are already running.
 
 Transport caveat: LiteSVM0.29 local v1 does not enforce inline CU/loaded limits (resource-control commit45aba47). Custody uses legacy explicit ComputeBudget, independently verified. Staged XMSS currently costs5transactions per logical operation (create,3uploads,execute); temporary stage rent is retained, no refund claimed.
+
+Validation worker availability changed: the original validation worker stopped following repeated runtime safety-screening failures. Existing code/raw evidence remains; infrastructure and crypto workers are checking/replaying it. No unfinished validation is promoted to passing because a worker stopped.
