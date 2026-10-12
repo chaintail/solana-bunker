@@ -1,7 +1,8 @@
-"""Research CLI: python -m client.cli --adapter host <command>.
+"""Research CLI: explicit host model or actual local-SBF LiteSVM demos.
 
-Only the explicit disposable host adapter is currently executable. It does not
-submit transactions, mint SPL tokens on a network, or measure SVM compute units.
+--adapter svm supports isolated demo and benchmark commands with real SPL CPIs
+and measured runtime metadata. Host persistence is separate. No adapter claims
+network confirmation; the public devnet deployment has its own infra workflow.
 """
 import argparse
 import fcntl
@@ -128,9 +129,14 @@ def main():
             sub.add_argument("--asset",choices=("sol","mock-usdc"),default="sol");sub.add_argument("--amount",type=int,required=True);sub.add_argument("--destination")
         if name=="burn-leaves": sub.add_argument("--targets",type=int,nargs="+",required=True)
     for name in ("demo-array","demo-merkle","demo-xmss","benchmark"):
-        subs.add_parser(name)
+        sub=subs.add_parser(name);sub.add_argument("--samples",type=int,default=20 if name=="benchmark" else 1)
     args=parser.parse_args()
-    if args.adapter!="host": parser.error("SVM adapter unavailable: toolchain/RPC integration required; host is not SVM evidence")
+    if args.adapter=="svm":
+        from . import svm
+        if args.command.startswith("demo-"):
+            emit(svm.run({"demo-array":1,"demo-merkle":2,"demo-xmss":3}[args.command],args.samples));return
+        if args.command=="benchmark":emit(svm.benchmark(args.samples));return
+        parser.error("SVM adapter currently supports isolated demo and benchmark commands; persistent commands use --adapter host")
     if args.command.startswith("demo-"):
         result=demo({"demo-array":1,"demo-merkle":2,"demo-xmss":3}[args.command]);emit(result);return
     if args.command=="benchmark":emit(benchmark());return
@@ -158,7 +164,8 @@ def main():
                 decoded=actions.parse_intent(message)
                 ledger.execute(message,witness)
                 if decoded["action"]==4:
-                    generation=private["generation"]+1
+                    history=AuthorityHistory(Path(args.journal_dir)/private["fixture"])
+                    generation=history.generation_for(decoded["root"]+decoded["public_seed"]);history.close()
                     public,secret=host.authority(private["seed"],state.vault_id,3,generation,1024)
                     if public!=decoded["root"]+decoded["public_seed"]:raise ValueError("replacement seed unavailable for retry")
                     private.update(generation=generation,xmss_secret=secret)
@@ -173,9 +180,10 @@ def main():
                 elif args.command=="burn-leaves":action=3;fields=dict(targets=args.targets)
                 else:
                     if state.mode!=3:raise ValueError("rotation requires XMSS mode")
-                    generation=private["generation"]+1
+                    history=AuthorityHistory(Path(args.journal_dir)/private["fixture"])
+                    generation=history.next_generation(private["generation"])
                     public,secret=host.authority(private["seed"],state.vault_id,3,generation,1024)
-                    history=AuthorityHistory(Path(args.journal_dir)/private["fixture"]);history.install(public,generation);history.close()
+                    history.install(public,generation);history.close()
                     action=4;fields=dict(new_mode=3,parameter_id=1,root=public[:32],public_seed=public[32:])
                 intent=host.context(ledger,private,index,action,**fields)
                 message,witness=authorize(ledger,private,intent,args.journal_dir,operation_id)

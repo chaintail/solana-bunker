@@ -118,10 +118,23 @@ class AuthorityHistory:
     def install(self, public, generation):
         if not isinstance(public,bytes) or len(public)!=64:
             raise JournalError("expected XMSS root/public-seed64")
+        if type(generation) is not int or not 0<=generation<2**64:
+            raise JournalError("generation must be uint64")
         try:
             self.db.execute("INSERT INTO keysets VALUES (?,?)",(public,str(generation))); self.db.commit()
         except sqlite3.IntegrityError as exc:
             raise JournalError("historical authority/generation reuse refused") from exc
+
+    def next_generation(self, active_generation=0):
+        highest=max([active_generation,*[int(row[0]) for row in self.db.execute("SELECT generation FROM keysets")]])
+        if highest==2**64-1:
+            raise JournalError("generation exhausted")
+        return highest+1
+
+    def generation_for(self, public):
+        row=self.db.execute("SELECT generation FROM keysets WHERE public=?",(public,)).fetchone()
+        if row is None:raise JournalError("unknown replacement authority")
+        return int(row[0])
 
     def close(self):
         self.db.close()

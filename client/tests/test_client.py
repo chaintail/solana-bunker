@@ -71,6 +71,16 @@ class ClientTests(unittest.TestCase):
             with self.assertRaises(JournalError):history.install(b"r"*64,1)
             with self.assertRaises(JournalError):history.install(b"s"*64,0)
             history.install(b"s"*64,1);history.close()
+    def test_uncertain_rotation_uses_fresh_generation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            history=AuthorityHistory(directory);history.install(b"a"*64,0)
+            pending=history.next_generation(0);history.install(b"b"*64,pending)
+            # Failed/uncertain attempt does not advance active generation0.
+            self.assertEqual(history.next_generation(0),2)
+            self.assertEqual(history.generation_for(b"b"*64),1)
+            history.install(b"c"*64,history.next_generation(0))
+            self.assertEqual(history.next_generation(0),3)
+            history.close()
     def test_host_persistence(self):
         with tempfile.TemporaryDirectory() as directory:
             ledger,private=host.initialize(2,16,"test-only")
