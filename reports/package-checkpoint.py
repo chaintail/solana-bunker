@@ -32,9 +32,11 @@ def main() -> None:
     parser.add_argument("--repo", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--confidential", type=Path)
+    parser.add_argument("--allow-in-progress", action="store_true")
     args = parser.parse_args()
     repo = args.repo.resolve()
-    if git(repo, "status", "--porcelain", "--untracked-files=all").strip():
+    dirty = git(repo, "status", "--porcelain", "--untracked-files=all").decode().splitlines()
+    if dirty and not args.allow_in_progress:
         raise SystemExit("Refusing a public checkpoint from an uncommitted tree; commit owned source/evidence first.")
     commit = git(repo, "rev-parse", "HEAD").decode().strip()
     archive = git(repo, "archive", "--format=zip", "HEAD")
@@ -53,6 +55,8 @@ def main() -> None:
             "source_commit": commit,
             "created_at_utc": datetime.now(timezone.utc).isoformat(),
             "scope": "Public source/evidence checkpoint; no live credentials or signer journals",
+            "working_tree_in_progress": bool(dirty),
+            "uncommitted_work_excluded": bool(dirty),
             "files_sha256": digest_map,
         }, indent=2) + "\n")
     if args.confidential:
