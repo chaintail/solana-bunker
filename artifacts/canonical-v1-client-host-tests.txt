@@ -1,0 +1,21 @@
+test_actions_roundtrip (test_client.ClientTests.test_actions_roundtrip) ... ok
+test_authority_history (test_client.ClientTests.test_authority_history) ... ok
+test_bip39_seed_vector (test_client.ClientTests.test_bip39_seed_vector) ... ok
+test_burn_policy (test_client.ClientTests.test_burn_policy) ... ok
+test_host_persistence (test_client.ClientTests.test_host_persistence) ... ok
+test_journal_reserve_retry_reuse_and_crash (test_client.ClientTests.test_journal_reserve_retry_reuse_and_crash) ... ok
+test_kdf_separation (test_client.ClientTests.test_kdf_separation) ... ok
+test_merkle_sizes_and_negatives (test_client.ClientTests.test_merkle_sizes_and_negatives) ... ok
+test_numeric_bounds (test_client.ClientTests.test_numeric_bounds) ... ok
+test_uncertain_rotation_uses_fresh_generation (test_client.ClientTests.test_uncertain_rotation_uses_fresh_generation) ... ok
+test_all_actions_roundtrip_full_signature_and_inline_limits (test_transport.V1TransportTests.test_all_actions_roundtrip_full_signature_and_inline_limits) ... ok
+test_allow_explicit_low_limit_for_runtime_control (test_transport.V1TransportTests.test_allow_explicit_low_limit_for_runtime_control) ... ok
+test_reject_actual_oversized_envelope (test_transport.V1TransportTests.test_reject_actual_oversized_envelope) ... ok
+test_reject_legacy_budget_instruction (test_transport.V1TransportTests.test_reject_legacy_budget_instruction) ... ok
+test_require_explicit_bounded_resources (test_transport.V1TransportTests.test_require_explicit_bounded_resources) ... ok
+test_retry_changes_only_outer_transport (test_transport.V1TransportTests.test_retry_changes_only_outer_transport) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.218s
+
+OK

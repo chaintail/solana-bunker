@@ -1,0 +1,278 @@
+{
+  "schema_version": 1,
+  "source_commit": "e4d20bff4eb589f97fcdf84a9d668c2cbc46b67f",
+  "program_binary_sha256": "48e2e324abcdcfd7e4c7cb601765da374595b922ed94e29d5ec168d37c06de79",
+  "environment": {
+    "python": "3.13.5",
+    "solders": "0.29.0",
+    "runtime": "LiteSVM",
+    "sbf_toolchain": "Agave4.3.0/platform-tools1.57",
+    "inline_resource_limits_enforced": false,
+    "inline_runtime_compute_override": 1400000,
+    "network_confirmation": false
+  },
+  "run_commands": [
+    "python tests/run_host.py",
+    "python -m unittest discover -s client/tests -v",
+    "python tests/svm_harness.py --full --samples 20",
+    "python -m client.cli --adapter svm demo-xmss",
+    "python -m client.cli --adapter svm --xmss-transport staged demo-xmss"
+  ],
+  "host_tests": 37,
+  "client_tests": 16,
+  "full_case_count": 195,
+  "full_measured_transactions": 317,
+  "full_v1_transaction_rows": 69,
+  "inline_client_cases": 22,
+  "inline_client_measured_transactions": 24,
+  "staged_client_cases": 22,
+  "staged_client_measured_transactions": 112,
+  "all_assertions_passed": true,
+  "principal_comparison": [
+    {
+      "mode": "SECRET_ARRAY_V1",
+      "asset": "SOL",
+      "samples": 20,
+      "transport": "legacy",
+      "compute_min": 7101,
+      "compute_median": 7101.0,
+      "compute_max": 7101,
+      "transaction_bytes": [
+        677
+      ],
+      "transactions_per_operation": [
+        1
+      ]
+    },
+    {
+      "mode": "SECRET_ARRAY_V1",
+      "asset": "MOCK_USDC",
+      "samples": 20,
+      "transport": "legacy",
+      "compute_min": 8012,
+      "compute_median": 8012.0,
+      "compute_max": 8012,
+      "transaction_bytes": [
+        774
+      ],
+      "transactions_per_operation": [
+        1
+      ]
+    },
+    {
+      "mode": "MERKLE_SECRET_V1",
+      "asset": "SOL",
+      "samples": 20,
+      "transport": "legacy",
+      "compute_min": 7227,
+      "compute_median": 7229.0,
+      "compute_max": 7231,
+      "transaction_bytes": [
+        933
+      ],
+      "transactions_per_operation": [
+        1
+      ]
+    },
+    {
+      "mode": "MERKLE_SECRET_V1",
+      "asset": "MOCK_USDC",
+      "samples": 20,
+      "transport": "legacy",
+      "compute_min": 21638,
+      "compute_median": 21640.0,
+      "compute_max": 21642,
+      "transaction_bytes": [
+        1030
+      ],
+      "transactions_per_operation": [
+        1
+      ]
+    },
+    {
+      "mode": "XMSS_SHA2_10_256_V1",
+      "asset": "SOL",
+      "samples": 20,
+      "transport": "v1",
+      "compute_min": 483722,
+      "compute_median": 518507.5,
+      "compute_max": 564891,
+      "transaction_bytes": [
+        3117
+      ],
+      "transactions_per_operation": [
+        1
+      ]
+    },
+    {
+      "mode": "XMSS_SHA2_10_256_V1",
+      "asset": "MOCK_USDC",
+      "samples": 20,
+      "transport": "v1",
+      "compute_min": 499275,
+      "compute_median": 522467.5,
+      "compute_max": 580447,
+      "transaction_bytes": [
+        3214
+      ],
+      "transactions_per_operation": [
+        1
+      ]
+    }
+  ],
+  "client_operations": [
+    {
+      "scenario": "client_principal_success",
+      "asset": "SOL",
+      "transport": "inline-v1",
+      "execute_transaction_bytes": 3117,
+      "execute_compute_consumed": 495315,
+      "transaction_count": 1,
+      "total_transaction_bytes": 3117,
+      "total_compute_consumed": 495315,
+      "total_fee_lamports": "5000",
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/client-svm-20261012T185506-915f49/00008.json"
+      ],
+      "temporary_account_bytes_in_fixture": 0,
+      "new_temporary_account_bytes": 0
+    },
+    {
+      "scenario": "client_principal_success",
+      "asset": "MOCK_USDC",
+      "transport": "inline-v1",
+      "execute_transaction_bytes": 3214,
+      "execute_compute_consumed": 578944,
+      "transaction_count": 1,
+      "total_transaction_bytes": 3214,
+      "total_compute_consumed": 578944,
+      "total_fee_lamports": "5000",
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/client-svm-20261012T185506-915f49/00013.json"
+      ],
+      "temporary_account_bytes_in_fixture": 0,
+      "new_temporary_account_bytes": 0
+    },
+    {
+      "scenario": "client_principal_success",
+      "asset": "SOL",
+      "transport": "staged",
+      "execute_transaction_bytes": 674,
+      "execute_compute_consumed": 482868,
+      "transaction_count": 5,
+      "total_transaction_bytes": 4532,
+      "total_compute_consumed": 492059,
+      "total_fee_lamports": "30000",
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/client-svm-20261012T185741-c63c08/00008.json",
+        "artifacts/logs/validation-svm/client-svm-20261012T185741-c63c08/00009.json",
+        "artifacts/logs/validation-svm/client-svm-20261012T185741-c63c08/00010.json",
+        "artifacts/logs/validation-svm/client-svm-20261012T185741-c63c08/00011.json",
+        "artifacts/logs/validation-svm/client-svm-20261012T185741-c63c08/00012.json"
+      ],
+      "temporary_account_bytes_in_fixture": 2625,
+      "new_temporary_account_bytes": 2625
+    },
+    {
+      "scenario": "client_principal_success",
+      "asset": "MOCK_USDC",
+      "transport": "staged",
+      "execute_transaction_bytes": 771,
+      "execute_compute_consumed": 508567,
+      "transaction_count": 5,
+      "total_transaction_bytes": 4726,
+      "total_compute_consumed": 517806,
+      "total_fee_lamports": "30000",
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/client-svm-20261012T185741-c63c08/00033.json",
+        "artifacts/logs/validation-svm/client-svm-20261012T185741-c63c08/00034.json",
+        "artifacts/logs/validation-svm/client-svm-20261012T185741-c63c08/00035.json",
+        "artifacts/logs/validation-svm/client-svm-20261012T185741-c63c08/00036.json",
+        "artifacts/logs/validation-svm/client-svm-20261012T185741-c63c08/00037.json"
+      ],
+      "temporary_account_bytes_in_fixture": 15750,
+      "new_temporary_account_bytes": 2625
+    },
+    {
+      "scenario": "client_authenticated_burn",
+      "asset": null,
+      "transport": "inline-v1",
+      "execute_transaction_bytes": 3086,
+      "execute_compute_consumed": 529688,
+      "transaction_count": 1,
+      "total_transaction_bytes": 3086,
+      "total_compute_consumed": 529688,
+      "total_fee_lamports": "5000",
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/client-svm-20261012T185506-915f49/00019.json"
+      ],
+      "temporary_account_bytes_in_fixture": 0,
+      "new_temporary_account_bytes": 0
+    },
+    {
+      "scenario": "client_authenticated_burn",
+      "asset": null,
+      "transport": "staged",
+      "execute_transaction_bytes": 643,
+      "execute_compute_consumed": 459248,
+      "transaction_count": 5,
+      "total_transaction_bytes": 4470,
+      "total_compute_consumed": 468423,
+      "total_fee_lamports": "30000",
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/client-svm-20261012T185741-c63c08/00063.json",
+        "artifacts/logs/validation-svm/client-svm-20261012T185741-c63c08/00064.json",
+        "artifacts/logs/validation-svm/client-svm-20261012T185741-c63c08/00065.json",
+        "artifacts/logs/validation-svm/client-svm-20261012T185741-c63c08/00066.json",
+        "artifacts/logs/validation-svm/client-svm-20261012T185741-c63c08/00067.json"
+      ],
+      "temporary_account_bytes_in_fixture": 31500,
+      "new_temporary_account_bytes": 2625
+    },
+    {
+      "scenario": "client_authorized_rotation",
+      "asset": null,
+      "transport": "inline-v1",
+      "execute_transaction_bytes": 3146,
+      "execute_compute_consumed": 494909,
+      "transaction_count": 1,
+      "total_transaction_bytes": 3146,
+      "total_compute_consumed": 494909,
+      "total_fee_lamports": "5000",
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/client-svm-20261012T185506-915f49/00023.json"
+      ],
+      "temporary_account_bytes_in_fixture": 0,
+      "new_temporary_account_bytes": 0
+    },
+    {
+      "scenario": "client_authorized_rotation",
+      "asset": null,
+      "transport": "staged",
+      "execute_transaction_bytes": 703,
+      "execute_compute_consumed": 482479,
+      "transaction_count": 5,
+      "total_transaction_bytes": 4590,
+      "total_compute_consumed": 491684,
+      "total_fee_lamports": "30000",
+      "evidence_paths": [
+        "artifacts/logs/validation-svm/client-svm-20261012T185741-c63c08/00083.json",
+        "artifacts/logs/validation-svm/client-svm-20261012T185741-c63c08/00084.json",
+        "artifacts/logs/validation-svm/client-svm-20261012T185741-c63c08/00085.json",
+        "artifacts/logs/validation-svm/client-svm-20261012T185741-c63c08/00086.json",
+        "artifacts/logs/validation-svm/client-svm-20261012T185741-c63c08/00087.json"
+      ],
+      "temporary_account_bytes_in_fixture": 42000,
+      "new_temporary_account_bytes": 2625
+    }
+  ],
+  "evidence_paths": [
+    "artifacts/canonical-v1-full-results.json",
+    "artifacts/canonical-v1-full-benchmarks.jsonl",
+    "artifacts/canonical-v1-inline-results.json",
+    "artifacts/canonical-v1-staged-results.json",
+    "artifacts/canonical-v1-host-results.json",
+    "artifacts/canonical-v1-client-host-tests.txt"
+  ],
+  "limitations": "Local SBF execution against a fresh pinned build. Inline transactions use a disclosed LiteSVM 1.4M CU runtime override because serialized inline resource limits are ignored. Devnet confirmation/enforcement evidence is separate. Ordinary upgrade/demo administrator is trusted; deterministic harness keys are disposable local-only test vectors."
+}
