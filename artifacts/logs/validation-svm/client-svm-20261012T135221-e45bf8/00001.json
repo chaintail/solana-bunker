@@ -1,0 +1,85 @@
+{
+  "run_id": "client-svm-20261012T135221-e45bf8",
+  "operation_id": "client-svm-20261012T135221-e45bf8-1",
+  "observed_at_utc": "2026-10-12T13:52:24.233859+00:00",
+  "result": {
+    "signature": "5fQwC1W2GSxV3xGBHGF1V7LXvQ2ZMNRQCrybU4US4G6TpmM2e3WW6eiHy8RJTMcziSw7nkuVpkhgLJJQBHwS2J1t",
+    "logs": [
+      "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+      "Program ComputeBudget111111111111111111111111111111 success",
+      "Program 11111111111111111111111111111111 invoke [1]",
+      "Program 11111111111111111111111111111111 success",
+      "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [1]",
+      "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 201 of 1399700 compute units",
+      "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success"
+    ],
+    "inner_instructions": [
+      [],
+      [],
+      []
+    ],
+    "compute_units_consumed": 501,
+    "return_data": {
+      "program_id": [
+        6,
+        221,
+        246,
+        225,
+        215,
+        101,
+        161,
+        147,
+        217,
+        203,
+        225,
+        70,
+        206,
+        235,
+        121,
+        172,
+        28,
+        180,
+        133,
+        237,
+        95,
+        91,
+        55,
+        145,
+        58,
+        140,
+        245,
+        133,
+        126,
+        255,
+        0,
+        169
+      ],
+      "data": []
+    },
+    "fee": 10000
+  },
+  "serialized_transaction_hex": "02e93190acd5471f99e1abc3e55ca6f787e0f83dcb51053f6cb0c0cc9e0add48f31b7de34990bd77493db7320e90dd1d9ce27416730da93458ea60471272203a0f505d637d841172ef47689788a677c9220db6d7e8ebd7b5a5996d6c9758114e3f1d98ecf1aa6a0a9667214818eed835941b49bcfc47de92a41c450510a6b4580802000305c77ae7fdb4719202aa76691c265c71b749432f19abd5cafc308cbf2eb0c2a7377586c9678f68d7d21ba44b5c401f9b093e2ca22e8c78acd2c46ea0ee1d5d176b00000000000000000000000000000000000000000000000000000000000000000306466fe5211732ffecadba72c39be7bc8ce5bbc5f7126b2c439b3a4000000006ddf6e1d765a193d9cbe146ceeb79ac1cb485ed5f5b37913a8cf5857eff00a932a72a8043f4ce5c962994ae137d350a0bff3032e9719e2923638cbc6abfcc9f0303000502c05c1500020200013400000000604d160000000000520000000000000006ddf6e1d765a193d9cbe146ceeb79ac1cb485ed5f5b37913a8cf5857eff00a9040101231406c77ae7fdb4719202aa76691c265c71b749432f19abd5cafc308cbf2eb0c2a73700",
+  "transaction_bytes": 430,
+  "accounts_after": {
+    "state": null,
+    "treasury": null,
+    "source": null,
+    "owner": {
+      "address": "8UdUv7vBbgzqZMSFffaeWtPECR7fTbC2NFpmpYP96LD4",
+      "lamports": "10000000000",
+      "owner": "11111111111111111111111111111111",
+      "data_hex": "",
+      "allocated_bytes": 0
+    },
+    "attacker": {
+      "address": "GFWUEfiEojjq6fDuLXDj3Xo7ECQBsQLVjd9gsRmcJ2Lh",
+      "lamports": "10000000000",
+      "owner": "11111111111111111111111111111111",
+      "data_hex": "",
+      "allocated_bytes": 0
+    },
+    "owner_token": null,
+    "attacker_token": null
+  },
+  "attacker_scope": "ordinary dedicated relayer credential plus disclosed bearer witness; admin, upgrade, mint authority, and XMSS seeds excluded"
+}

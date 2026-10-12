@@ -1,0 +1,200 @@
+{
+  "schema_version": 1,
+  "observed_at_utc": "2026-10-12T13:44:53.607485+00:00",
+  "commit": "7cab978d4d68b63cd14a15549ff49856c5c226b1",
+  "working_tree_dirty": true,
+  "source_sha256": {
+    "tests/evidence_schema.py": "56cff731845709600c245b05f7d176c507a3d20526f47fcacc2f425a822c6326",
+    "tests/run_host.py": "015d4b41acf502c85e9b167696d69d9d148022c6acf7d0c21d323020ea64f320",
+    "tests/test_client_contract.py": "807074cd58f8815e69c552164dae6dd11628216d4b5698a44149c97abb9d7973",
+    "tests/test_evidence_schema.py": "67c90d0ba953922a4d5ce20a79c2420e6230a5ae0819881ecd9080fefd351736",
+    "tests/test_journal.py": "a2b6dbb311ee3f77471f01cc6cb9cfbedf70978bc1836a06f26175ff7ad4d2b1",
+    "tests/test_model_acceptance.py": "77b6d27d05d1be2f546b09aa5056110d2d76fee5d57375e426ac125d82593a45",
+    "tests/test_xmss_reference.py": "450bfce29a10411826b8d0a4456dcfae9a0ebf4d898b5df64738c4f0d6e24842",
+    "client/__init__.py": "7e3a86e7ced9d8b59f15e171477829b1ae1b9c76f61ef3d5a605dbfe2fdf7f64",
+    "client/actions.py": "9c369347ad340bc24181f32923a30eb6ca008d5ce4475aea2e1f4b014df2f06a",
+    "client/cli.py": "c8bf915cbb7d3da12ec1f87bafc0eb9af0746382bda27b986c52792f2f9662e5",
+    "client/host.py": "aac525f0f3841cfccd8d262f2e4c77b2e014565d9f3fa75bd2c4839cb41db289",
+    "client/journal.py": "03811a7a412d8297b25741c0ede13e1c51a11c2c4bf17b318ec65edf4b941818",
+    "client/kdf.py": "1acc13addd9721ca7ac96a53399fa0ca2aa8b010f788d69f4000c2774c5460a8",
+    "client/merkle.py": "d7a5d117cba00f3c1dcd92b6a1d9cbd0a4156b3cce14db97b6bb4727e842f28b",
+    "program/Cargo.toml": "462b86d270d791e17aef2cf696a0e3aa4861bc5db4da279ec349ea81e672a13b",
+    "program/__init__.py": "f76890e779421d308ccc02c2a2f09edf4dc414ad3097e119082504cab637ef8b",
+    "program/model.py": "fe392fe5ddf2dce108d6e798395d8d5bdb57287ef91dfa6871239a436e2b9789",
+    "program/src/lib.rs": "99ab170b269f8f120da4e1b920be8ba7e8a289d52a2c6738676da4b7d1b09b28",
+    "crypto/generate_vectors.py": "6ef8beb35edcf01a935ab1151d29d696f3bda1f9a51f21c7c0502e46fc7049df",
+    "crypto/reference_bridge.c": "4b5cbdf6675e8be52007dc9a2b424412cff4d7d2e2f3c741c189bf4cb3eada33",
+    "crypto/run_svm_probe.py": "fc2c8d33aa613dab97f10c927528687d0ee0d89ddb1c36d64083bc6ca33ef31e",
+    "crypto/svm-probe/Cargo.toml": "fbb68af010b8ddd0abbbefb808823cac3c016e6bdd5e388035503852f35b6110",
+    "crypto/svm-probe/src/lib.rs": "31d6e3192d47776ee00cc269c2962bfd989f79aab85450e069ee8819f16acb3c",
+    "crypto/xmss-verifier/Cargo.toml": "ded7b42539e87880c124c527d5683d15d911eec7a9182e78d080b2d07368ebe6",
+    "crypto/xmss-verifier/examples/verify_file.rs": "0f6123f1e315e26203f22ec0b93815ecf7b6d5094cef26954de395228db6c7b9",
+    "crypto/xmss-verifier/src/lib.rs": "6c937d73957f8825ed09d4bdeb20b3a11396de57631e157793735489e2cae413",
+    "crypto/xmss.py": "ec6d048c04bdb177710f190ea5a03de36e34118763dd478a5ae377f51d3ce236"
+  },
+  "environment": {
+    "evidence_level": "host_reference",
+    "runtime_version": "3.12.14",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39"
+  },
+  "summary": {
+    "total": 37,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "successful": true
+  },
+  "tests": [
+    {
+      "id": "test_client_contract.IntentContractTests.test_all_identity_and_action_bytes_are_authenticated",
+      "status": "passed"
+    },
+    {
+      "id": "test_client_contract.IntentContractTests.test_burn_canonical_sorted_unique_bounded_and_distinct",
+      "status": "passed"
+    },
+    {
+      "id": "test_client_contract.IntentContractTests.test_every_prefix_and_trailing_byte_rejected",
+      "status": "passed"
+    },
+    {
+      "id": "test_client_contract.IntentContractTests.test_four_actions_match_independent_layout_and_lengths",
+      "status": "passed"
+    },
+    {
+      "id": "test_client_contract.IntentContractTests.test_max_base_unit_integers_preserved",
+      "status": "passed"
+    },
+    {
+      "id": "test_client_contract.IntentContractTests.test_rotation_requires_specified_mode_and_parameter",
+      "status": "passed"
+    },
+    {
+      "id": "test_client_contract.IntentContractTests.test_unsigned_integer_and_boolean_rejections",
+      "status": "passed"
+    },
+    {
+      "id": "test_client_contract.MerkleContractTests.test_equivalent_trees_and_boundary_proofs",
+      "status": "passed"
+    },
+    {
+      "id": "test_client_contract.MerkleContractTests.test_invalid_tree_sizes",
+      "status": "passed"
+    },
+    {
+      "id": "test_evidence_schema.EvidenceSchemaTests.test_actual_host_record_allows_unmeasured_nulls",
+      "status": "passed"
+    },
+    {
+      "id": "test_evidence_schema.EvidenceSchemaTests.test_claimed_network_confirmation_requires_observed_identifier",
+      "status": "passed"
+    },
+    {
+      "id": "test_evidence_schema.EvidenceSchemaTests.test_host_cannot_become_onchain_compute",
+      "status": "passed"
+    },
+    {
+      "id": "test_evidence_schema.EvidenceSchemaTests.test_large_monetary_value_must_preserve_decimal_precision",
+      "status": "passed"
+    },
+    {
+      "id": "test_evidence_schema.EvidenceSchemaTests.test_measurement_requires_raw_evidence",
+      "status": "passed"
+    },
+    {
+      "id": "test_evidence_schema.EvidenceSchemaTests.test_missing_field_is_not_implicitly_zero",
+      "status": "passed"
+    },
+    {
+      "id": "test_evidence_schema.EvidenceSchemaTests.test_negative_and_boolean_sizes_invalid",
+      "status": "passed"
+    },
+    {
+      "id": "test_evidence_schema.EvidenceSchemaTests.test_simulated_transaction_cannot_be_called_confirmed",
+      "status": "passed"
+    },
+    {
+      "id": "test_journal.JournalTests.test_exact_retry_durable_and_signer_called_once",
+      "status": "passed"
+    },
+    {
+      "id": "test_journal.JournalTests.test_history_rejects_root_or_generation_reuse",
+      "status": "passed"
+    },
+    {
+      "id": "test_journal.JournalTests.test_single_writer_lock_and_keyset_mismatch",
+      "status": "passed"
+    },
+    {
+      "id": "test_journal.JournalTests.test_uncertain_callback_and_crash_reservation_never_reused",
+      "status": "passed"
+    },
+    {
+      "id": "test_model_acceptance.ModelAcceptanceTests.test_A02_A04_M02_invalid_witness_index_and_replay",
+      "status": "passed"
+    },
+    {
+      "id": "test_model_acceptance.ModelAcceptanceTests.test_A03_M03_copied_bearer_redirects_both_assets_attacker_first",
+      "status": "passed"
+    },
+    {
+      "id": "test_model_acceptance.ModelAcceptanceTests.test_B01_B02_B03_fresh_burn_exact_targets",
+      "status": "passed"
+    },
+    {
+      "id": "test_model_acceptance.ModelAcceptanceTests.test_D01_explicit_admin_transition_stable_addresses_inactive_rejected",
+      "status": "passed"
+    },
+    {
+      "id": "test_model_acceptance.ModelAcceptanceTests.test_F01_F02_deterministic_pd_as_and_duplicate_init",
+      "status": "passed"
+    },
+    {
+      "id": "test_model_acceptance.ModelAcceptanceTests.test_F03_F04_A01_M01_both_assets_and_exact_movements",
+      "status": "passed"
+    },
+    {
+      "id": "test_model_acceptance.ModelAcceptanceTests.test_F05_wrong_domains_and_token_accounts",
+      "status": "passed"
+    },
+    {
+      "id": "test_model_acceptance.ModelAcceptanceTests.test_F06_model_aliases_without_claiming_runtime_privileges",
+      "status": "passed"
+    },
+    {
+      "id": "test_model_acceptance.ModelAcceptanceTests.test_R01_R02_R03_fresh_rotation_stable_treasury_and_new_signer",
+      "status": "passed"
+    },
+    {
+      "id": "test_model_acceptance.ModelAcceptanceTests.test_S01_S02_failed_transfer_rolls_back_then_exact_retry",
+      "status": "passed"
+    },
+    {
+      "id": "test_model_acceptance.ModelAcceptanceTests.test_X02_X03_X04_signed_effect_mutation_and_identical_copy",
+      "status": "passed"
+    },
+    {
+      "id": "test_model_acceptance.ModelAcceptanceTests.test_X05_X06_stale_epoch_nonce_and_no_hash_authorization",
+      "status": "passed"
+    },
+    {
+      "id": "test_xmss_reference.XMSSReferenceTests.test_chain_authentication_randomness_and_index_mutations",
+      "status": "passed"
+    },
+    {
+      "id": "test_xmss_reference.XMSSReferenceTests.test_malformed_lengths_and_out_of_range_index",
+      "status": "passed"
+    },
+    {
+      "id": "test_xmss_reference.XMSSReferenceTests.test_message_and_public_root_seed_mutations",
+      "status": "passed"
+    },
+    {
+      "id": "test_xmss_reference.XMSSReferenceTests.test_reference_valid_boundary_indices",
+      "status": "passed"
+    }
+  ],
+  "limitations": [
+    "Host contract/model checks do not establish Solana runtime ownership/privilege enforcement, actual CUs, rent, transaction size, or confirmed deployment."
+  ]
+}

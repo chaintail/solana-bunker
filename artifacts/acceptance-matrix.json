@@ -1,0 +1,254 @@
+{
+  "schema_version": 1,
+  "matrix": [
+    {
+      "id": "F01",
+      "test": "Initialize state and treasury",
+      "required_outcome": "Deterministic addresses; correct ownership and association",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "F02",
+      "test": "Duplicate initialization",
+      "required_outcome": "Rejected; authority/balances unchanged",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "F03",
+      "test": "Deposit and withdraw SOL",
+      "required_outcome": "Exact base-unit movement; rent reserve preserved",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "F04",
+      "test": "Deposit and withdraw mock USDC",
+      "required_outcome": "Exact token movement; six-decimal mint and source authority checked",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "F05",
+      "test": "Substitute state, treasury, mint, token program, or source account",
+      "required_outcome": "Rejected before unauthorized movement",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "F06",
+      "test": "Wrong writable/signing privileges or disallowed account alias",
+      "required_outcome": "Rejected without partial vault state changes",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "A01",
+      "test": "Valid unused array secret",
+      "required_outcome": "Withdrawal succeeds for each asset",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "A02",
+      "test": "Incorrect/out-of-range/consumed array slot",
+      "required_outcome": "Rejected",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "A03",
+      "test": "Copy pending secret; substitute destination",
+      "required_outcome": "Attacker succeeds under declared first-included ordering",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "A04",
+      "test": "Replay after consumption",
+      "required_outcome": "Rejected",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "M01",
+      "test": "Valid Merkle secret/path",
+      "required_outcome": "Withdrawal succeeds for each asset",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "M02",
+      "test": "Corrupt sibling, index, direction, or proof length",
+      "required_outcome": "Rejected",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "M03",
+      "test": "Copy pending secret/path; substitute destination",
+      "required_outcome": "Same bearer weakness remains",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "M04",
+      "test": "Compare array/Merkle at 16/256/1,024 leaves",
+      "required_outcome": "Actual storage/proof/transaction/CU data saved",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "X01",
+      "test": "Reference-valid XMSS signature",
+      "required_outcome": "Host and SVM agree; full withdrawals succeed for each asset",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "X02",
+      "test": "Change signature chain byte, authentication node, index, or public seed",
+      "required_outcome": "Rejected for the intended verification/format reason",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "X03",
+      "test": "Change amount, destination, mint, action, or burn list",
+      "required_outcome": "Rejected; signed effect cannot be substituted",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "X04",
+      "test": "Copy identical valid authorization",
+      "required_outcome": "At most one intended effect; never attacker-chosen redirection",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "X05",
+      "test": "Replay, stale nonce, stale epoch, wrong vault/program namespace",
+      "required_outcome": "Rejected",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "X06",
+      "test": "Relayer/funding Ed25519 key only; no hash authorization",
+      "required_outcome": "Rejected in XMSS mode",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "B01",
+      "test": "Valid burn request from a fresh leaf",
+      "required_outcome": "Target leaves and authorizing leaf consumed; unrelated leaves unaffected",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "B02",
+      "test": "Try a burned leaf; tamper with burn list",
+      "required_outcome": "Rejected",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "B03",
+      "test": "Duplicate/already-burned/out-of-range burn inputs",
+      "required_outcome": "Chosen bounded policy enforced and documented",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "R01",
+      "test": "XMSS-authorized rotation to fresh root/public seed",
+      "required_outcome": "Epoch advances; treasury/token addresses and balances unchanged",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "R02",
+      "test": "Unused old-root authorization after rotation",
+      "required_outcome": "Rejected; new-root withdrawal succeeds",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "R03",
+      "test": "Malicious replacement root or mode substitution",
+      "required_outcome": "Rejected unless explicitly authorized",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "S01",
+      "test": "Transaction fails after an authorization was signed",
+      "required_outcome": "Chain state rolls back; client does not reuse leaf for a different message",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "S02",
+      "test": "Retry exact inner authorization in fresh outer envelope",
+      "required_outcome": "Succeeds when still current and underlying execution condition is fixed",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "S03",
+      "test": "Two different messages requested for one local leaf",
+      "required_outcome": "Signer refuses; isolated adversarial tests may bypass client deliberately",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "D01",
+      "test": "Change active mode using explicit demo administration",
+      "required_outcome": "Receiving addresses stay fixed; inactive-mode withdrawal is rejected",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    },
+    {
+      "id": "D02",
+      "test": "Final branch contains temporary bypass",
+      "required_outcome": "Remove it or scope/document it as trusted administration; no hidden fallback",
+      "status": "pending",
+      "evidence_level": null,
+      "evidence_paths": []
+    }
+  ],
+  "scope": "Fresh isolated local fixtures; attacker receives only dedicated ordinary relayer/funder fixture credentials. Admin, upgrade, mint and XMSS seed material excluded. Pending does not mean passed."
+}
