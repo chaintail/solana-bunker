@@ -1,0 +1,22 @@
+/* explore mode: click a redaction bar to declassify an equation */
+.redact-x{position:relative;display:inline-block;vertical-align:middle;cursor:pointer;z-index:30}
+.redact-x .bar{position:absolute;left:0;top:0;transform-origin:100% 50%;transition:transform 380ms var(--ease),opacity 200ms ease 200ms}
+.redact-x:hover .bar{transform:translateY(-2px);box-shadow:0 4px 0 -1px rgba(192,38,44,.55)}
+.redact-x .hint{position:absolute;left:0;top:-19px;font:400 11px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--red);white-space:nowrap;opacity:0;transition:opacity 200ms ease}
+.redact-x:hover .hint{opacity:1}
+.redact-x.open .hint{opacity:0}
+.redact-x.open .bar{transform:scaleX(0);opacity:0}
+.slip{position:absolute;left:-14px;top:-14px;min-width:560px;max-width:760px;padding:0 0 12px;background:var(--paper-hi);border:1.5px solid var(--ink);
+  box-shadow:0 18px 40px -18px rgba(40,25,5,.6);font:400 20px/1.5 var(--serif);color:var(--ink);text-align:left;white-space:normal;
+  opacity:0;transform:translateY(6px) rotate(-.6deg);pointer-events:none;transition:opacity 260ms ease 120ms,transform 320ms var(--ease) 120ms;z-index:90;cursor:default}
+.slip.right{left:auto;right:-14px}
+.slip.up{top:auto;bottom:-14px}
+.redact-x.open .slip{opacity:1;transform:rotate(-.6deg);pointer-events:auto}
+.slip-h{display:flex;justify-content:space-between;gap:24px;padding:10px 16px 9px;border-bottom:1px solid var(--ink);font:400 12px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--ink2);background:var(--manila)}
+.slip-h .x{cursor:pointer;color:var(--red)}
+.slip-b{display:block;padding:12px 18px 4px}
+.slip-b .ln{display:block;white-space:nowrap}
+.slip-b .ln.sm{font:400 14px/1.5 var(--mono);color:var(--ink2);white-space:normal;margin-top:4px}
+.slip-b .v{font-style:italic}
+.slip-b sub,.slip-b sup{font-size:.62em;line-height:0}
+.slip-src{display:block;margin:6px 18px 0;font:400 13px/1.35 var(--mono);color:var(--blue);text-decoration:underline;text-underline-offset:3px}

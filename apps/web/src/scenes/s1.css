@@ -1,0 +1,82 @@
+/* ---------- Beat 1: the debate and the warning ---------- */
+.debate{position:absolute;left:420px;top:168px;width:1080px;height:760px;transform-origin:0 0;
+  transition:transform 640ms var(--ease),opacity 420ms ease}
+.r-tweet .debate{transform:translate(-324px,52px) scale(.66)}
+.r-contrast .debate{opacity:0;transform:translate(-324px,30px) scale(.66)}
+.thumb{position:absolute;left:0;top:0;width:1080px;height:607.5px;margin:0;background:#111;transform:rotate(-.7deg);
+  box-shadow:0 2px 2px rgba(60,40,10,.25),0 22px 40px -22px rgba(50,30,5,.7);outline:10px solid var(--paper-hi)}
+.thumb img{display:block;width:100%;height:100%;object-fit:cover;filter:sepia(.18) contrast(.96) saturate(.85)}
+.thumb .corner{position:absolute;width:44px;height:44px;background:rgba(28,26,23,.86);clip-path:polygon(0 0,100% 0,0 100%)}
+.thumb .corner.tl{left:-14px;top:-14px}
+.thumb .corner.tr{right:-14px;top:-14px;transform:scaleX(-1)}
+.thumb .corner.bl{left:-14px;bottom:-14px;transform:scaleY(-1)}
+.thumb .corner.br{right:-14px;bottom:-14px;transform:scale(-1,-1)}
+.caption{position:absolute;left:0;width:1080px;top:650px;margin:0;text-align:center;font:italic 400 34px/1.2 var(--serif);color:var(--ink)}
+.jd-arrow{position:absolute;left:-382px;top:250px;width:480px;height:300px;overflow:visible;transition:opacity 300ms ease}
+.jd-arrow .pen{fill:none;stroke:var(--red);stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;filter:url(#pen);
+  stroke-dasharray:1;stroke-dashoffset:1;animation:s1-draw 520ms var(--ease) 380ms forwards}
+.jd-arrow .pen+.pen{animation-delay:860ms;animation-duration:160ms}
+@keyframes s1-draw{to{stroke-dashoffset:0}}
+.jd-name{position:absolute;left:-330px;top:470px;transition:opacity 300ms ease;font:700 30px/1 var(--mono);color:var(--red);letter-spacing:.02em;white-space:nowrap;
+  opacity:0;animation:s1-in 300ms ease 300ms forwards}
+@keyframes s1-in{to{opacity:1}}
+.scene:not(.r-debate) .jd-arrow .pen,.scene:not(.r-debate) .jd-name{animation:none}
+
+/* the tweet clipping */
+.tweet{position:absolute;left:868px;top:236px;width:956px;padding:36px 44px 42px;background:var(--paper-hi);transform-origin:100% 0;
+  border:1px solid rgba(28,26,23,.18);box-shadow:0 2px 2px rgba(60,40,10,.2),0 24px 44px -24px rgba(50,30,5,.6);
+  opacity:0;transform:translateY(26px) rotate(.8deg);transition:opacity 420ms ease,transform 560ms var(--ease)}
+.r-tweet .tweet{opacity:1;transform:rotate(.8deg)}
+.r-contrast .tweet{transform:translate(0,-8px) rotate(.8deg) scale(.6)}
+.tweet header{display:flex;align-items:center;gap:18px;margin-bottom:24px}
+.tweet .av{width:62px;height:62px;border-radius:50%;border:1.5px solid var(--ink);display:flex;align-items:center;justify-content:center;font:700 22px/1 var(--mono);color:var(--ink)}
+.tweet .who{display:flex;flex-direction:column;gap:6px}
+.tweet .who b{font:700 28px/1 var(--serif)}
+.tweet .who span{font:400 19px/1 var(--mono);color:var(--ink3)}
+.tweet p{margin:0;font:400 35px/1.42 var(--serif);color:var(--ink)}
+.hlt{background:linear-gradient(transparent 12%,rgba(192,38,44,.24) 12%,rgba(192,38,44,.24) 90%,transparent 90%) no-repeat 0 0/0% 100%;
+  color:inherit;-webkit-box-decoration-break:clone;box-decoration-break:clone;transition:background-size 900ms cubic-bezier(.55,.1,.3,1) 650ms}
+.r-tweet .hlt{background-size:100% 100%}
+
+/* YouTube-style lower-third correction cards */
+.lower{position:absolute;left:96px;top:888px;display:flex;align-items:stretch;background:rgba(20,19,17,.9);color:var(--paper-hi);
+  box-shadow:0 14px 30px -18px rgba(0,0,0,.7);opacity:0;transform:translateX(-40px);transition:opacity 320ms ease,transform 420ms var(--ease)}
+.lower .tag{display:flex;align-items:center;padding:0 20px;background:var(--stamp);font:700 15px/1 var(--mono);letter-spacing:.22em;text-transform:uppercase}
+.lower .txt{padding:22px 28px 20px;font:400 34px/1 var(--mono);white-space:nowrap}
+.r-fix1 .l1{opacity:1;transform:none}
+.r-fix2 .l1{opacity:0;transform:translateY(16px)}
+.r-fix2 .l2{opacity:1;transform:none;transition-delay:180ms}
+.r-contrast .l2{opacity:0;transform:translateY(16px);transition-delay:0ms}
+
+/* Ethereum vs Solana address contrast */
+.contrast{position:absolute;left:96px;top:300px;width:1180px;height:560px}
+.contrast .row{position:absolute;left:0;right:0;display:flex;align-items:center;gap:0}
+.contrast .row.eth{top:30px}
+.contrast .row.sol{top:330px}
+.contrast .chain{position:absolute;left:0;top:-46px;font:700 15px/1 var(--mono);letter-spacing:.24em;color:var(--ink2)}
+.contrast .nd{position:relative;height:118px;min-width:200px;padding:22px 20px 0;border:1.5px solid var(--blue);background:rgba(247,241,227,.8);
+  display:flex;flex-direction:column;gap:18px;opacity:0;transform:translateY(10px);transition:opacity 320ms ease var(--d,0ms),transform 380ms var(--ease) var(--d,0ms)}
+.contrast .nd .lbl{color:var(--blue)}
+.contrast .nd .v{font:700 22px/1 var(--mono);white-space:nowrap}
+.contrast .nd.hid{border-style:dashed;background:repeating-linear-gradient(-45deg,rgba(31,58,147,.06) 0 6px,transparent 6px 12px)}
+.contrast .nd.hid .v{color:var(--blue)}
+.contrast .nd.fn{min-width:180px}
+.contrast .nd.exposed{border-color:var(--red);border-width:2px;min-width:560px}
+.contrast .nd.exposed .lbl{color:var(--red)}
+.contrast .ar{display:block;width:62px;height:2px;background:var(--blue);position:relative;opacity:0;transition:opacity 260ms ease var(--d,0ms)}
+.contrast .ar::after{content:"";position:absolute;right:-1px;top:-5px;border:6px solid transparent;border-left:9px solid var(--blue);border-right:0}
+.contrast .note{margin-left:26px;font:400 18px/1.3 var(--mono);color:var(--ink2);opacity:0;transition:opacity 300ms ease var(--d,0ms)}
+.contrast .eq-eth{position:absolute;left:0;top:146px;display:flex;align-items:center;gap:16px}
+.r-tweet .jd-arrow,.r-tweet .jd-name{opacity:0!important}
+.contrast .eq-eth{opacity:0;transition:opacity 300ms ease 900ms}
+.r-contrast .contrast .eq-eth{opacity:1}
+.contrast .row>*:nth-child(2){--d:80ms}.contrast .row>*:nth-child(3){--d:200ms}.contrast .row>*:nth-child(4){--d:260ms}
+.contrast .row>*:nth-child(5){--d:380ms}.contrast .row>*:nth-child(6){--d:440ms}.contrast .row>*:nth-child(7){--d:560ms}.contrast .row>*:nth-child(8){--d:620ms}
+.contrast .row.sol>*{--d:calc(var(--dd,0ms) + 700ms)!important}
+.contrast .row.sol>*:nth-child(3){--d:820ms!important}.contrast .row.sol>*:nth-child(4){--d:900ms!important}.contrast .row.sol>*:nth-child(5){--d:1100ms!important}
+.r-contrast .contrast .nd{opacity:1;transform:none}
+.r-contrast .contrast .ar,.r-contrast .contrast .note{opacity:1}
+.contrast .chain{opacity:0;transition:opacity 300ms ease}
+.r-contrast .contrast .chain{opacity:1}
+.st-drill{z-index:60}
+#s-warning .wash{z-index:66;background:rgba(239,231,212,.95)}
