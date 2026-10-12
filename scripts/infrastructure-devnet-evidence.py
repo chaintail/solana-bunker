@@ -45,6 +45,19 @@ def main():
                     row[key] = receipt[key]
     manifest['transaction_attempts'] = attempts
     manifest['known_unconfirmed_attempts'] = [row for row in attempts if not row.get('confirmed')]
+    address_link = lambda address: f'https://explorer.solana.com/address/{address}?cluster=devnet'
+    manifest['explorer_links'] = {key: address_link(manifest[key]) for key in
+                                  ('program_id', 'mock_mint', 'developer_public_address')}
+    for vault in manifest['vaults']:
+        vault['explorer_links'] = {key: address_link(vault[key]) for key in
+                                   ('state', 'treasury', 'token_source', 'recipient_sol', 'recipient_token')}
+    manifest['validation_artifacts'] = {
+        'devnet_summary': 'artifacts/v1-devnet-validation-summary.json',
+        'local_summary': 'artifacts/canonical-v1-validation-summary.json',
+        'native_tests': 'artifacts/v1-native-program-test-results.json',
+        'build_environment': 'artifacts/v1-integration-environment.json',
+        'initial_cli_failure': 'artifacts/logs/v1-cli-deploy-failure.log',
+    }
     operations = [row for row in manifest['confirmed_transactions'] if row.get('mode')]
     assert len(operations) == 10
     assert all(row['confirmed'] and row['success'] and row['balance_assertions_passed'] for row in operations)
