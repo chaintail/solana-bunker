@@ -2,7 +2,7 @@
 
 A research proof of concept comparing SHA-256 secret arrays, Merkle-committed bearer secrets and reference-compatible XMSS-SHA2_10_256 authorization over one stable Solana treasury. Native SOL and a six-decimal **Mock USDC — test token, no real value** mint are the two assets.
 
-**The core demonstrations work in local SVM. Public devnet deployment is blocked on funding.** The final functional run passes 195 cases across 573 measured transaction attempts; 37 host tests pass. Each of the six principal mode/asset cases has 20 local measurements. Individual negative-test variants remain explicitly partial in [the acceptance matrix](artifacts/acceptance-matrix.json).
+**The core demonstrations work in local SVM. Public devnet deployment is blocked on funding.** The final functional run passes 195 cases across 573 measured transaction attempts; 37 host tests pass. Each of the six principal mode/asset cases has 20 local measurements. Targeted supplements add 30 actual SVM assertions plus one separately labeled host cryptographic check, and close all required bounded variants in [the acceptance matrix](artifacts/acceptance-matrix.json). The 225 runtime assertions are independently reproduced; S03 remains host-tested and D02 source-inspected.
 
 ## Reproduce locally
 

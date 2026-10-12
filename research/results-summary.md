@@ -2,7 +2,7 @@
 
 All application measurements below are **local SVM**, solders 0.29.0/LiteSVM, enforced legacy ComputeBudget, custody binary `8d7435ea6225ef4b09e972cef7ed3d2b99f7f4e1d1b9e9f8aa5124a0848f6e25`. No devnet transaction is confirmed.
 
-Final functional run `validation-20261012T135652` at source `e3938925e3b2153592328ca56163b47d8686c314`: **195/195 cases passed, 573 measured transaction attempts**. Host run: **37 passed**. Individual acceptance variants remain partial as recorded in the [matrix](../artifacts/acceptance-matrix.json).
+Final functional run `validation-20261012T135652` at source `e3938925e3b2153592328ca56163b47d8686c314`: **195/195 cases passed, 573 measured transaction attempts**. Host run: **37 passed**. Final targeted supplements add15program and15intent runtime assertions, independently reproduced, plus one explicitly separate host RFC mint-binding check. The31-ID [matrix](../artifacts/acceptance-matrix.json) records29bounded local IDs, S03host and D02source inspection.
 
 ## Principal withdrawals
 
@@ -49,5 +49,5 @@ Standalone crypto measurements are a separate group: 42 valid/invalid cases and 
 
 Local v1 decoding/execution of the official 2,029-byte SDK transaction succeeds, but inline CU/loaded limits are not enforced by this LiteSVM binding. Devnet submit/read remains blocked by an unfunded payer. Public deployment and mint identifiers are prospective only.
 
-Ordinary upgrade/demo administration is trusted. Partial matrix variants, source-only guards and host-only tests are not promoted to full runtime coverage. Missing measurements stay null. No production, audit, formal-verification, cryptanalytic break or first-ever-vault claim is made.
+Ordinary upgrade/demo administration is trusted. Runtime policy rejection, signature-verifier failure, host-only signing/cryptographic checks and source inspection are explicitly labeled. Missing measurements stay null. No production, audit, formal-verification, cryptanalytic break or first-ever-vault claim is made.
 

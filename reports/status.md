@@ -1,3 +1,5 @@
+Updated: 2026-10-12T14:12:51.678721+00:00
+
 # Sprint status
 
 **Sprint start:** 2026-10-12T13:36:06.597515Z.
@@ -15,7 +17,7 @@
 | Functional custody harness | 195/195 cases, 573 measured attempts; 20 samples for each principal mode/asset | validation-20261012T135652 |
 | Client XMSS / independent review | 15 cases, 77 transactions, both assets, burn, root rotation, exact retry | client-svm-xmss-final.json, crypto-reviewed-client-xmss.json |
 | Storage comparison | Actual 16/256/1,024-leaf state allocation; all three modes on same treasury | validation-svm-results.json, client-comparison-summary.json |
-| Clean source build | Both SBF digests reproduced from empty target directories | clean-build-origin.json |
+| Clean source build/replay | Both SBF digests; 37 host + 195 main + 15 program + 15 intent SVM assertions independently reproduced, plus one intent host check | clean-build-origin.json, clean-reproduction-summary.json |
 
 Final custody program: 124,464 bytes, SHA-256 `8d7435ea6225ef4b09e972cef7ed3d2b99f7f4e1d1b9e9f8aa5124a0848f6e25`.
 Standalone XMSS probe: 33,864 bytes, SHA-256 `21088f9ef0f6add41231e5ef7b19eb8ab3272f17fc493fe104df44b612c8f700`.
@@ -24,13 +26,13 @@ Standalone XMSS probe: 33,864 bytes, SHA-256 `21088f9ef0f6add41231e5ef7b19eb8ab3
 
 Developer address `AxQBVSbA3tEc8RsMhn3D4gPLBLnEu3XD84Zd9yy3pmnQ`, **devnet**, remains unfunded. Recommend 2 devnet SOL (about 1.3 SOL estimated peak deployment/fixture rent). No program/mint creation or application transaction is publicly confirmed. Funding affects public deployment only.
 
-The 31-ID acceptance matrix has explicit variant gaps: F02/F05/F06/A02/M02/X03/X05/R03/D01 remain partial, S03 is host-tested, D02 is source-inspected. Sealed-stage write mutation and same-authority rotation rejection are source guards without dedicated final runtime negative cases. See the matrix for each exact distinction.
+All 31 acceptance IDs have bounded evidence: 29 local-runtime IDs, S03 host-tested, D02 source-inspected. Program and intent supplements add 15 runtime assertions each, independently reproduced without Git/private credentials; intent also has one separately labeled host RFC mint-binding check. Sealed-stage write mutation and same-authority rotation rejection now have actual runtime cases. Cheap account/policy rejection and deep signature-verifier failures remain distinct. See the matrix and clean-reproduction-summary.json.
 
 Local LiteSVM 0.29 does not enforce v1 inline resource limits. Custody measurements use enforced legacy ComputeBudget instructions and five-transaction XMSS staging. Temporary stage rent is retained; refunds are not implemented. Ordinary upgrade/demo administration remains trusted. SLH-DSA and final UI remain deferred.
 
 ## Execution and restart
 
-The parent only coordinates. Workers own infrastructure/integration, program, cryptography, client, validation and documentation. The original validator worker stopped after runtime capability failures; infrastructure completed an independent replay and honest acceptance mapping, with a separate crypto crosscheck. Final source writers are frozen apart from clean-replay metadata and documentation packaging.
+The parent only coordinates. Workers own infrastructure/integration, program, cryptography, client, validation and documentation. The original validator worker stopped after runtime capability failures; infrastructure completed an independent replay and honest acceptance mapping, with a separate crypto crosscheck. All execution/source writers are frozen; final documentation and checkpoint packaging are complete.
 
 Active local branch: `main`. Read README.md, decisions.md, interfaces.md, all early/milestone reports and final-research-handover.md. Reproduce with `bash scripts/infrastructure-replay.sh`; use fresh local disposable keysets. Do not treat a source review as a runtime test or a local transaction identifier as public confirmation.
 

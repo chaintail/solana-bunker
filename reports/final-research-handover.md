@@ -2,6 +2,7 @@
 
 **Sprint start:** 2026-10-12T13:36:06.597515Z.
 **Target end:** 2026-10-13T13:36:06.597515Z.
+**Final checkpoint:** 2026-10-12T14:12:51.678827+00:00.
 **Overall status:** Partial — core local demonstrations work; devnet deployment is blocked on funding. This is the current session checkpoint, not a claim of unattended work through the 24-hour target.
 **Custody binary:** 124,464 bytes, SHA-256 `8d7435ea6225ef4b09e972cef7ed3d2b99f7f4e1d1b9e9f8aa5124a0848f6e25`.
 **Standalone XMSS binary:** 33,864 bytes, SHA-256 `21088f9ef0f6add41231e5ef7b19eb8ab3272f17fc493fe104df44b612c8f700`.
@@ -40,7 +41,7 @@ Small 16-leaf benchmark fixtures use five samples per asset to leave leaves for 
 | XMSS SOL/mock-USDC withdrawals | Complete locally | 20 principal samples per asset; sealed staging |
 | Leaf burning | Complete locally | Exact targets plus authorizing leaf consumed; bounds/mutations rejected |
 | Current-root-authorized fresh-root rotation | Complete locally | Same receiving accounts/balances; new root passes, old root fails |
-| Independent tests and raw benchmarks | Main/clean replay complete; targeted supplemental crosscheck finalizing | Main195 + program15 + intent15 SVM cases; intent also has one host-only cryptographic case |
+| Independent tests and raw benchmarks | Complete for bounded local scope; independently replayed | Main195 + program15 + intent15 SVM cases; intent also has one host-only cryptographic case |
 | Public deployment and mint | Blocked on devnet funding | public-deployment.json: zero balance, no confirmed transactions |
 | Research and UI-ready evidence | Complete | Whitepaper, results, sources, contract and runtime event feeds |
 | Optional SLH-DSA | Deferred | No implementation/performance claim |
@@ -69,7 +70,7 @@ Public deployment, confirmed devnet demonstrations and v1 submit/read await fund
 
 The local LiteSVM v1 parser executes oversized bytes but does not enforce inline compute/loaded limits. Application measurements therefore use verified legacy ComputeBudget and sealed staging. Temporary stage accounts and excess state rent after shrinking are retained; no refund is claimed.
 
-The acceptance matrix distinguishes actual runtime policy rejection, signature-verifier rejection, host-only cryptographic checks and source inspection. Targeted supplemental records close previously missing variants; independent replay metadata will be linked before final packaging. No source guard is promoted to a runtime result. The final-index reference signer patch is disclosed and accepted by the unchanged verifier.
+The acceptance matrix distinguishes actual runtime policy rejection, signature-verifier rejection, host-only cryptographic checks and source inspection. Targeted supplemental records close previously missing variants. Both are independently replayed without Git/private credentials: program15 runtime cases, intent15 runtime plus one separate host cryptographic case, yielding225 actual runtime assertions across main/supplement groups. [Clean replay metadata](../artifacts/clean-reproduction-summary.json) pins the exact committed scripts, snapshot identities and unchanged binary. No source guard is promoted to a runtime result. The final-index reference signer patch is disclosed and accepted by the unchanged verifier.
 
 Production recovery, protected upgrade governance, multidevice signing, final UI/slides and SLH-DSA remain outside this completed local scope.
 
@@ -81,7 +82,7 @@ Show the same receiving address across modes/roots, expected bearer-secret attac
 
 ## Resume instructions
 
-Active branch: `main`. The parent coordinates and workers execute. Final source is frozen apart from evidence/documentation packaging. Read status.md, decisions.md, interfaces.md, all early/milestone reports and the acceptance matrix. The public checkpoint manifest pins its final source commit and file digests.
+Active branch: `main`. The parent coordinates and workers execute. All source/execution writers are frozen; the final source/evidence archive is ready for continued funded devnet work. Read status.md, decisions.md, interfaces.md, all early/milestone reports and the acceptance matrix. The public checkpoint manifest pins its final source commit and file digests.
 
 Public source/evidence and confidential continuation are separate. Restore development credentials only privately with restrictive permissions. Never restore an older signer journal over a newer one, infer signing progress from the chain bitmap, or reuse an uncertain leaf. Use fresh disposable local keysets for reproduction; use a fresh root if live signing continuity is uncertain.
 
