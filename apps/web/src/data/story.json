@@ -249,7 +249,7 @@
    "url": "https://www.anza.xyz/blog/quantumglow-will-solana%E2%80%99s-performance-survive-quantum-computing",
    "date": "2026-07-30",
    "status": "Published research proposal",
-   "relation": "Hash-signature Solana prior art at consensus layer, separate from custody demo."
+   "relation": "Hash-signature Solana prior art at consensus layer, separate from Bunker custody."
   },
   {
    "name": "Ethereum leanXMSS/leanSig",

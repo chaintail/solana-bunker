@@ -34,7 +34,7 @@ const priorWork = L(chart.prior_work_timeline.records).map((r) => ({
   url: r.original_url,
   date: r.source_date,
   status: r.status,
-  relation: r.relationship_to_bunker,
+  relation: r.relationship_to_bunker.replace('custody demo', 'Bunker custody'),
 }));
 
 const wd = read('artifacts/devnet-transactions/v1-live-20261012-xmss-withdraw-sol.json');

@@ -159,3 +159,4 @@ a{color:inherit}
 .lite .stamp,.lite .redact,.lite .pen,.lite [style*="filter"]{filter:none!important}
 .lite .stamp,.lite .paper{mix-blend-mode:normal!important}
 .lite .paper.grain{opacity:.18}
+.stamp.bold.on{opacity:.93}

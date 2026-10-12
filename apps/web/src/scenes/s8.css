@@ -41,3 +41,4 @@
 .links a:hover{background:var(--paper-hi)}
 .links a .lbl{display:block;color:var(--blue);margin-bottom:8px}
 .links a b{font:700 17px/1 var(--mono);word-break:break-all}
+.xp-log div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

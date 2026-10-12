@@ -57,6 +57,8 @@ await send('Page.enable');
 await send('Runtime.enable');
 const problems = [];
 for (const [w, h] of sizes) {
+  await send('Page.navigate', { url: 'about:blank' });
+  await sleep(300);
   await send('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: 1, mobile: w < 800 });
   await send('Page.navigate', { url: base + (process.env.FULL ? '' : '?lite') + '#0-0' });
   await sleep(2500);
