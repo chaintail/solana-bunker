@@ -1,0 +1,44 @@
+{
+  "observed_at_utc": "2026-10-12T13:46:18.165601+00:00",
+  "cluster": "devnet",
+  "program_binary_bytes": 122848,
+  "program_binary_sha256": "a84a81cd97e78dd1090acaaaae22d5f103e3c258eab248ad1ef2e47f84301020",
+  "deployment_max_len": 122848,
+  "estimate_only": true,
+  "balance": {
+    "jsonrpc": "2.0",
+    "result": {
+      "context": {
+        "apiVersion": "4.4.0-beta.0",
+        "slot": 510283389
+      },
+      "value": 0
+    },
+    "id": 1
+  },
+  "genesis_hash": {
+    "jsonrpc": "2.0",
+    "result": "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG",
+    "id": 1
+  },
+  "program_data_rent_lamports": {
+    "jsonrpc": "2.0",
+    "result": 624946680,
+    "id": 1
+  },
+  "deployment_buffer_rent_lamports": {
+    "jsonrpc": "2.0",
+    "result": 624906040,
+    "id": 1
+  },
+  "mint_rent_lamports": {
+    "jsonrpc": "2.0",
+    "result": 1066800,
+    "id": 1
+  },
+  "token_account_rent_lamports": {
+    "jsonrpc": "2.0",
+    "result": 1488440,
+    "id": 1
+  }
+}

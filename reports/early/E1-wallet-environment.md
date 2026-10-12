@@ -17,3 +17,5 @@ Status: pass (local development active; public deployment pending).
 Local work proceeds during funding and toolchain installation. Final exact versions and deployment outcomes will be recorded independently.
 
 Toolchain update: Rust/cargo1.99.0, Agave/solana4.3.0, cargo-build-sbf4.3.0/platform-tools1.57, solders0.29.0 LiteSVM and official @solana/kit8.4.0 installed. A second bounded faucet attempt through solana CLI for1SOL failed with its generic rate-limit message; no confirmed airdrop. Exact versions: `artifacts/toolchain-manifest.json`.
+
+Concrete funding update from the122,848-byte custody binary: devnet queried programdata rent624,946,680lamports and buffer rent624,906,040lamports at fixed max length. Estimated peak deployment funds about1.3devnetSOL plus test fixtures/fees; **2devnetSOL recommended**, replacing the early5SOL provisional estimate. Balance still0 at2026-10-12T13:46:18Z. `artifacts/devnet-funding-estimate.json` and prospective `artifacts/public-deployment.json` preserve exact results; program/mint identities are allocated but not yet created publicly.
