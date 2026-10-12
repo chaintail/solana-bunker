@@ -1,0 +1,22 @@
+{
+  "source_commit": "d3fe6d383177c66eba5c8d9f955784192d8d1f1f",
+  "export_directory": "/workspace/scratch/1a48031fefb9/clean-replay-d3fe6d38",
+  "source": "git archive committed HEAD",
+  "secret_files_included": false,
+  "build_passed": true,
+  "build_command": "bash scripts/infrastructure-build.sh",
+  "outputs": [
+    {
+      "path": "program/target/deploy/bunker_program.so",
+      "bytes": 124464,
+      "sha256": "8d7435ea6225ef4b09e972cef7ed3d2b99f7f4e1d1b9e9f8aa5124a0848f6e25",
+      "matches_active_binary": true
+    },
+    {
+      "path": "target/deploy/bunker_xmss_probe.so",
+      "bytes": 33864,
+      "sha256": "21088f9ef0f6add41231e5ef7b19eb8ab3272f17fc493fe104df44b612c8f700",
+      "matches_active_binary": true
+    }
+  ]
+}
