@@ -1,7 +1,7 @@
 # Milestone M1 — Foundation and experimental infrastructure
 
 **Status:** Partial (preliminary checkpoint)
-**Timestamp:** 2026-10-12T13:50Z; sprint began2026-10-12T13:36:06.597515Z.
+**Timestamp:** 2026-10-12T13:46:44.744114+00:00; sprint began2026-10-12T13:36:06.597515Z.
 **Validated commit / program binary digest:** Host subset at009cc06a dirty-tree source manifest; no final validated SBF digest.
 **Authoring / independent validation:** Program/crypto/client workers; validation worker; evidence consolidated by documentation worker.
 
