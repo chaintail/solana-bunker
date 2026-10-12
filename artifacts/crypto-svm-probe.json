@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "observed_at_utc": "2026-10-12T13:46:23.385084+00:00",
-  "commit": "ad9ccd6d33a2732fb4f8c97b5a7fb8ab2c0690a2",
+  "observed_at_utc": "2026-10-12T13:49:32.630605+00:00",
+  "commit": "d1179800bf74062e0e5dc78a455b70f3598b1e2c",
   "program_binary_sha256": "21088f9ef0f6add41231e5ef7b19eb8ab3272f17fc493fe104df44b612c8f700",
   "binary_path": "target/deploy/bunker_xmss_probe.so",
   "runtime": "solders0.29.0 LiteSVM native binding",
