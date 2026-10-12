@@ -27,6 +27,9 @@ def main():
         mock_mint=str(mint.pubkey()), mock_mint_created=False, mock_token_label='Mock USDC — test token, no real value',
         decimals=6, token_program=str(TOKEN), mint_authority=str(developer.pubkey()), freeze_authority=None,
         status='preparing', confirmed_transactions=[], vaults=[])
+    probe = ROOT / 'artifacts/v1-devnet-transport-result.json'
+    if probe.exists():
+        manifest['confirmed_transactions'].append(json.loads(probe.read_text())['result'])
     try:
         manifest['developer_balance_lamports'] = rpc('getBalance', [str(developer.pubkey()), {'commitment': 'confirmed'}])['value']
         if manifest['developer_balance_lamports'] < 2_000_000_000:
