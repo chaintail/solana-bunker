@@ -1,43 +1,37 @@
 # Sprint status
 
-Updated: 2026-10-12T13:46:44.744114+00:00 (early checkpoint; not final evidence).
+**Sprint start:** 2026-10-12T13:36:06.597515Z.
+**Target end:** 2026-10-13T13:36:06.597515Z.
+**Current state:** Core local-SVM demonstrations complete; public deployment blocked on funding. A 24-hour target does not imply unattended execution after this runtime ends.
 
-Start: **2026-10-12T13:36:06.597515Z**. Target end: **2026-10-13T13:36:06.597515Z**.
+## Completed local evidence
 
-## Current gate
-
-E1 delivered: dedicated developer address `AxQBVSbA3tEc8RsMhn3D4gPLBLnEu3XD84Zd9yy3pmnQ`; selected cluster **devnet**; last measured balance **0 SOL**. Current recommendation is **2 devnet SOL**, based on122,848-byte program and about1.3SOL estimated peak deployment/fixture rent; initial5SOL was provisional. The permitted 2-SOL faucet request returned RPC -32603; public deployment is pending funding. This is not a blocker for local work.
-
-Initial validation reports 17/17 host contract/schema tests passed at scaffold commit `009cc06a9f6df69dc3a9a6469eab057e8e182e6d` with a dirty-tree SHA-256 file manifest. Canonical encoded lengths are 230 bytes SOL, 327 bytes token, 203 bytes three-target burn and 259 bytes rotation. These results validate host encodings/oracles, not custody execution. All 31 core acceptance IDs still require integration evidence. No integrated custody or public deployment is declared complete by this checkpoint.
-
-E2 is partial: @solana/kit 8.4.0 produced a 2,029-byte v1 transaction and decoded it locally. The exact SDK bytes executed the Memo program in local LiteSVM at 2,056 CUs, with local fee-payer credit and blockhash checks disabled. Devnet RPC 4.4.0-beta.0 reached simulation, which failed `AccountNotFound` for the unfunded payer; submission returned -32002. The locally derived signature is not a confirmed transaction, and public submit/read is unfinished. Raw records: `artifacts/v1-probe-result.json`, `artifacts/v1-sdk-local-result.json`.
-
-E3 standalone verifier gate: six valid and 36 invalid cases passed in actual local LiteSVM. Reported success-case range is 464,546–496,643 CUs; raw binary SHA-256 is `21088f9ef0f6add41231e5ef7b19eb8ab3272f17fc493fe104df44b612c8f700`. The fixture account is installed directly by the harness: this proves verifier execution, not witness upload, custody, epoch/nonce enforcement or public deployment. Raw record: `artifacts/crypto-svm-probe.json`. Final-index reference signer patch is disclosed; verifier reference is unchanged.
-
-## Workers and ownership
-
-| Worker | Active responsibility | Owned paths |
+| Gate | Result | Evidence |
 |---|---|---|
-| Infrastructure/integration | Toolchain, E1/E2, shared deployments, integration | setup/deployment scripts, early E1/E2, environment metadata |
-| Program/custody | Account model, both assets, selected authorization modes | programs/ |
-| Cryptography | Pinned XMSS reference, host vectors, actual SVM verification and E3 | crypto/, early E3 |
-| Client | Canonical intent, Merkle proofs, signer journal, CLI and event contract | client/, interfaces |
-| Validation | Original worker stopped by runtime capability failure; infrastructure independently replays existing harness, crypto reviewer crosschecks | tests/, validation artifacts |
-| Documentation | Checkpoints, research, final public package and confidential continuation | reports/status, decisions, milestones, research/, README |
+| E1 | Fresh developer wallet; devnet; last balance 0 SOL | early/E1-wallet-environment.md, environment.json |
+| E2 | Exact 2,029-byte SDK v1 transaction executes locally; public submit/read unfinished | early/E2-v1-transport.md, v1 resource controls |
+| E3 | Standalone XMSS 42/42 valid/invalid cases; 120 repeated valid measurements | early/E3-xmss-feasibility.md, crypto-svm-* |
+| Host tests | 37 passed | artifacts/test-results.json |
+| Functional custody harness | 195/195 cases, 573 measured attempts; 20 samples for each principal mode/asset | validation-20261012T135652 |
+| Client XMSS / independent review | 15 cases, 77 transactions, both assets, burn, root rotation, exact retry | client-svm-xmss-final.json, crypto-reviewed-client-xmss.json |
+| Storage comparison | Actual 16/256/1,024-leaf state allocation; all three modes on same treasury | validation-svm-results.json, client-comparison-summary.json |
+| Clean source build | Both SBF digests reproduced from empty target directories | clean-build-origin.json |
 
-## Dependencies and continuation
+Final custody program: 124,464 bytes, SHA-256 `8d7435ea6225ef4b09e972cef7ed3d2b99f7f4e1d1b9e9f8aa5124a0848f6e25`.
+Standalone XMSS probe: 33,864 bytes, SHA-256 `21088f9ef0f6add41231e5ef7b19eb8ab3272f17fc493fe104df44b612c8f700`.
 
-Rust/toolchain installation and SDK selection proceed alongside host XMSS research and speculative client/program work. XMSS reference is pinned to `171ccbd26f098542a67eb5d2b128281c80bd71a6`. E2 requires actual submit/read evidence; E3 requires actual SVM execution. Funding affects devnet deployment only. Mode/canonical-intent contracts must agree before final integration. Local tests and eventual public transactions are separate evidence groups.
+## Remaining limitations and dependency
 
-## Restart rules
+Developer address `AxQBVSbA3tEc8RsMhn3D4gPLBLnEu3XD84Zd9yy3pmnQ`, **devnet**, remains unfunded. Recommend 2 devnet SOL (about 1.3 SOL estimated peak deployment/fixture rent). No program/mint creation or application transaction is publicly confirmed. Funding affects public deployment only.
 
-Read this file, reports/decisions.md, reports/interfaces.md when available, and the latest early/milestone reports. Resume only from actual evidence; don't treat planned commands as passing runs. Preserve one writer per XMSS keyset, never reuse an uncertain leaf, and never infer signer progress from the onchain bitmap alone. The public source package excludes private credentials and signing journals; the separate confidential continuity artifact is required to resume a previously funded developer wallet. If it is unavailable, generate a fresh dedicated development wallet and report the new address before funding. No unattended work is implied after this runtime ends.
+The 31-ID acceptance matrix has explicit variant gaps: F02/F05/F06/A02/M02/X03/X05/R03/D01 remain partial, S03 is host-tested, D02 is source-inspected. Sealed-stage write mutation and same-authority rotation rejection are source guards without dedicated final runtime negative cases. See the matrix for each exact distinction.
 
+Local LiteSVM 0.29 does not enforce v1 inline resource limits. Custody measurements use enforced legacy ComputeBudget instructions and five-transaction XMSS staging. Temporary stage rent is retained; refunds are not implemented. Ordinary upgrade/demo administration remains trusted. SLH-DSA and final UI remain deferred.
 
-Actual integrated custody smoke: local LiteSVM12cases pass all3modes/bothassets exact100base-unit transfers plus replay rejection, custody binary a84a81cd97e78dd1090acaaaae22d5f103e3c258eab248ad1ef2e47f84301020. Extended copied-witness/account/burn/rotation scenarios are already running.
+## Execution and restart
 
-Transport caveat: LiteSVM0.29 local v1 does not enforce inline CU/loaded limits (resource-control commit45aba47). Custody uses legacy explicit ComputeBudget, independently verified. Staged XMSS currently costs5transactions per logical operation (create,3uploads,execute); temporary stage rent is retained, no refund claimed.
+The parent only coordinates. Workers own infrastructure/integration, program, cryptography, client, validation and documentation. The original validator worker stopped after runtime capability failures; infrastructure completed an independent replay and honest acceptance mapping, with a separate crypto crosscheck. Final source writers are frozen apart from clean-replay metadata and documentation packaging.
 
-Validation worker availability changed: the original validation worker stopped following repeated runtime safety-screening failures. Existing code/raw evidence remains; infrastructure and crypto workers are checking/replaying it. No unfinished validation is promoted to passing because a worker stopped.
+Active local branch: `main`. Read README.md, decisions.md, interfaces.md, all early/milestone reports and final-research-handover.md. Reproduce with `bash scripts/infrastructure-replay.sh`; use fresh local disposable keysets. Do not treat a source review as a runtime test or a local transaction identifier as public confirmation.
 
-Actual client-SVM demonstrations are now runnable: array/merkle each7cases9transactions; XMSS final15cases77transactions at source27f76f6 and custody binary8d7435ea6225ef4b09e972cef7ed3d2b99f7f4e1d1b9e9f8aa5124a0848f6e25. XMSS includes both assets, burn, old-root-authorized rotation, new/old-root outcomes and exact retry after rollback. Independent crypto crosscheck and complete main harness replay continue.
+The public checkpoint captures committed source/evidence, with a commit/file-digest manifest. Preserve the separate confidential continuation bundle privately to recover the development credentials. Never restore an old journal over a newer one or infer signer progress from unused chain leaves. If signing state is uncertain, retire/abandon affected leaves or install a fresh tree. If developer credentials are unavailable, generate a new dedicated wallet and report its address before funding.
