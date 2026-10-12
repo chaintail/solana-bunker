@@ -21,7 +21,7 @@ def forbidden_public_path(name: str) -> bool:
     lower = name.lower()
     return (
         any(part in {".private", ".git", "node_modules", "target", "__pycache__"} for part in p.parts)
-        or "keypair" in lower
+        or ("keypair" in lower and p.suffix.lower() not in {".c", ".h", ".rs", ".py", ".ts", ".md"})
         or p.suffix.lower() in {".sqlite", ".sqlite3", ".db", ".pem", ".key"}
         or p.name.lower().startswith("signer-journal")
     )

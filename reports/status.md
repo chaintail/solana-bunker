@@ -12,7 +12,7 @@ Initial validation reports 17/17 host contract/schema tests passed at scaffold c
 
 E2 is partial: @solana/kit 8.4.0 produced a 2,029-byte v1 transaction and decoded it locally. The exact SDK bytes executed the Memo program in local LiteSVM at 2,056 CUs, with local fee-payer credit and blockhash checks disabled. Devnet RPC 4.4.0-beta.0 reached simulation, which failed `AccountNotFound` for the unfunded payer; submission returned -32002. The locally derived signature is not a confirmed transaction, and public submit/read is unfinished. Raw records: `artifacts/v1-probe-result.json`, `artifacts/v1-sdk-local-result.json`.
 
-E3 standalone verifier gate: six valid and 36 invalid cases passed in actual local LiteSVM. Reported success-case range is 464,530–496,627 CUs; raw binary SHA-256 is `1541bdb3be149c279550c62350492a0dc4e5f50ced0d476db759fcf3caea19de`. The fixture account is installed directly by the harness: this proves verifier execution, not witness upload, custody, epoch/nonce enforcement or public deployment. Raw record: `artifacts/crypto-svm-probe.json`. Final-index reference signer patch is disclosed; verifier reference is unchanged.
+E3 standalone verifier gate: six valid and 36 invalid cases passed in actual local LiteSVM. Reported success-case range is 464,546–496,643 CUs; raw binary SHA-256 is `1541bdb3be149c279550c62350492a0dc4e5f50ced0d476db759fcf3caea19de`. The fixture account is installed directly by the harness: this proves verifier execution, not witness upload, custody, epoch/nonce enforcement or public deployment. Raw record: `artifacts/crypto-svm-probe.json`. Final-index reference signer patch is disclosed; verifier reference is unchanged.
 
 ## Workers and ownership
 
