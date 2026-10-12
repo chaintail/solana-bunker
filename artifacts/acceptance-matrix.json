@@ -18,14 +18,17 @@
       "id": "F02",
       "test": "Duplicate initialization",
       "required_outcome": "Rejected; authority/balances unchanged",
-      "status": "partial",
-      "evidence_level": "mixed_host_local_svm",
+      "status": "passed_local",
+      "evidence_level": "local_svm",
       "evidence_paths": [
         "artifacts/validation-svm-results.json",
         "artifacts/validation-benchmarks.jsonl",
-        "artifacts/test-results.json"
+        "artifacts/test-results.json",
+        "artifacts/supplemental-program-results.json",
+        "artifacts/clean-reproduction/supplemental-program-results.json"
       ],
-      "notes": "Duplicate initialization verified in host model; no dedicated full-program runtime case in this final harness."
+      "notes": "Previously missing required variants exercised in bounded supplemental runtime checks and independently replayed from clean no-git source.",
+      "previous_coverage_gap": "Duplicate initialization verified in host model; no dedicated full-program runtime case in this final harness."
     },
     {
       "id": "F03",
@@ -57,27 +60,33 @@
       "id": "F05",
       "test": "Substitute state, treasury, mint, token program, or source account",
       "required_outcome": "Rejected before unauthorized movement",
-      "status": "partial",
-      "evidence_level": "mixed_host_local_svm",
+      "status": "passed_local",
+      "evidence_level": "local_svm",
       "evidence_paths": [
         "artifacts/validation-svm-results.json",
         "artifacts/validation-benchmarks.jsonl",
-        "artifacts/test-results.json"
+        "artifacts/test-results.json",
+        "artifacts/supplemental-program-results.json",
+        "artifacts/clean-reproduction/supplemental-program-results.json"
       ],
-      "notes": "Treasury substitution is runtime-tested; state/mint/token-program/source substitution variants have host coverage but not dedicated runtime coverage."
+      "notes": "Previously missing required variants exercised in bounded supplemental runtime checks and independently replayed from clean no-git source.",
+      "previous_coverage_gap": "Treasury substitution is runtime-tested; state/mint/token-program/source substitution variants have host coverage but not dedicated runtime coverage."
     },
     {
       "id": "F06",
       "test": "Wrong writable/signing privileges or disallowed account alias",
       "required_outcome": "Rejected without partial vault state changes",
-      "status": "partial",
-      "evidence_level": "mixed_host_local_svm",
+      "status": "passed_local",
+      "evidence_level": "local_svm",
       "evidence_paths": [
         "artifacts/validation-svm-results.json",
         "artifacts/validation-benchmarks.jsonl",
-        "artifacts/test-results.json"
+        "artifacts/test-results.json",
+        "artifacts/supplemental-program-results.json",
+        "artifacts/clean-reproduction/supplemental-program-results.json"
       ],
-      "notes": "Runtime checks cover readonly state/treasury/destination and canonical source alias. Missing-signature and readonly token-source variants are not separately runtime-tested."
+      "notes": "Previously missing required variants exercised in bounded supplemental runtime checks and independently replayed from clean no-git source.",
+      "previous_coverage_gap": "Runtime checks cover readonly state/treasury/destination and canonical source alias. Missing-signature and readonly token-source variants are not separately runtime-tested."
     },
     {
       "id": "A01",
@@ -96,14 +105,17 @@
       "id": "A02",
       "test": "Incorrect/out-of-range/consumed array slot",
       "required_outcome": "Rejected",
-      "status": "partial",
-      "evidence_level": "mixed_host_local_svm",
+      "status": "passed_local",
+      "evidence_level": "local_svm",
       "evidence_paths": [
         "artifacts/validation-svm-results.json",
         "artifacts/validation-benchmarks.jsonl",
-        "artifacts/test-results.json"
+        "artifacts/test-results.json",
+        "artifacts/supplemental-program-results.json",
+        "artifacts/clean-reproduction/supplemental-program-results.json"
       ],
-      "notes": "Runtime bad secret and consumed leaf rejection covered; out-of-range slot is host covered."
+      "notes": "Previously missing required variants exercised in bounded supplemental runtime checks and independently replayed from clean no-git source.",
+      "previous_coverage_gap": "Runtime bad secret and consumed leaf rejection covered; out-of-range slot is host covered."
     },
     {
       "id": "A03",
@@ -148,14 +160,17 @@
       "id": "M02",
       "test": "Corrupt sibling, index, direction, or proof length",
       "required_outcome": "Rejected",
-      "status": "partial",
-      "evidence_level": "mixed_host_local_svm",
+      "status": "passed_local",
+      "evidence_level": "local_svm",
       "evidence_paths": [
         "artifacts/validation-svm-results.json",
         "artifacts/validation-benchmarks.jsonl",
-        "artifacts/test-results.json"
+        "artifacts/test-results.json",
+        "artifacts/supplemental-program-results.json",
+        "artifacts/clean-reproduction/supplemental-program-results.json"
       ],
-      "notes": "Runtime corrupt sibling covered; index/direction/proof-length variants are host covered."
+      "notes": "Previously missing required variants exercised in bounded supplemental runtime checks and independently replayed from clean no-git source.",
+      "previous_coverage_gap": "Runtime corrupt sibling covered; index/direction/proof-length variants are host covered."
     },
     {
       "id": "M03",
@@ -214,14 +229,17 @@
       "id": "X03",
       "test": "Change amount, destination, mint, action, or burn list",
       "required_outcome": "Rejected; signed effect cannot be substituted",
-      "status": "partial",
+      "status": "passed_local",
       "evidence_level": "mixed_host_local_svm",
       "evidence_paths": [
         "artifacts/validation-svm-results.json",
         "artifacts/validation-benchmarks.jsonl",
-        "artifacts/test-results.json"
+        "artifacts/test-results.json",
+        "artifacts/supplemental-intent-results.json",
+        "artifacts/clean-reproduction/supplemental-intent-results.json"
       ],
-      "notes": "Runtime destination/amount/burn-list mutations covered; mint and action mutations are host covered."
+      "notes": "Previously missing required variants exercised in bounded supplemental runtime checks and independently replayed from clean no-git source. Mint mutation rejects at account policy in runtime; cryptographic mint binding independently checked on host, rather than claiming a deep runtime signature check for that variant.",
+      "previous_coverage_gap": "Runtime destination/amount/burn-list mutations covered; mint and action mutations are host covered."
     },
     {
       "id": "X04",
@@ -240,14 +258,17 @@
       "id": "X05",
       "test": "Replay, stale nonce, stale epoch, wrong vault/program namespace",
       "required_outcome": "Rejected",
-      "status": "partial",
-      "evidence_level": "mixed_host_local_svm",
+      "status": "passed_local",
+      "evidence_level": "local_svm",
       "evidence_paths": [
         "artifacts/validation-svm-results.json",
         "artifacts/validation-benchmarks.jsonl",
-        "artifacts/test-results.json"
+        "artifacts/test-results.json",
+        "artifacts/supplemental-intent-results.json",
+        "artifacts/clean-reproduction/supplemental-intent-results.json"
       ],
-      "notes": "Runtime replay/stale nonce and unused old authority after rotation covered; wrong-vault/program/namespace variants are host covered."
+      "notes": "Previously missing required variants exercised in bounded supplemental runtime checks and independently replayed from clean no-git source.",
+      "previous_coverage_gap": "Runtime replay/stale nonce and unused old authority after rotation covered; wrong-vault/program/namespace variants are host covered."
     },
     {
       "id": "X06",
@@ -331,14 +352,17 @@
       "id": "R03",
       "test": "Malicious replacement root or mode substitution",
       "required_outcome": "Rejected unless explicitly authorized",
-      "status": "partial",
-      "evidence_level": "mixed_host_local_svm",
+      "status": "passed_local",
+      "evidence_level": "local_svm",
       "evidence_paths": [
         "artifacts/validation-svm-results.json",
         "artifacts/validation-benchmarks.jsonl",
-        "artifacts/test-results.json"
+        "artifacts/test-results.json",
+        "artifacts/supplemental-intent-results.json",
+        "artifacts/clean-reproduction/supplemental-intent-results.json"
       ],
-      "notes": "Runtime replacement-root mutation covered; mode substitution is host covered. No dedicated same-authority reinstallation negative runtime case."
+      "notes": "Previously missing required variants exercised in bounded supplemental runtime checks and independently replayed from clean no-git source.",
+      "previous_coverage_gap": "Runtime replacement-root mutation covered; mode substitution is host covered. No dedicated same-authority reinstallation negative runtime case."
     },
     {
       "id": "S01",
@@ -383,14 +407,17 @@
       "id": "D01",
       "test": "Change active mode using explicit demo administration",
       "required_outcome": "Receiving addresses stay fixed; inactive-mode withdrawal is rejected",
-      "status": "partial",
-      "evidence_level": "mixed_host_local_svm",
+      "status": "passed_local",
+      "evidence_level": "local_svm",
       "evidence_paths": [
         "artifacts/validation-svm-results.json",
         "artifacts/validation-benchmarks.jsonl",
-        "artifacts/test-results.json"
+        "artifacts/test-results.json",
+        "artifacts/supplemental-intent-results.json",
+        "artifacts/clean-reproduction/supplemental-intent-results.json"
       ],
-      "notes": "Same actual vault array->Merkle->XMSS preserves receiving accounts/balances and accepts post-transition withdrawals; inactive-mode rejection is host covered."
+      "notes": "Previously missing required variants exercised in bounded supplemental runtime checks and independently replayed from clean no-git source.",
+      "previous_coverage_gap": "Same actual vault array->Merkle->XMSS preserves receiving accounts/balances and accepts post-transition withdrawals; inactive-mode rejection is host covered."
     },
     {
       "id": "D02",
@@ -419,8 +446,15 @@
   },
   "limitations": [
     "All public-cluster deployment and mint creation pending developer devnet funding.",
-    "Staged witness sealed-write mutation rejection and same-authority rotation rejection have source guards but no dedicated final runtime negative cases.",
     "Raw benchmark logs include disposable local-only fixtures; those fixture seeds are never publicly funded.",
-    "Local v1 parser execution does not enforce inline resource budgets; custody measurements use enforced legacy ComputeBudget instructions."
-  ]
+    "Local v1 parser execution does not enforce inline resource budgets; custody measurements use enforced legacy ComputeBudget instructions.",
+    "All 31 acceptance IDs have bounded local or explicit host/source coverage; no general audit or public-cluster confirmation is implied."
+  ],
+  "supplemental_summary": {
+    "program_runtime_cases": 15,
+    "intent_runtime_cases": 15,
+    "intent_host_crypto_cases": 1,
+    "all_passed": true,
+    "independent_clean_replay_passed": true
+  }
 }

@@ -8,3 +8,5 @@ bash crypto/build_reference.sh
 python -m crypto.generate_vectors
 python tests/run_host.py
 python tests/svm_harness.py --full --samples "${BUNKER_BENCHMARK_SAMPLES:-20}"
+python tests/supplemental_program.py
+python tests/supplemental_intent.py

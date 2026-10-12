@@ -24,5 +24,23 @@
     "python tests/svm_harness.py --full --samples 20"
   ],
   "binary_build_evidence": "artifacts/clean-build-origin.json",
-  "artifact_directory": "artifacts/clean-reproduction"
+  "artifact_directory": "artifacts/clean-reproduction",
+  "supplemental_program": {
+    "committed_script": "8df97ec:tests/supplemental_program.py",
+    "passed": 15,
+    "failed": 0,
+    "run_id": "supplemental-program-20261012T140438Z-74786c7e",
+    "source_identity": "source_snapshot:4ec5655443a3bfdb4ce1453e2ae52ff466c910b80736b18721634c77dbdbf95c",
+    "program_binary_sha256": "8d7435ea6225ef4b09e972cef7ed3d2b99f7f4e1d1b9e9f8aa5124a0848f6e25"
+  },
+  "supplemental_intent": {
+    "committed_script": "ffd6c8c:tests/supplemental_intent.py",
+    "case_count": 16,
+    "actual_runtime_case_count": 15,
+    "host_crypto_case_count": 1,
+    "measured_transactions": 59,
+    "all_assertions_passed": true,
+    "run_id": "supplemental-intent-20261012T140642-e4548d",
+    "program_binary_sha256": "8d7435ea6225ef4b09e972cef7ed3d2b99f7f4e1d1b9e9f8aa5124a0848f6e25"
+  }
 }
