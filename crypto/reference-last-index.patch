@@ -1,0 +1,11 @@
+--- xmss_core.c@171ccbd
++++ xmss_core_boundary.c
+@@ -219,7 +219,7 @@
+      * to be on the safe side (there is no index value left to indicate that the 
+      * key is finished, hence external handling would be necessary)
+      */ 
+-    if (idx >= ((1ULL << params->full_height) - 1)) {
++    if (idx >= (1ULL << params->full_height)) {
+         // Delete secret key here. We only do this in memory, production code
+         // has to make sure that this happens on disk.
+         memset(sk, 0xFF, params->index_bytes);

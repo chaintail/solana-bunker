@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "reference_commit": "171ccbd26f098542a67eb5d2b128281c80bd71a6",
+  "rust": "1.99.0",
+  "openssl": "OpenSSL 3.0.13 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)",
+  "executable_sha256": "99b4e950000431c6b0f71360c6c64854e14e192f5424b625201b4c15eec79ccf",
+  "rows": [
+    {
+      "index": 0,
+      "evidence_level": "host_reference",
+      "result": "result=Ok(0) sha256_calls=1790 sha256_input_bytes=174354",
+      "exit_code": 0,
+      "wall_seconds": 0.007888917000400397
+    },
+    {
+      "index": 1,
+      "evidence_level": "host_reference",
+      "result": "result=Ok(1) sha256_calls=1880 sha256_input_bytes=182994",
+      "exit_code": 0,
+      "wall_seconds": 0.007965822000187472
+    },
+    {
+      "index": 511,
+      "evidence_level": "host_reference",
+      "result": "result=Ok(511) sha256_calls=1790 sha256_input_bytes=174356",
+      "exit_code": 0,
+      "wall_seconds": 0.00769777800041993
+    },
+    {
+      "index": 512,
+      "evidence_level": "host_reference",
+      "result": "result=Ok(512) sha256_calls=1745 sha256_input_bytes=170036",
+      "exit_code": 0,
+      "wall_seconds": 0.007615994999923714
+    },
+    {
+      "index": 1022,
+      "evidence_level": "host_reference",
+      "result": "result=Ok(1022) sha256_calls=1880 sha256_input_bytes=182997",
+      "exit_code": 0,
+      "wall_seconds": 0.009156664999864006
+    },
+    {
+      "index": 1023,
+      "evidence_level": "host_reference",
+      "result": "result=Ok(1023) sha256_calls=1745 sha256_input_bytes=170037",
+      "exit_code": 0,
+      "wall_seconds": 0.0074230059999536024
+    }
+  ]
+}

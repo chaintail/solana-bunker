@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "parameter": "XMSS-SHA2_10_256",
+  "reference_commit": "171ccbd26f098542a67eb5d2b128281c80bd71a6",
+  "reference_license": "CC0-1.0",
+  "public_seed_input_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f",
+  "disposable_test_only": true,
+  "public_key_sha256": "11934839971739c68bab104055c68f0429220e3827f40c584854dbecd0a87eae",
+  "created_at_utc": "2026-10-12T13:41:20.220554+00:00",
+  "vectors": [
+    {
+      "index": 0,
+      "message": "0.msg",
+      "signature": "0.sig",
+      "signature_bytes": 2500,
+      "sha256": "95fdc56085e4e953a327c3058c5124f3bfe90123829567235e61120ee8807eec",
+      "reference_signer": "original",
+      "reference_verify": true,
+      "python_verify": true
+    },
+    {
+      "index": 1,
+      "message": "1.msg",
+      "signature": "1.sig",
+      "signature_bytes": 2500,
+      "sha256": "67f9a09ae8466992665b590011869f1e56c3f63e568e4d3e830da073dfe08218",
+      "reference_signer": "original",
+      "reference_verify": true,
+      "python_verify": true
+    },
+    {
+      "index": 511,
+      "message": "511.msg",
+      "signature": "511.sig",
+      "signature_bytes": 2500,
+      "sha256": "ce81d0eeb9c62bca20e192274cfd52d75977cf66bc77a217015fa87c7b2afb53",
+      "reference_signer": "original",
+      "reference_verify": true,
+      "python_verify": true
+    },
+    {
+      "index": 512,
+      "message": "512.msg",
+      "signature": "512.sig",
+      "signature_bytes": 2500,
+      "sha256": "6a57ee46164031813106cee52ee07dfeb840fc83bd478176945d70d11024832b",
+      "reference_signer": "original",
+      "reference_verify": true,
+      "python_verify": true
+    },
+    {
+      "index": 1022,
+      "message": "1022.msg",
+      "signature": "1022.sig",
+      "signature_bytes": 2500,
+      "sha256": "97edd8359e987d4d7bee45c2fde0840b76626cb9b84fdb0cffa1dc6c9c222214",
+      "reference_signer": "original",
+      "reference_verify": true,
+      "python_verify": true
+    },
+    {
+      "index": 1023,
+      "message": "1023.msg",
+      "signature": "1023.sig",
+      "signature_bytes": 2500,
+      "sha256": "0250a2c8ac186fdc40d07845a74b2ffc1325f81d5c2049ab426eb2d8099be24c",
+      "reference_signer": "max-index control-flow patch",
+      "reference_verify": true,
+      "python_verify": true
+    }
+  ],
+  "upstream_last_index_original_verifies": false,
+  "wall_seconds": 18.587006489000032
+}
