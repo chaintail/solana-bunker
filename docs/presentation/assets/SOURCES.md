@@ -1,0 +1,1 @@
+bankless-debate-thumb.jpg: YouTube Rd_04vVLE-4, Bankless, "ETHEREUM VS. SOLANA: Which Blockchain Wins 2024 & Beyond?" (Justin Drake vs Anatoly Yakovenko debate, May/June 2024). Justin Drake is top-left in the black turtleneck; Anatoly Yakovenko is far right.
