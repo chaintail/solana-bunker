@@ -8,7 +8,7 @@
 
 Can a Solana account keep receiving funds at the same address while the cryptography that unlocks it is swapped out?
 
-The treasury is a program-derived address with no private key. The authorization rule lives in a separate state account and is replaced in three versions, each tested for native SOL and a six-decimal SPL token called **Mock USDC — test token, no real value**.
+The treasury is a program-derived address with no private key. The authorization rule lives in a separate state account and is replaced in three versions, each tested for native SOL and a six-decimal SPL token, Mock USDC.
 
 The ten confirmed devnet operations, 225 runtime assertions and every measurement in the whitepaper come from this repository, and the Reproduce section below rebuilds them with one script.
 
