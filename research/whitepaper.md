@@ -1,6 +1,6 @@
 # Solana Bunker: stable custody addresses with replaceable hash authorization
 
-**Working research draft — measurements pending.** This describes the experiment and its claim boundaries. Implementation status and measurements are recorded separately in results-summary.md and the milestone reports.
+**Research proof of concept — local-SVM results.** The three core demonstrations run locally; public devnet deployment remains unfunded. Complete raw measurements and acceptance coverage are recorded in results-summary.md and the milestone reports.
 
 ## Question and experimental scope
 
@@ -30,9 +30,23 @@ Reference-generated signatures and negative vectors are checked independently fr
 
 Burning is an authenticated action that consumes its own signing leaf and retires a bounded specified list. Root rotation must be authorized by the current XMSS root, install a genuinely fresh tree, preserve custody addresses/balances, and reject old-root authorizations. A trusted administrator reset is not equivalent evidence. The signer reserves leaves before releasing signatures and persists exact retry bytes; restoring seed material or seeing unused onchain leaves is insufficient permission to reuse uncertain signing state.
 
-## Measured results
+## Implementation and measured results
 
-Pending. Read [results-summary.md](results-summary.md) for the current evidence gate; values are filled only from worker runs tied to commits/binary digests.
+The custody program uses the raw Solana Rust SDK, separate stable PDAs and checked standard SPL transfers. A sealed program-owned signature stage provides a legacy transport path; no transfer occurs during upload. The client uses the pinned C reference for signing, a one-writer SQLite journal with synchronous reservation before signature release, exact retry records, fresh authority generation tracking, and a documented BIP-39/HKDF project seed recipe. These offchain conventions are separate from standardized XMSS.
+
+The final functional run `validation-20261012T135652` passes 195 cases across 573 measured attempts on custody binary `8d7435ea6225ef4b09e972cef7ed3d2b99f7f4e1d1b9e9f8aa5124a0848f6e25`. Each principal mode/asset case has 20 measurements; 37 host tests also pass. An independent source export without Git history or private credentials reproduces all 37 host and 195 SVM cases (run `validation-20261012T140013`, source archive `10a96e861e087488753a43849415cbea0b1ad02b`). These are finite experimental tests, not complete security verification.
+
+For 1,024 leaves, actual array state occupies 33,126 bytes versus 390 bytes for Merkle state; initialization/authority upload uses 38 versus two transactions. A fixed 128-byte usage bitmap is included in both allocations. Copied-witness destination substitution still succeeds in both primitive modes for both assets.
+
+Complete XMSS executes both transfers, authenticated leaf retirement, current-root-signed rotation to a fresh tree, old-root rejection and exact retry after rolled-back insufficient-balance failure. Rotation preserves treasury/token addresses and balances. Separate independent client review passes 15 cases / 77 transactions. The trusted same-vault array→Merkle→XMSS mode transition also preserves receiving accounts.
+
+With 20 measured withdrawal intents per asset, final XMSS execution has median 522,160 CUs for SOL and 531,758 for tokens; tested maxima are 603,323 and 578,142 respectively. A logical staged withdrawal uses five transactions, 30,000 lamports in observed fees and a retained 2,625-byte stage account funded with 19,160,880 rent lamports. The total-operation median includes staging: 534,351 CUs SOL / 539,497 tokens. Temporary accounts are not refunded. The numbers characterize this implementation/runtime and tested messages, not a worst-case cryptographic bound.
+
+Reference vectors at indices 0, 1, 511, 512 and 1022 match the unmodified independent signer. The upstream signer prematurely clears secret seeds at index 1023; a small explicitly recorded control-flow patch supplies that boundary vector, which the unchanged reference verifier accepts. This patch and exact source provenance are preserved rather than silently reported as unmodified signer behavior.
+
+Standalone XMSS has a separate 42-case valid/invalid SVM run, 120 repeated valid measurements and SHA-256 microbenchmarks. Its directly installed fixture account excludes custody/upload cost. Likewise, successful local execution of a 2,029-byte SDK v1 transaction establishes parsing/execution only: this LiteSVM binding does not enforce inline resource settings. Custody experiments use verified legacy ComputeBudget enforcement.
+
+See [results-summary.md](results-summary.md), raw run links and the acceptance matrix for min/median/max, complete serialized envelopes, allocated storage/rent, setup costs, rejection stages and remaining test distinctions.
 
 ## Limitations and future work
 
