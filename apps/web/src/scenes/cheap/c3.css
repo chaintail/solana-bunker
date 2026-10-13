@@ -1,15 +1,69 @@
-.c3-list{left:80px;top:210px}
-.c3-vault{position:absolute;left:1360px;top:200px;width:380px;text-align:center}
-.c3-vault svg{display:block}
-.c3-addr{margin-top:20px;font:700 44px/1 Arial,Helvetica,sans-serif;color:#0000ff;white-space:nowrap;margin-left:-60px;margin-right:-60px}
-.c3-vault .wheel{transform-origin:100px 100px;transition:transform 600ms ease-in-out}
-.r-coins .c3-vault .wheel{transform:rotate(240deg)}
-.c3-coin{position:absolute;left:0;top:0;opacity:0;transform:translate(-120px,var(--y))}
-.a-coins .c3-coin{animation:c3-fly 600ms ease-in var(--d) both}
-@keyframes c3-fly{0%{opacity:1;transform:translate(-120px,var(--y)) rotate(0)}100%{opacity:0;transform:translate(1500px,340px) rotate(360deg) scale(.4)}}
-.c3-ticker{position:absolute;left:0;right:0;top:960px;height:72px;overflow:hidden;background:#ffff00;border-top:4px solid #000;border-bottom:4px solid #000;opacity:0}
-.r-disclaimer .c3-ticker{opacity:1}
-.c3-run{display:flex;white-space:nowrap;width:max-content}
-.c3-run span{padding:12px 80px 0 0;font:400 44px/1 Arial,Helvetica,sans-serif;color:#000}
-.r-disclaimer .c3-run{animation:c3-tick 9s linear infinite}
-@keyframes c3-tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+/* ---------- slide 4: parchment + polished vault left, white + cheap right ---------- */
+.c3-svg{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:visible;pointer-events:none}
+.c3-parch{position:absolute;inset:0;background:var(--paper);clip-path:polygon(0 0,982px 0,944px 1080px,0 1080px)}
+.c3-hl{position:absolute;left:92px;top:74px;margin:0;font:400 84px/1 var(--serif-d);color:var(--ink);letter-spacing:-.01em;opacity:0;transition:opacity 500ms ease}
+.r-vault .c3-hl{opacity:1}
+.c3-door{position:absolute;left:150px;top:230px;width:640px;height:700px;transform-origin:0 0;opacity:0;transform:scale(.97);
+  transition:opacity 600ms ease,transform 900ms cubic-bezier(.6,0,.25,1)}
+.r-vault .c3-door{opacity:1;transform:none}
+.c3-door.moved{transform:translate(1452px,150px) scale(.4)!important}
+.c3-door .door-wheel{transform-origin:320px 330px;transition:transform 900ms ease}
+.r-three .c3-door .door-wheel{transform:rotate(240deg)}
+
+/* PDA, the curve, the point off it */
+.c3-pda>*{opacity:0;transition:opacity 200ms linear var(--d,0ms)}
+.c3-pda.on>*{opacity:1}
+.c3-pda-big{position:absolute;left:1040px;top:110px;font:700 280px/1 Arial,Helvetica,sans-serif;color:#000;letter-spacing:-.02em}
+.c3-pda-sub{position:absolute;left:1046px;top:400px;font:400 54px/1 Arial,Helvetica,sans-serif;color:#000;--d:200ms}
+.c3-curve{fill:none;stroke:#000;stroke-width:9;stroke-linecap:round;--d:500ms;--dur:900ms}
+.c3-pda.on .c3-curve{stroke-dashoffset:0}
+.c3-dot{fill:#e00000;stroke:#000;stroke-width:3;opacity:0;transition:opacity 150ms linear 1500ms}
+.c3-pda.on .c3-dot{opacity:1}
+.c3-off{position:absolute;left:1610px;top:660px;font-size:58px;line-height:1.05;transform:rotate(-4deg);--d:1650ms}
+
+/* executive order */
+.c3-eo>*{opacity:0;transition:opacity 220ms linear}
+.c3-eo.on>*{opacity:1}
+.c3-photo{position:absolute;left:1020px;top:120px;width:840px;height:472px;background:#d9d9d9;border:3px solid #000;box-sizing:border-box;overflow:hidden}
+.c3-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.c3-cap{position:absolute;left:1020px;top:612px;width:880px;font:400 44px/1.15 Arial,Helvetica,sans-serif;color:#000}
+.c3-cap1{font-weight:700;font-size:48px}
+.c3-cap2{margin-top:30px;font:700 76px/1 Arial,Helvetica,sans-serif;white-space:nowrap}
+.c3-cap3{margin-top:22px;font-size:44px}
+.c3-art{position:relative;display:inline-block}
+.c3-strike{position:absolute;left:-8px;top:0;width:calc(100% + 16px);height:100%;overflow:visible;opacity:0}
+.c3-strike path{fill:none;stroke:#e00000;stroke-width:13;stroke-linecap:round}
+.c3-strike.on{opacity:1}
+.c3-super{left:50%;top:-34px;font-size:64px;transition:none!important;transform:translate(-50%,-50%) rotate(-6deg)!important}
+.c3-super.on{opacity:1}
+
+/* tokens: polished odometer beside cheap voice note bubbles */
+.c3-tok>*{opacity:0;transition:opacity 250ms linear}
+.c3-tok.on>*{opacity:1}
+.odo{position:absolute;left:1000px;top:300px;padding:18px;border-radius:22px;
+  background:linear-gradient(#4a4f57,#16181c);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 26px 50px -20px rgba(0,0,0,.65),0 0 0 2px #0b0c0e}
+.odo-face{display:flex;align-items:stretch;padding:10px 12px;border-radius:12px;background:#0b0c0e;box-shadow:inset 0 3px 10px rgba(0,0,0,.8)}
+.odo-win{position:relative;width:70px;height:120px;overflow:hidden;margin:0 3px;border-radius:6px;background:linear-gradient(#e9e6df,#fbfaf6 45%,#fbfaf6 55%,#d9d5cc)}
+.odo-win:last-child{background:linear-gradient(#b8262c,#e0353b 45%,#e0353b 55%,#a51f25)}
+.odo-win::after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,0) 30%,rgba(0,0,0,0) 70%,rgba(0,0,0,.45));pointer-events:none}
+.odo-drum{position:absolute;left:0;top:0;width:100%;height:1100%;display:flex;flex-direction:column;will-change:transform}
+.odo-drum b{flex:1;display:flex;align-items:center;justify-content:center;font:700 92px/1 Archivo,Arial,sans-serif;color:#16181c;font-variant-numeric:tabular-nums}
+.odo-win:last-child b{color:#fff}
+.odo-sep{width:22px;display:flex;align-items:flex-end;justify-content:center;font:700 70px/1 Archivo,Arial,sans-serif;color:#e9e6df;font-style:normal;padding-bottom:4px}
+.c3-tok-l{position:absolute;left:1000px;top:500px;width:640px;text-align:center;font:600 60px/1 Archivo,Arial,sans-serif;color:#1d1d1f}
+.c3-vns{position:absolute;left:1600px;top:130px;width:280px}
+.vn{width:276px;height:78px;margin-bottom:22px;background:#effdde;border:3px solid #000;box-sizing:border-box;opacity:0}
+.vn svg{display:block}
+.c3-tok.on .vn{opacity:1}
+.a-tokens .vn{animation:c3-vn 260ms cubic-bezier(.3,1.5,.5,1) var(--d) both}
+@keyframes c3-vn{from{opacity:0;transform:translateX(120px)}to{opacity:1;transform:none}}
+.c3-vn-l{position:absolute;left:1580px;top:840px;width:320px;text-align:center;font:700 52px/1.05 Arial,Helvetica,sans-serif;color:#000}
+
+/* three vaults */
+.c3-three>*{opacity:0;transition:opacity 250ms linear}
+.c3-three.on>*{opacity:1}
+.c3-3t{position:absolute;left:990px;width:900px;top:170px;text-align:center;font:700 74px/1 Arial,Helvetica,sans-serif;color:#000}
+.c3-v1,.c3-v2{position:absolute;top:400px}
+.c3-v1{left:1030px}
+.c3-v2{left:1320px;transition-delay:200ms!important}
+.c3-vl{position:absolute;top:700px;width:240px;text-align:center;font:700 70px/1 Arial,Helvetica,sans-serif;color:#000}

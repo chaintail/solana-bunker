@@ -126,6 +126,49 @@ We built it.
 Actually, we built it three times,
 each version better than the last.
 
+## Beat 4, version one
+
+### SLIDE 5
+
+Back to Justin's tweet. The first idea was let's use a Hash.
+
+> bring back tweet in same position left side of screen. Magnify some section or maybe multiple sections and just highlight the word hash wherever that appears.
+
+Justin is super smart,
+if he likes a hash we like a hash
+
+And hashing is super simple!
+> can we show code snippet or sys prog call instruction or whatever is used to do sha256 on solana?
+
+> draw stick figure on top left side of screen.
+> draw large rectangle on right side of screen with title Bunker Program 001
+> have come circles with solana logo fly from stick man into program
+
+So the idea. Create a bunch of one-time secrets
+
+> draw out vertical list of secret_1, secret_2…. Secret_1000
+> down left side of screen
+> draw out 1000 squares in grid. Bunker Program 001 taking up right half of screen.
+
+hash each of them, and store the hashes in the vault.
+
+> animate the secrets moving cascading, start slower and speed up
+> they fly through black MATH hash box and then out other side each into one for the squares
+> leave the list on left side of screen still, but all the text is dimmed.
+
+To spend, you reveal one of the secrets.
+> highlight a secret. Move it to the stick man, move it to the program square, cross it out, have SOL token move back to the stick man.
+
+If it matches, the vault lets you in and crosses that one off.
+
+Pretty simple, eh?
+Sure, keeping track of a thousand one time passwords is annoying
+But the real pain in the a– wallet is storing them all on chain
+
+> show RENT: XXX SOL
+
+and that is why we built version two.
+
 ---
 
 ## Fact fills (composer, verified)
@@ -135,3 +178,4 @@ each version better than the last.
 - OpenAI drop: **719 manuscripts, 17 disciplines, 0 explicitly cryptographic** (strict count).
 - Timeline bars (fission in the title, Physical Review, per year): 1936 0, 1937 0, 1938 0, 1939 17, 1940 22, 1941 17, 1942 0, 1943 0, 1944 0, 1945 2, 1946 6, 1947 18. Source: docs/research-story/visualizations.json, chart `historical_publication_trend`, subject `fission_title`.
 - Design rule (Liam, 15589): 90% of the information on every step must be understandable at 426x240.
+- Slide 5 rent: array state at 1,024 leaves is 33,126 bytes; measured setup rent **234,433,680 lamports = 0.234 SOL** over 38 transactions. Merkle version: 6,591,120 lamports = 0.0066 SOL over 2 transactions (research/results-summary.md). The SHA-256 call in the program is the `hashv` syscall from `solana_program::hash` (program/src/lib.rs line 108).

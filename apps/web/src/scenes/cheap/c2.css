@@ -1,33 +1,65 @@
-.c2-field{position:absolute;left:60px;top:190px;width:858px;height:570px;overflow:visible}
-.c2-cl circle{fill:#0000ff;opacity:0;transition:opacity 200ms linear calc(var(--ci) * 30ms)}
-.r-dots .c2-cl circle{opacity:1}
-.c2-crypto circle{fill:none;stroke:#ff0000;stroke-width:6;stroke-dasharray:14 10}
-.c2-crypto text{font:700 56px Arial,Helvetica,sans-serif;fill:#ff0000}
-.c2-crypto{opacity:0;transition:opacity 250ms linear}
-.r-crypto0 .c2-crypto{opacity:1}
-.c2-capL{left:60px;top:790px;opacity:0;transition:opacity 250ms linear}
-.r-dots .c2-capL{opacity:1}
-.c2-list{position:absolute;left:990px;top:178px;width:880px;margin:0;padding:0;list-style:none;font:400 40px/44px Arial,Helvetica,sans-serif;color:#000;opacity:0;transition:opacity 250ms linear}
-.c2-list li{white-space:nowrap}
-.c2-list b{color:#0000ff}
-.r-dots .c2-list{opacity:1}
-.c2-cryptoli{color:#ff0000;font-weight:700;opacity:0;transition:opacity 250ms linear 200ms}
-.c2-cryptoli b{color:#ff0000!important}
-.r-crypto0 .c2-cryptoli{opacity:1}
-.c2-fission{position:absolute;left:1000px;top:200px;width:860px;height:700px;opacity:0;transform:translateX(80px);transition:opacity 250ms linear 200ms,transform 350ms ease-out 200ms}
-.r-fission .c2-fission{opacity:1;transform:none}
-.c2-chart{display:block;width:860px;height:560px;overflow:visible}
-.c2-bar{fill:#0000ff;transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0);transition:transform 400ms ease-out calc(var(--i) * 30ms + 300ms)}
-.r-fission .c2-bar{transform:none}
-.c2-yr{font:400 40px Arial,Helvetica,sans-serif;fill:#000}
-.c2-zero{font:700 64px Arial,Helvetica,sans-serif;fill:#ff0000}
-.c2-capR{left:0;top:572px;font-size:40px}
-.c2-zl{left:0;top:622px;font-size:40px;color:#ff0000;font-weight:700}
-.c2-flash{position:absolute;left:50%;top:420px;transform:translateX(-50%);z-index:70;white-space:nowrap;padding:30px 50px;background:#ffff00;border:8px solid #000;
-  font:700 80px/1 Arial,Helvetica,sans-serif;color:#000;opacity:0;pointer-events:none}
-.a-checked .c2-flash{animation:c2-flash 1000ms linear both}
-@keyframes c2-flash{0%{opacity:1;transform:translateX(-50%) scale(.6)}15%{transform:translateX(-50%) scale(1)}80%{opacity:1}100%{opacity:0;transform:translateX(-50%) scale(1)}}
-.c2-tally{top:896px;font-size:50px;opacity:0;transition:opacity 250ms linear}
-.r-checked .c2-tally{opacity:1;transition-delay:900ms}
-.c2-conc{top:972px;font-style:italic;font-weight:400;font-size:52px;opacity:0;transition:opacity 400ms linear}
-.r-conclude .c2-conc{opacity:1}
+/* ---------- slide 3: polished cluster (right), cheap circle, built timeline (left) ---------- */
+.c2-svg{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:visible;pointer-events:none}
+.c2-panel{position:absolute;left:968px;top:122px;width:928px;height:720px;background:var(--paper);border-radius:4px;overflow:hidden;
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 22px 40px -22px rgba(55,38,10,.55),0 0 0 1px rgba(60,40,10,.12);transition:opacity 300ms linear}
+.c2-fieldw{transition:opacity 300ms linear}
+.c2-fieldw .field{position:absolute;width:880px;height:600px;overflow:visible}
+.c2-fcap{position:absolute;left:1000px;top:760px;font:400 50px/1 var(--serif-d);color:var(--ink);opacity:0;transition:opacity 400ms ease 500ms}
+.r-dots .c2-fcap{opacity:1}
+
+.c2-q{opacity:0;transition:opacity 150ms linear}
+.c2-q.on{opacity:1}
+.c2-q.on .draw1{stroke-dashoffset:0}
+.c2-qq{position:absolute;font-size:110px;line-height:1;transform:rotate(-6deg);opacity:0;transition:opacity 150ms linear 820ms}
+.c2-qw{position:absolute;font-size:56px;line-height:1;transform:rotate(-4deg);opacity:0;transition:opacity 150ms linear 950ms}
+.c2-q.on .c2-qq,.c2-q.on .c2-qw{opacity:1}
+
+/* timeline */
+.c2-tl{position:absolute;inset:0;pointer-events:none}
+.c2-tl-cap{position:absolute;left:70px;top:132px;font:400 42px/1.15 Arial,Helvetica,sans-serif;color:#000;opacity:0;transition:opacity 250ms linear}
+.c2-tl-cap b{font-size:52px}
+.c2-tl.on .c2-tl-cap{opacity:1}
+.c2-ax{fill:none;stroke:#1c1a17;stroke-width:4;stroke-linecap:square;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 420ms cubic-bezier(.4,0,.2,1) var(--d,0ms)}
+.c2-tl.on .c2-ax{stroke-dashoffset:0}
+.c2-yl{position:absolute;top:762px;text-align:center;font:700 42px/1 Arial,Helvetica,sans-serif;color:#000;opacity:0;transform:translateY(-14px);
+  transition:opacity 160ms linear calc(var(--d) + 300ms),transform 260ms cubic-bezier(.3,1.6,.5,1) calc(var(--d) + 300ms)}
+.c2-tl.on .c2-yl{opacity:1;transform:none}
+.c2-tl.built .c2-yr.z .c2-yl{color:#d00000}
+.a-bars .c2-yr.z .c2-yl{animation:c2-shake 380ms linear var(--sd) both}
+@keyframes c2-shake{0%{transform:none;color:#000}15%{transform:translateX(-9px) rotate(-5deg);color:#d00000}35%{transform:translateX(8px) rotate(5deg)}55%{transform:translateX(-6px) rotate(-3deg)}75%{transform:translateX(4px)}100%{transform:none;color:#d00000}}
+
+/* each paper is a small cream cover page */
+.c2-pg{position:absolute;width:50px;box-sizing:border-box;background:#f7f1e3;border:1.5px solid #6d6150;border-radius:1px;
+  background-image:linear-gradient(#4c463d,#4c463d),linear-gradient(#a99c84,#a99c84);background-size:60% 2px,40% 2px;background-position:8px 4px,8px 9px;background-repeat:no-repeat;
+  box-shadow:0 1px 2px rgba(60,40,10,.35);transform:rotate(var(--rot));opacity:0}
+.c2-tl.built .c2-pg{opacity:1}
+.a-bars .c2-pg{animation:c2-drop 200ms cubic-bezier(.3,.7,.4,1) var(--d) both}
+@keyframes c2-drop{from{opacity:0;transform:translateY(-70px) rotate(calc(var(--rot) * 4))}to{opacity:1;transform:rotate(var(--rot))}}
+.c2-pg.mark{border-color:#b3242a;box-shadow:0 0 0 2px rgba(179,36,42,.4)}
+.c2-n{position:absolute;text-align:center;font:700 44px/1 Arial,Helvetica,sans-serif;color:#000;opacity:0}
+.c2-tl.built .c2-n{opacity:1}
+.a-bars .c2-n{animation:c2-in 200ms linear var(--d) both}
+@keyframes c2-in{from{opacity:0}to{opacity:1}}
+.c2-note{position:absolute;left:556px;top:470px;width:250px;padding:16px 18px;box-sizing:border-box;background:#fff27a;color:#222;font:400 34px/1.12 Arial,Helvetica,sans-serif;
+  box-shadow:0 14px 20px -12px rgba(0,0,0,.5);transform:rotate(-4deg);opacity:0}
+.c2-note::after{content:"";position:absolute;right:-60px;bottom:-38px;width:70px;height:4px;background:#b3242a;transform:rotate(38deg);transform-origin:0 0}
+.c2-tl.built .c2-note{opacity:1}
+.a-bars .c2-note{animation:c2-stick 260ms cubic-bezier(.3,1.5,.5,1) var(--d) both}
+@keyframes c2-stick{from{opacity:0;transform:rotate(-14deg) scale(1.4)}to{opacity:1;transform:rotate(-4deg)}}
+
+/* trust, but verify */
+.c2-prov>*{position:absolute;left:1000px;opacity:0;transition:opacity 250ms linear var(--d,0ms)}
+.c2-prov.on>*{opacity:1}
+.c2-dov{top:170px;font:400 66px/1 'PT Mono','Courier New',monospace;color:#1c1a17;--d:250ms}
+.c2-cyr{top:262px;font:400 48px/1 'PT Mono','Courier New',monospace;color:#4c463d;--d:400ms}
+.c2-rp{top:330px;font:italic 400 40px/1 Arial,Helvetica,sans-serif;color:#666;--d:400ms}
+.c2-tr{top:450px;font:700 86px/1.1 Arial,Helvetica,sans-serif;color:#000;--d:900ms;white-space:nowrap}
+.c2-trl{font:400 40px/1 Arial,Helvetica,sans-serif;color:#666}
+.c2-ins{margin:0 .1em}
+
+/* the big numbers grow in */
+.c2-big{position:absolute;left:0;right:0;text-align:center;font:700 78px/1 Arial,Helvetica,sans-serif;color:#000;opacity:0;transform:scale(.3);
+  transition:opacity 150ms linear,transform 520ms cubic-bezier(.25,1.45,.45,1)}
+.c2-big.on{opacity:1;transform:none}
+.c2-b1{top:862px}
+.c2-b2{top:968px;color:#0000ff}

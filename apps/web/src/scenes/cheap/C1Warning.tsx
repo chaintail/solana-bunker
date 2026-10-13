@@ -1,160 +1,190 @@
 import thumb from '../../assets/bankless-thumb-phone.jpg';
 import { CStamp, cx } from '../../components/bits';
 import type { SceneDef, SceneProps } from '../../types';
+import { Highlights, Ins, Lens, paintArrow, wobLine } from './mix';
 import { TWEET } from './tweet';
 import './c1.css';
 
-/* tweet viewport on the left half */
-const VP = { x: 50, y: 40, w: 900, h: 1000 };
-const S = VP.w / TWEET.sourceWidth; // source px -> display px
-const SCROLL = TWEET.naturalHeight * (VP.w / TWEET.naturalWidth) - VP.h;
-const MAG = 1.6;
-const [lx0, ly0, lx1, ly1] = TWEET.lens;
-const LENS = (() => {
-  const w = (lx1 - lx0) * S * MAG,
-    h = (ly1 - ly0) * S * MAG;
-  const cxs = VP.x + ((lx0 + lx1) / 2) * S,
-    cys = VP.y + ((ly0 + ly1) / 2) * S;
-  return { left: Math.max(24, cxs - w / 2), top: cys - h / 2, w, h };
-})();
-
+/* plain arrow, still used by later cheap slides */
 export function Arrow({ x1, y1, x2, y2, w = 6, color = '#000' }: { x1: number; y1: number; x2: number; y2: number; w?: number; color?: string }) {
   const a = Math.atan2(y2 - y1, x2 - x1);
   const L = w * 4.2;
   const p = (ang: number) => `${x2 - L * Math.cos(a + ang)},${y2 - L * Math.sin(a + ang)}`;
   return (
     <g>
-      <line x1={x1} y1={y1} x2={x2 - (L * 0.7) * Math.cos(a)} y2={y2 - (L * 0.7) * Math.sin(a)} stroke={color} strokeWidth={w} />
+      <line x1={x1} y1={y1} x2={x2 - L * 0.7 * Math.cos(a)} y2={y2 - L * 0.7 * Math.sin(a)} stroke={color} strokeWidth={w} />
       <polygon points={`${x2},${y2} ${p(0.45)} ${p(-0.45)}`} fill={color} />
     </g>
   );
 }
 
-function Atom() {
+/* the tweet column on the left */
+const COL = { x: 50, y: 120, w: 680, h: 920 };
+const CK = COL.w / TWEET.column.w; // column px -> stage px
+const SK = COL.w / TWEET.sourceWidth; // source px -> stage px
+const BOTTOM = -(TWEET.column.h * CK - COL.h);
+const SCROLL: Record<string, number> = { debate: 0, bunker: 0, fresh: -150, diagram: -150 };
+const scrollFor = (cur: string) => SCROLL[cur] ?? BOTTOM;
+
+/* the lenses, right of the column */
+const LX = 780,
+  LW = 1100;
+const REPLY_REGION: [number, number, number, number] = [150, TWEET.reply.region[1], 1290, TWEET.reply.region[3]];
+
+/** focus box on the column for a source region (topInColumn: where that screenshot starts, column px) */
+function focusRect(region: number[], topInColumn: number, scroll: number) {
+  const [x0, y0, x1, y1] = region;
+  return { left: COL.x + x0 * SK, top: COL.y + topInColumn * CK + y0 * SK + scroll, width: (x1 - x0) * SK, height: (y1 - y0) * SK };
+}
+
+const NAME_ARROW = paintArrow([560, 470], [905, 500], 11, 70, 12);
+const X_STROKES = [wobLine([800, 590], [1560, 840], 14, 41, 5), wobLine([790, 836], [1570, 604], 14, 43, 5)];
+
+function GoldBars() {
+  const bar = (x: number, y: number, k: number) => (
+    <g key={k} transform={`translate(${x},${y})`}>
+      <polygon points="30,0 190,0 210,22 10,22" fill="#ffe36b" stroke="#000" strokeWidth={4} strokeLinejoin="round" />
+      <polygon points="10,22 210,22 220,84 0,84" fill="#f2b705" stroke="#000" strokeWidth={4} strokeLinejoin="round" />
+      <text x={110} y={66} textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontWeight={700} fontSize={30} fill="#8a6000">
+        GOLD
+      </text>
+    </g>
+  );
   return (
-    <svg viewBox="0 0 160 160" width={160} height={160} aria-hidden="true">
-      <g stroke="#000" strokeWidth={6} strokeLinecap="round" className="legs">
-        <line className="leg l1" x1={66} y1={112} x2={56} y2={152} />
-        <line className="leg l2" x1={94} y1={112} x2={104} y2={152} />
-      </g>
-      <g fill="none" stroke="#0000ff" strokeWidth={6}>
-        <ellipse cx={80} cy={72} rx={70} ry={26} transform="rotate(30 80 72)" />
-        <ellipse cx={80} cy={72} rx={70} ry={26} transform="rotate(-30 80 72)" />
-      </g>
-      <circle cx={80} cy={72} r={22} fill="#ff0000" stroke="#000" strokeWidth={4} />
-      <circle cx={73} cy={68} r={4} fill="#fff" />
-      <circle cx={87} cy={68} r={4} fill="#fff" />
-      <circle cx={142} cy={40} r={7} fill="#0000ff" />
-      <circle cx={20} cy={104} r={7} fill="#0000ff" />
+    <svg className="c1-gold" viewBox="0 0 700 300" width={700} height={300} aria-hidden="true">
+      {[bar(0, 216, 1), bar(232, 216, 2), bar(464, 216, 3), bar(116, 132, 4), bar(348, 132, 5), bar(232, 48, 6)]}
+      <path d="M600,40 l10,-28 l10,28 l28,10 l-28,10 l-10,28 l-10,-28 l-28,-10 z" fill="#fff" stroke="#000" strokeWidth={3} />
+      <path d="M70,110 l7,-20 l7,20 l20,7 l-20,7 l-7,20 l-7,-20 l-20,-7 z" fill="#fff" stroke="#000" strokeWidth={3} />
     </svg>
   );
 }
 
-function Robot() {
-  return (
-    <svg viewBox="0 0 170 170" width={170} height={170} aria-hidden="true">
-      <line x1={85} y1={40} x2={85} y2={10} stroke="#000" strokeWidth={6} />
-      <circle cx={85} cy={10} r={9} fill="#ff0000" stroke="#000" strokeWidth={3} />
-      <rect x={20} y={40} width={130} height={120} rx={6} fill="#a8a8a8" stroke="#000" strokeWidth={6} />
-      <rect x={8} y={80} width={12} height={36} fill="#000" />
-      <rect x={150} y={80} width={12} height={36} fill="#000" />
-      <circle cx={58} cy={88} r={18} fill="#fff" stroke="#000" strokeWidth={4} />
-      <circle cx={112} cy={88} r={18} fill="#fff" stroke="#000" strokeWidth={4} />
-      <circle className="pupil" cx={52} cy={90} r={7} fill="#000" />
-      <circle className="pupil" cx={106} cy={90} r={7} fill="#000" />
-      <rect x={48} y={124} width={74} height={20} fill="#fff" stroke="#000" strokeWidth={4} />
-      <path d="M66,124 v20 M85,124 v20 M104,124 v20" stroke="#000" strokeWidth={4} />
-    </svg>
-  );
-}
-
-function Warning({ at }: SceneProps) {
-  const diagram = at('diagram');
+function Warning({ at, cur }: SceneProps) {
+  const sc = scrollFor(cur);
+  const fBunker = focusRect(TWEET.bunker.region, 0, 0);
+  const fFresh = focusRect(TWEET.fresh.region, 0, SCROLL.fresh);
+  const fReply = focusRect(REPLY_REGION, TWEET.replyTop, BOTTOM);
+  const focus = cur === 'bunker' ? fBunker : cur === 'fresh' ? fFresh : cur === 'reply' ? fReply : null;
+  const late = at('broken');
   return (
     <>
-      {/* debate thumbnail (founder's phone screenshot), caption, name */}
-      <div className={cx('c1-top', diagram && 'gone')}>
+      {/* 1. the debate thumbnail, the name, the sticky note */}
+      <div className={cx('c1-debate', at('bunker') && 'gone')}>
         <img className="c1-thumb" src={thumb} alt="Bankless: Ethereum vs Solana" draggable={false} />
-        <p className="c1-cap">This debate is when I first started to believe in Solana.</p>
         <div className="c1-name">
           Justin
           <br />
           Drake
         </div>
-        <svg className="c1-svg" viewBox="0 0 1920 1080">
-          <Arrow x1={1214} y1={338} x2={1340} y2={314} w={7} />
+        <svg className="c1-svg" viewBox="0 0 1920 1080" aria-hidden="true">
+          {NAME_ARROW.map((d, i) => (
+            <path key={i} className="mkp c1-paint" d={d} strokeWidth={16} />
+          ))}
+        </svg>
+        <div className="sticky c1-sticky">This debate is when I first started to believe in Solana</div>
+      </div>
+
+      {/* 2. the tweet column */}
+      <div className={cx('c1-col', at('bunker') && !late && 'on')} style={{ left: COL.x, top: COL.y, width: COL.w, height: COL.h }}>
+        <img src={TWEET.column.src} alt="Justin Drake's bunker mode post" draggable={false} style={{ width: COL.w, transform: `translateY(${sc}px)` }} />
+      </div>
+      <i className={cx('c1-focus', focus && 'on')} style={focus ?? fBunker} />
+
+      <Lens
+        className={cx(cur === 'bunker' && 'on')}
+        img={TWEET.lens1.src}
+        imgW={TWEET.lens1.w}
+        imgH={TWEET.lens1.h}
+        origin={TWEET.lens1.origin}
+        region={TWEET.bunker.region}
+        width={LW}
+        x={LX}
+        y={150}
+        over={<Highlights lines={TWEET.bunker.lines} seed={5} />}
+      />
+      <Lens
+        className={cx(cur === 'fresh' && 'on')}
+        img={TWEET.lens1.src}
+        imgW={TWEET.lens1.w}
+        imgH={TWEET.lens1.h}
+        origin={TWEET.lens1.origin}
+        region={TWEET.fresh.region}
+        width={LW}
+        x={LX}
+        y={190}
+        over={<Highlights lines={TWEET.fresh.lines} seed={9} />}
+      />
+
+      {/* 3. Ethereum vs Solana, polished, with a cheap marker X */}
+      <div className={cx('c1-diag', cur === 'diagram' && 'on')}>
+        <div className="c1-row-l" style={{ top: 150 }}>
+          Ethereum
+        </div>
+        <div className="c1-node eth" style={{ left: 800, top: 236, width: 270 }}>
+          key
+        </div>
+        <div className="c1-node eth" style={{ left: 1170, top: 236, width: 270, ['--d' as string]: '150ms' }}>
+          hash
+        </div>
+        <div className="c1-node eth" style={{ left: 1540, top: 236, width: 340, ['--d' as string]: '300ms' }}>
+          address
+        </div>
+        <div className="c1-sub" style={{ top: 378 }}>
+          key stays hidden behind the hash
+        </div>
+        <div className="c1-row-l" style={{ top: 530 }}>
+          Solana
+        </div>
+        <div className="c1-node sol" style={{ left: 800, top: 616, width: 270, ['--d' as string]: '500ms' }}>
+          key
+        </div>
+        <div className="c1-eq" style={{ ['--d' as string]: '600ms' }}>=</div>
+        <div className="c1-node sol" style={{ left: 1210, top: 616, width: 340, ['--d' as string]: '650ms' }}>
+          address
+        </div>
+        <div className="c1-sub" style={{ top: 758, ['--d' as string]: '700ms' }}>
+          the address is the key
+        </div>
+        <svg className="c1-svg" viewBox="0 0 1920 1080" aria-hidden="true">
+          <g className="c1-arr">
+            <path d="M1082,296 H1156 M1142,284 L1158,296 L1142,308" />
+            <path d="M1452,296 H1526 M1512,284 L1528,296 L1512,308" />
+          </g>
+          {X_STROKES.map((d, i) => (
+            <path key={i} className="mkp draw1 c1-x" d={d} pathLength={1} strokeWidth={24} style={{ ['--d' as string]: `${1300 + i * 380}ms`, ['--dur' as string]: '340ms' }} />
+          ))}
         </svg>
       </div>
 
-      {/* the tweet: a tall column that scrolls, then a magnifier */}
-      <div className={cx('c1-tweet', diagram && 'gone')} style={{ left: VP.x, top: VP.y, width: VP.w, height: VP.h }}>
-        <div className="c1-col" style={{ ['--scroll' as string]: `${-SCROLL}px` }}>
-          <img src={TWEET.src} alt="Justin Drake's bunker mode post" draggable={false} style={{ width: VP.w }} />
-        </div>
-      </div>
-      <div className={cx('c1-lens', diagram && 'gone')} style={{ left: LENS.left, top: LENS.top, width: LENS.w, height: LENS.h }}>
-        <img
-          src={TWEET.src}
-          alt=""
-          draggable={false}
-          style={{ width: VP.w * MAG, left: -lx0 * S * MAG, top: -ly0 * S * MAG }}
-        />
-        {TWEET.highlight.map(([x0, y0, x1, y1], i) => (
-          <i
-            key={i}
-            className="c1-hl"
-            style={{ left: (x0 - lx0) * S * MAG, top: (y0 - ly0) * S * MAG, width: (x1 - x0) * S * MAG, height: (y1 - y0) * S * MAG, ['--i' as string]: i }}
-          />
-        ))}
+      {/* 4. the first reply */}
+      <Lens
+        className={cx(cur === 'reply' && 'on', 'c1-lens7')}
+        img={TWEET.lens7.src}
+        imgW={TWEET.lens7.w}
+        imgH={TWEET.lens7.h}
+        origin={TWEET.lens7.origin}
+        region={REPLY_REGION}
+        width={LW}
+        x={LX}
+        y={190}
+      />
+
+      {/* 5. sell it all for gold */}
+      <div className={cx('c1-goldw', cur === 'gold' && 'on')}>
+        <GoldBars />
+        <div className="c1-goldt">Sell it all for gold?</div>
       </div>
 
-      {/* the cheesy diagram */}
-      <div className="c1-diag">
-        <div className="c1-fancy">fancy math</div>
-        <div className="c1-eq">
-          y<sup>2</sup> = x<sup>3</sup> + ax + b
-        </div>
-        <svg className="c1-svg c1-arrows" viewBox="0 0 1920 1080">
-          <path className="scrib" d="M110,250 C100,190 260,168 400,170 C560,172 700,195 690,248 C682,300 540,322 390,318 C250,316 96,300 118,236 C126,214 170,200 210,196" />
-          <g className="a1">
-            <Arrow x1={470} y1={330} x2={548} y2={392} />
-          </g>
-          <g className="a2">
-            <Arrow x1={760} y1={545} x2={610} y2={700} />
-          </g>
-          <g className="a3">
-            <Arrow x1={1160} y1={545} x2={1310} y2={700} />
-          </g>
-        </svg>
-        <div className="c1-box">ELLIPTIC CURVES</div>
-        <div className="c1-ecdsa">
-          <svg viewBox="0 0 100 160" width={100} height={160} aria-hidden="true">
-            <polygon points="50,0 100,80 50,108 0,80" fill="#555" stroke="#000" strokeWidth={4} />
-            <polygon points="50,118 100,90 50,160 0,90" fill="#888" stroke="#000" strokeWidth={4} />
-          </svg>
-          <span>ECDSA</span>
-        </div>
-        <div className="c1-ed">
-          <span>Ed25519</span>
-          <svg viewBox="0 0 140 120" width={140} height={120} aria-hidden="true">
-            <polygon points="24,4 136,4 116,30 4,30" fill="#9945ff" stroke="#000" strokeWidth={3} />
-            <polygon points="4,46 116,46 136,72 24,72" fill="#14f195" stroke="#000" strokeWidth={3} />
-            <polygon points="24,88 136,88 116,114 4,114" fill="#9945ff" stroke="#000" strokeWidth={3} />
-          </svg>
-        </div>
-        <div className="c1-atom">
-          <div className="c1-atom-b">
-            <Atom />
-          </div>
-        </div>
-        <div className="c1-robot">
-          <Robot />
-        </div>
-      </div>
-
-      <CStamp on={at('drill')} x={960} y={950} size={110} r={-1.5} d={40}>
-        THIS IS A DRILL
+      {/* 6. nothing is broken; this is all (conspiracy) theoretical */}
+      <CStamp on={late} x={960} y={400} size={128} r={-2} d={40}>
+        NOTHING IS BROKEN
       </CStamp>
+      <div className={cx('c1-well', late && 'on')}>(well, until quantum)</div>
+      <div className={cx('c1-theory', at('theory') && 'on')}>
+        This is all
+        <Ins on={at('theory')} word="conspiracy" className="c1-ins" />
+        theoretical
+      </div>
     </>
   );
 }
@@ -164,6 +194,6 @@ export const C1: SceneDef = {
   exhibit: '',
   title: '',
   cheap: true,
-  steps: [{ id: 'debate' }, { id: 'tweet' }, { id: 'scroll' }, { id: 'magnify' }, { id: 'diagram' }, { id: 'atom' }, { id: 'robot' }, { id: 'drill' }],
+  steps: [{ id: 'debate' }, { id: 'bunker' }, { id: 'fresh' }, { id: 'diagram' }, { id: 'reply' }, { id: 'gold' }, { id: 'broken' }, { id: 'theory' }],
   C: Warning,
 };

@@ -4,9 +4,9 @@ import type { SceneDef, SceneProps } from '../types';
 import './s2.css';
 
 /* ---------- 719 manuscripts as dots, clustered by discipline ---------- */
-const FW = 880,
+export const FW = 880,
   FH = 600; // field, local coords
-const DOT = 2.9,
+export const DOT = 2.9,
   SP = 6.4; // dot radius, sunflower spacing
 const GOLD = Math.PI * (3 - Math.sqrt(5));
 const CH = 7.9; // mono char width at 13px
@@ -83,8 +83,8 @@ const PACK = (() => {
   });
   return { clusters: res, crypto, overflow: y0 - gapY > FH + 0.5 };
 })();
-const CLUSTERS = PACK.clusters;
-const CRYPTO = PACK.crypto;
+export const CLUSTERS = PACK.clusters;
+export const CRYPTO = PACK.crypto;
 if (CLUSTERS.length !== story.categories.length || PACK.overflow) console.error('beat 2 cluster packing failed', CLUSTERS.length, PACK.overflow);
 
 /* ---------- Physical Review fission chart (ported from the mockup's Fig. A-1) ---------- */
