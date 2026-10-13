@@ -1,0 +1,64 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Share+Tech+Mono&family=Archivo:wdth,wght@62..125,700..900&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0b2545}
+.bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 70% at 45% 45%,#12366a 0%,#0b2545 60%,#071a33 100%)}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(190,215,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(190,215,255,.08) 1px,transparent 1px),linear-gradient(rgba(190,215,255,.16) 1px,transparent 1px),linear-gradient(90deg,rgba(190,215,255,.16) 1px,transparent 1px);background-size:16px 16px,16px 16px,80px 80px,80px 80px}
+.noise{position:absolute;inset:0;mix-blend-mode:soft-light;opacity:.5}
+.border{position:absolute;inset:18px;border:2px solid rgba(235,243,255,.75)}
+.border::after{content:"";position:absolute;inset:6px;border:1px solid rgba(235,243,255,.4)}
+.door{position:absolute;left:150px;top:50px;width:560px;height:612px;filter:drop-shadow(0 0 2px rgba(220,235,255,.55))}
+.door *{stroke:#eaf3ff}
+.door text{fill:#eaf3ff;stroke:none}
+.tb{position:absolute;right:42px;bottom:42px;width:430px;border:2px solid #eaf3ff;color:#eaf3ff;font-family:'Share Tech Mono',monospace;background:rgba(11,37,69,.6)}
+.tb .r{display:flex;border-top:1px solid rgba(234,243,255,.7)}
+.tb .r>div{padding:8px 12px;border-left:1px solid rgba(234,243,255,.7)}
+.tb .r>div:first-child{border-left:0}
+.tb .l{font-size:11px;letter-spacing:.2em;opacity:.75}
+.tb .title{padding:14px 14px 10px;font:400 50px/1 'Architects Daughter',cursive;letter-spacing:.06em}
+.tb .lab{font:400 22px/1.2 'Architects Daughter',cursive}
+.hz{position:absolute;right:52px;top:70px;width:380px;transform:rotate(-2deg);box-shadow:0 10px 24px rgba(0,0,0,.45)}
+.hz .stripes{height:26px;background:repeating-linear-gradient(-45deg,#111 0 18px,#ffcc00 18px 36px)}
+.hz .body{background:#ffcc00;padding:14px 18px;text-align:center;font:900 40px/1 'Archivo',sans-serif;font-stretch:78%;letter-spacing:.04em;color:#111}
+.hz .body small{display:block;font-size:16px;letter-spacing:.3em;margin-bottom:6px}
+.note{position:absolute;left:740px;top:300px;font:400 20px/1.4 'Architects Daughter',cursive;color:#eaf3ff;opacity:.85}
+.logo{position:absolute;left:44px;bottom:40px;width:62px;filter:brightness(0) invert(1);opacity:.8}
+</style></head><body>
+<div class="bg"></div><div class="grid"></div>
+<svg class="noise" width="1280" height="720"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="3"/><feColorMatrix values="0 0 0 0 .8 0 0 0 0 .9 0 0 0 0 1 0 0 0 .7 -.2"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>
+<div class="border"></div>
+<svg class="door" viewBox="0 0 640 700" id="door">
+  <g fill="none" stroke-width="1.6">
+    <line x1="40" y1="330" x2="600" y2="330" stroke-dasharray="14 4 2 4" opacity=".6"/>
+    <line x1="320" y1="40" x2="320" y2="620" stroke-dasharray="14 4 2 4" opacity=".6"/>
+    <circle cx="320" cy="330" r="250"/><circle cx="320" cy="330" r="236"/><circle cx="320" cy="330" r="176"/>
+    <circle cx="320" cy="330" r="168" opacity=".5"/><circle cx="320" cy="330" r="62"/><circle cx="320" cy="330" r="24"/>
+    <g id="hs"><line x1="320" y1="268" x2="320" y2="170"/><line x1="314" y1="268" x2="314" y2="176" opacity=".5"/><circle cx="320" cy="158" r="12"/></g>
+    <use href="#hs" transform="rotate(120 320 330)"/><use href="#hs" transform="rotate(240 320 330)"/>
+    <rect x="52" y="230" width="22" height="58" rx="3"/><rect x="52" y="372" width="22" height="58" rx="3"/>
+    <rect x="262" y="96" width="116" height="34" rx="2"/>
+    <line x1="70" y1="640" x2="570" y2="640"/><line x1="70" y1="628" x2="70" y2="652"/><line x1="570" y1="628" x2="570" y2="652"/>
+    <path d="M70,640 l14,-5 v10 z M570,640 l-14,-5 v10 z" fill="#eaf3ff"/>
+    <line x1="612" y1="80" x2="612" y2="580"/><line x1="600" y1="80" x2="624" y2="80"/><line x1="600" y1="580" x2="624" y2="580"/>
+    <path d="M612,80 l-5,14 h10 z M612,580 l-5,-14 h10 z" fill="#eaf3ff"/>
+    <path d="M378,113 L470,70 L600,70" opacity=".85"/><path d="M344,330 L470,470 L600,470" opacity=".85"/>
+  </g>
+  <g id="bolts"></g>
+  <g font-family="Share Tech Mono, monospace" font-size="14" letter-spacing="2">
+    <text x="470" y="62">A  ADDRESS PLATE</text><text x="470" y="88" opacity=".7">fixed</text>
+    <text x="470" y="462">B  LOCK ASSEMBLY</text><text x="470" y="488" opacity=".7">replaceable</text>
+    <text x="320" y="672" text-anchor="middle">DOOR, FRONT ELEVATION · NOT TO SCALE</text>
+  </g>
+</svg>
+<script>
+const g=document.getElementById('bolts');for(let k=0;k<36;k++){const a=k/36*Math.PI*2;const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',320+243*Math.cos(a));c.setAttribute('cy',330+243*Math.sin(a));c.setAttribute('r',2.8);c.setAttribute('fill','#eaf3ff');c.setAttribute('stroke','none');g.appendChild(c)}
+</script>
+<div class="hz"><div class="stripes"></div><div class="body"><small>HAZARD</small>WARNING: CONTAINS MATH</div><div class="stripes"></div></div>
+<div class="note">vault = program derived address<br>lock = replaceable one-time keys<br>— no private key behind the door</div>
+<div class="tb">
+  <div class="title">SOLANA BUNKER</div>
+  <div class="r"><div style="flex:1"><div class="l">DRAWN BY</div><div class="lab">Chaintail Labs R&amp;D</div></div><div><div class="l">SHEET</div><div class="lab">1 / 11</div></div></div>
+  <div class="r"><div style="flex:1"><div class="l">PROJECT</div><div class="lab">vault door, devnet</div></div><div><div class="l">REV</div><div class="lab">003</div></div></div>
+</div>
+<img class="logo" src="../../../docs/presentation/assets/chaintail-logo.svg">
+</body></html>

@@ -1,0 +1,104 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@500;700&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#1a1612}
+.paper{position:absolute;inset:0;background:radial-gradient(ellipse 80% 75% at 50% 50%,#efe5c9 0%,#e6d9b7 62%,#cdbb91 100%)}
+.fold{position:absolute;inset:0;background:
+  linear-gradient(90deg,transparent 0,rgba(255,255,255,.0) 600px,rgba(255,250,235,.35) 636px,rgba(80,60,30,.32) 640px,rgba(80,60,30,.08) 646px,transparent 690px),
+  linear-gradient(0deg,transparent 0,rgba(255,250,235,.0) 330px,rgba(255,250,235,.3) 357px,rgba(80,60,30,.3) 360px,rgba(80,60,30,.06) 366px,transparent 400px)}
+svg.abs{position:absolute;inset:0;width:1280px;height:720px}
+.ink{mix-blend-mode:multiply}
+.t1{position:absolute;left:52px;top:112px;transform:rotate(-12deg);transform-origin:0 100%;font:400 156px/.86 'Anton',sans-serif;letter-spacing:.01em;color:#161310;mix-blend-mode:multiply}
+.t1 b{display:block;font-weight:400;color:#c4261c;margin-left:104px}
+.t2{position:absolute;left:96px;top:398px;transform:rotate(-12deg);transform-origin:0 0;background:#161310;color:#efe5c9;font:700 52px/1 'Oswald',sans-serif;letter-spacing:.12em;padding:14px 26px 12px 24px;mix-blend-mode:multiply}
+.t3{position:absolute;left:140px;top:485px;transform:rotate(-12deg);transform-origin:0 0;font:500 24px/1 'Oswald',sans-serif;letter-spacing:.42em;color:#161310;mix-blend-mode:multiply}
+.lemur{position:absolute;left:1062px;top:540px;width:190px;height:165px}
+</style></head><body>
+<div class="paper"></div>
+<svg class="abs ink" viewBox="0 0 1280 720">
+  <defs>
+    <clipPath id="burst"><circle cx="905" cy="300" r="350"/></clipPath>
+  </defs>
+  <!-- rays -->
+  <g clip-path="url(#burst)" fill="#c4261c" opacity=".92">
+    <g transform="translate(905 300)">
+      <path id="ray" d="M0,0 L-34,-420 L34,-420 Z"/>
+      <use href="#ray" transform="rotate(22.5)"/><use href="#ray" transform="rotate(45)"/><use href="#ray" transform="rotate(67.5)"/>
+      <use href="#ray" transform="rotate(90)"/><use href="#ray" transform="rotate(112.5)"/><use href="#ray" transform="rotate(135)"/><use href="#ray" transform="rotate(157.5)"/>
+      <use href="#ray" transform="rotate(180)"/><use href="#ray" transform="rotate(202.5)"/><use href="#ray" transform="rotate(225)"/><use href="#ray" transform="rotate(247.5)"/>
+      <use href="#ray" transform="rotate(270)"/><use href="#ray" transform="rotate(292.5)"/><use href="#ray" transform="rotate(315)"/><use href="#ray" transform="rotate(337.5)"/>
+    </g>
+  </g>
+  <!-- diagonal bands -->
+  <polygon points="0,640 1280,368 1280,446 0,718" fill="#c4261c"/>
+  <polygon points="0,612 1280,340 1280,350 0,622" fill="#161310"/>
+  <!-- vault silhouette -->
+  <g transform="translate(905 300)">
+    <rect x="-212" y="-92" width="44" height="54" rx="6" fill="#161310"/>
+    <rect x="-212" y="40" width="44" height="54" rx="6" fill="#161310"/>
+    <circle r="190" fill="#161310"/>
+    <circle r="160" fill="none" stroke="#efe5c9" stroke-width="5"/>
+    <circle r="146" fill="none" stroke="#efe5c9" stroke-width="1.5" stroke-dasharray="3 9"/>
+    <g fill="#efe5c9">
+      <circle cx="0" cy="-174" r="7"/><circle cx="0" cy="174" r="7"/><circle cx="-174" cy="0" r="7"/><circle cx="174" cy="0" r="7"/>
+      <circle cx="123" cy="-123" r="7"/><circle cx="-123" cy="123" r="7"/><circle cx="-123" cy="-123" r="7"/><circle cx="123" cy="123" r="7"/>
+    </g>
+    <circle r="72" fill="none" stroke="#efe5c9" stroke-width="10"/>
+    <g stroke="#efe5c9" stroke-width="12" stroke-linecap="round">
+      <line x1="0" y1="-24" x2="0" y2="-118"/><line x1="20.8" y1="12" x2="102" y2="59"/><line x1="-20.8" y1="12" x2="-102" y2="59"/>
+    </g>
+    <g fill="#efe5c9"><circle cx="0" cy="-118" r="13"/><circle cx="102" cy="59" r="13"/><circle cx="-102" cy="59" r="13"/></g>
+    <circle r="26" fill="#c4261c" stroke="#efe5c9" stroke-width="6"/>
+  </g>
+  <!-- civil defence seal -->
+  <g transform="translate(330 612) scale(1.02)">
+    <circle r="98" fill="#161310"/>
+    <circle r="90" fill="#efe5c9"/>
+    <circle r="86" fill="#c4261c"/>
+    <circle r="58" fill="#efe5c9"/>
+    <path id="arcTop" d="M-70,0 A70,70 0 0 1 70,0" fill="none"/>
+    <path id="arcBot" d="M-74,0 A74,74 0 0 0 74,0" fill="none"/>
+    <text font-family="Oswald" font-weight="700" font-size="23" letter-spacing="4" fill="#efe5c9"><textPath href="#arcTop" startOffset="50%" text-anchor="middle">WARNING</textPath></text>
+    <text font-family="Oswald" font-weight="700" font-size="20" letter-spacing="3" fill="#efe5c9" dominant-baseline="hanging"><textPath href="#arcBot" startOffset="50%" text-anchor="middle">CONTAINS MATH</textPath></text>
+    <circle cx="-79" cy="0" r="4" fill="#efe5c9"/><circle cx="79" cy="0" r="4" fill="#efe5c9"/>
+    <polygon points="0,-46 40,24 -40,24" fill="#161310"/>
+    <text x="0" y="17" text-anchor="middle" font-family="Anton" font-size="44" fill="#c4261c">&#931;</text>
+  </g>
+</svg>
+<div class="t1">BUNKER<b>MODE</b></div>
+<div class="t2">SOLANA BUNKER</div>
+<div class="t3">CHAINTAIL LABS R&amp;D</div>
+<!-- lemur mascot in a hard hat, pointing at the vault -->
+<svg class="lemur" viewBox="0 0 150 130">
+  <path d="M64,96 C50,92 40,80 32,62" stroke="#161310" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <g transform="translate(30 58) rotate(-128)" stroke="#161310" stroke-width="2.6" fill="#efe5c9" stroke-linejoin="round">
+    <rect x="4" y="-5" width="26" height="9" rx="4.5"/>
+    <path d="M-10,-9 C-4,-14 8,-12 10,-6 L10,10 C6,15 -6,15 -11,9 C-14,4 -14,-4 -10,-9 Z"/>
+    <path d="M2,4 C8,4 10,8 6,11 L0,11"/><path d="M-2,-10 C0,-17 8,-17 8,-11"/>
+  </g>
+  <image href="../../../docs/presentation/assets/chaintail-logo.svg" x="36" y="50" width="100" height="81"/>
+  <path d="M58,62 C58,40 70,30 86,30 C102,30 114,40 114,62 Z" fill="#e3b21f" stroke="#161310" stroke-width="3"/>
+  <rect x="81" y="28" width="10" height="34" rx="3" fill="#c9971a" stroke="#161310" stroke-width="2"/>
+  <path d="M48,62 L124,62 C126,62 127,67 124,68 L48,68 C45,67 46,62 48,62 Z" fill="#e3b21f" stroke="#161310" stroke-width="3"/>
+</svg>
+<svg class="abs" viewBox="0 0 1280 720" style="mix-blend-mode:multiply;opacity:.6">
+  <filter id="g"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="3" seed="7"/><feColorMatrix values="0 0 0 0 .45 0 0 0 0 .36 0 0 0 0 .2 0 0 0 1.1 -.35"/></filter>
+  <rect width="1280" height="720" filter="url(#g)"/>
+</svg>
+<!-- ink loss and cracks -->
+<svg class="abs" viewBox="0 0 1280 720">
+  <filter id="loss" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".06 .5" numOctaves="3" seed="11"/><feColorMatrix values="0 0 0 0 .94 0 0 0 0 .9 0 0 0 0 .79 0 0 0 9 -7"/></filter>
+  <filter id="loss2" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".5 .06" numOctaves="3" seed="5"/><feColorMatrix values="0 0 0 0 .94 0 0 0 0 .9 0 0 0 0 .79 0 0 0 9 -7"/></filter>
+  <filter id="spk"><feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 .94 0 0 0 0 .9 0 0 0 0 .8 0 0 0 14 -11.6"/></filter>
+  <rect x="628" y="0" width="24" height="720" filter="url(#loss)"/>
+  <rect x="0" y="349" width="1280" height="22" filter="url(#loss2)"/>
+  <rect width="1280" height="720" filter="url(#spk)" opacity=".8"/>
+  <g fill="none" stroke="#f3ead2" stroke-width="1.4" opacity=".85">
+    <path d="M0,214 L38,220 L61,232 L97,229 L131,246"/>
+    <path d="M1280,520 L1236,526 L1214,541 L1180,538 L1151,556 L1118,560"/>
+    <path d="M412,0 L418,30 L409,58 L421,92"/>
+    <path d="M760,720 L754,690 L768,664 L759,640"/>
+  </g>
+  <rect width="1280" height="720" fill="none" stroke="rgba(60,40,15,.35)" stroke-width="10"/>
+</svg>
+</body></html>

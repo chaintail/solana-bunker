@@ -1,0 +1,40 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=VT323&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#050403}
+.crt{position:absolute;inset:0;background:radial-gradient(ellipse 85% 80% at 50% 50%,#1a1206 0%,#0a0703 60%,#020100 100%)}
+.screen{position:absolute;left:70px;top:56px;right:70px;bottom:56px;color:#ffb000;font-family:'IBM Plex Mono',monospace;text-shadow:0 0 4px rgba(255,176,0,.85),0 0 18px rgba(255,140,0,.45),0 0 42px rgba(255,120,0,.2)}
+.boot{font-size:19px;line-height:1.55;opacity:.8}
+.boot .ok{color:#ffd36b}
+.boot .warn{color:#ff6a00;text-shadow:0 0 6px rgba(255,90,0,.95),0 0 22px rgba(255,80,0,.5);font-weight:700;opacity:1}
+.title{margin-top:90px;font:400 132px/1 'VT323',monospace;letter-spacing:.04em}
+.title .cur{display:inline-block;width:.55em;height:.86em;margin-left:.08em;vertical-align:-.06em;background:#ffb000;box-shadow:0 0 14px rgba(255,176,0,.8)}
+.prompt{font:400 46px/1 'VT323',monospace;opacity:.9}
+.lab{margin-top:14px;font:600 26px/1 'IBM Plex Mono',monospace;letter-spacing:.24em}
+.hex{position:absolute;left:0;right:0;bottom:0;font:400 15px/1.5 'IBM Plex Mono',monospace;opacity:.42;white-space:nowrap;overflow:hidden}
+.scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.32) 0 1px,transparent 1px 3px);pointer-events:none}
+.vig{position:absolute;inset:0;background:radial-gradient(ellipse 75% 70% at 50% 50%,transparent 55%,rgba(0,0,0,.75) 100%);pointer-events:none}
+.glass{position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,220,150,.06),transparent 35%);pointer-events:none}
+.logo{position:absolute;right:86px;top:66px;width:64px;filter:sepia(1) saturate(6) hue-rotate(-12deg) brightness(.95) drop-shadow(0 0 8px rgba(255,160,0,.6));opacity:.85}
+</style></head><body>
+<div class="crt"></div>
+<div class="screen">
+  <div class="boot">
+    BUNKER-OS · chaintail labs<br>
+    [ <span class="ok">OK</span> ] mounting vault at program derived address<br>
+    [ <span class="ok">OK</span> ] loading one-time keys .......... 1024<br>
+    [ <span class="ok">OK</span> ] sha-256 syscall ready<br>
+    <span class="warn">[WARN] contains math</span>
+  </div>
+  <div class="title"><span class="prompt">$ </span>SOLANA BUNKER<span class="cur"></span></div>
+  <div class="lab">// CHAINTAIL LABS R&amp;D</div>
+  <div class="hex" id="hex"></div>
+</div>
+<img class="logo" src="../../../docs/presentation/assets/chaintail-logo.svg">
+<div class="glass"></div><div class="scan"></div><div class="vig"></div>
+<script>
+let s=1;const r=()=>{s=(s*16807)%2147483647;return s};let out='';
+for(let row=0;row<3;row++){let line='';for(let i=0;i<12;i++){line+=(r()%65536).toString(16).padStart(4,'0')+(r()%65536).toString(16).padStart(4,'0')+'  '}out+='0x'+(0x7f3a00+row*0x40).toString(16)+'  '+line+'<br>'}
+document.getElementById('hex').innerHTML=out;
+</script>
+</body></html>
