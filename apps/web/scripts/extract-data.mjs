@@ -76,6 +76,23 @@ const out = {
     epochBefore: rot.before.epoch,
   },
   program: { id: pub.program_id, binaryBytes: pub.program_binary_bytes, cluster: pub.cluster },
+  /** every confirmed devnet operation that matters for the proof grid (slide 9) */
+  proofOps: [
+    ['array-withdraw-sol', 'array withdraw SOL'],
+    ['array-withdraw-mock-usdc', 'array withdraw mock USDC'],
+    ['merkle-withdraw-sol', 'Merkle withdraw SOL'],
+    ['merkle-withdraw-mock-usdc', 'Merkle withdraw mock USDC'],
+    ['xmss-withdraw-sol', 'XMSS withdraw SOL'],
+    ['xmss-withdraw-mock-usdc', 'XMSS withdraw mock USDC'],
+    ['xmss-burn-leaves', 'XMSS burn leaves'],
+    ['xmss-rotate-root', 'XMSS rotate root'],
+    ['xmss-post-rotation-withdraw-sol', 'post-rotation withdraw SOL'],
+    ['xmss-post-rotation-withdraw-mock-usdc', 'post-rotation withdraw mock USDC'],
+  ].map(([op, label]) => {
+    const t = pub.confirmed_transactions.find((x) => x.operation === `v1-live-20261012-${op}`);
+    if (!t || t.success !== true) throw new Error(`missing confirmed op ${op}`);
+    return { label, signature: t.transaction_signature };
+  }),
   /** the confirmed devnet XMSS operations, in order */
   xmssOps: [
     ['withdraw-sol', 'withdraw SOL'],

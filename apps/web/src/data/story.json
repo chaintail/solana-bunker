@@ -323,6 +323,48 @@
   "binaryBytes": 124464,
   "cluster": "devnet"
  },
+ "proofOps": [
+  {
+   "label": "array withdraw SOL",
+   "signature": "5mHxtbGLuEhxVCDhRRc6A1pdpQzn3KgQyfvzSoUS4GzySBZ2AkDJQgKbwb3UrNaZ4rMEzJ2syQb3yvWw35TMhwjr"
+  },
+  {
+   "label": "array withdraw mock USDC",
+   "signature": "3gY1NgZpSmEaa3TVhoTjAuhf6m5tYn4nkahqGrTEZn2izrbPMaWNjvodF4LGXnt4c6QtEKUYLiMkT34PJrJ6XSmg"
+  },
+  {
+   "label": "Merkle withdraw SOL",
+   "signature": "5XPHXjBKRvZJ5vNkEqDF5TXtk88ZZd96R92MuSxf7uAYRXTVER6AnYgDyqZoqEMe8Tn8zwez3hSRme1VZv9BaKBw"
+  },
+  {
+   "label": "Merkle withdraw mock USDC",
+   "signature": "gfA5rq9xAa8JxHX14FwpegzjiDdK1oT7jmwLx5bM7dBbEWcTXgu6Ciy2xN1yJGQ5dWav3x4oEuCKcBLq5ebNAhh"
+  },
+  {
+   "label": "XMSS withdraw SOL",
+   "signature": "CiZmcGsaX4G7upT1ECscLUr1vVrX1htShX4Q2y8K4wd1hJcsVpfZEQc9GZtod8MxVSmP4Hy6mbVqiM75QiAJdBM"
+  },
+  {
+   "label": "XMSS withdraw mock USDC",
+   "signature": "VveVy2HNqacHi8L7CR683XeGjdViy5qsCaBzyFanjVyGqJfd1RxU2EjkHuWpHEDSb9h8awNz4iMmiZNzQTG7yHd"
+  },
+  {
+   "label": "XMSS burn leaves",
+   "signature": "4jW1PJwKdSDW1bDRM5T2CrRRPDwisX4K2UAFZTWxZqYupP3vuoXmcPnCyD71xtRsNohAUWWRJB1zUfRS1fVbSdNg"
+  },
+  {
+   "label": "XMSS rotate root",
+   "signature": "5U4B7zhgQ38cyUztvxUK5tYCJ2uHMweKjePJ14gYJGv2X42mDwWGqWreiQi9KYtYkkoWskS8pykD2Fab8RjML5iy"
+  },
+  {
+   "label": "post-rotation withdraw SOL",
+   "signature": "3bGS1Mhx5dAF2K7W38eB6Jb3LUfYuBNR5st7NZQDtePz3vZtQPBuWo15x8eG7z7si63jNDyhHASz8QUkmRvcuCmR"
+  },
+  {
+   "label": "post-rotation withdraw mock USDC",
+   "signature": "3H343RTxDLz4h1RLZxxUeQkF4gKD7pz9yboKMz2RMc9b7i3JGc4Z7MgbeatL22C89GkDtuJWTvi5rkRjaZ7Fx5Wr"
+  }
+ ],
  "xmssOps": [
   {
    "label": "withdraw SOL",

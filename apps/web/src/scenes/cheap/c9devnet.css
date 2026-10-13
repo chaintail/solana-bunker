@@ -1,0 +1,19 @@
+/* ---------- slide 9: live on devnet ---------- */
+.c9d-line{position:absolute;left:120px;right:120px;top:50%;transform:translateY(-50%);text-align:center;font:700 84px/1.15 Arial,Helvetica,sans-serif;color:#000;opacity:0;transition:opacity 200ms linear}
+.c9d-line.on{opacity:1}
+.c9d-line.prev{opacity:.25;top:16%;transform:none;font-size:60px;font-weight:400}
+.c9d-grid{position:absolute;inset:0;opacity:0;transition:opacity 200ms linear}
+.c9d-grid.on{opacity:1}
+.c9d-h{position:absolute;left:60px;top:34px;display:flex;align-items:center;gap:14px;font:700 52px/1 Arial,Helvetica,sans-serif;color:#000}
+.c9d-cell{position:absolute;width:340px;display:flex;flex-direction:column;align-items:center;text-decoration:none;color:#000}
+.c9d-cell .pf-qr{display:block;outline:2px solid #bbb;outline-offset:6px}
+.c9d-l{margin-top:6px;width:340px;text-align:center;font:700 32px/1.1 Arial,Helvetica,sans-serif}
+.c9d-cell:nth-child(-n+5){top:120px}
+.c9d-cell:nth-child(n+6){top:540px}
+.c9d-cell:nth-child(5n+1){left:70px}
+.c9d-cell:nth-child(5n+2){left:430px}
+.c9d-cell:nth-child(5n+3){left:790px}
+.c9d-cell:nth-child(5n+4){left:1150px}
+.c9d-cell:nth-child(5n+5){left:1510px}
+#s-c-devnet2.a-grid .c9d-cell{animation:c9d-pop 260ms cubic-bezier(.3,1.5,.5,1) calc(var(--i) * 80ms) both}
+@keyframes c9d-pop{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:none}}

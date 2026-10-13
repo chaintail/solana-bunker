@@ -1,12 +1,6 @@
 import { textSlide } from './textslide';
 
 /* slides 8, 9 and 10 as spoken lines (draft 3); full slides replace these one by one */
-export const C9Devnet = textSlide('c-devnet2', [
-  'This is not a bunch of diagrams.',
-  'All of it is live on devnet right now.',
-  'Three vaults, SOL and USDC, the robbery, the rejection, the rotation.',
-  'Every number on this screen is a transaction you can open in the explorer.',
-]);
 export const C10End = textSlide('c-end', [
   'Thanks for sticking around.',
   'If you made it this far,',
