@@ -27,7 +27,12 @@ const V: Record<Version, { code: string; line: number; tx: string }> = {
     tx: 'CiZmcGsaX4G7upT1ECscLUr1vVrX1htShX4Q2y8K4wd1hJcsVpfZEQc9GZtod8MxVSmP4Hy6mbVqiM75QiAJdBM',
   },
 };
+// Solscan opens mainnet unless told otherwise, so devnet links keep ?cluster=devnet
 const txUrl = (sig: string) => `https://solscan.io/tx/${sig}?cluster=devnet`;
+/* lowest error correction uqr offers, no logo overlay: verified to decode with OpenCV's standard detector at 1080p and 720p */
+const ECC = 'L' as const;
+const LOGO = false;
+const LOGO_AREA = 0.06;
 
 const GITHUB =
   'M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12';
@@ -59,25 +64,37 @@ function qr(text: string, ecc: 'L' | 'M' | 'Q' | 'H') {
   return v;
 }
 
-/** QR with an optional logo knocked out of the centre (quiet zone included in the drawing) */
-function QR({ text, size: max, ecc, logo }: { text: string; size: number; ecc: 'L' | 'M' | 'Q' | 'H'; logo?: 'github' | 'solscan' }) {
+/**
+ * QR with an optional logo knocked out of the centre. Whole pixels per module,
+ * 4-module quiet zone; `logoArea` is the share of the symbol the logo may cover.
+ */
+function QR({ text, size: max, ecc, logo, logoArea = 0.06 }: { text: string; size: number; ecc: 'L' | 'M' | 'Q' | 'H'; logo?: 'github' | 'solscan'; logoArea?: number }) {
   const { n, d } = qr(text, ecc);
-  const q = 2; // quiet zone, modules
-  const size = Math.floor(max / (n + 2 * q)) * (n + 2 * q); // whole pixels per module, so screens render it sharp
-  const L = n * 0.24; // logo box, modules
-  const c = n / 2;
+  const q = 4; // quiet zone, modules
+  const size = Math.floor(max / (n + 2 * q)) * (n + 2 * q);
+  const L = Math.round(n * Math.sqrt(logoArea)); // logo box side, modules
+  const c0 = Math.round((n - L) / 2);
   return (
-    <svg className="qr" viewBox={`${-q} ${-q} ${n + 2 * q} ${n + 2 * q}`} width={size} height={size} shapeRendering="crispEdges" aria-hidden="true">
+    <svg className="pf-qr" viewBox={`${-q} ${-q} ${n + 2 * q} ${n + 2 * q}`} width={size} height={size} shapeRendering="crispEdges" aria-hidden="true">
       <rect x={-q} y={-q} width={n + 2 * q} height={n + 2 * q} fill="#fff" />
       <path d={d} fill="#000" />
       {logo && (
         <g>
-          <rect x={c - L / 2 - 0.6} y={c - L / 2 - 0.6} width={L + 1.2} height={L + 1.2} rx={1} fill="#fff" shapeRendering="auto" />
-          <g transform={`translate(${c - L / 2},${c - L / 2}) scale(${L / 24})`} shapeRendering="auto">
+          <rect x={c0} y={c0} width={L} height={L} fill="#fff" />
+          <g transform={`translate(${c0 + 0.5},${c0 + 0.5}) scale(${(L - 1) / 24})`} shapeRendering="auto">
             {logo === 'github' ? <GithubMark /> : <SolscanMark />}
           </g>
         </g>
       )}
+    </svg>
+  );
+}
+
+/** the logos sit beside the headings: on top of the codes they stopped low-ECC codes decoding */
+function Mark({ kind }: { kind: 'github' | 'solscan' }) {
+  return (
+    <svg className="pf-mark" viewBox="0 0 24 24" aria-hidden="true">
+      {kind === 'github' ? <GithubMark /> : <SolscanMark />}
     </svg>
   );
 }
@@ -87,17 +104,21 @@ export function ProofColumn({ on, version, className }: { on: boolean; version: 
   return (
     <div className={cx('proof', on && 'on', className)} data-version={version}>
       <div className="pf-box">
-        <div className="pf-h">see the code</div>
-        <QR text={v.code} size={244} ecc="Q" logo="github" />
+        <div className="pf-h">
+          <Mark kind="github" /> see the code
+        </div>
+        <QR text={v.code} size={246} ecc={ECC} logo={LOGO ? 'github' : undefined} logoArea={LOGO_AREA} />
         <div className="pf-t">program/src/lib.rs line {v.line}</div>
-        <div className="pf-row">
-          <QR text={SOLSCAN_PROGRAM} size={130} ecc="L" />
-          <span>on Solscan</span>
+        <QR text={SOLSCAN_PROGRAM} size={226} ecc={ECC} />
+        <div className="pf-s">
+          <Mark kind="solscan" /> on Solscan
         </div>
       </div>
       <div className="pf-box">
-        <div className="pf-h">proof it works</div>
-        <QR text={txUrl(v.tx)} size={244} ecc="Q" logo="solscan" />
+        <div className="pf-h">
+          <Mark kind="solscan" /> proof it works
+        </div>
+        <QR text={txUrl(v.tx)} size={246} ecc={ECC} logo={LOGO ? 'solscan' : undefined} logoArea={LOGO_AREA} />
         <div className="pf-t">devnet tx {v.tx.slice(0, 8)}…</div>
       </div>
     </div>
