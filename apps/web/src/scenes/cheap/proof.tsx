@@ -151,3 +151,20 @@ export function ProofColumn({ on, version, staged = false, className }: { on: bo
     </div>
   );
 }
+
+/** a single link box in the same column style: heading with a mark, QR, the file and line under it */
+export function LinkBox({ title, url, text, mark = 'github' }: { title: string; url: string; text: string; mark?: LogoKind }) {
+  return (
+    <div className="pf-box">
+      <div className="pf-h">
+        <Mark kind={mark} /> {title}
+      </div>
+      <QR text={url} size={246} ecc={ECC} />
+      <div className="pf-t">{text}</div>
+    </div>
+  );
+}
+
+export function LinkColumn({ on, children }: { on: boolean; children: React.ReactNode }) {
+  return <div className={cx('proof', on && 'on')}>{children}</div>;
+}
