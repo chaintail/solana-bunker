@@ -1,3 +1,4 @@
+import logo from '../../assets/chaintail-logo.svg';
 import { CStamp } from '../../components/bits';
 import type { SceneDef, SceneProps } from '../../types';
 import './c0.css';
@@ -49,10 +50,18 @@ function Opener({ at }: SceneProps) {
       <TabBar />
       <div className="c0-card loop">
         <div className="c0-warn">WARNING</div>
-        <CStamp on={at('stamp')} x={960} y={720} size={124} r={-1.5} d={40}>
+        <CStamp on={at('stamp')} x={960} y={590} size={124} r={-1.5} d={40}>
           CONTAINS MATH
         </CStamp>
       </div>
+      {/* title: cheap text, the logo is the polished element */}
+      <div className="c0-by">
+        <div className="c0-by-1">R&amp;D from Chaintail Labs:</div>
+        <div className="c0-by-2">Solana Bunker</div>
+      </div>
+      <img className="c0-logo" src={logo} alt="Chaintail" draggable={false} />
+      {/* the slide number sits under the tab strip (the opener hides the deck chrome) */}
+      <div className="slide-no c0-no">SLIDE 1</div>
       <Cursor />
     </>
   );

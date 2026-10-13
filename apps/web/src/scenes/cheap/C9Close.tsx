@@ -1,26 +1,43 @@
-import { encode } from 'uqr';
+import logo from '../../assets/chaintail-logo.svg';
+import { Door } from '../../components/Door';
 import type { SceneDef } from '../../types';
-import './c89.css';
+import { QR } from './proof';
+import './c9.css';
+
+/** brand lines; Liam may switch the product line to "Solana Bunker" */
+export const BRAND = 'Chaintail Labs R&D';
+export const BRAND_PRODUCT = 'Solana Vault';
 
 const REPO = 'https://github.com/chaintail/solana-bunker';
-const QR = encode(REPO, { ecc: 'M', border: 0 });
+const TELEGRAM = 'https://t.me/chaintail';
+/* highest error correction; the logo covers at most this share of the code (verified to decode, see report) */
+const LOGO_AREA = 0.16;
 
 function Close() {
-  let d = '';
-  QR.data.forEach((row, y) => row.forEach((on, x) => on && (d += `M${x},${y}h1v1h-1z`)));
-  const n = QR.size;
   return (
     <>
-      <a className="c9-qr" href={REPO} target="_blank" rel="noreferrer" data-noadvance>
-        <svg viewBox={`-2 -2 ${n + 4} ${n + 4}`} shapeRendering="crispEdges" aria-label={REPO}>
-          <rect x={-2} y={-2} width={n + 4} height={n + 4} fill="#fff" />
-          <path d={d} fill="#000" />
-        </svg>
+      <div className="c9-parch">
+        <div className="paper mottle" />
+        <div className="paper grain" />
+        <div className="paper vig" />
+      </div>
+      <div className="c9-brand">
+        <div className="c9-b1">{BRAND}</div>
+        <div className="c9-b2">{BRAND_PRODUCT}</div>
+      </div>
+      <img className="c9-lemur" src={logo} alt="Chaintail" draggable={false} />
+      <div className="c9-door">
+        <Door className="door3" />
+      </div>
+      <a className="c9-q c9-gh" href={REPO} target="_blank" rel="noreferrer" data-noadvance>
+        <QR text={REPO} size={372} ecc="H" logo="github" logoArea={LOGO_AREA} dark="#1c1a17" light="#f7f1e3" />
+        <span>{REPO}</span>
       </a>
-      <a className="c9-url" href={REPO} target="_blank" rel="noreferrer" data-noadvance>
-        github.com/chaintail/solana-bunker
+      <a className="c9-q c9-tg" href={TELEGRAM} target="_blank" rel="noreferrer" data-noadvance>
+        <QR text={TELEGRAM} size={372} ecc="H" logo="telegram" logoArea={LOGO_AREA} dark="#1c1a17" light="#f7f1e3" />
+        <span>{TELEGRAM}</span>
       </a>
-      <div className="c9-name">Liam</div>
+      <div className="c9-ask">Feel free to reach out with any questions!</div>
     </>
   );
 }

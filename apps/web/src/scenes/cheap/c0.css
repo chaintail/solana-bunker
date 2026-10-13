@@ -1,4 +1,4 @@
-.c0-warn{position:absolute;left:0;right:0;top:320px;text-align:center;font:700 200px/1 Arial,Helvetica,sans-serif;color:#ff0000;opacity:0}
+.c0-warn{position:absolute;left:0;right:0;top:220px;text-align:center;font:700 200px/1 Arial,Helvetica,sans-serif;color:#ff0000;opacity:0}
 .r-warn .c0-warn{opacity:1}
 .a-warn .c0-warn{animation:c0-flash 900ms linear both}
 @keyframes c0-flash{0%{opacity:1}19.9%{opacity:1}20%{opacity:0}39.9%{opacity:0}40%{opacity:1}59.9%{opacity:1}60%{opacity:0}79.9%{opacity:0}80%{opacity:1}100%{opacity:1}}
@@ -34,3 +34,10 @@
 .r-stop .c0-card{animation:c0-shake 1500ms linear 700ms infinite}
 @keyframes c0-shake{0%,48%,100%{transform:none}4%{transform:translate(-14px,3px) rotate(-.6deg)}10%{transform:translate(13px,-3px) rotate(.6deg)}16%{transform:translate(-11px,2px) rotate(-.4deg)}
   22%{transform:translate(10px,-2px) rotate(.4deg)}28%{transform:translate(-7px,1px)}34%{transform:translate(6px,0)}40%{transform:translate(-3px,0)}}
+
+/* title: R&D from Chaintail Labs / Solana Bunker, logo bottom right */
+.c0-by{position:absolute;right:380px;bottom:70px;text-align:right;color:#000;font-family:Arial,Helvetica,sans-serif}
+.c0-by-1{font:400 48px/1.1 Arial,Helvetica,sans-serif}
+.c0-by-2{font:700 118px/1 Arial,Helvetica,sans-serif;margin-top:6px}
+.c0-logo{position:absolute;right:50px;bottom:56px;width:300px;height:auto;display:block}
+.slide-no.c0-no{top:128px}
