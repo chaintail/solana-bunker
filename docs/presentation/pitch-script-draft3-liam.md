@@ -133,3 +133,5 @@ each version better than the last.
 - Executive order: **Executive Order 14365, "Inaugurating The Era of Super Intelligence", signed 2026-09-29**, directs agencies to use "Super Intelligence"/"SI" for "artificial intelligence"/"AI" in non-statutory documents. Same day as the tech-CEO White House meeting. Sources: White House fact sheet, CNBC, Forbes.
 - Physical Review records checked: **9,923 records, 1920 to 1947**. Fission-title papers: 54 in 1939–41, **0 in 1942–44** (0 of 543). Plutonium paper received 1941, published 1946 (Phys. Rev. 70, 555).
 - OpenAI drop: **719 manuscripts, 17 disciplines, 0 explicitly cryptographic** (strict count).
+- Timeline bars (fission in the title, Physical Review, per year): 1936 0, 1937 0, 1938 0, 1939 17, 1940 22, 1941 17, 1942 0, 1943 0, 1944 0, 1945 2, 1946 6, 1947 18. Source: docs/research-story/visualizations.json, chart `historical_publication_trend`, subject `fission_title`.
+- Design rule (Liam, 15589): 90% of the information on every step must be understandable at 426x240.
