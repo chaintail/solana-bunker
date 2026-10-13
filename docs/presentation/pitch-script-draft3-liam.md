@@ -225,6 +225,105 @@ A timing attack!
 And it all worked as coded.
 The vault does not know the difference.
 
+## Beat 6, a signature made of hashes
+
+### SLIDE 6
+
+Okay,
+this is where things
+
+> flash "*the math*" for 500ms
+
+start to get cool
+
+The problem with versions one and two is that a secret is just a password.
+
+Whoever shows the password first gets into the vault
+
+But PASSWORD says nothing about where money should go. So if someone steals it on the way to the vault they can get in first!
+
+> show our high quality vault on right side of screen with bouncer outside
+> devil bandit whispers secret and gets let in. or maybe we use a tavern door with sliding slot?
+
+What we actually want is a SIGNATURE.
+
+> bouncer fly off screen
+
+Something that says: this exact withdrawal, to this exact address, and nothing else.
+
+> show a paper form with field maybe
+> fill in to: $xxxx amount: $xxxx
+> then quill signs paper. Paper gets handed through the door and it opens.
+
+### SLIDE 7
+
+And lucky for us, it turns out you can build a signature out of nothing but hash functions.
+> show tweet again and highlight a part about hash-based signatures
+
+No curves at all.
+
+Shout out to Leslie Lamport who figured this out in 1979.
+Yes, that Lamport, the namesake for the smallest unit of Solana.
+
+Unfortunately Lamport signatures are massive
+> some animation to represent them
+> then show their size in bytes
+
+But Winternitz made these smaller,
+with hash chains.
+> morph the lamport representation into chains
+
+Merkle put thousands of those one time keys into a tree.
+
+That whole thing is called XMSS,
+it is a NIST standard,
+and it is what we built for version three.
+
+> show NIST logo
+
+So now when the attacker copies our transaction and swaps the destination, the signature does not match anymore, and the program throws it out.
+
+> back to slide 6 visuals, devil bandit tries to sign similar form but his signature is different. Door slit slams shut? Or maybe we have a bouncer?
+
+## Beat 7, one transaction, and re-keying
+
+XMSS signatures seem awesome. They are way smaller…
+
+> show Lamport and byte size large number
+> then fade out Lamport replace with XMSS
+> number tick down to 2,750 bytes
+
+But… damn that 1,232 byte transaction size limit!
+
+> Then show in large 2,750 > 1,232
+
+Sigh… i guess we could use temporary data accounts to upload signatures in pieces, but from our research that took 5 transactions just to do a simple withdrawal!
+
+> show Bunker Program 003-a
+> show proof boxes
+
+That's not cool…
+
+> large text Solana Transactions V1 to the rescue!
+> flash a brand new label above this
+> then have the 1,232 number tick up to 4096
+> the > sign grows and rotates and shrinks back to be flipped <
+
+So we rebuilt it.
+
+> Bunker Program 003-a throw away the -a, fly in -b. The -b grows and settles in
+> old proof boxes grow and shrink to disappear one after another.
+> new proof boxes pop into their places
+
+One transaction,
+thirty one hundred bytes,
+about half a million compute units,
+and the full signature verifies on chain in a single shot.
+
+> then show a table of all the different transactions we built for rotation, mock usdc etc.
+
+> turn this into a text box on screen: And because every one time key gets used exactly once, the vault keeps a bitmap of which leaves are spent. When you run low, or you just get paranoid, you sign one more message that installs a brand new tree. New root, new keys, same address, same balance. The new tree comes from the same twelve word seed phrase, just the next generation. So recovery is one instruction: rotate.
+
 ---
 
 ## Fact fills (composer, verified)
@@ -237,3 +336,4 @@ The vault does not know the difference.
 - Slide 5 rent: array state at 1,024 leaves is 33,126 bytes; measured setup rent **234,433,680 lamports = 0.234 SOL** over 38 transactions. Merkle version: 6,591,120 lamports = 0.0066 SOL over 2 transactions (research/results-summary.md). The SHA-256 call in the program is the `hashv` syscall from `solana_program::hash` (program/src/lib.rs line 108).
 - "See the code" box (Liam, 15606): each time a new program version appears, top right: QR with GitHub logo to the mode's line in program/src/lib.rs (001 array line 113, 002 Merkle line 114, 003 XMSS line 118, links on branch main) plus a Solscan QR for the devnet program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V.
 - "Proof it works" box (Liam, 15607): under the see-the-code box, Solscan QR to the confirmed devnet SOL withdrawal for that version: 001 `5mHxtbGL…`, 002 `5XPHXjBK…`, 003 `CiZmcGsa…` (full signatures in artifacts/public-deployment.json).
+- Slides 6–7 facts: Lamport signature for a 256-bit digest with SHA-256 = 256 revealed 32-byte secrets = **8,192 bytes** (public key 16,384 bytes). XMSS-SHA2_10_256 signature = **2,500 bytes** (not 2,750). Legacy transaction cap **1,232 bytes**; v1 cap **4,096**. Staged transport = **5 transactions** (stage create, three uploads, execute), measured on the local SVM only, no devnet proof transactions exist for it. Inline v1 SOL withdraw: **3,117 bytes, 518,509 CU**. Tweet lines mentioning hash-based schemes: lines 21, 23, 25 of drake-tweet.txt (SPHINCS; "go all-in on hash-based cryptography"; roadmap).
