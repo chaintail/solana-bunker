@@ -28,7 +28,7 @@ export const TWEET = {
   },
   /** "fresh addresses" ... "addresses that have never signed a transaction" */
   fresh: {
-    region: [10, 500, 1180, 1118] as [number, number, number, number],
+    region: [10, 500, 1230, 1118] as [number, number, number, number],
     lines: [
       [1040, 1142, 542],
       [27, 266, 617],

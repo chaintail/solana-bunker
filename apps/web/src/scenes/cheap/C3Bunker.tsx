@@ -31,6 +31,7 @@ const SPLIT = wobLine([982, -10], [944, 1090], 5, 61, 7);
 
 /* the polished odometer: real carry behaviour, keeps ticking while shown */
 const DIGITS = 7;
+const CELL = 104; // drum cell height, px (matches .odo-win)
 function Odometer({ run }: { run: boolean }) {
   const drums = useRef<(HTMLSpanElement | null)[]>([]);
   useEffect(() => {
@@ -40,7 +41,7 @@ function Odometer({ run }: { run: boolean }) {
         const d = Math.floor(v / p) % 10;
         const frac = i === 0 ? v % 1 : Math.max(0, (v % p) - (p - 1));
         const el = drums.current[DIGITS - 1 - i];
-        if (el) el.style.transform = `translateY(${-(d + frac) * 10}%)`;
+        if (el) el.style.transform = `translateY(${-(d + frac) * CELL}px)`;
       }
     };
     if (!run) {
@@ -172,7 +173,7 @@ function Bunker({ at, cur, active }: SceneProps) {
         <div className="c3-vl" style={{ left: 1320 }}>
           V2
         </div>
-        <div className="c3-vl" style={{ left: 1610 }}>
+        <div className="c3-vl c3-v3l" style={{ left: 1610 }}>
           V3
         </div>
       </div>

@@ -23,10 +23,10 @@
 
 /* the cursor drifts toward the close button, then stops just short of it */
 .c0-cursor{position:absolute;left:0;top:0;z-index:20;opacity:0;filter:drop-shadow(0 4px 5px rgba(0,0,0,.3));transform:translate(1500px,880px)}
-.r-close .c0-cursor{opacity:1;transform:translate(1040px,330px);transition:transform 3800ms cubic-bezier(.35,.1,.45,1),opacity 200ms linear}
+.r-close .c0-cursor{opacity:1;transform:translate(1180px,236px);transition:transform 3800ms cubic-bezier(.35,.1,.45,1),opacity 200ms linear}
 .r-stop .c0-cursor{transform:translate(872px,96px)}
 .a-stop .c0-cursor{animation:c0-stop 900ms cubic-bezier(.3,.9,.4,1) both}
-@keyframes c0-stop{0%{transform:translate(1040px,330px)}62%{transform:translate(860px,80px)}78%{transform:translate(876px,100px)}100%{transform:translate(872px,96px)}}
+@keyframes c0-stop{0%{transform:translate(1180px,236px)}62%{transform:translate(860px,80px)}78%{transform:translate(876px,100px)}100%{transform:translate(872px,96px)}}
 .lite .c0-cursor{filter:none}
 
 /* ...while the cheap card shakes */
