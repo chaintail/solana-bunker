@@ -163,11 +163,67 @@ If it matches, the vault lets you in and crosses that one off.
 
 Pretty simple, eh?
 Sure, keeping track of a thousand one time passwords is annoying
-But the real pain in the a– wallet is storing them all on chain
+But the real pain in the a– … wallet is storing them all on chain
 
-> show RENT: XXX SOL
+> show RENT:
+> 33,000 bytes -> XXX SOL!
 
 and that is why we built version two.
+
+## Beat 5, version two, robbed
+
+### SLIDE 5 continues
+
+So we go to the standard whenever you want to compress data on chain
+A merkle tree!
+
+> slash the title Bunker Program ~001~ 002
+
+Same thousand secrets, but now we commit them as a single Merkle root.
+
+> all the squares fly around wildly for a second group together then line up (we don't need to keep all 1000 add … along leaves row at bottom)
+> and show tree grow above.
+> then dim the tree and highlight the root node.
+
+Thirty three thousand bytes of storage
+becomes three hundred ninety.
+
+> large 33,000
+> ticks down to 390
+> slash the XXX SOL and show new rent
+
+And it's time to celebrate. Our funds are safe in the Bunker.
+Let's spend some…
+
+> oh i guess we should have an RPC on the slide somewhere.
+> highlight another secret. secret_x moves to user, wraps in box with TX on it.
+> TX box moves to RPC (same as previous withdraw)
+> TX box slowly moves out of RPC towards the Program
+> then a red stick figure head peak up from bottom of screen with devil horns
+> a Red TX box fly up with swooping motion. This red TX box also have devil horns
+> swoop past our slow moving black TX and pass it and enter Program box first.
+> pass through hash box, move to a leaf node and cross it out… or maybe we show bit map representation on far right hand side inside program box, don't need to talk about it here. Can have text box (this doesn't need to be tiny screen readable) describing the used nonce tracking
+
+oh crap. What the flip happened there?
+We got robbed!
+
+Here is the THEORETICAL problem.
+
+It is unlikely, especially with the crazy fast block times on solana,
+but if an attacker can see our transaction before it lands,
+
+> large text in middle of screen for a second
+> and has already broken Ed25519 (literally I want the * in the text we show)
+
+they copy our secret,
+swap the destination,
+pay a bigger fee,
+and beat our transaction!
+
+A timing attack!
+
+And it all worked as coded.
+The vault does not know the difference.
 
 ---
 
