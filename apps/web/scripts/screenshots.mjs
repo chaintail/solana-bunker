@@ -63,6 +63,7 @@ for (const [w, h] of sizes) {
   await send('Page.navigate', { url: base + (process.env.FULL ? '' : '?lite') + '#0-0' });
   await sleep(2500);
   await evalJs('document.fonts.ready.then(()=>1)');
+  if (process.env.NO_SWITCH) await evalJs(`(()=>{const s=document.createElement('style');s.textContent='.deck-switch{display:none!important}';document.head.appendChild(s);return 1})()`);
   const plan = await evalJs('JSON.stringify(window.__deck && window.__deck.plan())');
   if (!plan) throw new Error('window.__deck missing');
   for (const route of ['pitch', 'technical']) {
