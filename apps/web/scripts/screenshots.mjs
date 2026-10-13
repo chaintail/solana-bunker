@@ -66,8 +66,8 @@ for (const [w, h] of sizes) {
   const plan = await evalJs('JSON.stringify(window.__deck && window.__deck.plan())');
   if (!plan) throw new Error('window.__deck missing');
   for (const route of ['pitch', 'technical']) {
-    for (const sc of JSON.parse(plan)) {
-      const n = route === 'pitch' ? sc.pitch : sc.technical;
+    for (const [i, n] of JSON.parse(plan)[route].entries()) {
+      const sc = { i };
       if (process.env.ROUTES && !process.env.ROUTES.includes(route)) continue;
       for (let s = 0; s < n; s++) {
         const name = `${w}x${h}_${route === 'technical' ? 't' : 'p'}_${String(sc.i).padStart(2, '0')}-${String(s).padStart(2, '0')}`;

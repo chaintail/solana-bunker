@@ -20,6 +20,8 @@ interface Shown {
 }
 
 export type Decks = Record<Route, SceneDef[]>;
+/** for each route, the index of the matching scene in the other route (decks may differ in length) */
+export type Twins = Record<Route, number[]>;
 
 function parseHash(decks: Decks): Pos | null {
   const m = location.hash.match(/^#(\d+)-(\d+)(-t)?$/);
@@ -31,7 +33,7 @@ function parseHash(decks: Decks): Pos | null {
   return { scene, step: Math.min(+m[2], n - 1), route };
 }
 
-export function useDeck(decks: Decks) {
+export function useDeck(decks: Decks, twins?: Twins) {
   const initial = useMemo<Pos>(() => {
     const h = parseHash(decks);
     if (h) return h;
@@ -43,7 +45,7 @@ export function useDeck(decks: Decks) {
   }, [decks]);
   const [pos, setPos] = useState<Pos>(initial);
   const [shown, setShown] = useState<Shown[]>(() =>
-    decks.pitch.map((_, i) => ({ idx: i === initial.scene ? initial.step : -1, instant: true, anim: false })),
+    Array.from({ length: Math.max(decks.pitch.length, decks.technical.length) }, (_, i) => ({ idx: i === initial.scene ? initial.step : -1, instant: true, anim: false })),
   );
   const [cut, setCut] = useState(true);
   const posRef = useRef(pos);
@@ -108,7 +110,8 @@ export function useDeck(decks: Decks) {
       if (route === p.route) return;
       const sc = decks[p.route][p.scene];
       const id = stepsFor(sc, p.route)[p.step].id;
-      const target = decks[route][p.scene];
+      const ti = Math.min(twins?.[p.route]?.[p.scene] ?? p.scene, decks[route].length - 1);
+      const target = decks[route][ti];
       const list = stepsFor(target, route);
       let step = list.findIndex((s) => s.id === id);
       if (step < 0 && target !== sc) step = 0;
@@ -119,9 +122,11 @@ export function useDeck(decks: Decks) {
         while (k > 0 && all[k].tech) k--;
         step = Math.max(0, list.findIndex((s) => s.id === all[k].id));
       }
-      go({ scene: p.scene, step, route }, 'jump');
+      // the other deck's scenes start fresh (decks differ in length and step counts)
+      setShown((s) => s.map(() => ({ idx: -1, instant: true, anim: false })));
+      go({ scene: ti, step, route }, 'jump');
     },
-    [go, decks],
+    [go, decks, twins],
   );
 
   const home = useCallback(() => go({ ...posRef.current, scene: 0, step: 0 }, 'jump'), [go]);

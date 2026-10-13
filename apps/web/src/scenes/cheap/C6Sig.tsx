@@ -2,6 +2,7 @@ import { CStamp, cx } from '../../components/bits';
 import type { SceneDef, SceneProps } from '../../types';
 import { Arrow } from './C1Warning';
 import { Robber } from './clip';
+import { ProofColumn } from './proof';
 import './c6.css';
 
 function Tree() {
@@ -24,6 +25,7 @@ function Sig({ at }: SceneProps) {
   const attack = at('attack');
   return (
     <>
+      <ProofColumn on version="003" />
       <h1 className="ch-title">A signature made of hashes</h1>
       <div className={cx('c6-col c6-lam', attack && 'dim')}>
         <div className="c6-h">Lamport</div>
@@ -80,7 +82,7 @@ function Sig({ at }: SceneProps) {
           Check: <b className="c-red">FAIL</b>
         </div>
       </div>
-      <CStamp on={attack} x={1500} y={962} size={100} d={500}>
+      <CStamp on={attack} x={1240} y={962} size={100} d={500}>
         REJECTED
       </CStamp>
     </>

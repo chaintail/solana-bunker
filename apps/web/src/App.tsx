@@ -2,14 +2,14 @@ import { useMemo, useRef } from 'react';
 import { Defs } from './components/Defs';
 import { cx, Header } from './components/bits';
 import { stepsFor, useDeck, useFit, useInput } from './engine';
-import { DECKS } from './scenes';
+import { DECKS, TWINS } from './scenes';
 import type { Route, SceneDef } from './types';
 
 function SceneFrame({ def, num, total, idx, instant, anim, active, cut, route }: { def: SceneDef; num: number; total: number; idx: number; instant: boolean; anim: boolean; active: boolean; cut: boolean; route: Route }) {
   const steps = stepsFor(def, route);
   const reached = steps.slice(0, idx + 1).map((s) => s.id);
   const set = useMemo(() => new Set(reached), [reached.join(' ')]);
-  const cur = idx >= 0 ? steps[idx].id : '';
+  const cur = idx >= 0 ? steps[Math.min(idx, steps.length - 1)].id : '';
   return (
     <section
       id={`s-${def.key}`}
@@ -25,11 +25,11 @@ function SceneFrame({ def, num, total, idx, instant, anim, active, cut, route }:
 
 declare global {
   interface Window {
-    __deck?: { plan: () => { i: number; pitch: number; technical: number }[]; overflow: () => string[] };
+    __deck?: { plan: () => Record<Route, number[]>; overflow: () => string[] };
   }
 }
 window.__deck = {
-  plan: () => DECKS.pitch.map((s, i) => ({ i, pitch: stepsFor(s, 'pitch').length, technical: stepsFor(DECKS.technical[i], 'technical').length })),
+  plan: () => ({ pitch: DECKS.pitch.map((s) => stepsFor(s, 'pitch').length), technical: DECKS.technical.map((s) => stepsFor(s, 'technical').length) }),
   overflow: () => {
     const st = document.getElementById('stage')!.getBoundingClientRect();
     const bad: string[] = [];
@@ -44,7 +44,7 @@ window.__deck = {
 export function App() {
   const stage = useRef<HTMLDivElement>(null);
   useFit(stage);
-  const deck = useDeck(DECKS);
+  const deck = useDeck(DECKS, TWINS);
   const { pos, shown, cut } = deck;
   const posRoute = useRef(pos.route);
   posRoute.current = pos.route;
