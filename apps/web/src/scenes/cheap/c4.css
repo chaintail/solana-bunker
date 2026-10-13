@@ -1,0 +1,87 @@
+/* ---------- slide 5: version one ---------- */
+.c4-svg{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:visible;pointer-events:none}
+
+/* 1. hash tour: column scrolls to three spots, the lens follows */
+.c4-tour{opacity:0;transition:opacity 250ms linear}
+.c4-tour.on{opacity:1}
+.c4-col{position:absolute;overflow:hidden;border-radius:18px;background:#000;box-shadow:0 0 0 2px #2f3336,0 24px 50px -24px rgba(0,0,0,.6)}
+.c4-colin{position:absolute;left:0;top:0;width:100%;transform:translateY(var(--s3))}
+.c4-colin img{display:block}
+.a-hash .c4-colin{animation:c4-scroll 4000ms both}
+@keyframes c4-scroll{0%,40%{transform:translateY(var(--s1));animation-timing-function:cubic-bezier(.5,0,.3,1)}50%,82.5%{transform:translateY(var(--s2));animation-timing-function:cubic-bezier(.5,0,.3,1)}92.5%,100%{transform:translateY(var(--s3))}}
+.c4-hw{position:absolute;background:#ffe14d;mix-blend-mode:difference;border-radius:3px;opacity:1}
+.a-hash .c4-hw{animation:c4-in 200ms linear calc(200ms + var(--i) * 60ms) both}
+@keyframes c4-in{from{opacity:0}to{opacity:1}}
+.c4-t{opacity:0;transform:scale(.86)}
+.r-hash .c4-t3{opacity:1;transform:none}
+.r-hash .c4-t3 .hl-strokes path{stroke-dashoffset:0}
+.a-hash .c4-t1{animation:c4-lens 1450ms ease 200ms both}
+.a-hash .c4-t2{animation:c4-lens 1350ms ease 2000ms both}
+.a-hash .c4-t3{animation:c4-lens-in 420ms cubic-bezier(.2,1.3,.4,1) 3700ms both}
+@keyframes c4-lens{0%{opacity:0;transform:scale(.86)}18%{opacity:1;transform:none}88%{opacity:1;transform:none}100%{opacity:0;transform:scale(.96)}}
+@keyframes c4-lens-in{from{opacity:0;transform:scale(.86)}to{opacity:1;transform:none}}
+.c4-t .hl-strokes path{transition:none}
+.a-hash .c4-t1 .hl-strokes path{animation:c4-hl 380ms cubic-bezier(.5,0,.6,1) calc(650ms + var(--i) * 300ms) both}
+.a-hash .c4-t2 .hl-strokes path{animation:c4-hl 380ms cubic-bezier(.5,0,.6,1) calc(2450ms + var(--i) * 300ms) both}
+.a-hash .c4-t3 .hl-strokes path{animation:c4-hl 380ms cubic-bezier(.5,0,.6,1) calc(4150ms + var(--i) * 300ms) both}
+@keyframes c4-hl{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+
+/* 2. code */
+.c4-code>*{opacity:0;transition:opacity 220ms linear}
+.c4-code.on>*{opacity:1}
+.c4-code-l{position:absolute;left:0;right:0;top:250px;text-align:center;font:700 80px/1 Arial,Helvetica,sans-serif;color:#000}
+.c4-code-b{position:absolute;left:250px;width:1420px;top:410px;margin:0;padding:44px 54px;box-sizing:border-box;border:6px solid #000;background:#fff;
+  font:400 64px/1.25 'PT Mono','Courier New',monospace;color:#000;white-space:pre}
+
+/* 3. stick figure, program */
+.c4-prog>*{opacity:0;transition:opacity 220ms linear}
+.c4-prog.on>*{opacity:1}
+.c4-stick{stroke:#000}
+.c4-rect{position:absolute;left:980px;top:126px;width:900px;height:920px;border:6px solid #000;box-sizing:border-box;background:#fff}
+.c4-rect-t{position:absolute;left:24px;top:22px;font:700 54px/1 Arial,Helvetica,sans-serif;color:#000;white-space:nowrap}
+.c4-coin{position:absolute;left:0;top:0;transform:translate(var(--x),140px)}
+.a-program .c4-coin{animation:c4-fly 700ms cubic-bezier(.4,0,.4,1) var(--d) both}
+@keyframes c4-fly{0%{opacity:0;transform:translate(230px,200px) scale(.8)}10%{opacity:1}55%{transform:translate(calc((var(--x) + 230px) / 2),-20px) scale(1.15)}100%{opacity:1;transform:translate(var(--x),140px)}}
+
+/* 4. list, grid */
+.c4-li{position:absolute;font:400 50px/1 'PT Mono','Courier New',monospace;color:#000;white-space:nowrap;opacity:0;transition:opacity 200ms linear var(--d),color 300ms linear}
+.c4-list.on .c4-li{opacity:1}
+.c4-list.dim .c4-li{opacity:.3;transition-delay:0ms}
+.c4-grid .c4-cell{position:absolute;width:20px;height:20px;box-sizing:border-box;border:2px solid #0000ff;background:#fff;opacity:0;transition:opacity 150ms linear var(--g)}
+.c4-grid.on .c4-cell{opacity:1}
+.c4-grid.full .c4-cell{background:#0000ff}
+.a-cascade .c4-grid .c4-cell{animation:c4-fill 120ms linear var(--d) both}
+@keyframes c4-fill{from{background:#fff}to{background:#0000ff}}
+
+/* 5. cascade */
+.c4-math{position:absolute;display:flex;align-items:center;justify-content:center;background:#000;color:#fff;font:700 80px/1 Arial,Helvetica,sans-serif;opacity:0;transition:opacity 200ms linear}
+.c4-math.on{opacity:1}
+.c4-chip,.c4-sq{position:absolute;left:0;top:0;opacity:0;pointer-events:none;z-index:20}
+.c4-chip{font:700 44px/1 'PT Mono','Courier New',monospace;color:#000;background:#ffe14d;padding:4px 8px;white-space:nowrap}
+.c4-sq{width:20px;height:20px;background:#0000ff}
+.a-cascade .c4-chip{animation:c4-go 450ms cubic-bezier(.5,0,.8,.6) var(--d) forwards}
+.a-cascade .c4-sq{animation:c4-go2 450ms cubic-bezier(.2,.4,.4,1) var(--d) forwards}
+@keyframes c4-go{0%{opacity:1;transform:translate(var(--fx),var(--fy))}85%{opacity:1}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(.6)}}
+@keyframes c4-go2{0%{opacity:1;transform:translate(var(--fx),var(--fy))}90%{opacity:1}100%{opacity:0;transform:translate(var(--tx),var(--ty))}}
+
+/* 6. spend */
+.c4-spend{position:absolute;left:0;top:0;z-index:25;font:700 50px/1 'PT Mono','Courier New',monospace;color:#000;background:#ffe14d;padding:4px 10px;white-space:nowrap;
+  opacity:0;transform:translate(var(--fx),var(--fy))}
+.r-spend .c4-li.first{opacity:1;background:#ffe14d}
+.a-spend .c4-spend{animation:c4-spend 1700ms cubic-bezier(.45,0,.4,1) both}
+@keyframes c4-spend{0%{opacity:1;transform:translate(var(--fx),var(--fy))}40%,50%{opacity:1;transform:translate(var(--hx),var(--hy))}92%{opacity:1;transform:translate(var(--tx),var(--ty)) scale(.7)}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(.5)}}
+.c4-cross{opacity:0}
+.c4-cross.on{opacity:1;transition:opacity 80ms linear 1650ms}
+.r-spend .c4-c0{background:#fff!important}
+.c4-back{position:absolute;left:0;top:0;z-index:24;opacity:0;transform:translate(var(--tx),var(--ty))}
+.c4-back.on{opacity:1}
+.a-spend .c4-back{animation:c4-back 750ms cubic-bezier(.4,0,.3,1) 1800ms both}
+@keyframes c4-back{0%{opacity:1;transform:translate(var(--fx),var(--fy))}55%{transform:translate(calc((var(--fx) + var(--tx)) / 2),20px) scale(1.2)}100%{opacity:1;transform:translate(var(--tx),var(--ty))}}
+
+/* 7. rent */
+.c4-rent{position:absolute;left:260px;width:1400px;top:330px;padding:40px 0 46px;border:8px solid #000;background:#fff;text-align:center;z-index:70;opacity:0;transform:scale(.6);
+  transition:opacity 120ms linear,transform 260ms cubic-bezier(.3,1.6,.5,1)}
+.c4-rent.on{opacity:1;transform:none}
+.c4-rent-b{font:700 160px/1 Arial,Helvetica,sans-serif;color:#ff0000}
+.c4-rent-s{margin-top:26px;font:400 48px/1 Arial,Helvetica,sans-serif;color:#000}
+.r-spend .c4-coin0{opacity:0!important}

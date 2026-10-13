@@ -171,3 +171,4 @@ a{color:inherit}
 .deck-switch.dossier{background:var(--manila);color:var(--ink);font-family:var(--mono);letter-spacing:.04em;border:1px solid rgba(70,52,20,.35)}
 /* short landscape screens (e.g. 426x240): no letterbox to sit in, so keep the switch small */
 @media (orientation:landscape) and (max-height:420px){.deck-switch{min-height:26px;line-height:26px;font-size:11px;padding:0 8px;opacity:.85}}
+@media (max-height:300px){.deck-switch{display:none}}

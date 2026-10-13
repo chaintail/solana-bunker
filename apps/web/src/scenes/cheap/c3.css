@@ -29,13 +29,13 @@
 .c3-photo img{width:100%;height:100%;object-fit:cover;display:block}
 .c3-cap{position:absolute;left:1020px;top:612px;width:880px;font:400 44px/1.15 Arial,Helvetica,sans-serif;color:#000}
 .c3-cap1{font-weight:700;font-size:48px}
-.c3-cap2{margin-top:64px;font:700 76px/1 Arial,Helvetica,sans-serif;white-space:nowrap}
+.c3-cap2{margin-top:96px;font:700 76px/1 Arial,Helvetica,sans-serif;white-space:nowrap}
 .c3-cap3{margin-top:22px;font-size:44px}
 .c3-art{position:relative;display:inline-block}
 .c3-strike{position:absolute;left:-8px;top:0;width:calc(100% + 16px);height:100%;overflow:visible;opacity:0}
 .c3-strike path{fill:none;stroke:#e00000;stroke-width:13;stroke-linecap:round}
 .c3-strike.on{opacity:1}
-.c3-super{left:50%;top:-46px;font-size:60px;transition:none!important;transform:translate(-50%,-50%) rotate(-6deg)!important}
+.c3-super{left:50%;top:-50px;font-size:60px;transition:none!important;transform:translate(-50%,-50%) rotate(-6deg)!important}
 .c3-super.on{opacity:1}
 
 /* tokens: polished odometer beside cheap voice note bubbles */

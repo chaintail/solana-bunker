@@ -35,6 +35,9 @@ out.save('src/assets/drake-tweet-stitched.jpg', quality=62, optimize=True, progr
 # mode so a yellow highlighter can sit under the words (multiply blend).
 ImageOps.invert(src['1-top'].crop((0, 230, 1290, 1160))).save('src/assets/tweet-lens-1.jpg', quality=82, optimize=True)
 src['7'].crop((0, 1030, 1290, 1720)).save('src/assets/tweet-lens-7.jpg', quality=80, optimize=True)
+# slide 5: the "hash" tour (tweet-5 is 979 px wide)
+ImageOps.invert(src['5'].crop((0, 0, 979, 340))).save('src/assets/tweet-lens-5.jpg', quality=82, optimize=True)
+ImageOps.invert(src['6'].crop((0, 1230, 1290, 1970))).save('src/assets/tweet-lens-6.jpg', quality=82, optimize=True)
 
 Image.open(f'{A}bankless-thumb-phone-screenshot.png').convert('RGB').save('src/assets/bankless-thumb-phone.jpg', quality=80)
 print(out.size)

@@ -127,7 +127,7 @@ function Papers({ at }: SceneProps) {
         <div className="mk c2-qq" style={{ left: CX - 470, top: CY + 120 }}>
           ???
         </div>
-        <div className="mk c2-qw" style={{ left: CX - 600, top: CY + 226 }}>
+        <div className="mk c2-qw" style={{ left: CX - 680, top: CY + 244 }}>
           cryptography
         </div>
       </div>

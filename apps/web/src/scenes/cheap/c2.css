@@ -11,7 +11,7 @@
 .c2-q.on{opacity:1}
 .c2-q.on .draw1{stroke-dashoffset:0}
 .c2-qq{position:absolute;font-size:110px;line-height:1;transform:rotate(-6deg);opacity:0;transition:opacity 150ms linear 820ms}
-.c2-qw{position:absolute;font-size:56px;line-height:1;transform:rotate(-4deg);opacity:0;transition:opacity 150ms linear 950ms}
+.c2-qw{position:absolute;font-size:66px;line-height:1;transform:rotate(-4deg);opacity:0;transition:opacity 150ms linear 950ms}
 .c2-q.on .c2-qq,.c2-q.on .c2-qw{opacity:1}
 
 /* timeline */
