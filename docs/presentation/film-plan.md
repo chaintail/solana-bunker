@@ -4,6 +4,7 @@ Liam: mix all four design worlds, one slide at a time, real motion graphics, 240
 
 | Slide | World | Choreography |
 |---|---|---|
+| 0 intro | broadcast | sponsor card "The following program is brought to you by Chaintail Labs", then advisory card: WARNING, contains math, conspiracy theories, fear mongering based on hypothetical scenarios, viewer discretion is advised (Liam 15771) |
 | 1 title | dossier | desk, folder drops, label types, CLASSIFIED slams, warning note on paperclip, cover lifts out |
 | 2 tweet | breaking news | lower third, Bankless thumbnail as footage, tweet document with magnifier, Liam as anchor |
 | 3 conspiracy | dossier | photocopied index page with cryptography redacted, fission timeline from journal covers, proverb on telegram strip |
