@@ -17,7 +17,7 @@ function SceneFrame({ def, num, total, idx, instant, anim, active, cut, route }:
     >
       <div className="content">
         {!def.bare && !def.cheap && <Header exhibit={def.exhibit} title={def.title} sheet={`Sheet ${String(num).padStart(2, '0')} / ${String(total).padStart(2, '0')}`} />}
-        <def.C at={(id) => set.has(id)} cur={cur} instant={instant} active={active} route={route} />
+        <def.C at={(id) => set.has(id)} cur={cur} instant={instant} anim={anim} active={active} route={route} />
       </div>
     </section>
   );

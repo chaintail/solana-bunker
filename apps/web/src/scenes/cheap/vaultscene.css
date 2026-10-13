@@ -1,0 +1,32 @@
+/* ---------- shared door scene (slides 6 and 7) ---------- */
+.vs-wrap{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 300ms linear}
+.vs-wrap.on{opacity:1}
+.vs-parch{position:absolute;inset:0;background:var(--paper);clip-path:polygon(962px 0,1920px 0,1920px 1080px,928px 1080px)}
+.vs-split{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:visible}
+.vs-interior{position:absolute;left:1254px;top:324px;width:472px;height:472px;border-radius:50%;background:radial-gradient(circle at 50% 45%,#3a2c18,#0d0904 70%);box-shadow:inset 0 0 0 3px #1f3a93}
+.vs-door{position:absolute;left:1170px;top:230px;width:640px;height:700px;transform-origin:84px 330px;transition:transform 900ms cubic-bezier(.5,0,.3,1) 600ms}
+.vs-door .door3{position:absolute;inset:0;width:640px;height:700px;overflow:visible;background:transparent}
+.vs-door .door-wheel{transform-origin:320px 330px;transition:transform 600ms ease-in-out}
+.vs-wrap.open .vs-door{transform:perspective(1400px) rotateY(-78deg)}
+.vs-wrap.open .vs-door .door-wheel{transform:rotate(240deg)}
+/* the door face needs a fill to hide the interior */
+.vs-door::before{content:"";position:absolute;left:70px;top:80px;width:500px;height:500px;border-radius:50%;background:var(--paper)}
+.vs-door .door3{z-index:1}
+.vs-slot{position:absolute;left:250px;top:526px;width:140px;height:26px;border-radius:4px;background:#1c1a17;box-shadow:inset 0 3px 6px rgba(0,0,0,.6),0 0 0 3px #1f3a93;z-index:2}
+.vs-shutter{position:absolute;left:246px;top:470px;width:148px;height:30px;border-radius:4px;background:#8a8170;border:3px solid #1f3a93;z-index:3;opacity:0;transform:translateY(-30px)}
+.vs-wrap.shut .vs-shutter{opacity:1;transform:translateY(56px)}
+
+.vs-ink{stroke:#000}
+.vs-bouncer{position:absolute;left:990px;top:470px;z-index:20;transition:opacity 200ms linear}
+.vs-wave{transform-origin:196px 160px}
+.vs-devil{position:absolute;left:0;top:0;z-index:21;opacity:0}
+.vs-bubble{position:absolute;z-index:22;padding:16px 26px;background:#fff;border:5px solid #000;border-radius:40px;font:700 52px/1 'PT Mono','Courier New',monospace;color:#000;opacity:0}
+.vs-bubble::after{content:"";position:absolute;left:40px;bottom:-30px;border:15px solid transparent;border-top:20px solid #000}
+
+.vs-form{position:absolute;width:760px;box-sizing:border-box;padding:26px 34px 30px;background:#fff;border:6px solid #000;font:400 48px/1.15 Arial,Helvetica,sans-serif;color:#000;z-index:25}
+.vs-f-h{font:700 56px/1 Arial,Helvetica,sans-serif;margin-bottom:20px}
+.vs-f-row{margin-top:14px;white-space:nowrap}
+.vs-f-row b{font-family:'PT Mono','Courier New',monospace;font-weight:400}
+.vs-f-sig{display:flex;align-items:center;gap:10px;border-bottom:4px solid #000;padding-bottom:4px}
+.vs-sigpath{fill:none;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1}
+.vs-quill{position:absolute;left:0;top:0;z-index:30;opacity:0}

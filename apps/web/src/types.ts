@@ -15,6 +15,8 @@ export interface SceneProps {
   cur: string;
   /** true while a state is applied without animation */
   instant: boolean;
+  /** the current step was reached by stepping forward (one-shot animations may play) */
+  anim?: boolean;
   active: boolean;
   route: Route;
 }

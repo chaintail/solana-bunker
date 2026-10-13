@@ -64,6 +64,8 @@ const out = {
     logs: wd.network_transaction.meta.logMessages,
     treasury: wd.before.treasury,
     tokenAccount: wd.before.token_source,
+    recipient: pub.vaults.find((v) => v.mode === 'xmss').recipient_sol,
+    amountLamports: Math.max(...wd.network_transaction.meta.postBalances.map((p, i) => p - wd.network_transaction.meta.preBalances[i])),
   },
   rotation: {
     signature: rot.transaction_signature,
@@ -74,6 +76,19 @@ const out = {
     epochBefore: rot.before.epoch,
   },
   program: { id: pub.program_id, binaryBytes: pub.program_binary_bytes, cluster: pub.cluster },
+  /** the confirmed devnet XMSS operations, in order */
+  xmssOps: [
+    ['withdraw-sol', 'withdraw SOL'],
+    ['withdraw-mock-usdc', 'withdraw mock USDC'],
+    ['burn-leaves', 'burn leaves'],
+    ['rotate-root', 'rotate root'],
+    ['post-rotation-withdraw-sol', 'post-rotation withdraw SOL'],
+    ['post-rotation-withdraw-mock-usdc', 'post-rotation withdraw mock USDC'],
+  ].map(([op, label]) => {
+    const t = pub.confirmed_transactions.find((x) => x.operation === `v1-live-20261012-xmss-${op}`);
+    if (!t || t.success !== true) throw new Error(`missing confirmed xmss op ${op}`);
+    return { label, signature: t.transaction_signature, bytes: t.transaction_bytes, cu: t.compute_units };
+  }),
 };
 writeFileSync(resolve(here, '../src/data/story.json'), JSON.stringify(out, null, 1) + '\n');
 console.log('story.json:', out.manuscripts, 'manuscripts,', out.journalRecords, 'journal records, slot', out.withdrawal.slot);

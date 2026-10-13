@@ -300,7 +300,9 @@
    "Program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V success"
   ],
   "treasury": "ExUjnwyEprLp2oMppaTca8zN6Ae7qqF5eeMJm5MTRFco",
-  "tokenAccount": "EZ6aP4ekd8uCW1VP8YrnJZf9W7gwBZcgH7zwPv45D4oJ"
+  "tokenAccount": "EZ6aP4ekd8uCW1VP8YrnJZf9W7gwBZcgH7zwPv45D4oJ",
+  "recipient": "ADLw7WkPsqngneGqoCKmGR17w16kmgA9q1WnxURt9Wod",
+  "amountLamports": 10000
  },
  "rotation": {
   "signature": "5U4B7zhgQ38cyUztvxUK5tYCJ2uHMweKjePJ14gYJGv2X42mDwWGqWreiQi9KYtYkkoWskS8pykD2Fab8RjML5iy",
@@ -320,5 +322,43 @@
   "id": "HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V",
   "binaryBytes": 124464,
   "cluster": "devnet"
- }
+ },
+ "xmssOps": [
+  {
+   "label": "withdraw SOL",
+   "signature": "CiZmcGsaX4G7upT1ECscLUr1vVrX1htShX4Q2y8K4wd1hJcsVpfZEQc9GZtod8MxVSmP4Hy6mbVqiM75QiAJdBM",
+   "bytes": 3117,
+   "cu": 518509
+  },
+  {
+   "label": "withdraw mock USDC",
+   "signature": "VveVy2HNqacHi8L7CR683XeGjdViy5qsCaBzyFanjVyGqJfd1RxU2EjkHuWpHEDSb9h8awNz4iMmiZNzQTG7yHd",
+   "bytes": 3214,
+   "cu": 532564
+  },
+  {
+   "label": "burn leaves",
+   "signature": "4jW1PJwKdSDW1bDRM5T2CrRRPDwisX4K2UAFZTWxZqYupP3vuoXmcPnCyD71xtRsNohAUWWRJB1zUfRS1fVbSdNg",
+   "bytes": 3086,
+   "cu": 529687
+  },
+  {
+   "label": "rotate root",
+   "signature": "5U4B7zhgQ38cyUztvxUK5tYCJ2uHMweKjePJ14gYJGv2X42mDwWGqWreiQi9KYtYkkoWskS8pykD2Fab8RjML5iy",
+   "bytes": 3146,
+   "cu": 483319
+  },
+  {
+   "label": "post-rotation withdraw SOL",
+   "signature": "3bGS1Mhx5dAF2K7W38eB6Jb3LUfYuBNR5st7NZQDtePz3vZtQPBuWo15x8eG7z7si63jNDyhHASz8QUkmRvcuCmR",
+   "bytes": 3117,
+   "cu": 506910
+  },
+  {
+   "label": "post-rotation withdraw mock USDC",
+   "signature": "3H343RTxDLz4h1RLZxxUeQkF4gKD7pz9yboKMz2RMc9b7i3JGc4Z7MgbeatL22C89GkDtuJWTvi5rkRjaZ7Fx5Wr",
+   "bytes": 3214,
+   "cu": 578944
+  }
+ ]
 }

@@ -1,6 +1,6 @@
 /* Shared pieces for the mixed slides: hand-drawn marker strokes (cheap) and
  * the glass magnifier (polished). Randomness is seeded so frames are stable. */
-import type { CSSProperties, ReactNode } from 'react';
+import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
 import { cx } from '../../components/bits';
 import './mix.css';
 
@@ -125,4 +125,24 @@ export function Highlights({ lines, seed, h = 64 }: { lines: [number, number, nu
       })}
     </g>
   );
+}
+
+/** a number that ticks from `from` to `to` when `run` turns on (instant: jump straight to `to`) */
+export function Tick({ from, to, run, instant, ms = 1600, delay = 300 }: { from: number; to: number; run: boolean; instant: boolean; ms?: number; delay?: number }) {
+  const el = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    const set = (v: number) => el.current && (el.current.textContent = Math.round(v).toLocaleString('en-US'));
+    if (!run) return void set(from);
+    if (instant) return void set(to);
+    let raf = 0;
+    const t0 = performance.now() + delay;
+    const tick = (now: number) => {
+      const t = Math.min(1, Math.max(0, (now - t0) / ms));
+      set(from + (to - from) * (1 - Math.pow(1 - t, 3)));
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [from, to, run, instant, ms, delay]);
+  return <span ref={el}>{from.toLocaleString('en-US')}</span>;
 }

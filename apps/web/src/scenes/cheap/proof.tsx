@@ -115,7 +115,7 @@ function Mark({ kind }: { kind: LogoKind }) {
   );
 }
 
-export function ProofColumn({ on, version, className }: { on: boolean; version: Version; className?: string }) {
+export function ProofColumn({ on, version, staged = false, className }: { on: boolean; version: Version; staged?: boolean; className?: string }) {
   const v = V[version];
   return (
     <div className={cx('proof', on && 'on', className)} data-version={version}>
@@ -130,12 +130,23 @@ export function ProofColumn({ on, version, className }: { on: boolean; version: 
           <Mark kind="solscan" /> on Solscan
         </div>
       </div>
-      <div className="pf-box">
-        <div className="pf-h">
-          <Mark kind="solscan" /> proof it works
+      <div className={cx('pf-slot', staged && 'staged')}>
+        <div className="pf-box pf-qrbox">
+          <div className="pf-h">
+            <Mark kind="solscan" /> proof it works
+          </div>
+          <QR text={txUrl(v.tx)} size={246} ecc={ECC} logo={LOGO ? 'solscan' : undefined} logoArea={LOGO_AREA} />
+          <div className="pf-t">devnet tx {v.tx.slice(0, 8)}…</div>
         </div>
-        <QR text={txUrl(v.tx)} size={246} ecc={ECC} logo={LOGO ? 'solscan' : undefined} logoArea={LOGO_AREA} />
-        <div className="pf-t">devnet tx {v.tx.slice(0, 8)}…</div>
+        {/* staged transport (003-a): measured on a local test validator only, so no devnet transaction to point at */}
+        <div className="pf-box pf-staged">
+          <div className="pf-h">proof it works</div>
+          <div className="pf-st">
+            5 transactions,
+            <br />
+            local test validator
+          </div>
+        </div>
       </div>
     </div>
   );

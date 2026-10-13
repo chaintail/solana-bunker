@@ -138,7 +138,7 @@ function Ticker({ run, instant }: { run: boolean; instant: boolean }) {
   return <span ref={el}>33,000</span>;
 }
 
-function V1({ at, cur, instant }: SceneProps) {
+function V1({ at, cur, anim }: SceneProps) {
   const r = rng(404);
   const cells = [];
   for (let k = 0; k < N; k++) {
@@ -356,7 +356,7 @@ function V1({ at, cur, instant }: SceneProps) {
       {/* 10. 33,000 -> 390 bytes, 0.234 -> 0.0066 SOL */}
       <div className={cx('c4-card c4-shrink', cur === 'shrink' && 'on')}>
         <div className="c4-sh-n">
-          <Ticker run={at('shrink')} instant={instant || cur !== 'shrink'} /> <small>bytes</small>
+          <Ticker run={at('shrink')} instant={!anim || cur !== 'shrink'} /> <small>bytes</small>
         </div>
         <div className="c4-sh-s">
           <span className="c4-old">

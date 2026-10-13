@@ -1,28 +1,54 @@
-.c6-col{position:absolute;top:190px;width:500px;opacity:0;transform:translateY(20px);transition:opacity 250ms linear,transform 300ms ease-out}
-.c6-col.dim{opacity:.25!important}
-.c6-lam{left:60px}.c6-chain{left:590px}.c6-tree{left:1110px}
-.c6-chain svg,.c6-tree svg{width:480px;height:auto}
-#s-c-sig.r-lamport .c6-lam,#s-c-sig.r-chain .c6-chain,#s-c-sig.r-tree .c6-tree{opacity:1;transform:none}
-.c6-h{font:700 60px/1 Arial,Helvetica,sans-serif;color:#0000ff;margin-bottom:28px}
-.c6-pair{display:flex;gap:28px}
-.c6-sec{position:relative;width:220px;height:90px;border:6px solid #000;display:flex;align-items:center;justify-content:center}
-.c6-sec .bar{position:absolute;inset:12px;background:#000;transition:transform 250ms linear 200ms;transform-origin:100% 50%}
-.c6-sec .val{font:700 40px/1 Arial,Helvetica,sans-serif;color:#0000ff;opacity:0;transition:opacity 200ms linear 400ms}
-#s-c-sig.r-reveal .c6-sec.s1{border-color:#0000ff}
-#s-c-sig.r-reveal .c6-sec.s1 .bar{transform:scaleX(0)}
-#s-c-sig.r-reveal .c6-sec.s1 .val{opacity:1}
-.c6-lbl{margin-top:10px}
-.c6-lbl span{width:220px;text-align:center;font:400 40px/1 Arial,Helvetica,sans-serif}
-.c6-bit{margin-top:40px;font:400 44px/1.2 Arial,Helvetica,sans-serif;opacity:0;transition:opacity 200ms linear}
-.c6-bit b{font-size:60px}
-#s-c-sig.r-reveal .c6-bit{opacity:1}
-.c6-chain .cn{fill:#fff;stroke:#000;stroke-width:4;transition:fill 120ms linear calc(var(--k) * 70ms + 200ms)}
-#s-c-sig.r-chain .c6-chain .cn.past{fill:#0000ff}
-.c6-ct{position:static;margin-top:30px}
-.c6-ct sup{font-size:.6em;line-height:0}
-.c6-tree .c-mid{position:static;margin-top:10px}
-.c6-atk>*{opacity:0;transition:opacity 250ms linear}
-#s-c-sig.r-attack .c6-atk>*{opacity:1}
-.c6-robber{position:absolute;left:60px;top:760px}
-.c6-copy{left:230px;top:780px;width:760px}
-.c6-ver{left:1060px;top:770px;font-size:56px}
+/* ---------- slide 6: password vs signature ---------- */
+.c6-t{position:absolute;left:80px;width:820px;font:700 80px/1.1 Arial,Helvetica,sans-serif;color:#000;opacity:0;transition:opacity 220ms linear}
+.c6-t.on{opacity:1}
+.c6-okay{top:300px}
+.c6-cool{top:520px;color:#0000ff}
+#s-c-sig.r-math .c6-cool{transition-delay:550ms}
+.c6-math{position:absolute;left:0;right:0;top:330px;text-align:center;z-index:60;font:italic 700 230px/1 Arial,Helvetica,sans-serif;color:#ff0000;opacity:0;pointer-events:none}
+#s-c-sig.a-math .c6-math{animation:c6-flash 500ms linear both}
+@keyframes c6-flash{0%{opacity:1;transform:scale(.8)}12%{transform:scale(1.05)}20%,95%{opacity:1;transform:none}100%{opacity:0}}
+.c6-pw{top:220px}
+.c6-first{top:470px;font-size:58px;font-weight:400}
+
+/* bouncer, devil whisper, waved in */
+.c6-bouncer{position:absolute;left:990px;top:470px;z-index:20;opacity:0;transition:opacity 250ms linear 300ms}
+.c6-bouncer.on{opacity:1}
+#s-c-sig.r-signature .c6-bouncer{opacity:0;transition:none}
+#s-c-sig.a-signature .c6-bouncer{animation:c6-fly 900ms cubic-bezier(.5,-.3,.7,.4) 200ms both}
+@keyframes c6-fly{0%{opacity:1;transform:none}100%{opacity:1;transform:translate(1100px,-1200px) rotate(900deg) scale(.6)}}
+#s-c-sig.a-vault .vs-wave{animation:c6-wave 500ms ease-in-out 1700ms 3 both}
+@keyframes c6-wave{0%,100%{transform:none}50%{transform:rotate(38deg)}}
+.c6-devil{position:absolute;left:0;top:0;z-index:21;opacity:0;transform:translate(1380px,420px) scale(.4)}
+#s-c-sig.a-vault .c6-devil{animation:c6-devil 3600ms linear both}
+@keyframes c6-devil{
+  0%{opacity:1;transform:translate(-260px,520px)}
+  6%{transform:translate(-120px,500px)}12%{transform:translate(20px,520px)}18%{transform:translate(160px,500px)}24%{transform:translate(400px,520px)}30%{transform:translate(620px,500px)}
+  34%,70%{opacity:1;transform:translate(760px,520px)}
+  92%{opacity:1;transform:translate(1330px,400px) scale(.5)}
+  100%{opacity:0;transform:translate(1380px,420px) scale(.4)}}
+.c6-bubble{left:700px;top:400px}
+#s-c-sig.a-vault .c6-bubble{animation:c6-bubble 1600ms linear 1300ms both}
+@keyframes c6-bubble{0%{opacity:0;transform:scale(.4)}10%{opacity:1;transform:none}85%{opacity:1}100%{opacity:0}}
+
+/* SIGNATURE */
+.c6-sigw{position:absolute;left:70px;top:190px;transform-origin:0 0;font:700 160px/1 Arial,Helvetica,sans-serif;color:#ff0000;opacity:0;transform:scale(.6);transition:opacity 150ms linear,transform 360ms cubic-bezier(.3,1.6,.5,1)}
+.c6-sigw.on{opacity:1;transform:none}
+.c6-sigw.up{transform:translateY(-60px) scale(.7)}
+.c6-exact{top:420px;font-size:56px;font-weight:400}
+
+/* the form, the quill, through the door */
+.c6-form{left:100px;top:360px;opacity:0;transform:translateX(-40px);transition:opacity 220ms linear,transform 300ms ease-out}
+.c6-form.on{opacity:1;transform:none}
+#s-c-sig.a-form .c6-form .vs-f-to b,#s-c-sig.a-form .c6-form .vs-f-amt b{animation:c6-type 700ms steps(14,end) both}
+#s-c-sig.a-form .c6-form .vs-f-amt b{animation-delay:800ms}
+@keyframes c6-type{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+.c6-form.signed .vs-sigpath{stroke-dashoffset:0}
+#s-c-sig.a-sign .c6-form .vs-sigpath{animation:c6-sign 1200ms linear 200ms both}
+@keyframes c6-sign{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+#s-c-sig.r-sign .c6-form{opacity:0}
+#s-c-sig.a-sign .c6-form{animation:c6-post 2400ms cubic-bezier(.5,0,.4,1) both}
+@keyframes c6-post{0%,60%{opacity:1;transform:none}95%{opacity:1;transform:translate(1010px,238px) scale(.12)}100%{opacity:0;transform:translate(1010px,238px) scale(.1)}}
+#s-c-sig.a-sign .c6-quill{animation:c6-quill 1500ms linear both}
+@keyframes c6-quill{0%{opacity:1;transform:translate(372px,412px)}15%{transform:translate(420px,390px)}30%{transform:translate(480px,430px)}45%{transform:translate(560px,395px)}60%{transform:translate(640px,425px)}75%{transform:translate(720px,400px)}88%{opacity:1;transform:translate(760px,420px)}100%{opacity:0;transform:translate(820px,360px)}}
+#s-c-sig .vs-wrap.open .vs-door{transition-delay:2700ms}
+#s-c-sig .vs-wrap.open .vs-door .door-wheel{transition-delay:2300ms}
