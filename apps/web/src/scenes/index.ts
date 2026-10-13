@@ -7,7 +7,7 @@ import { C4 } from './cheap/C4V1';
 import { C6 } from './cheap/C6Sig';
 import { C7 } from './cheap/C7Rekey';
 import { C9 } from './cheap/C9Close';
-import { C10End } from './cheap/C10Slides';
+import { C10End } from './cheap/C10End';
 import { C9Devnet } from './cheap/C9DevnetGrid';
 import { C8Seed } from './cheap/C8Seed';
 import { S0 } from './S0Opener';

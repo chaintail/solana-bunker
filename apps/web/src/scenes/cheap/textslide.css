@@ -1,3 +1,0 @@
-.ts-line{position:absolute;left:120px;right:120px;top:50%;transform:translateY(-50%);text-align:center;font:700 84px/1.15 Arial,Helvetica,sans-serif;color:#000;opacity:0;transition:opacity 200ms linear}
-.ts-line.on{opacity:1}
-.ts-line.prev{opacity:.25;top:16%;transform:none;font-size:60px;font-weight:400}
