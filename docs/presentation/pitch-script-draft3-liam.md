@@ -324,6 +324,70 @@ and the full signature verifies on chain in a single shot.
 
 > turn this into a text box on screen: And because every one time key gets used exactly once, the vault keeps a bitmap of which leaves are spent. When you run low, or you just get paranoid, you sign one more message that installs a brand new tree. New root, new keys, same address, same balance. The new tree comes from the same twelve word seed phrase, just the next generation. So recovery is one instruction: rotate.
 
+## Beat 7 continued, the seed phrase
+
+### SLIDE 8
+
+Ok but there's still one really annoying part… how are we supposed to keep track of our 1000 one-time use secrets?
+
+If only there was a convenient way to *derive* secret keys from something memorable… rather than memorizing 1000's of strings of gibberish, what if
+
+> large text centre screen: BIP-39
+> example of a 24 word mnemonic fade in on left side of screen
+> text on right side of screen "yeah, we did that too!" check it out!
+> Proof box:
+> code: link to file and line number in gh + QR
+> whitepaper: link to file and line number in gh + QR
+> text description at bottom of slide.
+
+## Beat 8, live on devnet
+
+### SLIDE 9
+
+This is not a bunch of diagrams.
+All of it is live on devnet right now.
+Three vaults, SOL and USDC, the robbery, the rejection, the rotation.
+Every number on this screen is a transaction you can open in the explorer.
+
+> Show all proof links with QR codes
+
+## Beat 9, close
+
+### SLIDE 10
+
+Thanks for sticking around.
+If you made it this far,
+*And you didn't fall asleep*
+You must be a real crypto
+> large text CRYPTO [graphy] NERD
+Nerd like us!
+
+I told you the math would be worth it.
+
+There is a lot more in the whitepaper. Go check it out.
+> QR code to md whitepaper on github
+
+> Next Steps:
+The next coolest piece of research is a stateless version of this,
+For this we want to explore using SLH-DSA,
+The signatures are bigger, but you never have to track which keys are spent.
+
+> lightbulb or beaker and text SLH-DSA
+
+And my personal favourite idea we did not get to:
+using the vault to guard its own upgrade authority,
+so the bunker protects the bunker.
+
+> Put a vault inside a vault, maybe?
+
+Lots more to cook up in the Lab.
+
+> fade or transition to outro screen.
+
+### SLIDE 11, outro (Liam, 15624)
+
+Parchment and vault; Chaintail Labs R&D brand line; GitHub and Telegram QR codes with logos and links beneath; "Feel free to reach out with any questions!"
+
 ---
 
 ## Fact fills (composer, verified)
@@ -337,3 +401,4 @@ and the full signature verifies on chain in a single shot.
 - "See the code" box (Liam, 15606): each time a new program version appears, top right: QR with GitHub logo to the mode's line in program/src/lib.rs (001 array line 113, 002 Merkle line 114, 003 XMSS line 118, links on branch main) plus a Solscan QR for the devnet program HssAePJfZrERFjEAhm89nY9Tc9BWAobxp2GqGhefNK6V.
 - "Proof it works" box (Liam, 15607): under the see-the-code box, Solscan QR to the confirmed devnet SOL withdrawal for that version: 001 `5mHxtbGL…`, 002 `5XPHXjBK…`, 003 `CiZmcGsa…` (full signatures in artifacts/public-deployment.json).
 - Slides 6–7 facts: Lamport signature for a 256-bit digest with SHA-256 = 256 revealed 32-byte secrets = **8,192 bytes** (public key 16,384 bytes). XMSS-SHA2_10_256 signature = **2,500 bytes** (not 2,750). Legacy transaction cap **1,232 bytes**; v1 cap **4,096**. Staged transport = **5 transactions** (stage create, three uploads, execute), measured on the local SVM only, no devnet proof transactions exist for it. Inline v1 SOL withdraw: **3,117 bytes, 518,509 CU**. Tweet lines mentioning hash-based schemes: lines 21, 23, 25 of drake-tweet.txt (SPHINCS; "go all-in on hash-based cryptography"; roadmap).
+- Slide 8 links: BIP-39 seed derivation is `bip39_seed` in client/kdf.py line 10 (https://github.com/chaintail/solana-bunker/blob/main/client/kdf.py#L10); whitepaper mention of the BIP-39/HKDF project seed recipe is research/whitepaper.md line 35 (https://github.com/chaintail/solana-bunker/blob/main/research/whitepaper.md#L35). Whitepaper QR for slide 10: https://github.com/chaintail/solana-bunker/blob/main/research/whitepaper.md. SLH-DSA smallest standard signature 7,856 bytes (FIPS 205).
