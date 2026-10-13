@@ -160,3 +160,14 @@ a{color:inherit}
 .lite .stamp,.lite .paper{mix-blend-mode:normal!important}
 .lite .paper.grain{opacity:.18}
 .stamp.bold.on{opacity:.93}
+/* dossier route: big slide number, same place and size as the cheap deck, in the dossier's typewriter face */
+.slide-no.dossier-no{right:56px;top:30px;font:700 64px/1 var(--mono);letter-spacing:.02em;color:var(--ink);text-align:right}
+.slide-no.dossier-no small{display:block;margin-top:8px;font:400 16px/1 var(--mono);letter-spacing:.2em;color:var(--ink3)}
+#stage.dossier .hdr{right:420px}
+#stage.dossier .hdr>div:last-child{display:none}
+/* deck switch: outside the scaled stage, a real tap target on phones */
+.deck-switch{position:fixed;right:max(8px,env(safe-area-inset-right));bottom:max(4px,env(safe-area-inset-bottom));z-index:1000;min-height:44px;padding:0 14px;
+  border:0;margin:0;background:#fff;color:#0000ee;font:400 16px/44px Arial,Helvetica,sans-serif;text-decoration:underline;cursor:pointer;-webkit-tap-highlight-color:rgba(0,0,0,.1)}
+.deck-switch.dossier{background:var(--manila);color:var(--ink);font-family:var(--mono);letter-spacing:.04em;border:1px solid rgba(70,52,20,.35)}
+/* short landscape screens (e.g. 426x240): no letterbox to sit in, so keep the switch small */
+@media (orientation:landscape) and (max-height:420px){.deck-switch{min-height:26px;line-height:26px;font-size:11px;padding:0 8px;opacity:.85}}

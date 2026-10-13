@@ -46,18 +46,22 @@ export function App() {
   useFit(stage);
   const deck = useDeck(DECKS);
   const { pos, shown, cut } = deck;
+  const posRoute = useRef(pos.route);
+  posRoute.current = pos.route;
   useInput({
     next: deck.next,
     prev: deck.prev,
     home: deck.home,
-    toggleRoute: () => deck.setRoute(pos.route === 'pitch' ? 'technical' : 'pitch'),
+    toggleRoute: () => deck.setRoute(posRoute.current === 'pitch' ? 'technical' : 'pitch'),
   });
   const scenes = DECKS[pos.route];
   const sc = scenes[pos.scene];
   const n = stepsFor(sc, pos.route).length;
   const cheap = !!sc.cheap;
+  const toggle = () => deck.setRoute(pos.route === 'pitch' ? 'technical' : 'pitch');
   return (
-    <div id="stage" ref={stage} className={cx(sc.bare && 'chrome-hide', cheap && 'cheap')} data-scene={sc.key}>
+    <>
+    <div id="stage" ref={stage} className={cx(sc.bare && 'chrome-hide', cheap && 'cheap', pos.route === 'technical' && 'dossier')} data-scene={sc.key}>
       <Defs />
       {!cheap && (
         <>
@@ -71,24 +75,28 @@ export function App() {
       ))}
       {cheap && !sc.bare && <div className="slide-no">SLIDE {pos.scene + 1}</div>}
       {pos.route === 'technical' && (
-        <div className="tab tech">
-          BEAT {pos.scene} · STEP {pos.step + 1} OF {n}
+        <div className="slide-no dossier-no">
+          SLIDE {pos.scene + 1}
+          <small>
+            STEP {pos.step + 1} OF {n}
+          </small>
         </div>
       )}
-      <div
-        className="route"
-        data-noadvance
-        role="switch"
-        aria-checked={pos.route === 'technical'}
-        onClick={(e) => {
-          e.stopPropagation();
-          deck.setRoute(pos.route === 'pitch' ? 'technical' : 'pitch');
-        }}
-      >
-        <span className={cx(pos.route === 'pitch' && 'on')}>PITCH</span>
-        <span className={cx(pos.route === 'technical' && 'on')}>TECHNICAL</span>
-        <kbd>T</kbd>
-      </div>
     </div>
+    {/* outside the scaled stage so it stays a real 44px tap target on phones */}
+    <button
+      type="button"
+      className={cx('deck-switch', pos.route === 'technical' && 'dossier')}
+      data-noadvance
+      aria-label="Switch to the other deck (T)"
+      onClick={(e) => {
+        e.stopPropagation();
+        e.currentTarget.blur();
+        toggle();
+      }}
+    >
+      switch to the other deck
+    </button>
+    </>
   );
 }

@@ -35,8 +35,11 @@ export function useDeck(decks: Decks) {
   const initial = useMemo<Pos>(() => {
     const h = parseHash(decks);
     if (h) return h;
-    const r = (sessionStorage.getItem('sb-route') as Route) || 'pitch';
-    return { scene: 0, step: 0, route: r === 'technical' ? 'technical' : 'pitch' };
+    // ?deck=dossier or #dossier opens the technical (dossier) deck; ?deck=cheap or nothing opens the pitch deck
+    const q = new URLSearchParams(location.search).get('deck');
+    const h2 = location.hash.replace('#', '');
+    const dossier = q === 'dossier' || q === 'technical' || h2 === 'dossier' || h2 === 'technical';
+    return { scene: 0, step: 0, route: dossier ? 'technical' : 'pitch' };
   }, [decks]);
   const [pos, setPos] = useState<Pos>(initial);
   const [shown, setShown] = useState<Shown[]>(() =>
@@ -116,7 +119,6 @@ export function useDeck(decks: Decks) {
         while (k > 0 && all[k].tech) k--;
         step = Math.max(0, list.findIndex((s) => s.id === all[k].id));
       }
-      sessionStorage.setItem('sb-route', route);
       go({ scene: p.scene, step, route }, 'jump');
     },
     [go, decks],

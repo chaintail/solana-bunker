@@ -148,7 +148,7 @@ function Conspiracy({ at, instant }: SceneProps) {
   return (
     <>
       <h1 className="hl">The missing papers</h1>
-      <Stamp on={at('classified')} instant={instant} x={1574} y={146} size={84} r={-8} d={420}>
+      <Stamp on={at('classified')} instant={instant} x={1636} y={198} size={76} r={-8} d={420}>
         Classified
       </Stamp>
 
