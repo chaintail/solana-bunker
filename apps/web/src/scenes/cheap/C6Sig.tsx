@@ -11,7 +11,7 @@ function Sig({ at }: SceneProps) {
       <VaultDoor on={at('vault')} open={at('sign')} />
 
       <div className={cx('c6-t c6-okay', at('open') && !at('password') && 'on')}>Okay, this is where things</div>
-      <div className="c6-math">*the math*</div>
+      <div className="c6-math">the math</div>
       <div className={cx('c6-t c6-cool', at('math') && !at('password') && 'on')}>start to get cool</div>
 
       <div className={cx('c6-t c6-pw', at('password') && !sig && 'on')}>a secret is just a password</div>
