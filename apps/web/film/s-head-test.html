@@ -1,0 +1,83 @@
+<!doctype html><html data-duration="10" data-fps="30"><head><meta charset="utf-8">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
+<style>
+/* Floating-head test. Layers (same convention as s02-news):
+     ?layer=back   slide, title, target box, body + arm (head clip is composited over this by ffmpeg)
+     ?layer=front  collar / lapels / tie knot that overlap the bottom of the neck (transparent PNGs)
+   no ?layer  both (preview, no head) */
+html,body{font-family:'Inter',sans-serif;color:#fff}
+body.layer-front .back,body.layer-back .front{display:none}
+html:not([data-layer]) body,html[data-layer="back"] body{background:#0c1424}
+.bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 35% 45%,#1b2c4d 0%,#0c1424 70%)}
+.grid{position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(120,170,255,.05) 0 1px,transparent 1px 64px),repeating-linear-gradient(0deg,rgba(120,170,255,.05) 0 1px,transparent 1px 64px)}
+.title{left:700px;top:60px;font:700 64px/1 'Oswald';letter-spacing:.06em}
+.title small{display:block;margin-top:14px;font:500 24px/1 'Inter';letter-spacing:.04em;color:#8fb0e8}
+.target{left:880px;top:290px;width:340px;height:200px;border:4px solid #4fd1ff;border-radius:14px;background:rgba(79,209,255,.10);padding:26px 28px}
+.target b{display:block;font:700 40px/1.05 'Oswald';letter-spacing:.04em;color:#4fd1ff}
+.target span{display:block;margin-top:12px;font:500 24px/1.3 'Inter';color:#dbe8ff}
+svg{position:absolute;left:0;top:0}
+</style></head><body>
+<div class="back">
+  <div class="bg"></div><div class="grid"></div>
+  <div class="abs title" id="title">THE SOLANA BUNKER<small>Where the validators go to hide</small></div>
+  <div class="abs target" id="target"><b>VAULT 01</b><span>Cold keys, air-gapped, 40 m underground</span></div>
+  <svg width="1280" height="720" viewBox="0 0 1280 720"><g id="bobB">
+    <!-- neck stub (behind the head clip; hides any gap under the keyed neck edge) -->
+    <path d="M334 380 H446 V470 Q390 500 334 470Z" fill="#c68a68"/>
+    <!-- jacket torso -->
+    <path d="M110 720 L132 560 Q142 492 236 470 L336 440 H444 L544 470 Q638 492 648 560 L670 720Z" fill="#1d2a4d"/>
+    <path d="M110 720 L132 560 Q142 492 236 470 L250 478 Q168 505 160 566 L142 720Z" fill="#16213c"/>
+    <!-- collar wings (behind the head clip so the neck overlaps their top edge) -->
+    <path d="M318 410 L346 408 L396 484 L340 500 Z" fill="#f7f8fb" stroke="#d3d8e2" stroke-width="2"/>
+    <path d="M462 410 L434 408 L384 484 L440 500 Z" fill="#f7f8fb" stroke="#d3d8e2" stroke-width="2"/>
+    <!-- shirt V + tie -->
+    <path d="M330 436 H450 L420 600 H360Z" fill="#f2f4f8"/>
+    <path d="M360 600 H420 L430 720 H350Z" fill="#fff" opacity="0"/>
+    <path d="M382 478 H398 L418 700 L390 716 L362 700Z" fill="#c8323c"/>
+    <!-- RIGHT ARM (viewer's right): shoulder S = 600,500 -->
+    <g id="armU" style="transform-origin:600px 500px">
+      <rect x="572" y="488" width="56" height="176" rx="28" fill="#1d2a4d"/>
+      <g id="armF" style="transform-origin:600px 650px">
+        <rect x="574" y="636" width="52" height="128" rx="24" fill="#1d2a4d"/>
+        <rect x="575" y="752" width="50" height="16" rx="4" fill="#f2f4f8"/>
+        <ellipse cx="578" cy="782" rx="11" ry="15" fill="#e2a883" transform="rotate(25 578 782)"/>
+        <ellipse cx="600" cy="788" rx="26" ry="24" fill="#e2a883"/>
+        <rect x="591" y="796" width="18" height="46" rx="9" fill="#e2a883"/>
+        <path d="M580 780 Q600 772 620 780" stroke="#b9805e" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </g>
+    </g>
+    <circle cx="600" cy="520" r="34" fill="#1d2a4d"/>
+  </g></svg>
+</div>
+<div class="front">
+  <svg width="1280" height="720" viewBox="0 0 1280 720"><g id="bobF">
+    <!-- shirt collar wings + lapels over the neck base -->
+    <path d="M330 452 L390 560 L452 452 L474 462 L400 700 H380 L306 462Z" fill="#f2f4f8" opacity="0"/>
+    <path d="M326 480 L252 472 L300 600 L376 520Z" fill="#26376a"/>
+    <path d="M454 480 L528 472 L480 600 L404 520Z" fill="#26376a"/>
+    <path d="M372 484 H408 L414 520 H366Z" fill="#c8323c"/>
+    <path d="M372 484 H408 L414 520 H366Z" fill="none" stroke="#9c222b" stroke-width="2"/>
+  </g></svg>
+</div>
+<script src="lib/film.js"></script>
+<script>
+const f = window.__film, L = new URLSearchParams(location.search).get('layer');
+if (L) { document.documentElement.dataset.layer = L; document.body.classList.add('layer-' + L); }
+const $ = (id) => document.getElementById(id);
+// Body bob. The same function drives the head overlay in pipeline/head-test/comp.sh: dy = BOB_A * sin(2*pi*t/BOB_T)
+const BOB_A = 4, BOB_T = 2.2;
+f.onSeek((t) => { const v = `translateY(${(BOB_A * Math.sin(2 * Math.PI * t / BOB_T)).toFixed(3)}px)`; $('bobB').style.transform = v; $('bobF').style.transform = v; });
+// Slide furniture
+f.anim($('title'), [{ opacity: 0, transform: 'translateY(-14px)' }, { opacity: 1, transform: 'none' }], 0.2, 0.6, { easing: 'ease-out' });
+f.anim($('target'), [{ opacity: 0, transform: 'scale(.92)' }, { opacity: 1, transform: 'none' }], 0.7, 0.5, { easing: 'ease-out' });
+f.anim($('target'), [{ boxShadow: '0 0 0 rgba(79,209,255,0)' }, { boxShadow: '0 0 40px rgba(79,209,255,.9)', offset: .3 }, { boxShadow: '0 0 14px rgba(79,209,255,.4)' }], 2.4, 1.2, { easing: 'ease-out' });
+// Arm poses: [upper-arm deg, forearm deg]; CSS rotate, negative = counter-clockwise (arm swings up/right)
+const DOWN = [-4, 75], UP = [-80, -56];
+const R = (a) => `rotate(${a}deg)`;
+const EASE = 'cubic-bezier(.3,.7,.3,1.04)';
+const uk = (a, o, e) => ({ transform: R(a), offset: o / 7, easing: e || 'ease-in-out' });
+f.anim($('armU'), [uk(DOWN[0], 0), uk(DOWN[0], 1.5, EASE), uk(UP[0], 2.4), uk(UP[0], 5.6), uk(DOWN[0], 7)], 0, 7);
+// forearm: swing with the upper arm, then a pointing jab at 3.6 s and 4.8 s while the hand holds the target
+const fk = (a, o) => ({ transform: R(a), offset: o / 7, easing: 'ease-in-out' });
+f.anim($('armF'), [fk(DOWN[1], 0), { ...fk(DOWN[1], 1.5), easing: EASE }, fk(UP[1], 2.4), fk(UP[1], 3.3), fk(UP[1] + 7, 3.6), fk(UP[1] - 3, 3.9), fk(UP[1], 4.3), fk(UP[1] + 7, 4.8), fk(UP[1] - 3, 5.1), fk(UP[1], 5.6), fk(DOWN[1], 7)], 0, 7);
+</script></body></html>
