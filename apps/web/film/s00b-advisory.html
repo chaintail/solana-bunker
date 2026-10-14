@@ -23,7 +23,7 @@ html,body{background:#000;color:#fff;font-family:'Inter',sans-serif}
   <div class="view" id="view"></div>
 </div>
 <script src="data/s00b-words-out.js"></script>
-<script src="lib/film.js"></script><script src="lib/crt.js"></script>
+<script src="lib/film.js"></script>
 <script>
 const f = window.__film, VO_AT = 0.6;       // the VO file (with its own 0.8 s lead-in) starts here in scene time
 const W = window.VO.words;
@@ -41,5 +41,5 @@ f.anim(document.getElementById('rule'), [{transform:'scaleX(0)',transformOrigin:
 const adv = pairs[pairs.length - 1][0];
 f.anim(adv, [{color:'#fff'},{color:'#ffd400'}], VO_AT + W[18].s, 0.3);
 f.anim(document.body, [{opacity:1},{opacity:1,offset:.96},{opacity:.0}], 0, 12, {easing:'linear'});
-f.crt({noise:.05, flicker:.04, seed:5});
+f.onSeek(() => {});
 </script></body></html>

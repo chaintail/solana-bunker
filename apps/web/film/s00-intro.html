@@ -2,26 +2,21 @@
 <link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
 <style>
 html,body{background:#000}
-.bars{position:absolute;inset:0;display:none;z-index:60;background:linear-gradient(90deg,#c0c0c0 0 14.28%,#c0c000 0 28.57%,#00c0c0 0 42.85%,#00c000 0 57.14%,#c000c0 0 71.43%,#c00000 0 85.7%,#0000c0 0)}
-.bars:after{content:"";position:absolute;left:0;right:0;bottom:0;height:22%;background:linear-gradient(90deg,#0000c0 0 14.28%,#111 0 28.57%,#c000c0 0 42.85%,#111 0 57.14%,#00c0c0 0 71.43%,#111 0 85.7%,#c0c0c0 0)}
-.stage{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Playfair Display',serif;color:#fff;text-align:center}
-.pre{font-size:48px;line-height:1.2;letter-spacing:.01em;width:1180px}
+.stage{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Liberation Serif','Times New Roman',Times,serif;color:#fff;text-align:center}
+.pre{font-size:52px;font-weight:400;line-height:1.2;letter-spacing:0;width:1180px}
 .brand{display:flex;align-items:center;gap:30px;margin-top:44px}
 .brand img{width:150px;height:150px;object-fit:contain}
-.brand span{font-size:96px;font-weight:700;letter-spacing:.02em}
+.brand span{font-size:96px;font-weight:700;letter-spacing:0}
 </style></head><body>
 <div class="stage" id="stage">
   <div class="pre" id="pre">The following program is brought to you by</div>
   <div class="brand" id="brand"><img src="assets/chaintail-logo-800.png"><span>Chaintail Labs</span></div>
 </div>
-<div class="bars" id="bars"></div>
-<script src="lib/film.js"></script><script src="lib/crt.js"></script>
+<script src="lib/film.js"></script>
 <script>
 const f = window.__film;
 f.anim(document.getElementById('pre'), [{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}], 0.5, 0.7, {easing:'ease-out'});
 f.anim(document.getElementById('brand'), [{opacity:0,transform:'scale(.92)'},{opacity:1,transform:'none'}], 1.7, 0.6, {easing:'cubic-bezier(.2,.9,.3,1)'});
 f.anim(document.getElementById('stage'), [{opacity:1},{opacity:0}], 3.65, 0.35);
-const bars = document.getElementById('bars');
-f.onSeek((t) => { bars.style.display = t < 0.03 ? 'block' : 'none'; });
-f.crt({noise:.06, flicker:.05, seed:3});
+f.onSeek(() => {});
 </script></body></html>

@@ -26,7 +26,7 @@ html:not([data-layer]) body,html[data-layer="back"] body{background:#05070d}
 .bug .dot{width:20px;height:20px;border-radius:50%;background:#e30613;box-shadow:0 0 16px #e30613}
 .bug .chan{font:700 26px/1 'Oswald';letter-spacing:.12em;background:#fff;color:#0d1830;padding:6px 12px;margin-left:10px}
 .l3{position:absolute;left:36px;bottom:104px;width:880px;height:84px;display:flex;align-items:stretch;box-shadow:0 12px 30px rgba(0,0,0,.55);overflow:hidden}
-.l3 .tag{background:#fff;color:#e30613;font:800 30px/84px 'Inter';padding:0 22px;letter-spacing:.06em;min-width:150px}
+.l3 .tag{background:#fff;color:#e30613;font:800 30px/84px 'Inter';padding:0 22px;letter-spacing:.06em;min-width:180px;text-align:center}
 .l3 .bar{flex:1;background:linear-gradient(180deg,#f2141f,#b8000a);font:700 48px/84px 'Oswald';padding:0 24px;letter-spacing:.02em;white-space:nowrap}
 .l3sub{position:absolute;left:36px;bottom:70px;width:880px;height:36px;background:rgba(10,14,24,.94);font:700 22px/36px 'Inter';padding:0 20px;letter-spacing:.03em;color:#e8eefa;white-space:nowrap}
 .ticker{position:absolute;left:0;right:0;bottom:0;height:56px;background:#f4f5f7;display:flex;align-items:center;box-shadow:0 -4px 14px rgba(0,0,0,.4);overflow:hidden}
@@ -39,17 +39,22 @@ html:not([data-layer]) body,html[data-layer="back"] body{background:#05070d}
 .ots{position:absolute;right:36px;top:36px;width:410px;height:230px;border:5px solid #fff;background:#000;box-shadow:0 10px 30px rgba(0,0,0,.6);overflow:hidden;transform-origin:100% 0}
 .ots .pan{position:absolute;left:0;top:0;width:410px;height:230px;transform-origin:0 0}
 .ots img{position:absolute;left:0;top:0;width:410px;height:230px;display:block}
-.ots .ring{position:absolute;border:5px solid #ff1f2d;border-radius:50%;box-shadow:0 0 14px #ff1f2d;opacity:0}
+.ots svg.pen{position:absolute;left:0;top:0;width:410px;height:230px;overflow:visible}
+.ots svg.pen path{fill:none;stroke:#ff1f2d;stroke-width:3.6;stroke-linecap:round;stroke-linejoin:round}
 .otstag{position:absolute;right:36px;top:36px;transform:translateY(-100%);background:#e30613;font:800 18px/1 'Inter';letter-spacing:.14em;padding:6px 12px;opacity:0}
-/* tweet card */
-.tweet{position:absolute;left:30px;top:96px;width:370px;background:#fff;color:#0f1419;border-radius:18px;box-shadow:0 18px 50px rgba(0,0,0,.6);padding:20px 22px 22px}
-.tweet .hd{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.tweet .av{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#4f6bd8,#222c66);display:flex;align-items:center;justify-content:center;font:800 22px/1 'Inter';color:#fff}
-.tweet .nm{font:800 24px/1.1 'Inter'}.tweet .hn{font:500 19px/1.1 'Inter';color:#536471;margin-top:3px}
-.tweet .tx{position:relative;height:200px}
-.tweet .tx p{position:absolute;left:0;right:0;top:0;margin:0;font:700 32px/1.22 'Inter';letter-spacing:-.01em;opacity:0}
-.tweet mark{background:linear-gradient(180deg,transparent 0,transparent 8%,#ffe14a 8%,#ffe14a 94%,transparent 94%);color:#0f1419;padding:0 2px;background-size:0% 100%;background-repeat:no-repeat}
-.tweet .x{position:absolute;right:20px;top:20px;font:800 30px/1 'Inter';color:#0f1419}
+/* tweet component: the real screenshot pieces (assets/tweet-header.jpg fixed on top, assets/tweet-body.jpg scrolls) */
+.tweet{position:absolute;left:24px;top:96px;width:430px;background:#000;border:1px solid #3a3f45;border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden}
+.tweet .thead{display:block;width:428px;height:auto;position:relative;z-index:2;background:#000}
+.tweet .twin{position:relative;width:428px;height:310px;overflow:hidden;border-top:1px solid #1d2126}
+.tweet .tscroll{position:absolute;left:0;top:0;width:428px;will-change:transform}
+.tweet .tinner{position:relative;width:1290px;transform-origin:0 0;transform:scale(.33178)}
+.tweet .tinner img{display:block;width:1290px}
+.tweet .band{position:absolute;left:0;width:1290px;background:rgba(255,214,0,.34);box-shadow:inset 8px 0 0 rgba(255,214,0,.9);transform-origin:0 50%;opacity:0}
+.tweet .twin:after{content:"";position:absolute;left:0;right:0;bottom:0;height:26px;background:linear-gradient(180deg,transparent,#000);z-index:3}
+/* channel bug */
+.chbug{position:absolute;right:30px;bottom:70px;display:flex;align-items:center;gap:12px;color:#fff;opacity:0;filter:drop-shadow(0 3px 8px rgba(0,0,0,.65))}
+.chbug img{height:50px;display:block}
+.chbug span{font:700 52px/1 'Oswald';letter-spacing:.06em}
 /* flash + wipe */
 .flash{position:absolute;inset:0;background:#fff;opacity:0}
 .wipe{position:absolute;top:0;bottom:0;left:0;width:1500px;background:linear-gradient(90deg,#8a0008,#e30613 18%,#e30613 100%);transform:translateX(-1500px);display:flex;align-items:center;justify-content:center}
@@ -68,20 +73,17 @@ html:not([data-layer]) body,html[data-layer="back"] body{background:#05070d}
 <div class="front" id="front">
   <div class="desk"></div>
   <div class="bug"><div class="dot" id="livedot"></div>LIVE<div class="chan">CT NEWS</div></div>
-  <div class="otstag" id="otstag">BANKLESS</div>
+  <div id="otsw" style="position:absolute;inset:0"><div class="otstag" id="otstag">BANKLESS</div>
   <div class="ots" id="ots"><div class="pan" id="pan">
-    <img src="assets/bankless-debate-thumb.jpg"><div class="ring" id="ring"></div></div></div>
+    <img src="assets/bankless-debate-thumb.jpg">
+    <svg class="pen" id="penw" viewBox="0 0 410 230"><path id="pen" d="M0 0"/></svg></div></div></div>
   <div class="tweetw" id="tweetw" style="position:absolute;inset:0"><div class="tweet" id="tweet">
-    <div class="x">X</div>
-    <div class="hd"><div class="av">JD</div><div><div class="nm">Justin Drake</div><div class="hn">@drakefjustin</div></div></div>
-    <div class="tx">
-      <p id="tA">&ldquo;&hellip;calmly begin planning for <mark id="mA">&ldquo;bunker mode&rdquo;</mark>.&rdquo;</p>
-      <p id="tB">&ldquo;&hellip;move the bulk of their funds to addresses that <mark id="mB">have never signed a transaction</mark>.&rdquo;</p>
-      <p id="tC">&ldquo;&hellip;addresses whose pubkeys <mark id="mC">remain hidden behind a hash</mark>.&rdquo;</p>
-    </div>
+    <img class="thead" src="assets/tweet-header.jpg">
+    <div class="twin"><div class="tscroll" id="tscroll"><div class="tinner" id="tinner"><img src="assets/tweet-body.jpg"></div></div></div>
   </div></div>
-  <div class="l3" id="l3"><div class="tag" id="l3tag">LIAM</div><div class="bar" id="l3bar">Chaintail Labs</div></div>
-  <div class="l3sub" id="l3sub">Senior Bunker Correspondent</div>
+  <div class="l3" id="l3"><div class="tag" id="l3tag">BREAKING</div><div class="bar" id="l3bar">LIAM</div></div>
+  <div class="l3sub" id="l3sub">Chaintail Labs, Senior Bunker Correspondent</div>
+  <div class="chbug" id="chbug"><img src="assets/chaintail-logo-white.svg"><span>CNN</span></div>
   <div class="ticker"><div class="lbl">CT LIVE</div><div class="win"><div class="run" id="run"></div></div></div>
   <div class="flash" id="flash"></div>
   <div class="wipe" id="wipe"><i style="top:215px"></i><i style="top:495px"></i><span>SPECIAL REPORT</span></div>
@@ -109,36 +111,54 @@ A('livedot', [{opacity:1},{opacity:.25},{opacity:1}], 0, 1.2, {iterations:40});
 // lower third in at 0.4, becomes the headline at "spiral" (6.8), stays
 A('l3', [{transform:'translateX(-120%)'},{transform:'none'}], 0.4, 0.45, {easing:'cubic-bezier(.2,.9,.3,1)'});
 A('l3sub', [{transform:'translateX(-120%)'},{transform:'none'}], 0.5, 0.45, {easing:'cubic-bezier(.2,.9,.3,1)'});
-f.onSeek((t) => { // text swap is a hard cut on the frame, keyed on time
+f.onSeek((t) => { // text swap is a hard cut on the frame, keyed on time; white box stays BREAKING, red bar carries the name
   const second = t >= 5.6 + OFF;
-  $('l3tag').textContent = second ? 'BREAKING' : 'LIAM';
-  $('l3bar').textContent = second ? 'CRYPTO TWITTER IN SPIRAL' : 'Chaintail Labs';
-  $('l3sub').textContent = second ? 'Ethereum researcher calls for “bunker mode”' : 'Senior Bunker Correspondent';
+  $('l3tag').textContent = 'BREAKING';
+  $('l3bar').textContent = second ? 'CRYPTO TWITTER IN SPIRAL' : 'LIAM';
+  $('l3sub').textContent = second ? 'Ethereum researcher calls for “bunker mode”' : 'Chaintail Labs, Senior Bunker Correspondent';
 });
-// over-the-shoulder box: in at "this lead Ethereum researcher" (0.96)
+A('chbug', [{opacity:0},{opacity:1}], 0.8, 0.5);
+// over-the-shoulder box: in at "this lead Ethereum researcher" (0.96) with the FULL thumbnail (Anatoly and Justin), held for a beat
 A('ots', [{opacity:0,transform:'translateY(-30px)'},{opacity:1,transform:'none'}], 0.9 + OFF, 0.35, {easing:'ease-out'});
 A('otstag', [{opacity:0},{opacity:1}], 1.1 + OFF, 0.2);
 // face geometry in 410x230 box coordinates (thumbnail face centre ~ (170,395)/1280 * 410)
 const fx = 170 * 410 / 1280, fy = 395 * 410 / 1280, fr = 150 * 410 / 1280;
-const ring = $('ring'); ring.style.cssText += `;left:${fx - fr}px;top:${fy - fr}px;width:${2 * fr}px;height:${2 * fr}px`;
-const tc = 2.16 + OFF; // "researcher" lands: red circle snaps on
-A('ring', [{opacity:0,transform:'scale(3.2)'},{opacity:1,transform:'scale(1)'}], tc, 0.16, {easing:'cubic-bezier(.2,.9,.3,1)'});
-// two pulses of the ring (scale up and back), nested wrapper so no property is animated twice on the same element
-const rw = document.createElement('div'); rw.style.cssText = `position:absolute;left:${fx - fr}px;top:${fy - fr}px;width:${2 * fr}px;height:${2 * fr}px;transform-origin:50% 50%`;
-ring.style.left = ring.style.top = '0'; ring.style.width = ring.style.height = '100%'; ring.parentNode.insertBefore(rw, ring); rw.append(ring);
-for (const p of [tc + 0.35, tc + 0.85]) f.anim(rw, [{transform:'scale(1)'},{transform:'scale(1.35)'},{transform:'scale(1)'}], p, 0.45, {easing:'ease-in-out'});
-// zoom: box becomes a square, image zooms until the face fills it (while "put out a massive post")
-const z0 = 3.2 + OFF, zd = 0.9, S = 2.45, sq = 260;
+// hand-drawn circle: a seeded wobbly loop (1.12 turns, radius drifting, low-frequency wobble plus jitter), drawn with stroke-dashoffset
+{ const r = f.rng(77), pts = []; const a0 = -1.9, turns = 1.12, N = 140;
+  const ph = [r() * 6.28, r() * 6.28, r() * 6.28];
+  for (let i = 0; i <= N; i++) { const u = i / N, a = a0 + u * turns * 6.2832;
+    const rad = fr * (0.98 + 0.10 * u + 0.045 * Math.sin(2 * a + ph[0]) + 0.03 * Math.sin(3 * a + ph[1]) + 0.012 * Math.sin(9 * a + ph[2]));
+    pts.push([fx + 1.05 * rad * Math.cos(a) + 1.5 * (u - .5), fy + 1.12 * rad * Math.sin(a)]); }
+  $('pen').setAttribute('d', 'M' + pts.map((p) => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' L')); }
+const tc = 2.6 + OFF;   // the circle starts after the beat on the full thumbnail
+const penLen = Math.ceil($('pen').getTotalLength()) + 2;
+A('pen', [{strokeDasharray:`${penLen} ${penLen}`,strokeDashoffset:penLen},{strokeDasharray:`${penLen} ${penLen}`,strokeDashoffset:0}], tc, 1.9, {easing:'cubic-bezier(.45,.05,.5,.95)'});
+A('penw', [{opacity:1},{opacity:1,offset:.81},{opacity:0}], tc, 3.2);   // finished circle (drawn by 4.5) holds ~0.7 s, fades out by 5.8, before the zoom at 5.9
+// zoom: box becomes a square, image zooms until the face fills it, slow, starts after the circle has faded
+const z0 = 5.9 + OFF, zd = 2.2, S = 2.45, sq = 260;
 A('ots', [{width:'410px',height:'230px'},{width:sq + 'px',height:sq + 'px'}], z0, zd, {easing:'ease-in-out'});
 A('pan', [{transform:'translate(0,0) scale(1)'},{transform:`translate(${(sq / 2 - 5) - S * fx}px,${(sq / 2 - 5) - S * fy}px) scale(${S})`}], z0, zd, {easing:'ease-in-out'});
-// ots dims slightly while the tweet is on screen? no: stays as the second source. leaves at the wipe.
-// tweet card slides up on the other side at "He said, get ready for bunker mode" (7.12)
+// short rest on the zoomed face, then the box leaves (it used to stay on screen to the wipe)
+A('otsw', [{opacity:1,transform:'none'},{opacity:0,transform:'translateY(-40px)'}], z0 + zd + 1.6, 0.45, {easing:'ease-in'});
+// tweet component slides up on the other side at "He said, get ready for bunker mode" (7.12)
 const t1 = 7.12 + OFF;
 A('tweet', [{opacity:0,transform:'translateY(260px)'},{opacity:1,transform:'none'}], t1, 0.5, {easing:'cubic-bezier(.2,.9,.3,1)'});
-const showP = (id, a, b) => A(id, [{opacity:0},{opacity:1,offset:.1},{opacity:1,offset:.9},{opacity:0}], a, b - a);
-showP('tA', t1 + 0.1, 15.0 + OFF); showP('tB', 15.0 + OFF, 22.3 + OFF); showP('tC', 22.3 + OFF, 38.3 + OFF);
-const hl = (id, at) => A(id, [{backgroundSize:'0% 100%'},{backgroundSize:'100% 100%'}], at, 0.5, {easing:'ease-out'});
-hl('mA', 8.7 + OFF); hl('mB', 18.5 + OFF); hl('mC', 24.6 + OFF);
+// body scroll: source-pixel offsets into assets/tweet-body.jpg (1290 px wide, scale .33178). Landmarks: line pitch 77 px.
+//   0 = top (bunker mode, fresh addresses, never signed, hash) | 1610 = "IMO ... ECDSA breaks before qday"
+const K = 0.33178, SC = (y) => `translateY(${-y * K}px)`;
+const tS = (at) => at + OFF;
+// (scroll keyframes are built on absolute scene time: [t, y] pairs)
+{ const keys = [[0, 0], [9.84, 0], [10.7, 1610], [14.5, 1610], [15.4, 0]].map(([t, y]) => [tS(t), y]), T = 46;
+  f.anim($('tscroll'), keys.map(([t, y], i) => ({transform:SC(y), offset: i ? Math.min(.9999, t / T) : 0, easing:'ease-in-out'})).concat([{transform:SC(0),offset:1}]), 0, T); }
+// marker bands over the passage being discussed: [lineTop, lineBottom, x0, x1, start, end] (body px)
+const bandEl = (y0, y1, x0, x1, at, out) => { const d = document.createElement('div'); d.className = 'band';
+  d.style.cssText += `;top:${y0 - 8}px;height:${y1 - y0 + 16}px;left:${x0}px;width:${x1 - x0}px`; $('tinner').append(d);
+  f.anim(d, [{opacity:0,transform:'scaleX(0)'},{opacity:1,transform:'scaleX(1)',offset:.12},{opacity:1,offset:.85},{opacity:0,transform:'scaleX(1)'}], tS(at), out - at, {easing:'ease-out'}); };
+bandEl(86, 141, 676, 1075, 8.7, 10.6);        // "bunker mode"
+bandEl(1665, 1890, 0, 1290, 11.0, 14.4);      // "ECDSA breaks before qday ... months not years" (scrolled-in passage)
+bandEl(240, 372, 0, 1290, 16.0, 18.4);        // "mass migration of assets to fresh addresses"
+bandEl(702, 834, 0, 1290, 18.5, 20.6);        // "addresses that have never signed a transaction"
+bandEl(318, 438, 0, 1290, 22.6, 29.4);        // "addresses whose pubkeys remain hidden behind a hash" (stays through "public key stays hidden")
 A('tweetw', [{opacity:1,transform:'none'},{opacity:0,transform:'translateY(260px)'}], 38.3 + OFF, 0.45, {easing:'ease-in'});
 // chyron
 const jokes = ['@sol_maxi_…: it’s over', '@quant_…: quantum is 30 years away, buy the dip', '@eth_bro_…: told you hashes were the future', '@gm_fren_…: moving everything to a fresh address, brb', '@cold_wallet_…: my mattress is post-quantum', '@degen_dad_…: bunker mode = my basement', '@pubkey_…: never signing anything again', '@gold_bug_…: sold it all for gold, now what', '@lamport_…: have you tried not being on chain', '@vc_…: we are very bullish on bunkers', '@sha_…: finally, my time'];

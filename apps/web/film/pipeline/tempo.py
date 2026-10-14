@@ -1,21 +1,24 @@
 #!/usr/bin/env python3
-"""Tempo curve for the advisory voice-over.
+"""Tempo curve for the advisory voice-over (revision 2).
 Input : data/s00b-words-1x.json (word times of the 1x render)
 Output: data/s00b-tempo.cmd (asendcmd file, times in 1x input time)
-        data/s00b-words-out.json (word times mapped through the curve, i.e. in the stretched audio)
-Curve : 1.1x at 'Warning', linear ramp to 2.0x by the end of 'hypothetical scenarios',
-        back to 1.0x exactly at 'Viewer'. Integration of dt/tempo gives the output clock."""
+        data/s00b-words-out.json/.js (word times mapped through the curve, i.e. in the stretched audio)
+Curve : 1.0x until the word 'math' has ended, then an ease-in ramp (slow at first, steeper later, quadratic)
+        reaching 1.3x at the end of 'scenarios.', then back to 1.0x over 0.3 s so 'Viewer discretion is advised' is at 1.0x.
+        Integration of dt/tempo gives the output clock."""
 import json, sys
 words = json.load(open('data/s00b-words-1x.json'))
-t_start = words[0]['s']
+t_math = next(w for w in words if w['w'].lower().startswith('math'))['e']
 t_viewer = next(w for w in words if w['w'].lower().startswith('viewer'))['s']
-t_peak = t_viewer - 0.45          # reach 2.0x here, hold, then drop to 1.0x at t_viewer
+t_peak = t_viewer                  # 1.3x reached at the end of 'scenarios.'
+T_DROP = 0.3                       # the drop back to 1.0x is the first 0.3 s of 'Viewer' (so 'Viewer discretion...' is 1.0x)
+PEAK = 1.3
 LEAD_IN = 0.8                      # seconds of silence before the VO in the scene clock
 
 def tempo(t):
-    if t < t_start: return 1.1
-    if t < t_peak: return 1.1 + 0.9 * (t - t_start) / (t_peak - t_start)
-    if t < t_viewer: return 2.0 - 1.0 * (t - t_peak) / (t_viewer - t_peak)
+    if t < t_math: return 1.0
+    if t < t_peak: return 1.0 + (PEAK - 1.0) * ((t - t_math) / (t_peak - t_math)) ** 2
+    if t < t_peak + T_DROP: return PEAK - (PEAK - 1.0) * (t - t_peak) / T_DROP
     return 1.0
 
 STEP = 0.02

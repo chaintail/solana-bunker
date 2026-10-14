@@ -6,7 +6,7 @@ set -euo pipefail
 export PATH=/opt/homebrew/opt/ffmpeg-full/bin:$PATH
 D="$1"; IN="$2"; cd "$D"
 cat > stretch.filter <<'F'
-[0:a]aresample=48000,asendcmd=f=s00b-tempo.cmd,rubberband@rb=tempo=1.1:pitch=1:transients=smooth:window=long:pitchq=quality[a]
+[0:a]aresample=48000,asendcmd=f=s00b-tempo.cmd,rubberband@rb=tempo=1.0:pitch=1:transients=smooth:window=long:pitchq=quality[a]
 F
 ffmpeg -nostdin -v error -y -i "$IN" -/filter_complex stretch.filter -map '[a]' -ac 1 vo-stretched.wav
 M=$(ffmpeg -nostdin -hide_banner -i vo-stretched.wav -af loudnorm=I=-16:TP=-1.5:LRA=7:print_format=json -f null - 2>&1 | sed -n '/^{/,/^}/p')
