@@ -1,0 +1,8 @@
+/* shared by every film scene; fonts are vendored in film/fonts so renders are offline and repeatable */
+@font-face{font-family:'Oswald';font-weight:700;src:url(fonts/Oswald-700.woff2) format('woff2');}
+@font-face{font-family:'Inter';font-weight:500;src:url(fonts/Inter-500.woff2) format('woff2');}
+@font-face{font-family:'Inter';font-weight:700;src:url(fonts/Inter-700.woff2) format('woff2');}
+@font-face{font-family:'Inter';font-weight:800;src:url(fonts/Inter-800.woff2) format('woff2');}
+@font-face{font-family:'Playfair Display';font-weight:700;src:url(fonts/PlayfairDisplay-700.woff2) format('woff2');}
+@font-face{font-family:'Special Elite';font-weight:400;src:url(fonts/SpecialElite-400.woff2) format('woff2');}
+@font-face{font-family:'Anton';font-weight:400;src:url(fonts/Anton-400.woff2) format('woff2');}

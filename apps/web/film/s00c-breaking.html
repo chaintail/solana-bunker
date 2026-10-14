@@ -1,0 +1,31 @@
+<!doctype html><html data-duration="2" data-fps="30"><head><meta charset="utf-8">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
+<style>
+html,body{background:#000;color:#fff}
+.band{position:absolute;left:0;right:0;top:230px;height:260px;background:linear-gradient(180deg,#f2141f,#a80008);box-shadow:0 0 80px rgba(255,0,20,.55);display:flex;align-items:center;justify-content:center;transform-origin:50% 50%}
+.band span{font:700 150px/1 'Oswald';white-space:nowrap;letter-spacing:.04em;text-shadow:0 8px 0 rgba(0,0,0,.35)}
+.line{position:absolute;left:0;right:0;height:10px;background:#fff}
+.flash{position:absolute;inset:0;background:#fff;opacity:0;z-index:70}
+.chime{position:absolute;right:30px;top:24px;font:800 22px/1 'Inter';letter-spacing:.2em;color:#e30613;opacity:0}
+</style></head><body>
+<div class="line" style="top:208px" id="l1"></div><div class="line" style="top:502px" id="l2"></div>
+<div class="band" id="band"><span>BREAKING NEWS</span></div>
+<div class="flash" id="flash"></div>
+<script src="lib/film.js"></script><script src="lib/crt.js"></script>
+<script>
+const f = window.__film, rng = f.rng(11);
+// chime slot: 0.00 to 2.00 s. Slam lands at 0.15 (chime attack); white flash builds from 1.45 and is solid at 2.0.
+f.anim(document.getElementById('band'), [{transform:'scale(5,5)',opacity:0},{transform:'scale(1,1)',opacity:1,offset:.7},{transform:'scale(1.04,1.04)',opacity:1}], 0.05, 0.22, {easing:'cubic-bezier(.2,.9,.3,1)'});
+f.anim(document.getElementById('l1'), [{transform:'scaleX(0)'},{transform:'scaleX(1)'}], 0.2, 0.25, {easing:'ease-out'});
+f.anim(document.getElementById('l2'), [{transform:'scaleX(0)'},{transform:'scaleX(1)'}], 0.2, 0.25, {easing:'ease-out'});
+f.anim(document.getElementById('flash'), [{opacity:0},{opacity:1}], 1.45, 0.55, {easing:'ease-in'});
+const band = document.getElementById('band'), bg = document.body;
+f.onSeek((t) => { // screen shake on the slam + red strobe, keyed on frame so it is repeatable
+  const fr = Math.round(t * 30), k = Math.max(0, 1 - (t - 0.27) / 0.4), r = f.rng(fr * 7 + 1);
+  const dx = t > 0.27 ? (r() - .5) * 26 * k : 0, dy = t > 0.27 ? (r() - .5) * 18 * k : 0;
+  document.querySelectorAll('.line').forEach((e) => (e.style.marginLeft = dx + 'px'));
+  band.style.marginLeft = dx + 'px'; band.style.marginTop = dy + 'px';
+  bg.style.background = t > 0.2 && t < 0.6 && fr % 4 < 2 ? '#2a0003' : '#000';
+});
+f.crt({noise:.05, flicker:.04, seed:9});
+</script></body></html>

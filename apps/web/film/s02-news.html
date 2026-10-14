@@ -1,0 +1,151 @@
+<!doctype html><html data-duration="46" data-fps="30"><head><meta charset="utf-8">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
+<style>
+/* Two layers are rendered separately and composited around the matted footage on dev-mac:
+     ?layer=back  studio backdrop (static; one still is enough)
+     ?layer=front desk, bugs, lower third, over-the-shoulder box, tweet card, chyron, flash, wipe (transparent PNGs)
+   no ?layer  both together (previews only) */
+html,body{font-family:'Inter',sans-serif;color:#fff}
+body.layer-front .back,body.layer-back .front{display:none}
+html:not([data-layer]) body,html[data-layer="back"] body{background:#05070d}
+/* ---------- back: studio ---------- */
+.studio{position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 50% 40%,#244a80 0%,#0d1830 50%,#05070d 100%)}
+.rays{position:absolute;inset:0;background:repeating-conic-gradient(from 200deg at 50% 30%,rgba(120,170,255,.07) 0 4deg,transparent 4deg 11deg);mask-image:radial-gradient(ellipse 60% 60% at 50% 30%,#000,transparent)}
+.sky{position:absolute;left:0;right:0;top:120px;height:420px}
+.sky i{position:absolute;bottom:0;background:#0a1226;border-top:2px solid rgba(120,170,255,.25)}
+.sky b{position:absolute;width:5px;height:7px;background:#ffd98a;opacity:.7}
+.moon{position:absolute;left:1010px;top:130px;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,#bcd2ff 60%,#6f8fd0);box-shadow:0 0 60px rgba(160,200,255,.55)}
+.glass{position:absolute;left:0;right:0;top:0;height:560px;background:linear-gradient(90deg,rgba(20,40,80,.0),rgba(60,110,200,.10) 50%,rgba(20,40,80,0))}
+.mullion{position:absolute;top:0;height:560px;width:10px;background:linear-gradient(90deg,#060a14,#16233f,#060a14)}
+.sign{position:absolute;left:50%;top:40px;transform:translateX(-50%);font:700 28px/1 'Oswald';letter-spacing:.5em;color:rgba(190,215,255,.55)}
+/* ---------- front ---------- */
+.desk{position:absolute;left:0;right:0;top:545px;height:175px;background:linear-gradient(180deg,#2a3a5c 0,#16213a 8%,#0b1224 40%,#070b17 100%);border-top:5px solid #7fa6ff;box-shadow:0 -10px 40px rgba(0,0,0,.5)}
+.desk:after{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:rgba(255,255,255,.55)}
+.deskfront{position:absolute;left:290px;width:700px;top:604px;height:5px;background:#2a3a5c;opacity:0}
+.bug{position:absolute;left:36px;top:30px;display:flex;align-items:center;gap:12px;font:800 28px/1 'Inter';letter-spacing:.14em}
+.bug .dot{width:20px;height:20px;border-radius:50%;background:#e30613;box-shadow:0 0 16px #e30613}
+.bug .chan{font:700 26px/1 'Oswald';letter-spacing:.12em;background:#fff;color:#0d1830;padding:6px 12px;margin-left:10px}
+.l3{position:absolute;left:36px;bottom:104px;width:880px;height:84px;display:flex;align-items:stretch;box-shadow:0 12px 30px rgba(0,0,0,.55);overflow:hidden}
+.l3 .tag{background:#fff;color:#e30613;font:800 30px/84px 'Inter';padding:0 22px;letter-spacing:.06em;min-width:150px}
+.l3 .bar{flex:1;background:linear-gradient(180deg,#f2141f,#b8000a);font:700 48px/84px 'Oswald';padding:0 24px;letter-spacing:.02em;white-space:nowrap}
+.l3sub{position:absolute;left:36px;bottom:70px;width:880px;height:36px;background:rgba(10,14,24,.94);font:700 22px/36px 'Inter';padding:0 20px;letter-spacing:.03em;color:#e8eefa;white-space:nowrap}
+.ticker{position:absolute;left:0;right:0;bottom:0;height:56px;background:#f4f5f7;display:flex;align-items:center;box-shadow:0 -4px 14px rgba(0,0,0,.4);overflow:hidden}
+.ticker .lbl{position:relative;z-index:2;height:100%;background:#0d1830;color:#fff;font:800 22px/56px 'Inter';padding:0 20px;letter-spacing:.12em;white-space:nowrap}
+.ticker .win{position:relative;flex:1;height:100%;overflow:hidden}
+.ticker .run{position:absolute;left:0;top:0;height:100%;white-space:nowrap;font:700 28px/56px 'Inter';color:#141821;will-change:transform}
+.ticker .run span{display:inline-block;padding-right:0}
+.ticker .run b{color:#e30613;margin:0 22px}
+/* over-the-shoulder box */
+.ots{position:absolute;right:36px;top:36px;width:410px;height:230px;border:5px solid #fff;background:#000;box-shadow:0 10px 30px rgba(0,0,0,.6);overflow:hidden;transform-origin:100% 0}
+.ots .pan{position:absolute;left:0;top:0;width:410px;height:230px;transform-origin:0 0}
+.ots img{position:absolute;left:0;top:0;width:410px;height:230px;display:block}
+.ots .ring{position:absolute;border:5px solid #ff1f2d;border-radius:50%;box-shadow:0 0 14px #ff1f2d;opacity:0}
+.otstag{position:absolute;right:36px;top:36px;transform:translateY(-100%);background:#e30613;font:800 18px/1 'Inter';letter-spacing:.14em;padding:6px 12px;opacity:0}
+/* tweet card */
+.tweet{position:absolute;left:30px;top:96px;width:370px;background:#fff;color:#0f1419;border-radius:18px;box-shadow:0 18px 50px rgba(0,0,0,.6);padding:20px 22px 22px}
+.tweet .hd{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.tweet .av{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#4f6bd8,#222c66);display:flex;align-items:center;justify-content:center;font:800 22px/1 'Inter';color:#fff}
+.tweet .nm{font:800 24px/1.1 'Inter'}.tweet .hn{font:500 19px/1.1 'Inter';color:#536471;margin-top:3px}
+.tweet .tx{position:relative;height:200px}
+.tweet .tx p{position:absolute;left:0;right:0;top:0;margin:0;font:700 32px/1.22 'Inter';letter-spacing:-.01em;opacity:0}
+.tweet mark{background:linear-gradient(180deg,transparent 0,transparent 8%,#ffe14a 8%,#ffe14a 94%,transparent 94%);color:#0f1419;padding:0 2px;background-size:0% 100%;background-repeat:no-repeat}
+.tweet .x{position:absolute;right:20px;top:20px;font:800 30px/1 'Inter';color:#0f1419}
+/* flash + wipe */
+.flash{position:absolute;inset:0;background:#fff;opacity:0}
+.wipe{position:absolute;top:0;bottom:0;left:0;width:1500px;background:linear-gradient(90deg,#8a0008,#e30613 18%,#e30613 100%);transform:translateX(-1500px);display:flex;align-items:center;justify-content:center}
+.wipe span{position:absolute;left:640px;transform:translateX(-50%);font:700 150px/1 'Oswald';letter-spacing:.06em;white-space:nowrap;text-shadow:0 8px 0 rgba(0,0,0,.35)}
+.wipe i{position:absolute;left:0;right:0;height:10px;background:#fff}
+</style></head>
+<body>
+<div class="back" id="back">
+  <div class="studio"></div><div class="rays"></div>
+  <div class="moon"></div>
+  <div class="sky" id="sky"></div>
+  <div class="glass"></div>
+  <div class="mullion" style="left:190px"></div><div class="mullion" style="left:520px"></div><div class="mullion" style="left:850px"></div><div class="mullion" style="left:1090px"></div>
+  <div class="sign">CHAINTAIL NEWS</div>
+</div>
+<div class="front" id="front">
+  <div class="desk"></div>
+  <div class="bug"><div class="dot" id="livedot"></div>LIVE<div class="chan">CT NEWS</div></div>
+  <div class="otstag" id="otstag">BANKLESS</div>
+  <div class="ots" id="ots"><div class="pan" id="pan">
+    <img src="assets/bankless-debate-thumb.jpg"><div class="ring" id="ring"></div></div></div>
+  <div class="tweetw" id="tweetw" style="position:absolute;inset:0"><div class="tweet" id="tweet">
+    <div class="x">X</div>
+    <div class="hd"><div class="av">JD</div><div><div class="nm">Justin Drake</div><div class="hn">@drakefjustin</div></div></div>
+    <div class="tx">
+      <p id="tA">&ldquo;&hellip;calmly begin planning for <mark id="mA">&ldquo;bunker mode&rdquo;</mark>.&rdquo;</p>
+      <p id="tB">&ldquo;&hellip;move the bulk of their funds to addresses that <mark id="mB">have never signed a transaction</mark>.&rdquo;</p>
+      <p id="tC">&ldquo;&hellip;addresses whose pubkeys <mark id="mC">remain hidden behind a hash</mark>.&rdquo;</p>
+    </div>
+  </div></div>
+  <div class="l3" id="l3"><div class="tag" id="l3tag">LIAM</div><div class="bar" id="l3bar">Chaintail Labs</div></div>
+  <div class="l3sub" id="l3sub">Senior Bunker Correspondent</div>
+  <div class="ticker"><div class="lbl">CT LIVE</div><div class="win"><div class="run" id="run"></div></div></div>
+  <div class="flash" id="flash"></div>
+  <div class="wipe" id="wipe"><i style="top:215px"></i><i style="top:495px"></i><span>SPECIAL REPORT</span></div>
+</div>
+<script src="lib/film.js"></script>
+<script>
+const f = window.__film, L = new URLSearchParams(location.search).get('layer');
+if (L) { document.documentElement.dataset.layer = L; document.body.classList.add('layer-' + L); }
+const $ = (id) => document.getElementById(id);
+const OFF = 0.08; // desk t0 = 8.16 s in Liam's recording; words below are transcript times minus 8.24, plus OFF
+
+// ---- back: skyline (seeded) ----
+{ const r = f.rng(42), sky = $('sky'); let x = -10;
+  while (x < 1290) { const w = 40 + r() * 70, h = 60 + r() * 300 * (0.4 + 0.6 * Math.abs(Math.sin(x / 260)));
+    const b = document.createElement('i'); b.style.cssText = `left:${x}px;width:${w}px;height:${h}px;opacity:${0.55 + r() * 0.45}`;
+    for (let k = 0; k < (w * h) / 900; k++) { const s = document.createElement('b'); s.style.cssText = `left:${6 + r() * (w - 14)}px;top:${6 + r() * (h - 14)}px;opacity:${r() < .45 ? .8 : .12}`; b.append(s); }
+    sky.append(b); x += w + 3 + r() * 14; } }
+
+// ---- front: timeline ----
+const A = (id, kf, at, dur, o) => f.anim($(id), kf, at, dur, o);
+// entry flash from the BREAKING NEWS cut
+A('flash', [{opacity:1},{opacity:0}], 0, 0.5, {easing:'ease-out'});
+// LIVE dot pulse (loops via keyframes with iterations, still seekable)
+A('livedot', [{opacity:1},{opacity:.25},{opacity:1}], 0, 1.2, {iterations:40});
+// lower third in at 0.4, becomes the headline at "spiral" (6.8), stays
+A('l3', [{transform:'translateX(-120%)'},{transform:'none'}], 0.4, 0.45, {easing:'cubic-bezier(.2,.9,.3,1)'});
+A('l3sub', [{transform:'translateX(-120%)'},{transform:'none'}], 0.5, 0.45, {easing:'cubic-bezier(.2,.9,.3,1)'});
+f.onSeek((t) => { // text swap is a hard cut on the frame, keyed on time
+  const second = t >= 5.6 + OFF;
+  $('l3tag').textContent = second ? 'BREAKING' : 'LIAM';
+  $('l3bar').textContent = second ? 'CRYPTO TWITTER IN SPIRAL' : 'Chaintail Labs';
+  $('l3sub').textContent = second ? 'Ethereum researcher calls for “bunker mode”' : 'Senior Bunker Correspondent';
+});
+// over-the-shoulder box: in at "this lead Ethereum researcher" (0.96)
+A('ots', [{opacity:0,transform:'translateY(-30px)'},{opacity:1,transform:'none'}], 0.9 + OFF, 0.35, {easing:'ease-out'});
+A('otstag', [{opacity:0},{opacity:1}], 1.1 + OFF, 0.2);
+// face geometry in 410x230 box coordinates (thumbnail face centre ~ (170,395)/1280 * 410)
+const fx = 170 * 410 / 1280, fy = 395 * 410 / 1280, fr = 150 * 410 / 1280;
+const ring = $('ring'); ring.style.cssText += `;left:${fx - fr}px;top:${fy - fr}px;width:${2 * fr}px;height:${2 * fr}px`;
+const tc = 2.16 + OFF; // "researcher" lands: red circle snaps on
+A('ring', [{opacity:0,transform:'scale(3.2)'},{opacity:1,transform:'scale(1)'}], tc, 0.16, {easing:'cubic-bezier(.2,.9,.3,1)'});
+// two pulses of the ring (scale up and back), nested wrapper so no property is animated twice on the same element
+const rw = document.createElement('div'); rw.style.cssText = `position:absolute;left:${fx - fr}px;top:${fy - fr}px;width:${2 * fr}px;height:${2 * fr}px;transform-origin:50% 50%`;
+ring.style.left = ring.style.top = '0'; ring.style.width = ring.style.height = '100%'; ring.parentNode.insertBefore(rw, ring); rw.append(ring);
+for (const p of [tc + 0.35, tc + 0.85]) f.anim(rw, [{transform:'scale(1)'},{transform:'scale(1.35)'},{transform:'scale(1)'}], p, 0.45, {easing:'ease-in-out'});
+// zoom: box becomes a square, image zooms until the face fills it (while "put out a massive post")
+const z0 = 3.2 + OFF, zd = 0.9, S = 2.45, sq = 260;
+A('ots', [{width:'410px',height:'230px'},{width:sq + 'px',height:sq + 'px'}], z0, zd, {easing:'ease-in-out'});
+A('pan', [{transform:'translate(0,0) scale(1)'},{transform:`translate(${(sq / 2 - 5) - S * fx}px,${(sq / 2 - 5) - S * fy}px) scale(${S})`}], z0, zd, {easing:'ease-in-out'});
+// ots dims slightly while the tweet is on screen? no: stays as the second source. leaves at the wipe.
+// tweet card slides up on the other side at "He said, get ready for bunker mode" (7.12)
+const t1 = 7.12 + OFF;
+A('tweet', [{opacity:0,transform:'translateY(260px)'},{opacity:1,transform:'none'}], t1, 0.5, {easing:'cubic-bezier(.2,.9,.3,1)'});
+const showP = (id, a, b) => A(id, [{opacity:0},{opacity:1,offset:.1},{opacity:1,offset:.9},{opacity:0}], a, b - a);
+showP('tA', t1 + 0.1, 15.0 + OFF); showP('tB', 15.0 + OFF, 22.3 + OFF); showP('tC', 22.3 + OFF, 38.3 + OFF);
+const hl = (id, at) => A(id, [{backgroundSize:'0% 100%'},{backgroundSize:'100% 100%'}], at, 0.5, {easing:'ease-out'});
+hl('mA', 8.7 + OFF); hl('mB', 18.5 + OFF); hl('mC', 24.6 + OFF);
+A('tweetw', [{opacity:1,transform:'none'},{opacity:0,transform:'translateY(260px)'}], 38.3 + OFF, 0.45, {easing:'ease-in'});
+// chyron
+const jokes = ['@sol_maxi_…: it’s over', '@quant_…: quantum is 30 years away, buy the dip', '@eth_bro_…: told you hashes were the future', '@gm_fren_…: moving everything to a fresh address, brb', '@cold_wallet_…: my mattress is post-quantum', '@degen_dad_…: bunker mode = my basement', '@pubkey_…: never signing anything again', '@gold_bug_…: sold it all for gold, now what', '@lamport_…: have you tried not being on chain', '@vc_…: we are very bullish on bunkers', '@sha_…: finally, my time'];
+const run = $('run'); const unit = document.createElement('span'); unit.innerHTML = jokes.map((j) => j.replace(/&/g, '&amp;')).join('<b>•</b>') + '<b>•</b>';
+run.append(unit, unit.cloneNode(true));
+let unitW = 0;
+f.onSeek((t) => { if (!unitW) unitW = unit.getBoundingClientRect().width || 0; if (unitW) run.style.transform = `translateX(${-((t * 150) % unitW)}px)`; });
+// exit: SPECIAL REPORT wipe, fully covering at 46.0
+A('wipe', [{transform:'translateX(-1500px)'},{transform:'translateX(-220px)',offset:.55,easing:'linear'},{transform:'translateX(0)'}], 44.3, 1.7, {easing:'cubic-bezier(.5,0,.2,1)'});
+</script></body></html>

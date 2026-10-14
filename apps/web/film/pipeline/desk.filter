@@ -1,0 +1,7 @@
+[0:v]format=yuv420p,fps=30,trim=duration=46,setpts=PTS-STARTPTS[bg];
+[1:v]fps=30,scale=525:700:flags=lanczos,despill=type=green:mix=0.6:expand=0.2,format=rgb24[c];
+[2:v]fps=30,scale=525:700:flags=lanczos,format=gray[a];
+[c][a]alphamerge[liam];
+[bg][liam]overlay=x=377:y=-20:format=auto[bgl];
+[3:v]format=yuva420p[fr];
+[bgl][fr]overlay=format=auto,format=yuv420p,setsar=1[desk]
