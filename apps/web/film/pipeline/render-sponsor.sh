@@ -6,7 +6,7 @@ export PATH=/opt/homebrew/opt/ffmpeg-full/bin:$PATH
 D=~/video-work/solana-bunker/out/s00a-v3; mkdir -p "$D"; cd "$D"
 T="The following program is brought to you by Chaintail Labs."
 for v in bf_emma bf_isabella; do
-  curl -sf -m120 localhost:8899/v1/audio/speech -H "Content-Type: application/json" \
+  curl -sf -m120 100.78.140.122:8899/v1/audio/speech -H "Content-Type: application/json" \
     -d "{\"model\":\"mlx-community/Kokoro-82M-bf16\",\"input\":\"$T\",\"voice\":\"$v\",\"speed\":0.9,\"response_format\":\"wav\"}" -o raw_$v.wav
   M=$(ffmpeg -nostdin -hide_banner -i raw_$v.wav -af loudnorm=I=-16:TP=-1.5:LRA=7:print_format=json -f null - 2>&1 | sed -n '/^{/,/^}/p')
   g() { echo "$M" | sed -n "s/.*\"$1\" *: *\"\\(.*\\)\".*/\\1/p"; }
