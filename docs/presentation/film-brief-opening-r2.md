@@ -1,0 +1,13 @@
+# Opening beats, revision 2 (Liam voice 15835, 2026-10-14)
+
+Apply to the committed scenes in apps/web/film (s00-intro, s00b-advisory, s00c-breaking, s02-news) and rebuild `opening-v1.mp4` as `opening-v2.mp4`. Liam: "this is pretty freaking awesome"; the changes below are his words.
+
+1. **Sponsor card font** "is goofy looking". Replace with a plain, classic broadcast serif (e.g. a Times/Georgia-class face from the fonts dir), no decoration.
+2. **No flashing effect** behind "brought to you by" and behind the TV-MATH card. Remove the static/flicker and the colour-bar flash. Keep the TV-MATH box ("I love the TV math part").
+3. **Advisory voice tempo:** stay at 1.0x until the word "math" has been spoken. Only after "math" start accelerating, gently at first and increasing, reaching about 1.3x by the end of the disclaimer ("hypothetical scenarios"). "Viewer discretion is advised" back at 1.0x as now (he liked it). Re-derive the word reveal timing from the new tempo curve.
+4. **Lower third:** when the desk opens the white box reads "BREAKING", not his name. His name "LIAM" goes in the red box, as in his recording (the red tag at the left of the lower third).
+5. **Channel bug:** white version of the Chaintail lemur logo in the bottom-right corner with the letters "CNN" (Chaintail News Network) beside it. Source `docs/presentation/assets/chaintail-logo.svg`, recolour white.
+6. **Real tweet component:** stop using the home-made tweet card. Build a tweet component from the real screenshot pieces in `docs/presentation/assets/tweet-1-top.jpg` … `tweet-7.jpg` (see `apps/web/scripts/stitch-tweet.py` for how they join): the header with Justin's profile stays fixed at the top, the footer with likes, retweet and impressions is cut away, and the real body text scrolls inside the window so any passage can be brought into position; highlight the passage being discussed on the image (e.g. a translucent marker band over the "bunker mode" lines) in time with Liam's words.
+7. **Bankless box choreography:** hold the full YouTube thumbnail (with Anatoly) first for a beat, then draw a hand-drawn-looking circle around Justin's face slowly (imperfect, wobbly stroke, animated as if drawn), then fade the circle out, then zoom his face into the resting position. Slow the whole move down and shorten the time spent at rest. No red circle remains after the zoom.
+
+Everything else unchanged. Same pipeline rules as `film-brief-opening.md` (frames on dev-mac per the guard hook, ffmpeg only on dev-mac, commit by pathspec, no trailers). Report: preview stills for 0a, 0b, 2 (lower third, tweet component mid-scroll, circle mid-draw) and `dev-mac:~/video-work/solana-bunker/out/opening-v2.mp4`, plus anything not followed as written.
