@@ -1,0 +1,264 @@
+<!doctype html><html data-duration="68.13" data-fps="30"><head><meta charset="utf-8">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css"><link rel="stylesheet" href="dossier.css">
+<style>
+:root{--cork:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='360' height='360'><filter id='n' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='3' seed='9' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .28  0 0 0 0 .16  0 0 0 0 .05  0 0 0 1.5 -.55'/></filter><rect width='360' height='360' filter='url(%23n)'/></svg>")}
+.abs{position:absolute}
+/* open folder */
+#base{left:300px;top:50px;width:700px;height:620px;border-radius:6px 14px 14px 14px}
+#base .tab{position:absolute;right:50px;top:-44px;width:220px;height:48px;border-radius:12px 12px 0 0;background:#c9a255}
+#fold3{position:absolute;left:300px;top:50px;width:700px;height:620px;perspective:2600px;perspective-origin:50% 50%}
+#cover{position:absolute;left:0;top:0;width:700px;height:620px;transform-origin:0 50%;transform-style:preserve-3d}
+#cover .face{position:absolute;inset:0;border-radius:6px 14px 14px 14px;backface-visibility:hidden}
+#cover .front .tab{position:absolute;left:44px;top:-46px;width:240px;height:50px;border-radius:12px 12px 0 0;background:#d9b46c}
+#cover .back{transform:rotateY(180deg);background:linear-gradient(225deg,#c79f55,#b5893f);box-shadow:inset 0 0 40px rgba(80,50,10,.5)}
+#label{left:44px;top:70px;width:500px;height:104px}
+#label .ty{position:absolute;left:24px;top:20px;font-size:56px;line-height:64px;letter-spacing:.02em}
+#cls{left:96px;top:290px;font-size:104px;border-width:10px;padding:4px 28px 0}
+#qm{position:absolute;left:400px;top:170px;width:300px;text-align:center;font-family:'Anton';font-size:380px;line-height:1;color:var(--red);mix-blend-mode:multiply;filter:url(#rough);opacity:0}
+#page{left:320px;top:66px;width:660px;height:588px;transform:rotate(-.5deg)}
+.pbars{position:absolute;left:0;right:0;background:repeating-linear-gradient(180deg,rgba(40,38,32,.42) 0 5px,transparent 5px 21px)}
+/* A */
+#h1{left:350px;top:96px;font-size:64px;line-height:70px;letter-spacing:.01em}
+#h2{left:352px;top:170px;font-size:42px;line-height:46px;color:#9d1218}
+#hbar{left:352px;top:160px;width:560px;height:5px;background:#141310;transform-origin:0 50%}
+.sheet{position:absolute;width:250px;height:330px;background:#efe6ce}
+.sheet i{position:absolute;left:22px;right:22px;top:70px;bottom:26px;background:repeating-linear-gradient(180deg,rgba(40,38,32,.5) 0 5px,transparent 5px 19px)}
+.sheet b{position:absolute;left:22px;top:22px;width:120px;height:30px;background:#2c2b28}
+#plate{position:absolute;left:24px;top:456px;width:380px;height:240px;background:#0f0f0e;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,.5),0 18px 30px rgba(0,0,0,.5);transform-origin:0 100%}
+#plate:after{content:"";position:absolute;inset:8px;border:3px solid rgba(243,231,200,.25);border-radius:8px}
+#plate .n{position:absolute;left:0;right:0;top:6px;text-align:center;font:400 214px/1 'Anton';color:#f3e7c8;letter-spacing:.01em}
+#plate .l{position:absolute;left:0;right:0;bottom:10px;text-align:center;font:400 26px/1 'Special Elite';color:#c9b98f;letter-spacing:.3em}
+/* B index */
+#idx{left:110px;top:56px;width:800px;height:612px}
+#idxT{left:34px;top:26px;font-size:36px;letter-spacing:.04em}
+.dst{position:absolute;width:140px;height:88px;display:flex;align-items:center;justify-content:center;text-align:center;font:700 28px/1.02 'Oswald';text-transform:uppercase;border:4px solid;border-radius:6px;mix-blend-mode:multiply;filter:url(#rough);letter-spacing:.03em;padding:0 6px}
+#slot{position:absolute;left:334px;top:406px;width:444px;height:88px}
+#slot .out{position:absolute;inset:0;border:4px dashed rgba(60,55,40,.55);border-radius:6px}
+#slot .w{position:absolute;left:0;right:0;top:0;height:88px;display:flex;align-items:center;justify-content:center;font:700 50px/1 'Oswald';letter-spacing:.02em;color:#a3161c}
+#slot svg{position:absolute;left:0;top:0;overflow:visible}
+#note{left:196px;top:516px;font-size:68px;line-height:60px;color:#2f2f33;transform:rotate(-3deg);mix-blend-mode:multiply;text-shadow:0 0 1px rgba(40,40,44,.6)}
+#note svg{position:absolute;left:-6px;top:56px;overflow:visible}
+/* D cork */
+#cork{position:absolute;left:50px;top:36px;width:930px;height:654px;border:16px solid #5b3b1e;border-radius:6px;background:#b8874f;box-shadow:0 10px 30px rgba(0,0,0,.6);overflow:hidden}
+#cork:before{content:"";position:absolute;inset:0;background:var(--cork)}
+#cork:after{content:"";position:absolute;inset:0;background:var(--toner);opacity:.35}
+.card{position:absolute;background:#f6f1e3;box-shadow:2px 3px 3px rgba(0,0,0,.35),8px 12px 18px rgba(0,0,0,.35)}
+.tag{position:absolute;width:230px;height:84px;background:#efe3c3;border-radius:8px;box-shadow:2px 4px 4px rgba(0,0,0,.4),6px 10px 14px rgba(0,0,0,.3);font:400 44px/84px 'Special Elite';text-align:center;transform-origin:115px -64px;color:#141310}
+#slip .t{position:absolute;left:120px;top:30px;font:700 26px/1.1 'Inter';color:#111}
+/* E shelf */
+#shelf{position:absolute;left:50px;top:36px;width:930px;height:654px;border:14px solid #2d1d10;border-radius:4px;background:linear-gradient(180deg,#4a331d,#2c1e11 70%,#1e140b);overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+#shelf:before{content:"";position:absolute;inset:0;background:var(--fibre);opacity:.7;mix-blend-mode:overlay;z-index:3;pointer-events:none}
+#shelf:after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 80% 90% at 15% -10%,rgba(255,206,130,.40),transparent 70%),linear-gradient(180deg,rgba(60,35,10,.0),rgba(0,0,0,.35));z-index:3;pointer-events:none}
+#shin{position:absolute;left:0;top:0;width:1560px;height:100%}
+.spine{position:absolute;bottom:128px;width:120px;border-radius:4px 4px 2px 2px;box-shadow:inset 6px 0 8px rgba(255,220,150,.15),inset -8px 0 10px rgba(0,0,0,.45),3px 0 6px rgba(0,0,0,.5)}
+.spine .yr{position:absolute;left:0;right:0;top:46px;text-align:center;font:700 56px/1 'Oswald';color:#e9cb7d;writing-mode:vertical-rl;transform:rotate(180deg);letter-spacing:.06em;text-shadow:0 1px 0 rgba(0,0,0,.5)}
+.spine .bd{position:absolute;left:0;right:0;height:10px;background:linear-gradient(180deg,#8a6a22,#e1c26a,#8a6a22)}
+.gap{position:absolute;bottom:128px;width:134px;height:400px;background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(255,214,150,.10));border:3px dotted rgba(235,205,150,.0);border-radius:3px}
+.gap .dust{position:absolute;inset:-4px;border:4px dashed rgba(240,214,160,.85);border-radius:4px;opacity:0}
+.gap .gy{position:absolute;left:0;right:0;top:200px;text-align:center;font:700 52px/1 'Oswald';color:rgba(240,214,160,.55);writing-mode:vertical-rl;transform:rotate(180deg);margin-left:42px;opacity:0}
+#plank{position:absolute;left:0;top:520px;width:1560px;height:110px;background:linear-gradient(180deg,#8a6236,#6d4a26 12%,#4f3419 60%,#2a1b0d)}
+#brass{left:150px;top:536px;width:630px;height:70px;background:linear-gradient(180deg,#e2c46d,#b38d34 55%,#8c6c22);border-radius:6px;box-shadow:0 4px 6px rgba(0,0,0,.5);z-index:4;position:absolute}
+#brass .ty{position:absolute;left:0;right:0;top:15px;text-align:center;font-size:34px;line-height:40px;color:#2a1c05;text-shadow:0 1px 0 rgba(255,235,170,.5)}
+/* F evidence page */
+#fp{left:320px;top:60px;width:660px;height:600px;transform:rotate(.6deg)}
+#fslip{left:62px;top:34px;width:540px;height:280px;background:#f7f4ea;transform:rotate(-1.6deg)}
+#fslip .av{position:absolute;left:22px;top:22px;width:62px;height:62px;border-radius:50%;background:#4a5a6a}
+#fslip .nm{position:absolute;left:100px;top:24px;font:800 28px/1 'Inter';color:#111}
+#fslip .hd{position:absolute;left:100px;top:56px;font:500 22px/1 'Inter';color:#555}
+#fslip .tx{position:absolute;left:24px;top:108px;right:24px;font:700 30px/1.22 'Inter';color:#111}
+#l1{left:40px;top:358px;font-size:37px;line-height:44px}
+#l2{left:40px;top:446px;font-size:37px;line-height:44px}
+#l1b,#l2b{position:absolute;height:3px;background:#141310;transform-origin:0 50%}
+/* polaroid pip frame */
+#pol{position:absolute;left:999px;top:331px;width:250px;height:361px;transform-origin:125px 161px;transform:rotate(-2deg);opacity:0}
+#pol .ph{position:absolute;left:17px;top:17px;width:216px;height:288px;background:linear-gradient(160deg,#6d7d70,#3d4a42)}
+#pol .cap{position:absolute;left:0;right:0;bottom:9px;text-align:center;font:400 26px/1 'Special Elite';color:#2b2a26;letter-spacing:.12em}
+#cut{position:absolute;inset:0;background:#000;opacity:0}
+</style></head><body>
+<div class="world"><div class="blotter"></div>
+<div id="cam"><div id="shake" class="abs" style="inset:0">
+  <div id="base" class="manila abs"><div class="tab"></div></div>
+  <div id="fold3"><div id="cover">
+    <div class="face back"></div>
+    <div class="face front manila"><div class="tab"></div>
+      <div id="label" class="paper"><div class="ty" id="lt">SOLANA BUNKER</div></div>
+      <div id="cls" class="stamp">Classified</div><div id="qm">?</div></div>
+  </div></div>
+  <div id="page" class="paper"></div>
+  <div id="h1" class="ty abs"></div><div id="hbar" class="abs"></div><div id="h2" class="ty abs"></div>
+  <div id="stack"></div>
+  <div id="idx" class="paper"><div id="idxT" class="ty abs"></div><div id="grid"></div>
+    <div id="slot"><div class="out"></div><div class="w">CRYPTOGRAPHY</div></div>
+    <div id="note" class="hand abs">math checks out?</div></div>
+  <div id="cork"><div id="citems" class="abs" style="inset:0"></div><div id="slipwrap" class="abs" style="inset:0"></div></div>
+  <div id="shelf"><div id="shin"><div id="plank"></div></div><div id="brass"><div class="ty" id="bt"></div></div></div>
+  <div id="fp" class="paper"><div id="fslip" class="paper"><div class="av"></div><div class="nm">@crypto_bro_88</div><div class="hd">Crypto Twitter</div><div class="tx">BREAKING: they stopped publishing math in WW2 too. Same thing is happening NOW. Wake up.</div></div>
+    <div id="l1" class="ty abs"></div><div id="l2" class="ty abs"></div></div>
+  <div id="plateS" class="abs" style="inset:0;transform-origin:24px 696px"><div id="plate"><div class="n" id="pn">0</div><div class="l">PAPERS</div></div></div>
+</div></div>
+<div id="pol"><div class="paper" style="inset:0;background:#f4efe2"></div><div class="ph"></div><div class="cap">EXHIBIT A</div></div>
+<div class="lamp"></div><div class="dim" id="dim"></div><div class="grain"></div><div id="cut"></div>
+</div>
+<script src="lib/film.js"></script><script src="lib/dossier.js"></script><script src="data/conspiracy-timing.js"></script>
+<script>
+const D = __D, film = __film, $ = (i) => document.getElementById(i), mk = D.mk;
+D.defs();
+const OFF = 7.0, L = (g) => g - OFF, W = (p, w, s = true) => L(D.W(p, w, s)), A = (el, kf, at, dur, easing) => film.anim(el, kf, at, dur, easing ? { easing } : {});
+const EO = D.ease.out, EI = D.ease.in, EIO = D.ease.io;
+const rs = film.rng(719);
+// ---- camera: pull back from the paper we pushed into at the end of slide 1
+{ const S = 2.7, P = { x: 620, y: 200 };
+  A($('cam'), [{ transform: `translate(${640 - P.x * S}px,${360 - P.y * S}px) scale(${S})` }, { transform: 'translate(0,0) scale(1)' }], 0.12, 2.1, 'cubic-bezier(.35,0,.15,1)'); }
+// ---- open folder: the cover is lying open on the left; it closes at the end (cover is above everything while closing)
+const tClose = L(71.85), tShut = L(72.9), tQ = L(73.28);
+film.anim($('cover'), [{ transform: 'rotateY(-176deg)' }, { transform: 'rotateY(-176deg)', offset: tClose / tShut, easing: 'cubic-bezier(.5,0,.4,1)' }, { transform: 'rotateY(0deg)' }], 0, tShut);
+film.onSeek((t) => { $('fold3').style.zIndex = t >= tClose ? 80 : 'auto'; });
+D.slam($('qm'), tQ, -9, 2.2, .14);
+// ---- slide 3 beat 1: header types on the first page
+const tB = W('p1', 'But'), tCon = W('p1', 'conspiracy'), tSt = W('p1', 'starts', false);
+D.type($('h1'), 'CASE FILE 719', tB, tCon + .05, true);
+A($('hbar'), [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], tCon, .25, EO);
+D.type($('h2'), 'THE MISSING PAPERS', tCon + .25, tSt + .05, true);
+// ---- beat 2: the stack, counter to 719
+const tOpen = W('p2', 'OpenAI'), tPapers = W('p2', 'papers', false), tOver = W('p3', 'overnight');
+const plate = $('plate');
+A(plate, [{ opacity: 0, transform: 'translateY(300px) rotate(-2deg) scale(1)' }, { opacity: 1, transform: 'translateY(0) rotate(-2deg) scale(1)' }], tOpen - .35, .35, EO);
+const stack = $('stack');
+const N = 38;
+for (let i = 0; i < N; i++) {
+  const g = i < 26 ? tOpen + .05 + i * ((tPapers - tOpen - .1) / 25) : tPapers + .25 + (i - 26) * ((tOver + .5 - tPapers - .25) / 11);
+  const x = 650 + (rs() - .5) * 230, y = 436 + (rs() - .5) * 120, r = (rs() - .5) * 26;
+  const s = mk('div', 'sheet paper', `left:${x - 125}px;top:${y - 165}px`, stack, '<b></b><i></i>');
+  if (i % 5 == 2) s.firstChild.style.background = '#a8191f'; if (i % 7 == 3) s.firstChild.style.background = '#1d3f8f';
+  A(s, [{ opacity: 0, transform: `translate(${(rs() - .5) * 60}px,-340px) rotate(${r + 16}deg) scale(1.35)` }, { opacity: 1, transform: `translate(0,0) rotate(${r}deg) scale(1)` }], g, .17, EI);
+}
+const cnt = $('pn');
+film.onSeek((t) => { const p = film.prog(t, tOpen, tPapers); cnt.textContent = String(Math.round(719 * p)); });
+// plate shrinks to a corner badge when the index page arrives
+const tIdx = L(16.72);
+A($('plateS'), [{ transform: 'scale(1)' }, { transform: 'scale(.4)' }], tIdx - .1, .4, EIO);
+// ---- beat 3: index page + seventeen stamps
+const idx = $('idx');
+A(idx, [{ transform: 'translateY(780px) rotate(3deg)' }, { transform: 'translateY(0) rotate(-.6deg)' }], tIdx, .55, EO);
+D.type($('idxT'), 'INDEX / DISCIPLINES', tIdx + .35, tIdx + 1.0, false);
+const names = ['Algebra', 'Analysis', 'Topology', 'Number Theory', 'Combinatorics', 'Geometry', 'Logic', 'Probability', 'Statistics', 'Optimization', 'PDE', 'Dynamical Systems', 'Graph Theory', 'Category Theory', 'Numerical Analysis', 'Game Theory', 'Information Theory'];
+const cols = ['#1d3f8f', '#a3161c', '#1b1a17', '#1f6b3a'];
+const t17a = W('p4', 'covering'), t17b = W('p4', 'disciplines', false);
+names.forEach((nm, i) => {
+  const r = Math.floor(i / 5), c = i % 5;
+  const col = cols[(i * 3 + r) % 4];
+  const long = Math.max(...nm.split(' ').map((w) => w.length));
+  const fs = Math.min(36, Math.floor(118 / (long * .50)));
+  const e = mk('div', 'dst', `left:${30 + c * 152 + (rs() - .5) * 8}px;top:${90 + r * 104 + (rs() - .5) * 8}px;color:${col};border-color:${col};font-size:${fs}px`, $('grid'), nm.replace(' ', '<br>'));
+  const rot = (rs() - .5) * 9;
+  const g = t17a - .05 + i * ((t17b - t17a + .12) / 17);
+  A(e, [{ opacity: 0, transform: `rotate(${rot}deg) scale(1.9)` }, { opacity: .92, transform: `rotate(${rot}deg) scale(.97)`, offset: .75 }, { opacity: .92, transform: `rotate(${rot}deg) scale(1)` }], g, .11, 'cubic-bezier(.5,0,.9,.4)');
+});
+// ---- beat 4: the eighteenth slot stays empty, then a torn redaction bar covers CRYPTOGRAPHY
+const slot = $('slot'), tMiss = W('p5', 'missing'), tCry = W('p5', 'cryptography'), tCryE = W('p5', 'cryptography', false);
+A(slot.querySelector('.out'), [{ opacity: 0 }, { opacity: 1 }], tMiss - .6, .25);
+slot.querySelector('.w').style.opacity = 0;
+A(slot.querySelector('.w'), [{ opacity: 0 }, { opacity: 1 }], tCry - .1, .08);
+const jag = (x0, x1, y, amp, step, dir) => { const pts = []; for (let x = x0; (dir > 0 ? x <= x1 : x >= x1); x += dir * step) pts.push([x, y + (rs() - .5) * amp * 2]); return pts; };
+const poly = (arr) => arr.map((p) => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+const H0 = 24, H1 = 420;
+const hole = [...jag(H0, H1, 9, 6, 28, 1), [H1 + 6, 44], ...jag(H1, H0, 79, 6, 28, -1), [H0 - 6, 44]];
+const patch = [[H0 - 14, 2], ...jag(H0, H1 + 12, 3, 3, 26, 1), [H1 + 16, 44], ...jag(H1 + 12, H0, 85, 3, 26, -1), [H0 - 16, 44]];
+const barW = mk('div', 'abs', 'left:0;top:0;width:444px;height:88px', slot, `<svg width="444" height="88" viewBox="0 0 444 88"><defs><mask id="hm"><rect width="444" height="88" fill="#fff"/><polygon points="${poly(hole)}" fill="#000"/></mask></defs><rect x="-6" y="0" width="456" height="88" fill="#0b0b0b" mask="url(#hm)"/></svg>`);
+const patchW = mk('div', 'abs', 'left:0;top:0;width:444px;height:88px', slot, `<svg width="444" height="88" viewBox="0 0 444 88"><polygon points="${poly(patch)}" fill="#0b0b0b"/></svg>`);
+A(barW, [{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)' }], tCry - .5, .62, 'cubic-bezier(.5,0,.5,1)');
+A(patchW, [{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)' }], tCryE + .02, .3, 'cubic-bezier(.5,0,.5,1)');
+// ---- beat 5: pencilled note in the margin
+const tMaybe = W('p6', 'Maybe'), tMath = W('p6', 'math'), tSound = W('p6', 'sound', false);
+const note = $('note');
+A(note, [{ clipPath: 'inset(-10px 100% -10px 0)' }, { clipPath: 'inset(-10px -4% -10px 0)' }], tMath - .3, 1.15, 'linear');
+note.style.opacity = 1;
+const ul = mk('div', '', '', note, `<svg width="440" height="26" viewBox="0 0 440 26"><path d="M2 14 C60 4 120 22 190 12 S330 8 438 16" fill="none" stroke="#2f2f33" stroke-width="4" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" class="ulp"/></svg>`);
+A(ul.querySelector('.ulp'), [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], tSound - .2, .5, EO);
+// ---- beat 6: corkboard with OpenAI card, federal seal, red string, dangling quantum? tag
+const tCork = L(30.55), tSeal = W('p7b', 'government'), tAI = W('p7b', 'OpenAI'), tLean = W('p7b', 'leaning'), tDang = W('p7b', 'dangerous');
+const cork = $('cork');
+A(cork, [{ transform: 'translateY(-760px) rotate(-1.5deg)' }, { transform: 'translateY(0) rotate(0)' }], tCork, .6, EO);
+const ci = $('citems');
+const seal = mk('div', 'card abs', 'left:120px;top:150px;width:270px;height:280px;transform:rotate(-4deg)', ci, `<svg viewBox="0 0 270 280" width="270" height="280"><circle cx="135" cy="150" r="112" fill="#1b2d5e"/><circle cx="135" cy="150" r="112" fill="none" stroke="#d9b24a" stroke-width="9"/><circle cx="135" cy="150" r="78" fill="none" stroke="#d9b24a" stroke-width="3"/><path id="arc" d="M45 150 A90 90 0 0 1 225 150" fill="none"/><text font-family="Oswald" font-weight="700" font-size="25" fill="#f1d78a" letter-spacing="3"><textPath href="#arc" startOffset="50%" text-anchor="middle">U.S. GOVERNMENT</textPath></text><polygon points="135,112 146,141 177,141 152,159 162,189 135,171 108,189 118,159 93,141 124,141" fill="#f1d78a"/></svg>`);
+const pinSeal = mk('div', 'pin', 'left:243px;top:150px', ci);
+const ai = mk('div', 'card abs', 'left:560px;top:190px;width:300px;height:190px;transform:rotate(3deg)', ci, `<svg viewBox="0 0 300 190" width="300" height="190"><g transform="translate(150 62)" fill="none" stroke="#111" stroke-width="9" stroke-linecap="round"><ellipse rx="10" ry="30" cy="-30"/><ellipse rx="10" ry="30" cy="-30" transform="rotate(60)"/><ellipse rx="10" ry="30" cy="-30" transform="rotate(120)"/><ellipse rx="10" ry="30" cy="-30" transform="rotate(180)"/><ellipse rx="10" ry="30" cy="-30" transform="rotate(240)"/><ellipse rx="10" ry="30" cy="-30" transform="rotate(300)"/></g><text x="150" y="168" text-anchor="middle" font-family="Inter" font-weight="800" font-size="56" fill="#111">OpenAI</text></svg>`);
+const pinAI = mk('div', 'pin b', 'left:697px;top:190px', ci);
+const string = mk('div', 'abs', 'left:0;top:0;width:930px;height:654px', ci, `<svg width="930" height="654" viewBox="0 0 930 654" style="overflow:visible"><path d="M256 163 Q 470 330 710 203" fill="none" stroke="#c1121f" stroke-width="6" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" id="str" style="filter:drop-shadow(2px 4px 2px rgba(0,0,0,.45))"/></svg>`);
+const tagPin = mk('div', 'pin y', 'left:452px;top:20px', ci);
+const tagStr = mk('div', 'abs', 'left:464px;top:34px;width:3px;height:316px;background:#e8dfc8;transform-origin:50% 0', ci);
+const tag = mk('div', 'tag', 'left:349px;top:350px;transform-origin:115px -316px', ci, 'quantum?');
+A(seal, [{ opacity: 0, transform: 'translateY(-90px) rotate(-12deg) scale(1.25)' }, { opacity: 1, transform: 'translateY(0) rotate(-4deg) scale(1)' }], tSeal - .15, .2, EI);
+A(pinSeal, [{ opacity: 0, transform: 'scale(2)' }, { opacity: 1, transform: 'scale(1)' }], tSeal + .02, .1);
+A(ai, [{ opacity: 0, transform: 'translateY(-90px) rotate(10deg) scale(1.25)' }, { opacity: 1, transform: 'translateY(0) rotate(3deg) scale(1)' }], tAI - .15, .2, EI);
+A(pinAI, [{ opacity: 0, transform: 'scale(2)' }, { opacity: 1, transform: 'scale(1)' }], tAI + .02, .1);
+A(string.querySelector('#str'), [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], tAI + .15, .7, 'ease-in-out');
+A(tagPin, [{ opacity: 0, transform: 'scale(2)' }, { opacity: 1, transform: 'scale(1)' }], tDang - .1, .1);
+const swing = (deg) => { const k = [{ opacity: 0, transform: 'rotate(0deg)' }]; let a = deg; for (let i = 0; i < 8; i++) { k.push({ opacity: 1, transform: `rotate(${a}deg)` }); a = -a * .72; } k.push({ opacity: 1, transform: 'rotate(0deg)' }); return k; };
+const swingK = swing(24);
+A(tag, swingK.map((k, i) => ({ ...k, offset: i / (swingK.length - 1) })), tDang, 3.4, 'ease-in-out');
+A(tagStr, swingK.map((k, i) => ({ ...k, offset: i / (swingK.length - 1) })), tDang, 3.4, 'ease-in-out');
+// tweet slip pinned over the board; stamp UNVERIFIED
+const tSlip = W('p8b', 'least') - .1, tRep = W('p8b', 'kept');
+A(ci, [{ opacity: 1 }, { opacity: .3 }], tSlip, .25);
+const sw2 = $('slipwrap');
+const slip = mk('div', 'paper abs', 'left:210px;top:190px;width:560px;height:290px;background:#f7f4ea;transform:rotate(-2deg)', sw2, '<div class="av" style="position:absolute;left:22px;top:22px;width:62px;height:62px;border-radius:50%;background:#4a5a6a"></div><div style="position:absolute;left:100px;top:24px;font:800 28px/1 Inter;color:#111">@crypto_bro_88</div><div style="position:absolute;left:100px;top:56px;font:500 22px/1 Inter;color:#555">Crypto Twitter</div><div style="position:absolute;left:24px;top:108px;right:24px;font:700 30px/1.22 Inter;color:#111">BREAKING: they stopped publishing math in WW2 too. Same thing is happening NOW. Wake up.</div>');
+const slipPin = mk('div', 'pin', 'left:468px;top:176px', sw2);
+A(slip, [{ opacity: 0, transform: 'translate(0,-420px) rotate(8deg) scale(1.3)' }, { opacity: 1, transform: 'translate(0,0) rotate(-2deg) scale(1)' }], tSlip, .26, EI);
+A(slipPin, [{ opacity: 0, transform: 'scale(2.2)' }, { opacity: 1, transform: 'scale(1)' }], tSlip + .24, .1);
+const unv = mk('div', 'stamp', 'left:222px;top:306px;font-size:104px;border-width:10px;padding:2px 24px 0', sw2, 'Unverified');
+D.slam(unv, tRep, -9, 3.0, .13);
+// ---- beat 8: sepia shelf with the three missing years, slow pan
+const tShelf = L(42.85), tManh = W('p9b', 'Manhattan'), tStop = W('p9b', 'stopped'), tAtomic = W('p9b', 'atomic');
+const shelf = $('shelf'), shin = $('shin');
+const tFp = L(52.55);
+film.anim(shelf, [{ transform: 'translateY(780px)', easing: EO }, { transform: 'translateY(0)', offset: .5 / (tFp + .65 - tShelf) }, { transform: 'translateY(0)', offset: (tFp + .15 - tShelf) / (tFp + .65 - tShelf), easing: EI }, { transform: 'translateY(780px)' }], tShelf, tFp + .65 - tShelf);
+const cl = ['#6b4a2b', '#7d5a36', '#5a3d23', '#8a6a40', '#4e3520', '#73512f'];
+const yrs = [1939, 1940, 1941, 1942, 1943, 1944, 1945, 1946, 1947];
+const dusts = [];
+yrs.forEach((y, i) => {
+  const x = 40 + i * 164, miss = y >= 1942 && y <= 1944;
+  if (miss) {
+    const g = mk('div', 'gap', `left:${x - 6}px`, shin, `<div class="dust"></div><div class="gy">${y}</div>`);
+    g.style.height = '404px'; dusts.push(g);
+  } else {
+    const h = 372 + Math.floor(rs() * 30);
+    const s = mk('div', 'spine', `left:${x}px;height:${h}px;background:linear-gradient(90deg,${cl[(i * 5) % 6]},${cl[(i * 5 + 2) % 6]} 60%,#33200f)`, shin, `<div class="bd" style="top:22px"></div><div class="bd" style="top:${h - 32}px"></div><div class="yr">${y}</div>`);
+  }
+});
+dusts.forEach((g) => {
+  A(g.querySelector('.dust'), [{ opacity: 0 }, { opacity: 1 }], tManh - .1, .35);
+  A(g.querySelector('.gy'), [{ opacity: 0 }, { opacity: 1 }], tManh + .1, .35);
+});
+// dust motes
+for (let i = 0; i < 26; i++) { const x = 480 + rs() * 520, y = 150 + rs() * 360; const d = mk('div', 'abs', `left:${x}px;top:${y}px;width:${3 + rs() * 4}px;height:${3 + rs() * 4}px;border-radius:50%;background:rgba(240,214,160,.7)`, shin);
+  A(d, [{ opacity: 0, transform: 'translate(0,0)' }, { opacity: .8, transform: `translate(${(rs() - .5) * 40}px,${-20 - rs() * 30}px)`, offset: .5 }, { opacity: 0, transform: `translate(${(rs() - .5) * 80}px,${-60 - rs() * 40}px)` }], tManh + rs() * 3, 2.5); }
+A(shin, [{ transform: 'translateX(0)' }, { transform: 'translateX(-560px)' }], tShelf + .3, 9.0, 'cubic-bezier(.45,0,.55,1)');
+A($('brass'), [{ opacity: 0 }, { opacity: 1 }], tAtomic - .5, .2);
+D.type($('bt'), 'ATOMIC PHYSICS  1939-1947', tAtomic - .3, tAtomic + .9, false);
+D.hide(cork, L(43.55));
+D.hide(idx, tCork + .7);
+// ---- beat 9: back to the desk: the slip with UNVERIFIED, then CHECKED; the two typed lines
+const tTwit = W('p10', 'Twitter'), tChk = W('p10', 'checked'), tJ = W('p11', '9,923'), t47 = W('p11', '1947', false), tSev = W('p12', '719'), t26 = W('p12', '2026', false);
+D.hide(shelf, tFp + .7);
+const fp = $('fp');
+A(fp, [{ opacity: 0, transform: 'translateY(760px) rotate(5deg)' }, { opacity: 1, transform: 'translateY(0) rotate(.6deg)' }], tFp, .5, EO);
+const unv2 = mk('div', 'stamp', 'left:112px;top:196px;font-size:80px;border-width:8px;padding:2px 20px 0;transform:rotate(-8deg)', $('fslip'), 'Unverified');
+unv2.style.transform = 'rotate(-8deg)';
+const chk = mk('div', 'stamp', 'left:34px;top:86px;font-size:118px;border-width:11px;padding:4px 26px 0;color:#14753a;border-color:#14753a', $('fslip'), 'Checked');
+D.slam(chk, tChk, 6, 3.2, .14);
+D.type($('l1'), '9,923 journal records, 1920-1947', tJ, t47 + .05, true);
+D.type($('l2'), '719 papers, 2026', tSev, t26 + .05, true);
+D.hide($('plateS'), L(57.5), .2);
+// ---- beat 10: the silence is real: the lamp flickers once
+const tReal = W('p13', 'real');
+A($('dim'), [{ opacity: 0 }, { opacity: .62, offset: .12 }, { opacity: .08, offset: .3 }, { opacity: .5, offset: .5 }, { opacity: 0 }], tReal - .05, .4, 'linear');
+// ---- camera thumps (JS driven, one hook): stamps and the folder shutting
+const hits = [[W('p8b', 'kept'), 7], [tChk, 9], [tShut, 8], [tQ, 11]];
+film.onSeek((t) => { let y = 0, r = 0; for (const [h, a] of hits) { const d = t - h; if (d >= 0 && d < .45) { const e = Math.exp(-d * 9) * Math.sin(d * 52); y += a * e; r += a * e * .05; } } $('shake').style.transform = `translate(0,${y.toFixed(2)}px) rotate(${r.toFixed(3)}deg)`; });
+// hard cut to black for the next scene
+A($('cut'), [{ opacity: 0 }, { opacity: 1, offset: .0001 }, { opacity: 1 }], 68.13 - .1, .1, 'steps(1,end)');
+// ---- polaroid frame for Liam (the video is overlaid at the same place by ffmpeg)
+const pol = $('pol'), tPi = L(9.75), tPo = L(57.45);
+film.anim(pol, [{ opacity: 0 }, { opacity: 1, offset: .15 / (tPo + .15 - tPi) }, { opacity: 1, offset: (tPo - tPi) / (tPo + .15 - tPi) }, { opacity: 0 }], tPi, tPo + .15 - tPi);
+</script></body></html>
