@@ -1,4 +1,4 @@
-<!doctype html><html data-duration="46" data-fps="30"><head><meta charset="utf-8">
+<!doctype html><html data-duration="44.4" data-fps="30"><head><meta charset="utf-8">
 <link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
 <style>
 /* Two layers are rendered separately and composited around the matted footage on dev-mac:
@@ -22,9 +22,9 @@ html:not([data-layer]) body,html[data-layer="back"] body{background:#05070d}
 .desk{position:absolute;left:0;right:0;top:545px;height:175px;background:linear-gradient(180deg,#2a3a5c 0,#16213a 8%,#0b1224 40%,#070b17 100%);border-top:5px solid #7fa6ff;box-shadow:0 -10px 40px rgba(0,0,0,.5)}
 .desk:after{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:rgba(255,255,255,.55)}
 .deskfront{position:absolute;left:290px;width:700px;top:604px;height:5px;background:#2a3a5c;opacity:0}
-.bug{position:absolute;left:36px;top:30px;display:flex;align-items:center;gap:12px;font:800 28px/1 'Inter';letter-spacing:.14em}
-.bug .dot{width:20px;height:20px;border-radius:50%;background:#e30613;box-shadow:0 0 16px #e30613}
-.bug .chan{font:700 26px/1 'Oswald';letter-spacing:.12em;background:#fff;color:#0d1830;padding:6px 12px;margin-left:10px}
+.live{position:relative;top:14px;display:flex;align-items:center;gap:10px;font:800 26px/1 'Inter';letter-spacing:.14em;padding-right:16px;margin-right:2px;border-right:3px solid rgba(255,255,255,.55)}
+.live .dot{width:18px;height:18px;border-radius:50%;background:#e30613;box-shadow:0 0 14px #e30613}
+.live.tl{position:absolute;left:36px;top:30px;border:0;padding:0}
 .l3{position:absolute;left:36px;bottom:104px;width:880px;height:84px;display:flex;align-items:stretch;box-shadow:0 12px 30px rgba(0,0,0,.55);overflow:hidden}
 .l3 .tag{background:#fff;color:#e30613;font:800 30px/84px 'Inter';padding:0 22px;letter-spacing:.06em;min-width:180px;text-align:center}
 .l3 .bar{flex:1;background:linear-gradient(180deg,#f2141f,#b8000a);font:700 48px/84px 'Oswald';padding:0 24px;letter-spacing:.02em;white-space:nowrap}
@@ -42,19 +42,26 @@ html:not([data-layer]) body,html[data-layer="back"] body{background:#05070d}
 .ots svg.pen{position:absolute;left:0;top:0;width:410px;height:230px;overflow:visible}
 .ots svg.pen path{fill:none;stroke:#ff1f2d;stroke-width:3.6;stroke-linecap:round;stroke-linejoin:round}
 .otstag{position:absolute;right:36px;top:36px;transform:translateY(-100%);background:#e30613;font:800 18px/1 'Inter';letter-spacing:.14em;padding:6px 12px;opacity:0}
-/* tweet component: the real screenshot pieces (assets/tweet-header.jpg fixed on top, assets/tweet-body.jpg scrolls) */
-.tweet{position:absolute;left:24px;top:96px;width:430px;background:#000;border:1px solid #3a3f45;border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden}
-.tweet .thead{display:block;width:428px;height:auto;position:relative;z-index:2;background:#000}
-.tweet .twin{position:relative;width:428px;height:310px;overflow:hidden;border-top:1px solid #1d2126}
+/* tweet component (rev 4): real header (assets/tweet-header-v4.jpg) and real footer (assets/tweet-footer.jpg) are fixed, the real body (assets/tweet-body.jpg) scrolls between them */
+.tweet{position:absolute;left:24px;top:26px;width:430px;background:#000;border:1px solid #3a3f45;border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden}
+.tweet .thead,.tweet .tfoot{display:block;width:428px;height:auto;position:relative;z-index:2;background:#000}
+.tweet .tfoot{border-top:1px solid #2a2f35}
+.tweet .twin{position:relative;width:428px;height:358px;overflow:hidden;border-top:1px solid #1d2126}
 .tweet .tscroll{position:absolute;left:0;top:0;width:428px;will-change:transform}
 .tweet .tinner{position:relative;width:1290px;transform-origin:0 0;transform:scale(.33178)}
 .tweet .tinner img{display:block;width:1290px}
-.tweet .band{position:absolute;left:0;width:1290px;background:rgba(255,214,0,.34);box-shadow:inset 8px 0 0 rgba(255,214,0,.9);transform-origin:0 50%;opacity:0}
-.tweet .twin:after{content:"";position:absolute;left:0;right:0;bottom:0;height:26px;background:linear-gradient(180deg,transparent,#000);z-index:3}
+.tweet .hlg{position:absolute;left:0;top:0;width:1290px;height:1px}
+.tweet .hl{position:absolute;background:rgba(255,214,0,.42);border-radius:6px;transform-origin:0 50%;mix-blend-mode:screen}
+.tweet .twin:before,.tweet .twin:after{content:"";position:absolute;left:0;right:0;height:14px;z-index:3;pointer-events:none}
+.tweet .twin:before{top:0;background:linear-gradient(0deg,transparent,rgba(0,0,0,.85))}
+.tweet .twin:after{bottom:0;background:linear-gradient(180deg,transparent,rgba(0,0,0,.85))}
 /* channel bug */
-.chbug{position:absolute;right:30px;bottom:70px;display:flex;align-items:center;gap:12px;color:#fff;opacity:0;filter:drop-shadow(0 3px 8px rgba(0,0,0,.65))}
+.chbug{position:absolute;right:26px;bottom:122px;display:flex;align-items:center;gap:12px;color:#fff;opacity:0;filter:drop-shadow(0 3px 8px rgba(0,0,0,.65))}
 .chbug img{height:50px;display:block}
 .chbug span{font:700 52px/1 'Oswald';letter-spacing:.06em}
+.qday{position:absolute;right:36px;top:36px;width:410px;height:230px;border:5px solid #fff;background:radial-gradient(ellipse at 50% 40%,#244a80,#0d1830 75%);box-shadow:0 10px 30px rgba(0,0,0,.6);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0}
+.qday b{font:700 104px/1 'Oswald';letter-spacing:.04em;color:#fff}
+.qday i{font:800 italic 44px/1 'Inter';color:#ff3b47;margin-top:8px;letter-spacing:.04em;transform:rotate(-4deg)}
 /* flash + wipe */
 .flash{position:absolute;inset:0;background:#fff;opacity:0}
 .wipe{position:absolute;top:0;bottom:0;left:0;width:1500px;background:linear-gradient(90deg,#8a0008,#e30613 18%,#e30613 100%);transform:translateX(-1500px);display:flex;align-items:center;justify-content:center}
@@ -72,22 +79,24 @@ html:not([data-layer]) body,html[data-layer="back"] body{background:#05070d}
 </div>
 <div class="front" id="front">
   <div class="desk"></div>
-  <div class="bug"><div class="dot" id="livedot"></div>LIVE<div class="chan">CT NEWS</div></div>
+  <div class="qday" id="qday"><b>Q-DAY?</b><i>(fake)</i></div>
   <div id="otsw" style="position:absolute;inset:0"><div class="otstag" id="otstag">BANKLESS</div>
   <div class="ots" id="ots"><div class="pan" id="pan">
     <img src="assets/bankless-debate-thumb.jpg">
     <svg class="pen" id="penw" viewBox="0 0 410 230"><path id="pen" d="M0 0"/></svg></div></div></div>
   <div class="tweetw" id="tweetw" style="position:absolute;inset:0"><div class="tweet" id="tweet">
-    <img class="thead" src="assets/tweet-header.jpg">
+    <img class="thead" src="assets/tweet-header-v4.jpg">
     <div class="twin"><div class="tscroll" id="tscroll"><div class="tinner" id="tinner"><img src="assets/tweet-body.jpg"></div></div></div>
+    <img class="tfoot" src="assets/tweet-footer.jpg">
   </div></div>
   <div class="l3" id="l3"><div class="tag" id="l3tag">BREAKING</div><div class="bar" id="l3bar">LIAM</div></div>
   <div class="l3sub" id="l3sub">Chaintail Labs, Senior Bunker Correspondent</div>
-  <div class="chbug" id="chbug"><img src="assets/chaintail-logo-white.svg"><span>CNN</span></div>
+  <div class="chbug" id="chbug"><div class="live" id="live"><i class="dot" id="livedot"></i>LIVE</div><img src="assets/chaintail-logo-white.svg"><span>CNN</span></div>
   <div class="ticker"><div class="lbl">CT LIVE</div><div class="win"><div class="run" id="run"></div></div></div>
   <div class="flash" id="flash"></div>
   <div class="wipe" id="wipe"><i style="top:215px"></i><i style="top:495px"></i><span>SPECIAL REPORT</span></div>
 </div>
+<script src="data/tweet-hl.js"></script>
 <script src="lib/film.js"></script>
 <script>
 const f = window.__film, L = new URLSearchParams(location.search).get('layer');
@@ -117,7 +126,8 @@ f.onSeek((t) => { // text swap is a hard cut on the frame, keyed on time; white 
   $('l3bar').textContent = second ? 'CRYPTO TWITTER IN SPIRAL' : 'LIAM';
   $('l3sub').textContent = second ? 'Ethereum researcher calls for “bunker mode”' : 'Chaintail Labs, Senior Bunker Correspondent';
 });
-A('chbug', [{opacity:0},{opacity:1}], 0.8, 0.5);
+A('chbug', [{opacity:0},{opacity:1}], 0.4, 0.4);
+if (new URLSearchParams(location.search).get('live') === 'tl') { const l = $('live'); l.classList.add('tl'); $('front').append(l); }   // A/B: LIVE top-left instead of beside CNN
 // over-the-shoulder box: in at "this lead Ethereum researcher" (0.96) with the FULL thumbnail (Anatoly and Justin), held for a beat
 A('ots', [{opacity:0,transform:'translateY(-30px)'},{opacity:1,transform:'none'}], 0.9 + OFF, 0.35, {easing:'ease-out'});
 A('otstag', [{opacity:0},{opacity:1}], 1.1 + OFF, 0.2);
@@ -138,8 +148,8 @@ A('penw', [{opacity:1},{opacity:1,offset:.81},{opacity:0}], tc, 3.2);   // finis
 const z0 = 5.9 + OFF, zd = 2.2, S = 2.45, sq = 260;
 A('ots', [{width:'410px',height:'230px'},{width:sq + 'px',height:sq + 'px'}], z0, zd, {easing:'ease-in-out'});
 A('pan', [{transform:'translate(0,0) scale(1)'},{transform:`translate(${(sq / 2 - 5) - S * fx}px,${(sq / 2 - 5) - S * fy}px) scale(${S})`}], z0, zd, {easing:'ease-in-out'});
-// short rest on the zoomed face, then the box leaves (it used to stay on screen to the wipe)
-A('otsw', [{opacity:1,transform:'none'},{opacity:0,transform:'translateY(-40px)'}], z0 + zd + 1.6, 0.45, {easing:'ease-in'});
+// rev 4: the zoomed face stays up until the tweet discussion ends ("... hidden until you actually sign something", 28.9), then exits as before
+A('otsw', [{opacity:1,transform:'none'},{opacity:0,transform:'translateY(-40px)'}], 29.0 + OFF, 0.45, {easing:'ease-in'});
 // tweet component slides up on the other side at "He said, get ready for bunker mode" (7.12)
 const t1 = 7.12 + OFF;
 A('tweet', [{opacity:0,transform:'translateY(260px)'},{opacity:1,transform:'none'}], t1, 0.5, {easing:'cubic-bezier(.2,.9,.3,1)'});
@@ -148,17 +158,22 @@ A('tweet', [{opacity:0,transform:'translateY(260px)'},{opacity:1,transform:'none
 const K = 0.33178, SC = (y) => `translateY(${-y * K}px)`;
 const tS = (at) => at + OFF;
 // (scroll keyframes are built on absolute scene time: [t, y] pairs)
-{ const keys = [[0, 0], [9.84, 0], [10.7, 1610], [14.5, 1610], [15.4, 0]].map(([t, y]) => [tS(t), y]), T = 46;
+{ const keys = [[0, 0], [9.84, 0], [10.7, 1610], [14.5, 1610], [15.4, 0]].map(([t, y]) => [tS(t), y]), T = 44.4;
   f.anim($('tscroll'), keys.map(([t, y], i) => ({transform:SC(y), offset: i ? Math.min(.9999, t / T) : 0, easing:'ease-in-out'})).concat([{transform:SC(0),offset:1}]), 0, T); }
-// marker bands over the passage being discussed: [lineTop, lineBottom, x0, x1, start, end] (body px)
-const bandEl = (y0, y1, x0, x1, at, out) => { const d = document.createElement('div'); d.className = 'band';
-  d.style.cssText += `;top:${y0 - 8}px;height:${y1 - y0 + 16}px;left:${x0}px;width:${x1 - x0}px`; $('tinner').append(d);
-  f.anim(d, [{opacity:0,transform:'scaleX(0)'},{opacity:1,transform:'scaleX(1)',offset:.12},{opacity:1,offset:.85},{opacity:0,transform:'scaleX(1)'}], tS(at), out - at, {easing:'ease-out'}); };
-bandEl(86, 141, 676, 1075, 8.7, 10.6);        // "bunker mode"
-bandEl(1665, 1890, 0, 1290, 11.0, 14.4);      // "ECDSA breaks before qday ... months not years" (scrolled-in passage)
-bandEl(240, 372, 0, 1290, 16.0, 18.4);        // "mass migration of assets to fresh addresses"
-bandEl(702, 834, 0, 1290, 18.5, 20.6);        // "addresses that have never signed a transaction"
-bandEl(318, 438, 0, 1290, 22.6, 29.4);        // "addresses whose pubkeys remain hidden behind a hash" (stays through "public key stays hidden")
+// highlighter (rev 4): exact sentences, drawn line by line from the sentence's first word to its last (data/tweet-hl.js, word boxes of the real body pixels).
+// Each segment sweeps left to right in proportion to its width; the finished sentence stays until the next one starts, then fades out.
+const HL = window.TWEET_HL;
+// [sentence, sweep start, sweep end] in Liam's transcript time
+const plan = [['bunker', 7.9, 9.7], ['imo', 11.0, 14.0], ['fresh', 15.9, 18.1], ['never', 18.4, 20.4], ['hash', 23.4, 26.4]];
+plan.forEach(([name, a, b], k) => {
+  const segs = HL[name], tot = segs.reduce((n, g) => n + (g.x1 - g.x0), 0), grp = document.createElement('div'); grp.className = 'hlg'; $('tinner').append(grp);
+  let t = a;
+  for (const g of segs) { const d = document.createElement('div'); d.className = 'hl'; d.style.cssText += `;left:${g.x0}px;top:${g.y0}px;width:${g.x1 - g.x0}px;height:${g.y1 - g.y0}px`; grp.append(d);
+    const dur = (b - a) * (g.x1 - g.x0) / tot; f.anim(d, [{transform:'scaleX(0)'},{transform:'scaleX(1)'}], tS(t), dur, {easing:'linear'}); t += dur; }
+  const next = plan[k + 1]; if (next) f.anim(grp, [{opacity:1},{opacity:0}], tS(next[1]) - 0.05, 0.25);
+});
+// the Q-DAY joke: at "maybe it never will be" (40.72) the over-the-shoulder box comes back top right with a card
+A('qday', [{opacity:0,transform:'translateY(-40px)'},{opacity:1,transform:'none'}], 40.72 + OFF, 0.35, {easing:'cubic-bezier(.2,.9,.3,1)'});
 A('tweetw', [{opacity:1,transform:'none'},{opacity:0,transform:'translateY(260px)'}], 38.3 + OFF, 0.45, {easing:'ease-in'});
 // chyron
 const jokes = ['@sol_maxi_…: it’s over', '@quant_…: quantum is 30 years away, buy the dip', '@eth_bro_…: told you hashes were the future', '@gm_fren_…: moving everything to a fresh address, brb', '@cold_wallet_…: my mattress is post-quantum', '@degen_dad_…: bunker mode = my basement', '@pubkey_…: never signing anything again', '@gold_bug_…: sold it all for gold, now what', '@lamport_…: have you tried not being on chain', '@vc_…: we are very bullish on bunkers', '@sha_…: finally, my time'];
@@ -166,6 +181,6 @@ const run = $('run'); const unit = document.createElement('span'); unit.innerHTM
 run.append(unit, unit.cloneNode(true));
 let unitW = 0;
 f.onSeek((t) => { if (!unitW) unitW = unit.getBoundingClientRect().width || 0; if (unitW) run.style.transform = `translateX(${-((t * 150) % unitW)}px)`; });
-// exit: SPECIAL REPORT wipe, fully covering at 46.0
-A('wipe', [{transform:'translateX(-1500px)'},{transform:'translateX(-220px)',offset:.55,easing:'linear'},{transform:'translateX(0)'}], 44.3, 1.7, {easing:'cubic-bezier(.5,0,.2,1)'});
+// exit: SPECIAL REPORT wipe, fully covering at 44.4
+A('wipe', [{transform:'translateX(-1500px)'},{transform:'translateX(-220px)',offset:.55,easing:'linear'},{transform:'translateX(0)'}], 42.7, 1.7, {easing:'cubic-bezier(.5,0,.2,1)'});
 </script></body></html>
