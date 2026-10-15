@@ -2,12 +2,7 @@
 
 Scope is Liam's words, nothing wider. Three changes to the opening cut on `main` (v6, commit 3314b09). Everything else stays as rendered.
 
-1. **Advisory card voice.** Voice is `en-US-Chirp3-HD-Enceladus` (Google Cloud TTS, v1beta1 `markup` input, service account `~/.secrets/gcp-tts-sa.json`). Per-phrase speaking rates, each phrase its own synth call, butt-joined with explicit silences, no time stretching:
-   - "Warning." at 1.0, then 700 ms silence
-   - "The following program contains math" at 1.08, then 300 ms silence
-   - "conspiracy theories, and fear mongering based on hypothetical scenarios." at 1.15, then 400 ms silence
-   - "Viewer discretion is advised." at 1.0
-   Liam heard exactly this join (`ALT-advisory-Enceladus-1x-108-115-1x.wav`, 24 kHz mono, 300 ms lead and tail) and said it is the right voice. Reproduce it with the same calls, normalise to the card's loudness target, re-time the on-screen word reveals to the new audio, keep the `[WARNING]` label and the previous layout. Check "mongering" acoustically as in r5.
+1. **Advisory card voice.** Do NOT re-synthesize: the Chirp voice is not deterministic and Liam approved one specific take. The approved phrase files are committed in `apps/web/film/pipeline/voices/advisory-r7/` (24 kHz mono LINEAR16, voice `en-US-Chirp3-HD-Enceladus`): `1-warning.wav` (rate 1.0), `2-contains-math.wav` (1.08), `3-conspiracy.wav` (1.15), `4-discretion.wav` (1.0). Join them butt to butt with these silences, no time stretching: 700 ms after warning, 150 ms after math, 400 ms before discretion. `joined-reference.wav` is exactly that join as Liam heard it (300 ms lead and tail); your card audio must match it sample for sample apart from loudness normalisation and the card's lead-in. Re-time the on-screen word reveals to the new audio, keep the `[WARNING]` label and the previous layout.
 2. **PiP outline during the Justin zoom.** "The outline box around the picture-in-picture when we're zooming into Justin's head is flashing. Our image is on top of the outline. Fix the outline." The border must be its own layer above the thumbnail image for the whole zoom, so the image never covers it and it never flickers. Step through the zoom frames and confirm.
 3. **Tweet highlights:** unchanged ("I'll leave the tweet alone").
 
