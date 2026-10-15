@@ -1,0 +1,52 @@
+<!doctype html><html data-duration="2.2" data-fps="30"><head><meta charset="utf-8">
+<style>
+html,body{margin:0;width:1280px;height:720px;background:transparent;overflow:hidden}
+/* Tin foil hat layer for the conspiracy section: transparent, composited by ffmpeg OVER Liam's picture-in-picture.
+   Base front edge sits at (1130,402) on the 1280x720 frame (top of his hair in the Polaroid). The animation starts at t=0.2 s:
+   fade in about 130 px above the head, float down in 0.8 s, settle with a tiny bounce, then hold (ffmpeg holds the last frame). */
+#hatpos{position:absolute;left:1046px;top:272px;width:176px;height:146px;transform-origin:88px 141px;transform:rotate(-2deg) scale(.92)}
+#hat{position:absolute;inset:0;transform-origin:88px 141px;filter:drop-shadow(3px 6px 4px rgba(0,0,0,.45))}
+</style></head><body>
+<div id="hatpos"><div id="hat">
+<svg width="176" height="146" viewBox="0 0 176 146">
+ <defs>
+  <linearGradient id="sheen" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+ </defs>
+ <!-- facets, tip at (96,5), irregular bent tip like crumpled foil -->
+ <polygon points="96,5 10,122 33,133" fill="#a7adb5"/>
+ <polygon points="96,5 33,133 60,140" fill="#d9dde2"/>
+ <polygon points="96,5 60,140 86,142" fill="#8c929a"/>
+ <polygon points="96,5 86,142 112,140" fill="#e8ebee"/>
+ <polygon points="96,5 112,140 140,133" fill="#9aa0a8"/>
+ <polygon points="96,5 140,133 166,122" fill="#c6cbd1"/>
+ <!-- crumple facets inside the big ones -->
+ <polygon points="70,52 46,96 78,100" fill="#bfc4cb" opacity=".8"/>
+ <polygon points="84,38 70,52 94,70" fill="#eef0f2" opacity=".75"/>
+ <polygon points="108,60 92,98 130,104" fill="#7f858d" opacity=".55"/>
+ <polygon points="100,22 110,60 130,84" fill="#d3d7dc" opacity=".7"/>
+ <polygon points="40,110 62,92 76,128" fill="#8d939b" opacity=".5"/>
+ <!-- crease lines -->
+ <g fill="none" stroke="#5f656d" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity=".85">
+  <path d="M96 5 L33 133"/><path d="M96 5 L60 140"/><path d="M96 5 L86 142"/><path d="M96 5 L112 140"/><path d="M96 5 L140 133"/>
+  <path d="M70 52 L46 96 L78 100 Z"/><path d="M94 70 L108 60 L130 104"/><path d="M62 92 L76 128"/><path d="M110 60 L130 84"/>
+ </g>
+ <!-- outline and curved base lip -->
+ <path d="M96 5 L10 122 Q34 134 60 140 Q86 144 112 140 Q140 134 166 122 Z" fill="none" stroke="#4b5057" stroke-width="2.2" stroke-linejoin="round"/>
+ <path d="M10 122 Q88 152 166 122" fill="none" stroke="#e9ecef" stroke-width="2" opacity=".75"/>
+ <!-- sheen -->
+ <path d="M92 14 L52 120" fill="none" stroke="url(#sheen)" stroke-width="9" stroke-linecap="round"/>
+ <path d="M104 20 L128 108" fill="none" stroke="url(#sheen)" stroke-width="5" stroke-linecap="round" opacity=".7"/>
+</svg></div></div>
+<script src="lib/film.js"></script>
+<script>
+const hat = document.getElementById('hat');
+// float down from 130 px above with a tiny bounce (squash at touch-down, rebound, settle)
+window.__film.anim(hat, [
+  { opacity: 0, transform: 'translateY(-130px) rotate(-4deg) scale(1,1)', offset: 0, easing: 'cubic-bezier(.4,0,.8,.6)' },
+  { opacity: 1, transform: 'translateY(0) rotate(0deg) scale(1,1)', offset: .66, easing: 'cubic-bezier(.3,0,.6,1)' },
+  { opacity: 1, transform: 'translateY(2px) rotate(0deg) scale(1.03,.94)', offset: .76, easing: 'ease-out' },
+  { opacity: 1, transform: 'translateY(-5px) rotate(.4deg) scale(.99,1.02)', offset: .88, easing: 'ease-in-out' },
+  { opacity: 1, transform: 'translateY(0) rotate(0deg) scale(1,1)' }], 0.2, 1.1);
+// quicker fade-in over the first 0.25 s
+window.__film.anim(document.getElementById('hatpos'), [{ opacity: 0 }, { opacity: 1 }], 0.2, 0.25);
+</script></body></html>

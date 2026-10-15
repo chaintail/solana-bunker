@@ -50,18 +50,20 @@
 #wld{position:absolute;left:0;top:0;width:0;height:0;transform-origin:0 0}
 #wbg{position:absolute;left:-1400px;top:-900px;width:5400px;height:3200px;background:var(--cork),#b8874f}
 #wtn{position:absolute;left:-1400px;top:-900px;width:5400px;height:3200px;background:var(--toner);opacity:.35}
-.sl{position:absolute;width:200px;height:170px;background:#f6f1e3;box-shadow:2px 3px 3px rgba(0,0,0,.35),8px 12px 18px rgba(0,0,0,.35)}
-.sl .y{position:absolute;left:0;right:0;top:34px;text-align:center;font:700 46px/1 'Oswald';color:#2a2823;letter-spacing:.04em}
-.sl .c{position:absolute;left:0;right:0;top:80px;text-align:center;font:400 92px/1 'Anton';color:#141310}
+.sl{position:absolute;width:200px;height:140px;background:#f6f1e3;box-shadow:2px 3px 3px rgba(0,0,0,.35),8px 12px 18px rgba(0,0,0,.35)}
+.yr{position:absolute;top:0;width:214px;height:124px;background:#f1ead6;box-shadow:2px 3px 3px rgba(0,0,0,.35),6px 9px 14px rgba(0,0,0,.35);text-align:center;font:400 104px/124px 'Anton';letter-spacing:.02em;color:#141310}
+.yr:before{content:"";position:absolute;inset:7px;border:3px solid rgba(20,19,16,.55)}
+#wyr{position:absolute;left:0;top:62px;width:0;height:0;transform-origin:0 0;z-index:4}
+.sl .c{position:absolute;left:0;right:0;top:34px;text-align:center;font:400 92px/1 'Anton';color:#141310}
 .sl .c.z{color:#a3161c}
 .tk{position:absolute;width:34px;height:34px}
-#tw{position:absolute;left:412px;top:74px;width:297px;height:154px}
+#tw{position:absolute;left:412px;top:128px;width:297px;height:154px}
 #fslip{left:0;top:0;width:540px;height:280px;background:#f7f4ea;transform-origin:0 0;transform:scale(.55) rotate(-1.6deg)}
 #fslip .av{position:absolute;left:22px;top:22px;width:62px;height:62px;border-radius:50%;background:#4a5a6a}
 #fslip .nm{position:absolute;left:100px;top:24px;font:800 28px/1 'Inter';color:#111}
 #fslip .hd{position:absolute;left:100px;top:56px;font:500 22px/1 'Inter';color:#555}
 #fslip .tx{position:absolute;left:24px;top:108px;right:24px;font:700 30px/1.22 'Inter';color:#111}
-#card{left:385px;top:268px;width:345px;height:70px;transform:rotate(-.4deg)}
+#card{left:385px;top:322px;width:345px;height:70px;transform:rotate(-.4deg)}
 #l1{left:34px;top:28px;font-size:36px;line-height:44px}
 #l2{left:20px;top:13px;font-size:32px;line-height:44px}
 /* polaroid pip frame */
@@ -86,7 +88,7 @@
     <div id="slot"><div class="out"></div><div class="w">CRYPTOGRAPHY</div></div>
     <div id="note" class="hand abs">math checks out?</div></div>
   <div id="cork"><div id="citems" class="abs" style="inset:0"></div><div id="slipwrap" class="abs" style="inset:0"></div></div>
-  <div id="bd"><div id="wld"><div id="wbg"></div><div id="wtn"></div><svg id="wstr" class="abs" width="2730" height="1560" viewBox="0 0 2730 1560" style="left:0;top:0;overflow:visible;filter:drop-shadow(2px 4px 2px rgba(0,0,0,.5))"></svg><div id="wsl"></div></div>
+  <div id="bd"><div id="wld"><div id="wbg"></div><div id="wtn"></div><div id="wsl"></div><svg id="wstr" class="abs" width="2730" height="1560" viewBox="0 0 2730 1560" style="left:0;top:0;overflow:visible;filter:drop-shadow(3px 6px 3px rgba(0,0,0,.5))"></svg></div><div id="wyr"></div>
     <div id="tw"><div id="fslip" class="paper"><div class="av"></div><div class="nm">@crypto_bro_88</div><div class="hd">Crypto Twitter</div><div class="tx">BREAKING: they stopped publishing math in WW2 too. Same thing is happening NOW. Wake up.</div><div class="pin" style="left:257px;top:-10px"></div></div></div>
     <div id="card" class="paper"><div id="l2" class="ty abs"></div></div></div>
   <div id="plateS" class="abs" style="inset:0;transform-origin:24px 696px"><div id="plate"><div class="n" id="pn">0</div><div class="l">PAPERS</div></div></div>
@@ -225,17 +227,27 @@ A(head, [{ opacity: 0, transform: 'translateY(-160px) scale(1.2)' }, { opacity: 
 [90, 800].forEach((x) => A(mk('div', 'pin tk', `left:${x}px;top:4px;z-index:6`, $('bd')), [{ opacity: 0, transform: 'scale(2.4)' }, { opacity: 1, transform: 'scale(1)' }], L(43.35) + .5, .1, EI));
 [sheet, sheetPin].forEach((e) => A(e, [{ visibility: 'visible' }, { visibility: 'hidden' }], L(51.15) + .3, .01));
 const tkL = mk('div', 'abs', 'left:0;top:0', wld);
+// pre-pinned year stickers: one per year along the heading band, scrolled sideways with the board (x only), landing before the counts arrive
+const wyr = $('wyr');
+DATA.forEach(([yr], i) => {
+  const rot = (rs() - .5) * 3, g = L(43.5) + i * .045;
+  const st = mk('div', 'yr', `left:${X(i) - 107}px;top:0;transform:rotate(${rot}deg)`, wyr, String(yr));
+  A(st, [{ opacity: 0, transform: `translateY(-160px) rotate(${rot + 6}deg) scale(1.25)` }, { opacity: 1, transform: `translateY(0) rotate(${rot}deg) scale(1)` }], g, .18, EI);
+  A(mk('div', 'pin tk', `left:${X(i) - 17}px;top:6px;z-index:2`, wyr), [{ opacity: 0, transform: 'scale(2.4)' }, { opacity: 1, transform: 'scale(1)' }], g + .17, .08, EI);
+});
 DATA.forEach(([yr, c], i) => {
   const r = (rs() - .5) * 5, tp = TP[i];
-  const sl = mk('div', 'sl', `left:${X(i) - 100}px;top:${Y(c) - 85}px;transform:rotate(${r}deg)`, wsl, `<div class="y">${yr}</div><div class="c${c === 0 ? ' z' : ''}">${c}</div>`);
+  const sl = mk('div', 'sl', `left:${X(i) - 100}px;top:${Y(c) - 70}px;transform:rotate(${r}deg)`, wsl, `<div class="c${c === 0 ? ' z' : ''}">${c}</div>`);
   if (i === 0) A(sl, [{ opacity: 0, transform: `translateX(-232px) rotate(${r - 3}deg)`, offset: 0 }, { opacity: 1, transform: `translateX(-232px) rotate(${r - 3}deg)`, offset: .01 }, { opacity: 1, transform: `translateX(0) rotate(${r}deg)` }], tp - .45, .45, EO);
   else A(sl, [{ opacity: 0, transform: `translateY(-330px) rotate(${r + 9}deg) scale(1.3)` }, { opacity: 1, transform: `translateY(0) rotate(${r}deg) scale(1)` }], tp - .22, .22, EI);
-  const tk = mk('div', 'pin tk', `left:${X(i) - 17}px;top:${Y(c) - 85 + 7}px`, tkL);
+  const tk = mk('div', 'pin tk', `left:${X(i) - 17}px;top:${Y(c) - 70 + 4}px`, tkL);
   A(tk, [{ opacity: 0, transform: 'scale(2.4)' }, { opacity: 1, transform: 'scale(1)' }], tp, .1, EI);
   if (i > 0) {
     const [, pc] = DATA[i - 1];
     const ln = document.createElementNS(SV, 'path');
-    ln.setAttribute('d', `M${X(i - 1)} ${Y(pc) - 61} L${X(i)} ${Y(c) - 61}`);
+    // quadratic string sagging 9% of its length (control point hangs 2x the sag below the chord midpoint), like the OpenAI-seal string
+    const x0 = X(i - 1), y0 = Y(pc) - 49, x1 = X(i), y1 = Y(c) - 49, len = Math.hypot(x1 - x0, y1 - y0), sag = .09 * len;
+    ln.setAttribute('d', `M${x0} ${y0} Q${(x0 + x1) / 2} ${((y0 + y1) / 2 + 2 * sag).toFixed(1)} ${x1} ${y1}`);
     ln.setAttribute('fill', 'none'); ln.setAttribute('stroke', '#c1121f'); ln.setAttribute('stroke-width', '9'); ln.setAttribute('stroke-linecap', 'round');
     ln.setAttribute('pathLength', '1'); ln.setAttribute('stroke-dasharray', '1'); ln.setAttribute('stroke-dashoffset', '1');
     wstr.appendChild(ln);
@@ -243,17 +255,21 @@ DATA.forEach(([yr, c], i) => {
   }
 });
 { // camera: follows the newest slip at scale .8, then pulls back to the whole board
-  const S = .7, Sf = 898 / 2310, pts = [];
-  const at = (i) => { const c = DATA[i][1]; return [449 - (X(i) + 170) * S, 175 + (22 - c) / 22 * 270 - Y(c) * S, S]; };
+  const S = .7, Sf = .38, pts = [];
+  const at = (i) => { const c = DATA[i][1]; return [449 - (X(i) + 170) * S, 215 + (22 - c) / 22 * 230 - Y(c) * S, S]; };
   pts.push([TP[0] - 1.6, ...at(0)]);
   for (let i = 1; i < DATA.length; i++) { pts.push([TP[i] - 0.55, ...at(i - 1)]); pts.push([TP[i] - 0.08, ...at(i)]); }
-  const fin = [-390 * Sf, 15.3, Sf];
+  const fin = [-127, 44, Sf];
   pts.push([TP[9] + .55, ...at(9)]); pts.push([TP[9] + 1.9, ...fin]);
   const t0 = pts[0][0], t1 = pts[pts.length - 1][0];
   const kf = pts.map((p, i) => ({ transform: `translate(${p[1].toFixed(1)}px,${p[2].toFixed(1)}px) scale(${p[3].toFixed(4)})`, offset: (p[0] - t0) / (t1 - t0), easing: 'cubic-bezier(.45,0,.25,1)' }));
   film.anim(wld, kf, t0, t1 - t0);
+  // the year row follows the same sideways scroll and zoom but stays on the heading band (x and scale only)
+  film.anim(wyr, pts.map((p, i) => ({ transform: `translate(${p[1].toFixed(1)}px,0px) scale(${p[3].toFixed(4)})`, offset: (p[0] - t0) / (t1 - t0), easing: 'cubic-bezier(.45,0,.25,1)' })), t0, t1 - t0);
 }
 D.hide(cork, L(43.55));
+// close: the corkboard (with the tweet and typed card) fades off the desk before the folder shuts, so the stamp lands on the folder over the plain desk
+D.hide(bd, L(70.55), .4);
 D.hide(idx, tCork + .7);
 // ---- beat 9: the tweet slip returns over the pulled-back board with TRUST ME, BRO; CHECKED lands on "checked"; typed lines on a card
 const tTwit = W('p10', 'We') - .1, tChk = W('p10', 'checked'), tJ = W('p11', '9,923'), tSev = W('p12', '719'), t26 = W('p12', '2026', false);
