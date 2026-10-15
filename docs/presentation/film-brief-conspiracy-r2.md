@@ -13,3 +13,10 @@ Keep: the dust-outline shelf is removed, not kept alongside. Timing: beats 8 and
 Review your own frames: stills at the CENSORED? stamp, the TRUST ME, BRO stamp, two slips mid-pin with string, the pulled-back line chart. Open each with the Read tool before reporting; fix what looks wrong.
 
 Rules as r1: dev-mac only for ffmpeg and capture (ffmpeg in /opt/homebrew/bin; dev-mac has about 7 GB free, delete your frame folders after the encode); worktree /home/claude/code/solana-bunker-conspiracy on branch film/conspiracy; commit by pathspec with the identity of commit 0192493, no Co-Authored-By or any trailer; do not push or merge; do not touch /home/claude/code/solana-bunker. Do not send anything to Telegram. Report: dev-mac path of conspiracy-v2.mp4 and a phone-sized re-encode (crf 26) next to it, the stills, the slip values used, anything not followed as written.
+
+## Addendum to item 4 (Liam voice 15966, 2026-10-15 03:49Z)
+"Before we start pinning the numbers and connecting them with the string, we could have something on the corkboard that pins the 9,000-whatever number of physics papers investigated. For the first one that we're pinning, it almost looks like we're pulling a sheet out of that and pinning it. And maybe there's a heading above where we're doing this on the corkboard, like 'atomic research papers'. By the time we're a few slips in, the 9,000 sheet would be off the screen because it scrolled off the left side."
+- Before the first slip: a pinned sheet at the left of the corkboard reading `9,923 Physical Review papers, 1920-1947, investigated` (big headline number, small sub-line). It is pinned first, on "we checked".
+- A heading pinned above the row, spanning the scroll: `ATOMIC RESEARCH PAPERS, BY YEAR` (fission in the title).
+- The first year slip is pulled out from behind that sheet and pinned to the right of it; then the sideways scroll proceeds as written, so the 9,923 sheet scrolls off the left edge after a few slips.
+- The later typed line "9,923 journal records, 1920-1947" is therefore dropped; keep "719 papers, 2026" where it was, or drop both if the pinned sheet already covers it and the pacing is better.
