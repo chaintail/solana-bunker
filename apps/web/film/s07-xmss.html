@@ -1,0 +1,337 @@
+<!doctype html><html data-duration="42" data-fps="30"><head><meta charset="utf-8">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
+<style>
+/* Slide 7, a signature made of hashes (docs/presentation/film-plan-s07.md). One seekable scene, captured whole.
+   0-33.0 s: a 1979 seminar (cream screen, keystoned overhead-projector window, transparencies sliding up from the bottom, slide 6's alley alive in a corner window).
+   33.0 s-end: hard cut to slide 6's noir alley (lib/noir-alley.js), the devil's swapped form is checked and thrown out into the gutter.
+   Heads: lip-synced narrator sprites (pipeline/s07/heads.py), slide 6's red devil head. Timing: data/s07-edl.js. Grades are added after capture (pipeline/s07/build.sh). */
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#000}
+.L{position:absolute;left:0;top:0;width:1280px;height:720px}
+.noir{filter:grayscale(1) contrast(1.28) brightness(.92)}
+svg{position:absolute;left:0;top:0;overflow:visible}
+.fig{position:absolute;left:0;top:0;width:1024px;height:1536px;transform-origin:0 0}
+.fig>img,.fig>.hd{position:absolute;left:0;top:0}
+.hd{width:152px;height:220px;overflow:hidden;transform-origin:0 0}
+.hd img{position:absolute;left:0;top:0;display:none}
+#doorWrap{position:absolute;left:0;top:0;width:1280px;height:720px;perspective:1100px;perspective-origin:870px 386px}
+#doorPanel{position:absolute;left:758px;top:176px;width:224px;height:420px;transform-origin:0 50%}
+#doorPanel svg{left:-758px;top:-176px}
+/* seminar */
+#room{background:radial-gradient(ellipse 900px 600px at 640px 390px,#ddd2b4 0%,#c9bc99 60%,#a89a76 100%)}
+#proj{position:absolute;left:290px;top:120px;width:700px;height:540px;transform-origin:50% 100%;transform:perspective(1400px) rotateX(-9deg)}
+#beam{position:absolute;inset:0;background:radial-gradient(ellipse 420px 340px at 46% 40%,#fffaf0 0%,#f7efdc 45%,#e9dec4 100%);box-shadow:0 0 40px rgba(255,248,225,.55)}
+#ap{position:absolute;left:30px;top:30px;width:640px;height:480px;overflow:hidden}
+.sheet{position:absolute;left:0;top:0;width:640px;height:480px;color:#1e1a12;font-family:'Special Elite'}
+.ty{position:absolute;white-space:nowrap}
+#mount{position:absolute;inset:0;border:30px solid rgba(58,48,34,.86);border-radius:6px;box-shadow:inset 0 0 18px rgba(40,30,20,.6)}
+#click{position:absolute;inset:0;background:#fff;opacity:0}
+#win{position:absolute;left:1010px;top:24px;width:250px;height:141px;border:5px solid #1c1812;box-shadow:0 6px 18px rgba(0,0,0,.45);overflow:hidden;background:#000}
+#win img{position:absolute;left:0;top:0;width:250px;height:141px}
+#winLbl{position:absolute;left:1005px;top:172px;width:260px;text-align:center;font:16px 'Special Elite';color:#3a3122}
+.kc{position:absolute;left:0;top:0;width:96px;height:60px;box-sizing:border-box;background:#f1e7cc;border:3px solid #2a2418;border-radius:6px;font:16px 'Special Elite';color:#2a2418}
+.kc svg{left:6px;top:14px}
+.kc b{position:absolute;left:52px;top:18px;font-weight:400}
+#counter{position:absolute;left:430px;top:598px;width:420px;height:106px;box-sizing:border-box;background:#f6eedb;border:4px solid #2a2418;border-radius:6px;text-align:center;font-family:'Special Elite';color:#1e1a12;box-shadow:0 8px 20px rgba(0,0,0,.35)}
+#cBig{font-size:58px;line-height:68px;margin-top:4px}
+#cSmall{font-size:20px;line-height:22px}
+.stamp{position:absolute;font-family:Anton;text-transform:uppercase;letter-spacing:.06em;line-height:1.08;white-space:nowrap;filter:url(#rough)}
+.pf{position:absolute;left:0;top:0;width:250px;box-sizing:border-box;border:3px solid #000;background:#fff;padding:6px 6px 8px;text-align:center;font-family:Arial,Helvetica,sans-serif;color:#000;box-shadow:0 8px 18px rgba(0,0,0,.35)}
+.pf-h{font:700 22px/1.15 Arial,Helvetica,sans-serif}
+.pf-t{font:400 14px/1.2 Arial,Helvetica,sans-serif;white-space:nowrap}
+.pf svg.mk{position:relative;width:22px;height:22px;vertical-align:-4px;margin-right:2px}
+.pf svg.qr{position:relative;display:block;margin:4px auto}
+/* alley cards */
+.card{position:absolute;left:0;top:0;box-sizing:border-box;background:radial-gradient(ellipse at 40% 35%,#e8d6ad 0%,#d8bf8c 62%,#b8945c 100%);border:2px solid #8a6a3a;color:#2a1c0e;font-family:'Special Elite';box-shadow:0 8px 20px rgba(0,0,0,.6)}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs><filter id="rough" x="-8%" y="-8%" width="116%" height="116%"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="2" result="w"/><feDisplacementMap in="SourceGraphic" in2="w" scale="5" result="d"/><feTurbulence type="fractalNoise" baseFrequency=".75" numOctaves="2" seed="5" result="s"/><feColorMatrix in="s" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -3.2 3.05" result="m"/><feComposite in="d" in2="m" operator="in"/></filter></defs></svg>
+
+<!-- ======================= seminar ======================= -->
+<div class="L" id="seminar">
+ <div class="L" id="room"></div>
+ <div id="proj"><div id="beam"></div>
+  <div id="ap">
+   <div class="sheet" id="sTweet"><div style="position:absolute;left:17px;top:2px;width:606px;height:476px;overflow:hidden">
+     <img src="assets/tweet-body.jpg" style="position:absolute;left:0;top:-2961px;width:606.3px;mix-blend-mode:multiply"><div id="hl"></div></div></div>
+   <div class="sheet" id="sCurve"><svg width="640" height="480" viewBox="160 20 960 720"><g id="curveG" fill="none" stroke="#1e1a12" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></g>
+     <g id="strike" fill="none" stroke="#c4161c" stroke-width="22" stroke-linecap="round" opacity=".92"><path id="st1" d="M200 70 Q640 380 1090 690" pathLength="1" stroke-dasharray="1 1"/><path id="st2" d="M1080 60 Q620 400 210 700" pathLength="1" stroke-dasharray="1 1"/></g></svg>
+     <div class="ty" id="eq" style="left:320px;top:28px;transform:translateX(-50%);font:29px 'Architects Daughter'">−x² + y² = 1 − (121665/121666)·x²·y²</div>
+     <div class="ty" style="left:362px;top:104px;font:28px 'Architects Daughter';color:#1d3fbf;transform:rotate(-6deg);transform-origin:0 50%">elliptic curve</div>
+     <div class="ty" style="left:22px;top:440px;font-size:22px">Ed25519</div></div>
+   <div class="sheet" id="sLamport"><div style="position:absolute;left:0;top:10px;width:752px;height:532px;transform:scale(.85);transform-origin:0 0">
+     <svg width="752" height="532">
+      <ellipse cx="170" cy="190" rx="120" ry="146" fill="none" stroke="#1d3fbf" stroke-width="5"/>
+      <path d="M170 92c-38 0-62 28-62 66 0 26 8 44 18 58 2 26 18 46 44 46s42-20 44-46c10-14 18-32 18-58 0-38-24-66-62-66z" fill="#2a2418" opacity=".88"/>
+      <path d="M126 214c4 34 20 60 44 60s40-26 44-60c-10 16-26 22-44 22s-34-6-44-22z" fill="#3b3326"/>
+      <path d="M86 334c8-44 40-62 84-66 44 4 76 22 84 66" fill="#2a2418" opacity=".88"/>
+      <path d="M150 300l20 16 20-16" stroke="#efe6cf" stroke-width="3" fill="none"/>
+      <g id="coin" transform="translate(688 196) scale(.9)"><circle r="17" fill="#000"/><polygon points="-11,-12 15,-12 11,-6 -15,-6" fill="#14f195"/><polygon points="-15,-2 11,-2 15,4 -11,4" fill="#9945ff"/><polygon points="-11,8 15,8 11,14 -15,14" fill="#14f195"/></g>
+      <path id="dots" d="M300 268 H700" stroke="#c4161c" stroke-width="4" stroke-dasharray="2 9" stroke-linecap="round"/>
+     </svg>
+     <div class="ty" style="left:52px;top:356px;font-size:40px">Leslie Lamport · 1979</div>
+     <div class="ty" style="left:52px;top:410px;font-size:21px;color:#5a4e38">one-time signatures from a hash function</div>
+     <div class="ty" id="lName" style="left:300px;top:138px;font-size:88px;letter-spacing:-1px"></div>
+     <div class="ty" id="lUnit" style="left:302px;top:288px;font-size:27px"></div>
+     <div class="ty" id="lYes" style="left:470px;top:466px;font-size:22px;color:#c4161c;transform:rotate(-3deg)">(yes, <u>that</u> Lamport)</div></div></div>
+   <div class="sheet" id="sX">
+     <div class="ty xl" style="left:22px;top:6px;font-size:84px">X</div><div class="ty xw" style="left:100px;top:34px;font-size:40px">e<u>X</u>tended</div>
+     <div class="ty xl" style="left:22px;top:100px;font-size:84px">M</div><div class="ty xw" style="left:100px;top:128px;font-size:40px">Merkle</div>
+     <div class="ty xl" style="left:22px;top:194px;font-size:84px">S</div><div class="ty xw" style="left:100px;top:222px;font-size:40px">Signature</div>
+     <div class="ty xl" style="left:22px;top:288px;font-size:84px">S</div><div class="ty xw" style="left:100px;top:316px;font-size:40px">Scheme</div>
+     <div class="ty" id="xCredit" style="left:24px;top:410px;font-size:27px;color:#1d3fbf">Lamport · Winternitz · Merkle</div></div>
+  </div>
+  <div id="mount"></div><div id="click"></div>
+ </div>
+ <svg class="L" id="tree" width="1280" height="720" style="transform-origin:0 0"><g id="chains"></g><g id="treeLines" fill="none" stroke="#1e1a12" stroke-width="5" stroke-linecap="round"></g><g id="treeNodes"></g></svg>
+ <div class="ty" id="chLbl" style="left:640px;top:556px;transform:translateX(-50%);font:26px 'Special Elite';color:#1e1a12">67 chains × 16 hash steps</div>
+ <div class="ty" id="kLbl" style="left:140px;top:278px;font:30px 'Special Elite';color:#1e1a12">× 1,024 keys</div>
+ <div class="L" id="wall"></div>
+ <div id="counter"><div id="cBig">0 bytes</div><div id="cSmall"></div></div>
+ <svg class="L" id="seal" width="1280" height="720"><g id="sealG" transform="translate(880 548)"><g id="sealIn">
+   <circle r="62" fill="rgba(29,63,191,.08)" stroke="#1d3fbf" stroke-width="6"/><circle r="50" fill="none" stroke="#1d3fbf" stroke-width="2.5"/>
+   <path id="sealArc" d="M-40 0 A40 40 0 0 1 40 0" fill="none"/><text font-family="Special Elite" font-size="13" fill="#1d3fbf" letter-spacing="1"><textPath href="#sealArc" startOffset="50%" text-anchor="middle">SP 800-208</textPath></text>
+   <text y="14" text-anchor="middle" font-family="Anton" font-size="34" fill="#1d3fbf" letter-spacing="2">NIST</text>
+   <text y="36" text-anchor="middle" font-family="Special Elite" font-size="11" fill="#1d3fbf">STANDARD</text></g></g></svg>
+ <div class="stamp" id="v3" style="left:826px;top:176px;font-size:50px;color:#c4161c;transform-origin:0 0"><span style="display:block;transform:translate(-50%,-50%);border:7px solid #c4161c;border-radius:8px;padding:2px 18px 0">Version 3</span></div>
+ <div class="ty" id="b2500" style="left:716px;top:426px;font:36px 'Architects Daughter';color:#c4161c">2,500 bytes</div>
+ <div class="L" id="narrSL"><div id="narrS"></div></div>
+ <div class="pf" id="pfCode" style="top:212px"><div class="pf-h"><svg class="mk" viewBox="0 0 24 24"><path fill="#000" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>see the code</div><div id="qrCode"></div><div class="pf-t">program/src/lib.rs line 118</div></div>
+ <div class="pf" id="pfProof" style="top:458px"><div class="pf-h"><svg class="mk" viewBox="0 0 24 24"><path d="M19.9,18.4 A9.6,9.6 0 1 1 21.4,14.2" fill="none" stroke="#00e8b5" stroke-width="4.8"/><circle cx="12" cy="10.6" r="4.9" fill="#c74ae3"/></svg>proof it works</div><div id="qrProof"></div><div class="pf-t" id="pfTx"></div></div>
+ <div id="win"><img src="assets/s07-alley-freeze.png"><canvas id="winRain" width="250" height="141" style="position:absolute;left:0;top:0"></canvas></div>
+ <div id="winLbl">meanwhile, in the alley…</div>
+ <canvas id="dust" width="1280" height="720" style="position:absolute;left:0;top:0"></canvas>
+</div>
+
+<!-- ======================= alley (33.0 s - end) ======================= -->
+<div class="L" id="alleyRoot" style="display:none">
+ <div class="L" id="alleyIn"></div>
+ <div class="L noir" id="narrAL"><div id="narrA"></div></div>
+ <div class="L" id="devilL">
+  <div id="devil" style="position:absolute;left:0;top:0;width:120px;height:174px">
+   <img src="heads/s06-devil.png" style="position:absolute;left:0;top:0;width:120px;height:174px">
+   <svg width="120" height="174" viewBox="0 0 152 220">
+    <path d="M38,40 Q16,8 18,-22 Q46,2 60,26 Z" fill="#d00000" stroke="#000" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M114,40 Q136,8 134,-22 Q106,2 92,26 Z" fill="#d00000" stroke="#000" stroke-width="5" stroke-linejoin="round"/>
+    <path fill-rule="evenodd" fill="#050505" d="M8,64 Q76,52 146,64 L146,96 Q76,104 8,96 Z M30,80 a16,10 0 1,0 32,0 a16,10 0 1,0 -32,0 Z M88,80 a16,10 0 1,0 32,0 a16,10 0 1,0 -32,0 Z"/>
+    <path d="M146,70 Q160,66 170,74 M146,84 Q160,90 168,98" stroke="#050505" stroke-width="6" fill="none" stroke-linecap="round"/></svg></div>
+  <div id="dForm" style="position:absolute;left:0;top:0;width:150px;height:185px;transform-origin:75px 92px"><div class="card" style="width:150px;height:185px" id="dCard">
+   <div class="ty" style="left:12px;top:10px;font-size:17px;letter-spacing:1px">WITHDRAWAL</div>
+   <div class="ty" style="left:10px;top:58px;font-size:12px">TO: ADLw7W…xURt9Wod</div>
+   <svg width="150" height="185"><path id="swapLine" d="M8 64 L144 62" stroke="#c1121f" stroke-width="4" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/>
+    <path d="M14 152 q10 -22 20 -2 t18 -4 t18 2 t16 -10 t20 6 t18 -4" stroke="#c1121f" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M10 168 H140" stroke="#5a4020" stroke-width="1.5"/></svg>
+   <div class="ty" id="dTo" style="left:20px;top:32px;font-size:20px;color:#b00d16;transform:rotate(-4deg)"></div>
+   <div class="ty" style="left:10px;top:94px;font-size:15px">AMOUNT: 1.5 SOL</div></div></div>
+  <svg id="fist" width="70" height="60" viewBox="66 -12 72 64" style="left:0;top:0;transform-origin:0 50%"><path d="M70,-6 q30,-14 56,-4 q14,6 4,16 q14,4 4,16 q10,6 -2,14 q4,10 -12,10 l-46,-6 q-14,-20 -4,-46 z" fill="#e01010" stroke="#000" stroke-width="4" stroke-linejoin="round"/></svg>
+  <canvas id="drips" width="1280" height="720" style="position:absolute;left:0;top:0"></canvas>
+ </div>
+ <div id="cmp" class="card" style="left:385px;top:100px;width:370px;height:310px;transform-origin:185px 155px">
+  <div class="ty" style="left:16px;top:12px;font-size:19px;color:#5a4020">inside the door: the check</div>
+  <div class="ty" style="left:16px;top:44px;font-size:19px">the signature signed:</div>
+  <div class="ty" style="left:16px;top:70px;font-size:28px">TO ADLw7W…xURt9Wod</div>
+  <div class="ty" style="left:16px;top:104px;font-size:24px">1.5 SOL</div>
+  <svg width="370" height="310"><path d="M150 132 q16 -30 30 -4 t28 -6 t26 4 t24 -14 t30 8 t26 -6 q16 -8 20 10" stroke="#c1121f" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
+  <div class="ty" style="left:16px;top:170px;font-size:19px">this form says:</div>
+  <div class="ty" style="left:16px;top:196px;font-size:28px;color:#b00d16">TO DEV1L…9x</div>
+  <div class="ty" style="left:16px;top:230px;font-size:24px">1.5 SOL</div>
+  <svg width="370" height="310"><g stroke="#e0101a" stroke-width="20" stroke-linecap="round" opacity=".92" style="filter:url(#rough)"><path id="x1" d="M40 30 L330 285" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/><path id="x2" d="M330 30 L40 285" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/></g></svg></div>
+ <div class="L" id="coneL"></div>
+ <canvas id="rain" width="1280" height="720" style="position:absolute;left:0;top:0"></canvas>
+</div>
+
+<!-- ======================= beat 0: projector lamp over slide 6's last frame ======================= -->
+<img id="b0" src="assets/s07-s06-end.png" style="position:absolute;left:0;top:0;width:1280px;height:720px">
+<div class="L" id="wash" style="background:#fff6e0;opacity:0"></div>
+
+<script src="data/s07-edl.js"></script><script src="data/s07-qr.js"></script>
+<script src="lib/film.js"></script><script src="lib/noir-alley.js"></script>
+<script>
+// late-typed text must not wait on a lazily requested font
+{ const fl = Promise.all(['400 40px "Architects Daughter"', '400 20px "Special Elite"', '400 20px Anton', '700 20px Arial'].map((x) => document.fonts.load(x, 'AaBb−²·…?')));
+  try { Object.defineProperty(document.fonts, 'ready', { get: () => fl.then(() => undefined), configurable: true }); } catch (e) {} }
+const f = window.__film, $ = (id) => document.getElementById(id), D = window.S07;
+const P = (t, a, b) => f.prog(t, a, b), ease = (p) => p * p * (3 - 2 * p), eo = (p) => 1 - (1 - p) * (1 - p), lerp = (a, b, p) => a + (b - a) * p;
+const step = (p, n) => Math.floor(p * n + 1e-6) / n;
+const show = (el, on) => { el.style.display = on ? '' : 'none'; };
+
+// ---------- timing: line in/out from data/s07-edl.js; a word's scene time = line start + (token time - the line's first token time)
+const L = Object.fromEntries(D.edl.map((e) => [e.id, e]));
+const ASR0 = { M1: 413.60, M2: 418.48, M3: 420.08, M4: 424.00, M5: 428.56, M6: 433.84, M7: 437.92, M8: 442.24, M9: 446.40, M10: 448.64, M11: 454.24 };
+const at = (id, tok) => L[id].out_in + (tok - ASR0[id]);
+const CUT = 33.0;   // hard cut to the alley
+const T = {
+  signature: at('M1', 416.16), nothing: at('M1', 416.88), hashFn: at('M1', 417.44), curves: at('M2', 418.80), leslie: at('M3', 420.80),
+  thatL: at('M4', 424.48), smallest: at('M4', 426.56), solana: at('M4', 427.44), unfort: L.M5.out_in, massive: at('M5', 431.28),
+  winternitz: L.M6.out_in, smaller: at('M6', 435.84), merkle: at('M7', 438.32), thousands: at('M7', 439.04), xmss: at('M8', 443.44), nist: at('M8', 445.20),
+  v3: at('M9', 447.44), copies: at('M10', 449.92), swaps: at('M10', 451.20), sigNo: at('M10', 452.56), match: at('M10', 453.28), throws: at('M11', 454.88),
+};
+window.__T = T;
+
+// ---------- figures (slide 6's compositing; seminar narrator in colour, alley narrator in the noir filter)
+const FG = NoirAlley.figs(f, 's07-narr', D);
+const narrS = FG.makeFig($('narrS'), 'prof', 'narr'), narrA = FG.makeFig($('narrA'), 'prof', 'narr');
+const POKE = { left: [118, 282, 27], right: [1162, 305, -27] };      // side pokes, 27 deg from upright, legs cut by the edge
+function poke(fig, side, pk) { const [x, y, r] = POKE[side], fl = side === 'left' ? 1 : -1; FG.place(fig, x - fl * (1 - pk) * 380, y, r, .42, fl); }
+const inOut = (t, t0, t1) => (t < t0 || t >= t1 + .15 ? 0 : t < t1 ? step(P(t, t0, t0 + .15), 3) : 1 - step(P(t, t1, t1 + .15), 3));
+
+// ---------- alley
+$('alleyIn').innerHTML = NoirAlley.markup(); $('coneL').innerHTML = NoirAlley.cone();
+const AL = NoirAlley.init(f); const rainCtx = $('rain').getContext('2d');
+
+// ---------- tweet highlights (OCR word boxes from data/tweet-body.tsv, image px; crop starts at y 6300, scale 0.47)
+const HL = [[[920, 6303, 1125, 6362], [25, 6384, 800, 6442]], [[878, 6616, 1166, 6676], [25, 6692, 690, 6758]], [[1114, 7165, 1232, 7232], [25, 7242, 955, 7308]]];
+$('hl').innerHTML = HL.map((g, i) => g.map(([x0, y0, x1, y1]) => `<div class="hl${i}" style="position:absolute;left:${(x0 * .47).toFixed(1)}px;top:${((y0 - 6300) * .47).toFixed(1)}px;width:${((x1 - x0) * .47).toFixed(1)}px;height:${((y1 - y0) * .47).toFixed(1)}px;background:rgba(255,214,0,.62);mix-blend-mode:multiply;clip-path:inset(0 100% 0 0)"></div>`).join('')).join('');
+
+// ---------- slide 4's Ed25519 curve, copied from s04-bunker.html (film/s04 c5b141b): same curve function, keyhole points and equation
+{ const CV = { x: 640, y: 400, R: 150 }, rad = (th) => CV.R * (1 + .09 * Math.cos(4 * th + .5) + .045 * Math.sin(2 * th + 1));
+  const pt = (th, k = 1) => [CV.x + k * rad(th) * Math.cos(th), CV.y + k * rad(th) * Math.sin(th)];
+  let d = ''; for (let i = 0; i <= 200; i++) { const th = i / 200 * Math.PI * 2, p = pt(th); d += (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1); }
+  let g = `<path d="${d}Z"/>`;
+  [-100, -62, -25, 20, 62, 105, 150, 195, 235].forEach((deg) => { const th = deg * Math.PI / 180, p = pt(th), q = pt(th, 1.22);
+    g += `<circle cx="${p[0]}" cy="${p[1]}" r="9" fill="#1e1a12" stroke="none"/><g transform="translate(${q[0]} ${q[1]}) scale(2.0)"><circle cx="0" cy="-4" r="5" fill="#1e1a12" stroke="none"/><path d="M-3 -1L3 -1L5.5 12L-5.5 12Z" fill="#1e1a12" stroke="none"/></g>`; });
+  g += `<path d="M690 214C650 200 640 168 700 140" stroke="#1d3fbf" stroke-width="4"/><path d="M676 136L702 138L694 164" stroke="#1d3fbf" stroke-width="4"/>`;
+  $('curveG').innerHTML = g; }
+
+// ---------- the key wall: 256 Lamport key cards (16 x 16, larger than the frame), seeded hex
+const WALL = { x: 16, y: 16, px: 104, py: 68 }, cards = [], RK = f.rng(256);
+{ const hex = '0123456789abcdef'; let h = '';
+  for (let i = 0; i < 256; i++) { const r = Math.floor(i / 16), c = i % 16, s = hex[Math.floor(RK() * 16)] + hex[Math.floor(RK() * 16)] + hex[Math.floor(RK() * 16)] + hex[Math.floor(RK() * 16)];
+    h += `<div class="kc" data-r="${r}" data-c="${c}"><svg width="44" height="32" viewBox="0 0 44 32"><circle cx="10" cy="16" r="8" fill="none" stroke="#2a2418" stroke-width="4"/><path d="M18 16H42M34 16V24M40 16V22" stroke="#2a2418" stroke-width="4" fill="none"/></svg><b>${s}</b></div>`; }
+  $('wall').innerHTML = h; $('wall').querySelectorAll('.kc').forEach((e) => cards.push(e)); }
+const rowStart = []; { let t = 0; for (let r = 0; r < 16; r++) { rowStart.push(t); t += .40 * Math.pow(.8, r); } rowStart.push(t); }
+const cardAt = (i) => { const r = Math.floor(i / 16), c = i % 16; return T.unfort + .03 + rowStart[r] + (rowStart[r + 1] - rowStart[r]) * c / 16; };
+// 48 cards become the chain links: rows 2-7 x cols 3-10 -> chain i (col-3), link j (7-row, bottom up)
+const CH = { x0: 382, dx: 74, y0: 520, dy: 40 }, isChain = (r, c) => r >= 2 && r <= 7 && c >= 3 && c <= 10;
+{ let ch = '';
+  for (let i = 0; i < 8; i++) for (let j = 0; j < 6; j++) { const x = CH.x0 + i * CH.dx, y = CH.y0 - j * CH.dy;
+    ch += j % 2 === 0 ? `<ellipse class="lk" data-j="${j}" cx="${x}" cy="${y}" rx="15" ry="24" fill="none" stroke="#1e1a12" stroke-width="7"/>` : `<rect class="lk" data-j="${j}" x="${x - 4}" y="${y - 22}" width="8" height="44" rx="4" fill="#1e1a12"/>`; }
+  ch += `<g class="lk" data-j="0"><path d="M320 548V312" stroke="#1d3fbf" stroke-width="4" fill="none"/><path d="M310 326L320 304L330 326Z" fill="#1d3fbf"/><text x="306" y="440" transform="rotate(-90 306 440)" text-anchor="middle" font-family="Special Elite" font-size="22" fill="#1d3fbf">hash ×16</text></g>`;
+  $('chains').innerHTML = ch; }
+// the tree above the chains (slide 5's marker language: wobbly black strokes, yellow root)
+function wob(pts, seed, amp = 2.5) { const r = f.rng(seed); let d = `M${pts[0][0]},${pts[0][1]}`;
+  for (let i = 1; i < pts.length; i++) { const [x0, y0] = pts[i - 1], [x1, y1] = pts[i]; d += ` Q${((x0 + x1) / 2 + (r() - .5) * amp * 2).toFixed(1)},${((y0 + y1) / 2 + (r() - .5) * amp * 2).toFixed(1)} ${x1},${y1}`; } return d; }
+const LV = [Array.from({ length: 8 }, (_, i) => [CH.x0 + i * CH.dx, 296])];
+for (let l = 1; l < 4; l++) LV.push(Array.from({ length: LV[l - 1].length / 2 }, (_, i) => [(LV[l - 1][2 * i][0] + LV[l - 1][2 * i + 1][0]) / 2, 296 - l * 54]));
+{ let ln = '', nd = '';
+  for (let i = 0; i < 8; i++) ln += `<path class="tl" data-l="0" d="${wob([[LV[0][i][0], 316], LV[0][i]], 70 + i)}" pathLength="1" stroke-dasharray="1 1"/>`;
+  for (let l = 1; l < 4; l++) LV[l].forEach((p, i) => { ln += `<path class="tl" data-l="${l}" d="${wob([LV[l - 1][2 * i], p], 80 + l * 9 + i)}" pathLength="1" stroke-dasharray="1 1"/><path class="tl" data-l="${l}" d="${wob([LV[l - 1][2 * i + 1], p], 90 + l * 9 + i)}" pathLength="1" stroke-dasharray="1 1"/>`; });
+  for (let l = 0; l < 4; l++) LV[l].forEach((p) => { nd += l < 3 ? `<circle class="tn" data-l="${l}" cx="${p[0]}" cy="${p[1]}" r="9" fill="#1e1a12"/>` : `<g class="tn" data-l="3"><circle id="glow" cx="${p[0]}" cy="${p[1]}" r="44" fill="#ffd23f" opacity=".0"/><circle cx="${p[0]}" cy="${p[1]}" r="20" fill="#ffd23f" stroke="#1e1a12" stroke-width="5"/></g>`; });
+  $('treeLines').innerHTML = ln; $('treeNodes').innerHTML = nd; }
+
+// ---------- QR codes (data/s07-qr.js, generated with uqr like the presentation's proof column)
+const qrSvg = (q, size) => `<svg class="qr" viewBox="-4 -4 ${q.n + 8} ${q.n + 8}" width="${size}" height="${size}" shape-rendering="crispEdges"><rect x="-4" y="-4" width="${q.n + 8}" height="${q.n + 8}" fill="#fff"/><path d="${q.d}" fill="#000"/></svg>`;
+$('qrCode').innerHTML = qrSvg(S07_QR.code, 164); $('qrProof').innerHTML = qrSvg(S07_QR.proof, 164); $('pfTx').textContent = 'devnet tx ' + S07_QR.tx.slice(0, 8) + '…';
+
+// ---------- small rain in the corner window, dust in the beam
+const WR = f.rng(43), wdrops = Array.from({ length: 60 }, () => ({ x: WR() * 300 - 30, y: WR() * 190, l: 4 + WR() * 8, a: .15 + WR() * .25, v: 360 + WR() * 180 }));
+const wctx = $('winRain').getContext('2d'), dctx = $('dust').getContext('2d'), drctx = $('drips').getContext('2d');
+
+const sheetY = (t, tin, tout) => (t < tin ? 480 : t < tin + .35 ? 480 * (1 - eo(P(t, tin, tin + .35))) : t < tout ? 0 : t < tout + .3 ? -480 * ease(P(t, tout, tout + .3)) : -480);
+const SH = { sTweet: [T.signature - .45, T.curves - .5], sCurve: [T.curves - .45, L.M3.out_in - .1], sLamport: [L.M3.out_in - .05, T.unfort], sX: [26.25, 99] };
+const slam = (p, rot, from = 3) => { const sc = p < .8 ? lerp(from, .96, Math.pow(p / .8, 2)) : lerp(.96, 1, (p - .8) / .2); return `rotate(${rot}deg) scale(${sc.toFixed(4)})`; };
+const type = (s, t, t1, cps) => s.slice(0, Math.max(0, Math.floor((t - t1) * cps + 1e-6)));
+
+f.onSeek((t0) => {
+  const FREEZE = 40.45, t = Math.min(t0, FREEZE);
+  // ---- beat 0: lamp click and cream wash over slide 6's last frame; the seminar is underneath from the brightest frame on
+  show($('b0'), t0 < .5);
+  $('wash').style.opacity = (t0 < .1 ? 0 : t0 < .13 ? .55 : t0 < .16 ? .1 : t0 < .5 ? .95 * eo(P(t0, .16, .5)) : t0 < .7 ? .95 * (1 - P(t0, .5, .7)) : 0).toFixed(3);
+  const sem = t < CUT; show($('seminar'), sem); show($('alleyRoot'), !sem);
+
+  if (sem) {
+    // sheets + projector clicks
+    let click = 0;
+    for (const [id, [a, b]] of Object.entries(SH)) { $(id).style.transform = `translateY(${sheetY(t, a, b).toFixed(1)}px)`; if (t >= a && t < a + .067) click = .16; }
+    $('click').style.opacity = click;
+    // tweet: three passages light up one after another
+    HL.forEach((g, i) => { const p = P(t, T.nothing - .05 + i * .38, T.nothing + .25 + i * .38); document.querySelectorAll('.hl' + i).forEach((e, k) => { const q = Math.min(1, Math.max(0, p * g.length - k)); e.style.clipPath = `inset(0 ${(100 - q * 100).toFixed(1)}% 0 0)`; }); });
+    // curve struck out
+    $('st1').style.strokeDashoffset = (1 - P(t, T.curves + .05, T.curves + .2)).toFixed(3); $('st2').style.strokeDashoffset = (1 - P(t, T.curves + .22, T.curves + .37)).toFixed(3);
+    // Lamport: the name types in huge, the tiny coin, the unit line
+    $('lName').textContent = type('lamport', t, T.thatL, 16); show($('coin'), t >= T.thatL + .5); show($('dots'), t >= T.smallest - .1);
+    $('lUnit').textContent = type('1 lamport = 0.000000001 SOL', t, T.smallest, 32); show($('lYes'), t >= T.solana + .2);
+    // key wall
+    let shown = 0;
+    cards.forEach((e, i) => { const r = +e.dataset.r, c = +e.dataset.c, ta = cardAt(i); let x = WALL.x + c * WALL.px, y = WALL.y + r * WALL.py, s = 1, vis = t >= ta;
+      if (vis) { shown++; s = t < ta + .067 ? .6 : 1; }
+      if (t >= T.winternitz + .05) {
+        if (isChain(r, c)) { const q = step(P(t, T.winternitz + .15, T.winternitz + .55), 4), i2 = c - 3, j = 7 - r;
+          x = lerp(x, CH.x0 + i2 * CH.dx - 48, q); y = lerp(y, CH.y0 - j * CH.dy - 30, q); s = lerp(1, .45, q); vis = t < T.winternitz + .6; }
+        else { const dt = Math.max(0, t - (T.winternitz + .05 + c * .02)); const q = Math.floor(dt * 15) / 15; y += 1900 * q * q; vis = y < 760; } }
+      e.style.display = vis ? '' : 'none'; if (vis) e.style.transform = `translate(${x}px,${y}px) scale(${s})`; });
+    show($('wall'), t >= T.unfort);
+    // chains, tree
+    const chOn = t >= T.winternitz + .6; show($('chains'), chOn); show($('chLbl'), chOn && t < 26.0);
+    $('chains').querySelectorAll('.lk').forEach((e) => { e.style.opacity = t >= T.winternitz + .6 + +e.dataset.j * .05 ? 1 : 0; });
+    $('treeLines').querySelectorAll('.tl').forEach((e) => { const l = +e.dataset.l, a = T.merkle + l * .42; e.style.strokeDashoffset = (1 - P(t, a, a + .35)).toFixed(3); });
+    $('treeNodes').querySelectorAll('.tn').forEach((e) => { e.style.opacity = t >= T.merkle + +e.dataset.l * .42 + .3 ? 1 : 0; });
+    $('glow').setAttribute('opacity', (t >= T.merkle + 1.6 ? .45 + .1 * Math.sin(t * 9) : 0).toFixed(3));
+    show($('kLbl'), t >= T.thousands && t < 26.0);
+    const mini = step(P(t, 26.0, 26.2), 3); $('tree').style.transform = `translate(${lerp(0, 700 - 300 * .42, mini)}px,${lerp(0, 208 - 110 * .42, mini)}px) scale(${lerp(1, .42, mini)})`;
+    show($('tree'), t >= T.winternitz + .6);
+    // counter: 32 bytes per revealed key; Winternitz rolls it down to 2,144 (67 chains x 32 bytes)
+    let bytes = 32 * shown; if (t >= T.smaller) bytes = Math.round(lerp(8192, 2144, ease(P(t, T.smaller, T.smaller + .6))));
+    show($('counter'), t >= T.unfort && t < 26.0); $('cBig').textContent = bytes.toLocaleString('en-US') + ' bytes';
+    $('cSmall').textContent = t < T.winternitz ? 'public key: ' + (64 * shown).toLocaleString('en-US') + ' bytes' : 'one Winternitz signature';
+    // XMSS letters, credit, NIST seal, VERSION 3, 2,500 bytes, boxes
+    document.querySelectorAll('#sX .xl').forEach((e, i) => { e.style.opacity = t >= T.xmss + i * .12 ? 1 : 0; });
+    document.querySelectorAll('#sX .xw').forEach((e, i) => { e.style.opacity = t >= T.xmss + i * .12 + .05 ? 1 : 0; });
+    show($('xCredit'), t >= T.xmss + .7);
+    show($('seal'), t >= T.nist); if (t >= T.nist) $('sealIn').style.transform = slam(P(t, T.nist, T.nist + .14), -8, 2.4);
+    show($('v3'), t >= T.v3); if (t >= T.v3) $('v3').style.transform = slam(P(t, T.v3, T.v3 + .14), -6);
+    show($('b2500'), t >= T.v3 + .3); $('b2500').style.clipPath = `inset(-10px ${(100 - 100 * P(t, T.v3 + .3, T.v3 + .8)).toFixed(1)}% -10px 0)`;
+    for (const [id, a] of [['pfCode', T.v3 + .05], ['pfProof', T.v3 + .2]]) { const p = eo(P(t, a, a + .3)); show($(id), t >= a); $(id).style.left = (1010 + 300 * (1 - p)).toFixed(1) + 'px'; }
+    // thumps on the seal and the stamp
+    let y = 0; for (const h of [T.nist + .14, T.v3 + .14]) { const d = t - h; if (d >= 0 && d < .45) y += 7 * Math.exp(-d * 9) * Math.sin(d * 52); }
+    $('proj').style.translate = `0 ${y.toFixed(2)}px`;
+    // narrator: left poke for M1-M5 (shoved off by the wall on "massive"), right poke for M7-M9 (leaves before the boxes land)
+    const nf = FG.narrFrame(t); FG.setHead(narrS, nf);
+    let side = null, pk = 0;
+    if (t < T.massive + .25) { side = 'left'; pk = inOut(t, L.M1.out_in - .15, T.massive); }
+    else if (t >= L.M7.out_in - .15) { side = 'right'; pk = inOut(t, L.M7.out_in - .15, T.v3 - .3); }
+    show($('narrSL'), side && pk > 0); if (side) poke(narrS, side, pk);
+    // corner window rain + dust
+    wctx.clearRect(0, 0, 250, 141); wctx.lineWidth = .8;
+    for (const d of wdrops) { const yy = ((d.y + d.v * t) % 190) - 25, x = d.x + yy * .18; wctx.strokeStyle = `rgba(230,230,230,${d.a.toFixed(2)})`; wctx.beginPath(); wctx.moveTo(x, yy); wctx.lineTo(x - d.l * .18, yy - d.l); wctx.stroke(); }
+    dctx.clearRect(0, 0, 1280, 720); const S = f.rng(9 + Math.floor(t * 30));
+    dctx.fillStyle = 'rgba(60,48,30,.35)'; for (let i = 0; i < 24; i++) { dctx.beginPath(); dctx.arc(330 + S() * 640, 150 + S() * 470, .6 + S() * 1.6, 0, 7); dctx.fill(); }
+    dctx.strokeStyle = 'rgba(60,48,30,.28)'; dctx.lineWidth = 1; for (let i = 0; i < 2; i++) { const x = 360 + S() * 560, yy = 170 + S() * 420; dctx.beginPath(); dctx.moveTo(x, yy); dctx.quadraticCurveTo(x + 14, yy - 10, x + 26 + S() * 10, yy + 6); dctx.stroke(); }
+  } else {
+    // ---- beat 8: the alley. The devil posts a copy of our form with the TO swapped; the check fails; the form is thrown out into the gutter.
+    const nf = FG.narrFrame(t); FG.setHead(narrA, nf);
+    show($('narrAL'), true); poke(narrA, 'left', step(P(t, CUT - .05, CUT + .1), 3));
+    // slot: posting (opens 36.15) and throwing out (opens just before "throws")
+    const tPost = T.swaps + .45, tThrow = T.throws;
+    let sh = 0;
+    if (t >= tPost + .05 && t < tPost + .6) sh = step(P(t, tPost + .05, tPost + .15), 3) * (1 - step(P(t, tPost + .52, tPost + .6), 2));
+    if (t >= tThrow - .07 && t < tThrow + .2) sh = step(P(t, tThrow - .07, tThrow), 2) * (1 - step(P(t, tThrow + .12, tThrow + .2), 2));
+    $('shutter').setAttribute('transform', `translate(${-92 * sh} 0)`); show($('eyes'), false);
+    // devil head
+    let dx = 1095, dy = 330, dr = 0; if (t >= tThrow + .76) { const q = step(P(t, tThrow + .76, tThrow + .96), 3); dx = lerp(1095, 1150, q); dy = lerp(330, 548, q); dr = 12 * q; }
+    $('devil').style.transform = `translate(${dx - 60}px,${dy - 87}px) rotate(${dr}deg)`;
+    // the devil's copy: held up, TO swapped, posted, thrown out, soggy in the gutter, held up dripping
+    let fx = 960, fy = 470, fs = 1, fsy = 1, fr = -4, fv = t >= T.copies, soggy = 0, fistOn = fv, fistX = 0, fistY = 0;
+    if (t >= T.copies && t < T.copies + .2) fs = lerp(.5, 1, step(P(t, T.copies, T.copies + .2), 3));
+    if (t >= tPost) { const q = step(P(t, tPost, tPost + .35), 5); fx = lerp(960, 870, q); fy = lerp(470, 255, q); fs = lerp(1, .55, q); fr = lerp(-4, 0, q); fsy = 1 - P(t, tPost + .35, tPost + .48); fv = t < tPost + .48; }
+    if (t >= tThrow) { fv = true; const q = step(P(t, tThrow, tThrow + .6), 10); fx = lerp(870, 990, q); fy = 255 + (640 - 255) * q - 260 * 4 * q * (1 - q); fs = lerp(.55, .8, q); fsy = 1; fr = lerp(0, 368, q); }
+    if (t >= tThrow + .6) { soggy = P(t, tThrow + .62, tThrow + .9); fr = 368 - 360; }
+    if (t >= tThrow + .96) { const q = step(P(t, tThrow + .96, tThrow + 1.16), 3); fy = lerp(640, 584, q); fx = lerp(990, 975, q); }
+    show($('dForm'), fv);
+    $('dForm').style.transform = `translate(${fx - 75}px,${fy - 92}px) rotate(${fr}deg) scale(${fs},${(fs * fsy * (1 - .15 * soggy)).toFixed(3)}) skewX(${(6 * soggy).toFixed(2)}deg)`;
+    $('dCard').style.filter = soggy ? `brightness(${(1 - .3 * soggy).toFixed(3)}) contrast(${(1 - .1 * soggy).toFixed(3)})` : '';
+    $('swapLine').style.strokeDashoffset = (1 - P(t, T.swaps, T.swaps + .15)).toFixed(3); $('dTo').textContent = type('DEV1L…9x', t, T.swaps + .15, 30);
+    // fist: holds the card (right edge), posts it, retreats, then holds the soggy form up
+    if (t < tPost + .5) { fistX = fx + 75 * fs - 8; fistY = fy - 10; }
+    else if (t < tThrow + .96) fistOn = false;
+    else { fistOn = true; fistX = fx + 75 * .8 - 8; fistY = fy - 14; }
+    show($('fist'), fistOn); $('fist').style.transform = `translate(${fistX}px,${fistY - 30}px)`;
+    // the check: comparison card, then the red X
+    const cmpOn = t >= T.sigNo && t < tThrow + .6; show($('cmp'), cmpOn);
+    $('cmp').style.transform = `scale(${lerp(.6, 1, step(P(t, T.sigNo, T.sigNo + .2), 3))})`;
+    $('x1').style.strokeDashoffset = (1 - P(t, T.match, T.match + .08)).toFixed(3); $('x2').style.strokeDashoffset = (1 - P(t, T.match + .1, T.match + .18)).toFixed(3);
+    // gutter splash, then drips off the soggy form
+    drctx.clearRect(0, 0, 1280, 720); drctx.fillStyle = 'rgba(220,220,220,.7)';
+    if (t >= tThrow + .6 && t < tThrow + .9) { const p = P(t, tThrow + .6, tThrow + .9), R2 = f.rng(77); for (let i = 0; i < 9; i++) { const a = Math.PI * (1.1 + R2() * .8), v = 60 + R2() * 70; drctx.beginPath(); drctx.ellipse(990 + Math.cos(a) * v * p * 1.6, 650 + Math.sin(a) * v * p + 200 * p * p, 3, 4, 0, 0, 7); drctx.fill(); } }
+    if (t >= tThrow + 1.16) { const R3 = f.rng(5 + Math.floor(t * 30)); for (let i = 0; i < 4; i++) { const x = 930 + i * 26 + R3() * 6, ph = (t * 1.8 + i * .27) % 1; drctx.beginPath(); drctx.ellipse(x, 650 + ph * 50, 2.5, 4, 0, 0, 7); drctx.fill(); } }
+    AL.rain(rainCtx, t);
+  }
+});
+</script></body></html>
