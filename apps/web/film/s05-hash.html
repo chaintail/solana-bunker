@@ -123,11 +123,11 @@ const END = S.total;
 const TB = (t) => Math.min(t, T.freeze);       // the board's clock: it stops dead at the robbery
 
 // ======================= slide-4 handoff =======================
-// The opening frame is the real last frame of slide 4 (assets/s05/handoff-s04-end.png = last frame of out/s04-bunker-v2.mp4, branch film/s04 c150d80). The lab coat narrator
+// The opening frame is the real last frame of slide 4 (assets/s05/handoff-s04-end.png = last frame of out/s04-bunker-v3.mp4, branch film/s04 c5b141b). The lab coat narrator
 // is drawn UNDER that image at exactly the physicist's end pose, so as the frame fades out (T.s4Out) the live figure is already standing where he stood.
-// S4_END_POSE: derived from s04-bunker.html (physicist: place(147, 670, rot 25, scale 1), k = .5795, pivot (395,900) body px) -> expressed on this scene's figure
-// pivot (512,1000 body px): x = 147 + R(25deg)*k*(117,100) = 183.96, y = 751.17, r = 25, s = .5795. Matched on the frame by overlay (see report).
-const S4_END_POSE = { pose: 'professor-point', x: 183.96, y: 751.17, r: 25, s: 0.5795, flip: 1 };
+// S4_END_POSE: slide 4 v3 places the narrator PNG with origin (395,900) at screen (-40,625), 25 deg clockwise, scale .5795*.8 = .4636; expressed on this scene's figure
+// pivot (512,1000 body px): x = -40 + R(25deg)*k*(117,100) = -10.43, y = 689.94. Matched on the frame by overlay (see report).
+const S4_END_POSE = { pose: 'professor-point', x: -10.43, y: 689.94, r: 25, s: 0.4636, flip: 1 };
 
 // ======================= board: static drawing =======================
 const B0 = $('bsvg0'), B1 = $('bsvg1'), X0 = $('btxt0'), X1 = $('btxt1');
