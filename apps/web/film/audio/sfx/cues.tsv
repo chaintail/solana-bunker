@@ -1,0 +1,69 @@
+# Solana Bunker film sound manifest: one row per audition file. Same format as clan-world apps/android/tools/audio/cues.tsv.
+# Built by master.py on dev-mac (encoding is banned on do-box). Columns are tab-separated, 11 per row.
+#
+# out      output stem = <cue>-<n>-<short-desc>; the file is audition/<out>.mp3 (libmp3lame 128 kbps, 48 kHz stereo).
+# cue      cue id (news-open, news-close, slot-slam, stamp-thump, projector-click, glass-shatter, cash-register,
+#          whoosh, confetti-pop, camera-shutter, tv-static, record-scratch).
+# cand     candidate letter within the cue. Kept stable across rounds; a retired letter is not reused.
+# ship     0 = audition candidate (all rows for now).
+# class    sting (HP 60 Hz, LP 16 kHz) | sfx (HP 60 Hz, LP 14 kHz).
+# target   event loudness in LUFS (ebur128 I, 1 s of silence padded so the 400 ms gate sees short sounds). Liam: sound
+#          effects not too loud, never jarring, so every cue is -20.
+# fade_ms  exponential tail fade.
+# maxlen   seconds kept after the leading silence is cut.
+# ceiling  sample-peak limit before encoding, dBFS. -4 leaves room for the mp3 encoder to stay at or under -3 dBTP.
+# layers   '+'-separated layers mixed together; a layer is segments SOURCE@start-end joined by '~' (0.25 s crossfade),
+#          then |key=value options delay (ms), gain (dB), af (ffmpeg filters). SOURCE is fs:<freesound id> or
+#          k:<pack>/<file stem> (pack: casino, impact, rpg). See SOURCES.tsv. fs: ids are HQ previews (stand-ins).
+# post     ffmpeg filters after the mix ("-": none). Macros: @SHELF (-4 dB high shelf at 7 kHz, -2 dB at 3.5 kHz),
+#          @MID (+3 dB at 1.5 kHz).
+#
+# out	cue	cand	ship	class	target	fade_ms	maxlen	ceiling	layers	post
+# --- 1 news-open: broadcast opening sting for the cut into the news desk (2-4 s)
+news-open-1-mini-jingle	news-open	a	0	sting	-20	300	3.3	-4	fs:670625@0-3.4	-
+news-open-2-minimalist-transition	news-open	b	0	sting	-20	500	3.5	-4	fs:827121@0-3.6	-
+news-open-3-da-da-da-daaa	news-open	c	0	sting	-20	400	3.2	-4	fs:784855@1.5-4.8	-
+# --- 2 news-close: urgent SPECIAL REPORT sting (1-3 s)
+news-close-1-breaking-news-radio	news-close	a	0	sting	-20	300	2.4	-4	fs:156060@0-2.5	-
+news-close-2-horn-stabs	news-close	b	0	sting	-20	200	1.6	-4	fs:350433@0-1.65	-
+news-close-3-cinematic-horn-hit	news-close	c	0	sting	-20	500	2.5	-4	fs:427803@0-2.6	-
+news-close-4-brass-sting-short	news-close	d	0	sting	-20	120	0.9	-4	fs:578591@0-0.64+fs:578591@0-0.64|delay=180|gain=-7	-
+# --- 3 slot-slam: metal shutter / slot slam (0.3-0.8 s)
+slot-slam-1-metal-slam	slot-slam	a	0	sfx	-20	80	0.8	-4	fs:591380@1.35-2.15	-
+slot-slam-2-heavy-door-thud	slot-slam	b	0	sfx	-20	100	0.8	-4	fs:406197@0.28-1.1	-
+slot-slam-3-door-slam	slot-slam	c	0	sfx	-20	60	0.7	-4	fs:48980@0-0.75	-
+slot-slam-4-mail-slot-clack	slot-slam	d	0	sfx	-20	60	0.7	-5	fs:712668@2.05-2.8	-
+# --- 4 stamp-thump: rubber stamp / wax seal thump
+stamp-thump-1-traditional-stamp	stamp-thump	a	0	sfx	-20	100	0.7	-5	fs:470710@0.45-1.2	-
+stamp-thump-2-stamp-bright-shelved	stamp-thump	b	0	sfx	-20	80	0.5	-5	fs:362624@0-0.55	@SHELF
+stamp-thump-3-kenney-soft-heavy	stamp-thump	c	0	sfx	-20	80	0.5	-4	k:impact/impactSoft_heavy_000@0-0.6	@MID
+# --- 5 projector-click: slide projector click / clunk
+projector-click-1-button-push	projector-click	a	0	sfx	-20	60	0.55	-5	fs:254713@0.25-0.85	-
+projector-click-2-manual-advance	projector-click	b	0	sfx	-20	60	0.55	-4	fs:870606@0.6-1.15	-
+projector-click-3-kenney-click-clunk	projector-click	c	0	sfx	-20	60	0.5	-4	k:rpg/metalClick@0-0.3+k:impact/impactMetal_light_000@0-0.4|delay=70|gain=-6	-
+# --- 6 glass-shatter: pump.fun chart shatter
+glass-shatter-1-hard-glass-break	glass-shatter	a	0	sfx	-20	200	1.2	-5	fs:861043@0-1.06	@SHELF
+glass-shatter-2-glass-panel	glass-shatter	b	0	sfx	-20	300	1.6	-5	fs:758207@0-1.8	@SHELF
+glass-shatter-3-bottle-shatter	glass-shatter	c	0	sfx	-20	250	1.3	-4	fs:825803@0-1.36	@SHELF
+# --- 7 cash-register: rent tag kerching
+cash-register-1-purchase	cash-register	a	0	sfx	-20	200	1.5	-4	fs:209578@0-1.6	@SHELF
+cash-register-2-dusty-machine	cash-register	b	0	sfx	-20	150	1.2	-4	fs:789219@0-1.3	@SHELF
+cash-register-3-ui-ding	cash-register	c	0	sfx	-20	150	0.6	-4	fs:858840@0-0.45	-
+# --- 8 whoosh: soft swoosh for cards / sheets sliding in
+whoosh-1-whoosh-plain	whoosh	a	0	sfx	-20	200	1.2	-4	fs:459941@0.05-1.3	-
+whoosh-2-paper-slide	whoosh	b	0	sfx	-20	200	1.3	-4	fs:464302@0.1-1.45	-
+whoosh-3-little-whoosh	whoosh	c	0	sfx	-20	300	1.3	-4	fs:423799@0.4-1.7	-
+# --- 9 confetti-pop: party popper
+confetti-pop-1-party-popper	confetti-pop	a	0	sfx	-20	150	0.6	-5	fs:26349@0-0.6	-
+confetti-pop-2-confetti-cannon	confetti-pop	b	0	sfx	-20	80	0.35	-4	fs:458398@0-0.35	-
+# --- 10 camera-shutter: freeze frame
+camera-shutter-1-shutter-click	camera-shutter	a	0	sfx	-20	60	0.5	-5	fs:271010@0.65-1.1	-
+camera-shutter-2-yn500-single	camera-shutter	b	0	sfx	-20	80	0.55	-4	fs:579884@0.15-0.7	-
+camera-shutter-3-yn500-late	camera-shutter	c	0	sfx	-20	80	0.5	-4	fs:579884@3.25-3.8	-
+# --- 11 tv-static / record-scratch (optional)
+tv-static-1-static-burst	tv-static	a	0	sfx	-20	150	1.0	-4	fs:721496@0-1.2	-
+tv-static-2-channel-change	tv-static	b	0	sfx	-20	200	1.0	-4	fs:335205@0-1.1	-
+tv-static-3-static-long	tv-static	c	0	sfx	-20	200	1.2	-4	fs:354019@0.1-1.4	-
+record-scratch-1-short-scratch	record-scratch	a	0	sfx	-20	80	0.5	-4	fs:71853@0-0.45	-
+record-scratch-2-scratch-5	record-scratch	b	0	sfx	-20	150	1.1	-4	fs:431780@0.45-1.55	-
+record-scratch-3-scratch-simkiott	record-scratch	c	0	sfx	-20	150	1.0	-4	fs:43404@0.05-1.05	-
