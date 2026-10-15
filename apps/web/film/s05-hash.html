@@ -76,7 +76,6 @@ html,body{font-family:'Architects Daughter','Inter',sans-serif;color:#1d2230;bac
 </defs></svg>
 <div id="scene">
  <div id="wall"></div>
- <div id="s4"></div>
  <div id="bwrap">
   <div id="bface"></div><div id="tray"></div>
   <svg id="bsvg0" class="bl" viewBox="0 0 960 650"></svg>
@@ -87,6 +86,7 @@ html,body{font-family:'Architects Daughter','Inter',sans-serif;color:#1d2230;bac
   <div id="btxt1" class="bl"></div>
  </div>
  <div id="figL" class="fig"></div><div id="figJ" class="fig"></div><div id="figE" class="fig"></div>
+ <div id="s4"><img src="assets/s05/handoff-s04-end.png" style="position:absolute;left:0;top:0;width:1280px;height:720px"></div>
  <div id="bandit"></div>
  <div id="tweetw"><div class="tweet"><img class="thead" src="assets/tweet-header-v4.jpg"><div class="twin"><div class="tscroll" id="tscroll"><div class="tinner" id="tinner"><img src="assets/tweet-body.jpg"></div></div></div><img class="tfoot" src="assets/tweet-footer.jpg"></div></div>
 </div>
@@ -122,15 +122,12 @@ T.cascEnd = T.casc + 3.15;
 const END = S.total;
 const TB = (t) => Math.min(t, T.freeze);       // the board's clock: it stops dead at the robbery
 
-// ======================= slide-4 stand-in =======================
-// S4_END_POSE: where the lab coat is on the last frame of slide 4 (tilted in from the left edge, upper body only, legs off screen, frozen).
-// ONE place to match to slide 4 later: pose, pivot (hip, screen px), rotation (deg, clockwise = top toward the right), scale of the 1024x1536 body PNG.
-const S4_END_POSE = { pose: 'professor-point', x: 58, y: 643, r: 24, s: 0.62, flip: 1 };
-{ const s = SV('svg', { width: 1280, height: 720, viewBox: '0 0 1280 720' }, $('s4'));
-  let g = ''; for (let x = 0; x <= 1280; x += 40) g += `<line x1="${x}" y1="0" x2="${x}" y2="720" stroke="#fff" stroke-opacity="${x % 200 ? .1 : .22}"/>`; for (let y = 0; y <= 720; y += 40) g += `<line x1="0" y1="${y}" x2="1280" y2="${y}" stroke="#fff" stroke-opacity="${y % 200 ? .1 : .22}"/>`;
-  g += [[640, 330, -9], [760, 340, 0], [880, 330, 9]].map(([x, y, r], i) => `<g transform="translate(${x} ${y}) rotate(${r})"><rect x="-110" y="-200" width="220" height="300" fill="#0f5877" stroke="#fff" stroke-width="3"/><circle cx="0" cy="-60" r="${50 + i * 14}" fill="none" stroke="#fff" stroke-width="3"/><circle cx="0" cy="-60" r="${26 + i * 8}" fill="none" stroke="#fff" stroke-width="2"/></g>`).join('');
-  g += `<rect x="930" y="600" width="320" height="100" fill="none" stroke="#fff" stroke-width="3"/><text x="946" y="636" fill="#fff" font-family="Oswald" font-size="28">SOLANA BUNKER</text><text x="946" y="668" fill="#fff" font-family="Oswald" font-size="22">SHEET 3 OF 3   REV C</text>`;
-  s.innerHTML = g; }
+// ======================= slide-4 handoff =======================
+// The opening frame is the real last frame of slide 4 (assets/s05/handoff-s04-end.png = last frame of out/s04-bunker-v2.mp4, branch film/s04 c150d80). The lab coat narrator
+// is drawn UNDER that image at exactly the physicist's end pose, so as the frame fades out (T.s4Out) the live figure is already standing where he stood.
+// S4_END_POSE: derived from s04-bunker.html (physicist: place(147, 670, rot 25, scale 1), k = .5795, pivot (395,900) body px) -> expressed on this scene's figure
+// pivot (512,1000 body px): x = 147 + R(25deg)*k*(117,100) = 183.96, y = 751.17, r = 25, s = .5795. Matched on the frame by overlay (see report).
+const S4_END_POSE = { pose: 'professor-point', x: 183.96, y: 751.17, r: 25, s: 0.5795, flip: 1 };
 
 // ======================= board: static drawing =======================
 const B0 = $('bsvg0'), B1 = $('bsvg1'), X0 = $('btxt0'), X1 = $('btxt1');
@@ -174,7 +171,7 @@ const card4 = H('<div id="card4"><b>SPENT BITMAP</b><br>one LED per leaf.<br>gre
 const strike001 = SV('path', { d: 'M704 136 L774 124', class: 'inkr' }, B1);
 const stamp002 = H('<div class="stamp" id="s002" style="left:430px;top:156px;font-size:46px;padding:2px 10px 0;border-width:6px">002</div>'); X1.append(stamp002);
 const rootTxt = txt(X1, 'ROOT', 'left:556px;top:286px;font-size:30px;', 'red');
-const leavesTxt = txt(X1, '1000 leaves', 'left:420px;top:598px;width:330px;font-size:24px;text-align:center;');
+const leavesTxt = txt(X1, '1000 leaves', 'left:418px;top:598px;width:200px;font-size:24px;text-align:left;');
 // spend marks
 const leafX = SV('path', { d: 'M486 576 L502 592 M502 576 L486 592', class: 'inkr' }, B1);
 const xMark = SV('path', { d: 'M443 164 L463 181 M463 164 L443 181', class: 'inkr' }, B1);
@@ -255,7 +252,7 @@ const JOE = { x: 560, y: 621, r: 0, s: 0.3, flip: 1 }, ENG = { x: 1128, y: 592, 
 
 // bandit: Liam's head, red tint, horns and mask (a fourth version of him), pops up from the bottom edge
 const banditHd = $('bandit');
-banditHd.innerHTML = `<div class="hd" id="bhd"></div><svg class="abs" style="left:0;top:0;overflow:visible" width="200" height="290" viewBox="0 0 200 290"><path d="M40 52 Q18 20 44 -8 Q46 26 66 44 Z M164 52 Q186 20 160 -8 Q156 26 134 44 Z" fill="#8c0f14" stroke="#2a0306" stroke-width="5" stroke-linejoin="round"/><path d="M16 125 Q100 100 184 125 L178 158 Q150 140 124 160 Q100 150 76 160 Q50 140 22 158 Z" fill="#14161c" stroke="#000" stroke-width="3"/><ellipse cx="68" cy="140" rx="16" ry="9" fill="#f2f2e8"/><ellipse cx="132" cy="140" rx="16" ry="9" fill="#f2f2e8"/><circle cx="70" cy="142" r="5" fill="#000"/><circle cx="130" cy="142" r="5" fill="#000"/></svg>`;
+banditHd.innerHTML = `<div class="hd" id="bhd"></div><svg class="abs" style="left:0;top:0;overflow:visible" width="200" height="290" viewBox="0 0 200 290"><path d="M40 52 Q18 20 44 -8 Q46 26 66 44 Z M164 52 Q186 20 160 -8 Q156 26 134 44 Z" fill="#8c0f14" stroke="#2a0306" stroke-width="5" stroke-linejoin="round"/><path transform="translate(-8 -5)" fill-rule="evenodd" d="M44 112 Q70 94 98 100 Q124 106 148 100 Q178 94 200 112 Q202 134 184 140 Q160 144 148 132 Q124 126 98 132 Q86 144 62 140 Q42 134 44 112 Z M82 118 Q98 104 114 118 Q98 132 82 118 Z M128 118 Q144 104 160 118 Q144 132 128 118 Z" fill="#14161c" stroke="#000" stroke-width="3"/></svg>`;
 const BAND_FRAME = 0;   // set after the sprite indices are known
 { const hd = $('bhd'); hd.style.transform = 'scale(1.46)'; hd.style.left = '1px'; }
 
@@ -494,7 +491,7 @@ f.onSeek((t) => {
   { const w = eio(FE.walk), ex = eio(FE.exit), hop = FE.walk > 0 && FE.walk < 1 ? Math.abs(Math.sin(FE.walk * 3.1416 * 5)) * 26 : 0, lean = FE.walk > 0 && FE.walk < 1 ? Math.sin(FE.walk * 3.1416 * 5) * 5 : 0;
     place(FE, { x: lerp(1480, ENG.x, w) + ex * 460, y: ENG.y - hop, r: lean, s: ENG.s, flip: 1, vis: FE.walk > 0 && FE.exit < 1 }); }
   // bandit head
-  { const b = $('bandit'); const p = eo(FB.pop); setHead($('bhd'), bandFrame()); b.style.opacity = FB.pop > 0 ? 1 : 0; b.style.transform = `translate(${1010}px,${lerp(790, 520, p)}px) rotate(${-6 + Math.sin(t * 5) * 2}deg)`; }
+  { const b = $('bandit'); const p = eo(FB.pop); setHead($('bhd'), bandFrame()); b.style.opacity = FB.pop > 0 ? 1 : 0; b.style.transformOrigin = '0 0'; b.style.transform = `translate(${823}px,${lerp(790, 566, p)}px) rotate(${-4 + Math.sin(t * 5) * 1.5}deg) scale(.82)`; }
   // polaroid photo
   { const h = $('phd'); setHead(h, polaFrame()); h.style.transform = 'scale(1.78)'; h.style.left = '8px'; h.style.top = '-8px'; }
   // desaturate the world at the freeze (+ a white flash when the red envelope dives in)
