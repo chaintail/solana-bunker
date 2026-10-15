@@ -1,0 +1,409 @@
+<!doctype html><html data-duration="28.1" data-fps="30"><head><meta charset="utf-8">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
+<style>
+/* Slide 6, a password is not a signature (docs/presentation/film-plan-s06.md; decisions from the plan review: the bouncer never speaks, the lab coat
+   narrator lip-syncs every line, red is the only colour (door, devil, ink) plus the sepia form).
+   One seekable scene, captured whole (no layers). Heads are sprite sheets cut from Liam's take (pipeline/s06/heads.py); line timing from data/s06-edl.js.
+   Grain, curve and vignette are added after capture (pipeline/s06/build.sh).
+   Stack: world [alley < interior < door < bouncer/hook < stick man < devil < narrator < bubbles < light cone] < form < rain < whiteboard plate < beam < flash */
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#000}
+.L{position:absolute;left:0;top:0;width:1280px;height:720px}
+.noir{filter:grayscale(1) contrast(1.28) brightness(.92)}
+svg{position:absolute;left:0;top:0;overflow:visible}
+#world{transform-origin:800px 380px}
+.fig{position:absolute;left:0;top:0;width:1024px;height:1536px;transform-origin:0 0}
+.fig>img,.fig>.hd{position:absolute;left:0;top:0}
+.hd{width:152px;height:220px;overflow:hidden;transform-origin:0 0}
+.hd img{position:absolute;left:0;top:0;display:none}
+#doorWrap{position:absolute;left:0;top:0;width:1280px;height:720px;perspective:1100px;perspective-origin:870px 386px}
+#doorPanel{position:absolute;left:758px;top:176px;width:224px;height:420px;transform-origin:0 50%}
+#doorPanel svg{left:-758px;top:-176px}
+.bub{position:absolute;left:0;top:0;padding:6px 18px 8px;background:#fff;border:4px solid #000;border-radius:26px;font:36px 'Special Elite';color:#000;white-space:nowrap;transform:translate(-50%,-100%)}
+.bub::after{content:"";position:absolute;left:30%;bottom:-22px;border:12px solid transparent;border-top:14px solid #000}
+.tag{position:absolute;left:0;top:0;padding:2px 12px;background:#e9e6dc;border:3px solid #000;border-radius:4px;font:30px 'Special Elite';color:#000;transform:translate(-50%,0) rotate(-6deg)}
+.tag::before{content:"";position:absolute;left:50%;top:-30px;height:28px;border-left:3px solid #000}
+#form{position:absolute;left:50px;top:70px;width:570px;height:570px;transform-origin:285px 285px;color:#2a1c0e;font-family:'Special Elite'}
+#form .paper{position:absolute;inset:0;background:radial-gradient(ellipse at 40% 35%,#e8d6ad 0%,#d8bf8c 62%,#b8945c 100%);box-shadow:0 14px 40px rgba(0,0,0,.65);border:2px solid #8a6a3a}
+#form .t{position:absolute;white-space:nowrap}
+.marker{fill:none;stroke-linecap:round;stroke-linejoin:round}
+</style></head><body>
+<div id="world" class="L">
+ <div class="L noir" id="alley"><svg width="1280" height="720" viewBox="0 0 1280 720"><defs>
+  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#070707"/><stop offset="1" stop-color="#1e1e1e"/></linearGradient>
+  <radialGradient id="wallLight" cx="690" cy="300" r="560" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset=".6" stop-color="#000" stop-opacity=".32"/><stop offset="1" stop-color="#000" stop-opacity=".62"/></radialGradient>
+  <linearGradient id="sideL" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".78"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></linearGradient>
+  <linearGradient id="sideR" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".82"/><stop offset="1" stop-color="#000" stop-opacity=".4"/></linearGradient>
+  <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#222"/><stop offset="1" stop-color="#0a0a0a"/></linearGradient>
+  <radialGradient id="pool" cx="690" cy="640" r="330" gradientTransform="translate(0 448) scale(1 .3)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity=".42"/><stop offset=".6" stop-color="#fff" stop-opacity=".08"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+  <filter id="soft"><feGaussianBlur stdDeviation="6"/></filter>
+  <filter id="smear"><feGaussianBlur stdDeviation="3 14"/></filter>
+ </defs>
+ <rect width="1280" height="720" fill="url(#sky)"/>
+ <g id="bricks"></g>
+ <rect x="170" y="70" width="960" height="530" fill="url(#wallLight)"/>
+ <rect x="236" y="70" width="14" height="530" fill="#333"/><rect x="230" y="160" width="26" height="8" fill="#3c3c3c"/><rect x="230" y="420" width="26" height="8" fill="#3c3c3c"/>
+ <g id="sideBricks"></g>
+ <polygon points="0,0 170,70 170,600 0,720" fill="url(#sideL)"/>
+ <polygon points="1280,0 1130,70 1130,600 1280,720" fill="url(#sideR)"/>
+ <g stroke="#000" stroke-width="5" fill="none" opacity=".9"><path d="M1140 150 L1280 96 M1140 196 L1280 148 M1140 150 L1140 196 M1170 138 L1170 186 M1200 126 L1200 174 M1230 115 L1230 162 M1260 104 L1260 152"/><path d="M1145 330 L1280 290 M1145 372 L1280 336 M1145 330 L1145 372 M1180 320 L1180 362 M1215 309 L1215 352 M1250 299 L1250 342"/><path d="M1150 196 L1250 300" stroke-width="7"/></g>
+ <polygon points="150,78 170,70 170,600 150,610" fill="#fff" opacity=".12"/>
+ <circle cx="690" cy="160" r="150" fill="#fff" opacity=".06" filter="url(#soft)"/>
+ <polygon points="0,720 170,600 1130,600 1280,720" fill="url(#ground)"/>
+ <rect x="170" y="598" width="960" height="5" fill="#2e2e2e"/>
+ <ellipse cx="690" cy="650" rx="380" ry="60" fill="url(#pool)"/>
+ <g fill="#000" opacity=".55"><ellipse cx="420" cy="672" rx="120" ry="14"/><ellipse cx="1000" cy="690" rx="150" ry="16"/><ellipse cx="700" cy="705" rx="90" ry="8"/></g>
+ <rect x="676" y="606" width="28" height="110" fill="#fff" opacity=".35" filter="url(#smear)"/>
+ <path d="M560 70 L560 104 Q560 118 600 118 L690 118" stroke="#0b0b0b" stroke-width="7" fill="none"/>
+ <path d="M664 118 L716 118 L728 142 L652 142 Z" fill="#111"/>
+ <ellipse cx="690" cy="144" rx="30" ry="6" fill="#fff"/>
+ <circle cx="690" cy="146" r="46" fill="#fff" opacity=".18" filter="url(#soft)"/>
+ <rect x="744" y="166" width="252" height="436" fill="#202020"/><rect x="736" y="160" width="268" height="14" fill="#2c2c2c"/>
+ <rect x="736" y="592" width="268" height="12" fill="#262626"/>
+ <ellipse id="bShadow" cx="584" cy="641" rx="70" ry="7" fill="#000" opacity=".85"/>
+ </svg></div>
+
+ <div class="L noir" id="interior"><svg width="1280" height="720"><defs>
+  <linearGradient id="inG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#050505"/><stop offset=".7" stop-color="#1a1a1a"/><stop offset="1" stop-color="#3a3a3a"/></linearGradient>
+  <radialGradient id="inL" cx="870" cy="560" r="160" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity=".25"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>
+  <rect x="758" y="176" width="224" height="420" fill="url(#inG)"/><rect x="758" y="176" width="224" height="420" fill="url(#inL)"/>
+  <path d="M800 176 L800 300 M940 176 L940 260" stroke="#2a2a2a" stroke-width="3"/></svg></div>
+
+ <div class="L" id="doorRefl"><svg width="1280" height="720"><defs><filter id="refl"><feGaussianBlur stdDeviation="2 10"/></filter></defs>
+  <g filter="url(#refl)"><rect x="758" y="604" width="224" height="120" fill="#6a080d"/><rect x="822" y="606" width="96" height="10" fill="#7a5820"/></g></svg></div>
+ <div id="doorWrap"><div id="doorPanel"><svg width="1280" height="720" viewBox="0 0 1280 720"><defs>
+  <linearGradient id="red" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8e0c13"/><stop offset=".4" stop-color="#5c060b"/><stop offset="1" stop-color="#1e0103"/></linearGradient>
+  <linearGradient id="brass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c29a52"/><stop offset=".5" stop-color="#7a5820"/><stop offset="1" stop-color="#3a290c"/></linearGradient>
+  <radialGradient id="doorLight" cx="740" cy="260" r="300" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ff9c8c" stop-opacity=".20"/><stop offset="1" stop-color="#ff9c8c" stop-opacity="0"/></radialGradient>
+  <linearGradient id="doorShade" x1="0" y1="0" x2="1" y2="0"><stop offset=".35" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".55"/></linearGradient>
+  <linearGradient id="lintel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".7"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
+  <clipPath id="slotClip"><rect x="824" y="246" width="92" height="18"/></clipPath>
+ </defs>
+ <rect x="758" y="176" width="224" height="420" rx="3" fill="url(#red)" stroke="#1a0203" stroke-width="3"/>
+ <rect x="776" y="300" width="188" height="276" fill="none" stroke="#4a0508" stroke-width="3"/>
+ <rect x="779" y="303" width="182" height="270" fill="none" stroke="#c02028" stroke-width="1" opacity=".5"/>
+ <rect x="764" y="214" width="9" height="40" rx="2" fill="url(#brass)"/><rect x="764" y="500" width="9" height="40" rx="2" fill="url(#brass)"/>
+ <g id="ring"></g>
+ <rect x="818" y="240" width="104" height="30" rx="2" fill="url(#brass)"/>
+ <g clip-path="url(#slotClip)">
+  <rect x="824" y="246" width="92" height="18" fill="#080303"/>
+  <g id="eyes"><ellipse cx="856" cy="256" rx="9" ry="5" fill="#ddd"/><ellipse cx="884" cy="256" rx="9" ry="5" fill="#ddd"/><circle cx="858" cy="256" r="3.2" fill="#000"/><circle cx="886" cy="256" r="3.2" fill="#000"/></g>
+  <rect id="shutter" x="824" y="246" width="92" height="18" fill="#5e070b" stroke="#2a0204" stroke-width="1.5"/>
+ </g>
+ <rect x="958" y="400" width="12" height="44" rx="5" fill="url(#brass)"/>
+ <rect x="758" y="176" width="224" height="420" fill="url(#doorLight)"/><rect x="758" y="176" width="224" height="420" fill="url(#doorShade)"/><rect x="758" y="176" width="224" height="34" fill="url(#lintel)"/>
+ </svg></div></div>
+
+ <div class="L noir" id="charsN"><div id="bouncer"></div>
+  <svg id="hook" width="1280" height="720"><path id="hookPath" d="" fill="none" stroke="#8a8a8a" stroke-width="14" stroke-linecap="round"/><path id="hookEdge" d="" fill="none" stroke="#222" stroke-width="3"/></svg></div>
+ <svg class="L" id="stick" width="1280" height="720"><g id="stickG"></g></svg>
+ <div class="L" id="devilL"><div id="devil" style="position:absolute;left:0;top:0;width:120px;height:174px">
+  <img src="heads/s06-devil.png" style="position:absolute;left:0;top:0;width:120px;height:174px">
+  <svg width="120" height="174" viewBox="0 0 152 220">
+   <path d="M38,40 Q16,8 18,-22 Q46,2 60,26 Z" fill="#d00000" stroke="#000" stroke-width="5" stroke-linejoin="round"/>
+   <path d="M114,40 Q136,8 134,-22 Q106,2 92,26 Z" fill="#d00000" stroke="#000" stroke-width="5" stroke-linejoin="round"/>
+   <path fill-rule="evenodd" fill="#050505" d="M8,64 Q76,52 146,64 L146,96 Q76,104 8,96 Z M30,80 a16,10 0 1,0 32,0 a16,10 0 1,0 -32,0 Z M88,80 a16,10 0 1,0 32,0 a16,10 0 1,0 -32,0 Z"/>
+   <path d="M146,70 Q160,66 170,74 M146,84 Q160,90 168,98" stroke="#050505" stroke-width="6" fill="none" stroke-linecap="round"/>
+  </svg></div>
+  <svg id="devilHand" width="1280" height="720"><g id="dhG"><g id="dhCard">
+   <rect x="-4" y="-52" width="96" height="112" fill="#d8bf8c" stroke="#8a6a3a" stroke-width="2"/>
+   <text x="44" y="-22" font-family="Special Elite" font-size="17" text-anchor="middle" fill="#2a1c0e">WITHDRAWAL</text>
+   <text x="44" y="6" font-family="Special Elite" font-size="17" text-anchor="middle" fill="#b00d16">TO: DEV1L…9x</text>
+   <path d="M10 36 q14 -18 24 0 t24 0 t24 -6" stroke="#c1121f" stroke-width="3" fill="none"/></g>
+   <g id="dhFist"><path d="M70,-6 q30,-14 56,-4 q14,6 4,16 q14,4 4,16 q10,6 -2,14 q4,10 -12,10 l-46,-6 q-14,-20 -4,-46 z" fill="#e01010" stroke="#000" stroke-width="4" stroke-linejoin="round"/></g>
+  </g></svg>
+ </div>
+ <div class="L noir" id="narrN"><div id="narrMirror" class="L" style="transform-origin:640px 0"><div id="narr"></div></div></div>
+ <div class="L" id="bubbles">
+  <div class="bub" id="bubS">secret_42</div><div class="bub" id="bubD">secret_42</div>
+  <div class="tag" id="tagS">TO: ?</div><div class="tag" id="tagD">TO: ?</div>
+  <div id="psst" style="position:absolute;font:italic 30px 'Special Elite';color:#ddd">psst…</div>
+  <div id="qmark" style="position:absolute;font:120px Anton;color:#fff;transform:translate(-50%,-100%)">?</div>
+  <div id="bang" style="position:absolute;font:90px Anton;color:#fff;-webkit-text-stroke:3px #000;transform:translate(-50%,-100%)">!</div>
+ </div>
+ <svg class="L" style="mix-blend-mode:screen" width="1280" height="720"><defs>
+  <linearGradient id="coneG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".30"/><stop offset="1" stop-color="#fff" stop-opacity=".03"/></linearGradient>
+  <filter id="coneBlur"><feGaussianBlur stdDeviation="10"/></filter></defs><polygon points="662,146 718,146 920,660 440,660" fill="url(#coneG)" filter="url(#coneBlur)"/></svg>
+</div>
+
+<div id="form"><div class="paper"></div>
+ <svg width="570" height="570"><defs><filter id="fib"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 .35  0 0 0 0 .25  0 0 0 0 .12  0 0 0 .22 0"/></filter></defs>
+  <rect width="570" height="570" filter="url(#fib)"/>
+  <path d="M40 112 H530 M110 236 H530 M196 352 H530 M80 496 H530" stroke="#5a4020" stroke-width="2.5"/>
+  <path id="sig" d="" fill="none" stroke="#c1121f" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1 1"/>
+ </svg>
+ <div class="t" style="left:40px;top:40px;font-size:52px;letter-spacing:6px">WITHDRAWAL</div>
+ <div class="t" style="left:40px;top:186px;font-size:38px">TO:</div>
+ <div class="t" id="fTo" style="left:118px;top:178px;font-size:42px;color:#14100a"></div>
+ <div class="t" id="fToFull" style="left:118px;top:244px;font-size:15px;color:#3a2c18"></div>
+ <div class="t" style="left:40px;top:302px;font-size:38px">AMOUNT:</div>
+ <div class="t" id="fAmt" style="left:206px;top:296px;font-size:46px;color:#14100a"></div>
+ <div class="t" style="left:40px;top:446px;font-size:46px">X</div>
+ <div class="t" style="left:80px;top:506px;font-size:20px;color:#5a4020">signature</div>
+ <svg id="quill" width="80" height="140" viewBox="0 0 120 200" style="left:0;top:0;transform-origin:0 0">
+  <path d="M10,196 C30,150 60,60 116,4 C96,70 70,140 18,196 Z" fill="#f4f1ea" stroke="#000" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M14,194 C46,140 80,70 112,10" fill="none" stroke="#000" stroke-width="3"/><path d="M4,200 L14,180 L22,186 Z" fill="#000"/></svg>
+</div>
+
+<canvas id="rain" width="1280" height="720" style="position:absolute;left:0;top:0"></canvas>
+
+<div class="L" id="wb"><svg width="1280" height="720" viewBox="0 0 1280 720"><g id="wbG"></g></svg><div id="wbNarr"></div></div>
+<div class="L" id="beam" style="mix-blend-mode:screen"></div>
+<div class="L" id="mathFlash" style="display:none"><div style="position:absolute;left:640px;top:360px;transform:translate(-50%,-50%) rotate(-4deg);font:150px Anton;color:#ffe600;-webkit-text-stroke:6px #000;paint-order:stroke fill;white-space:nowrap;text-shadow:6px 8px 0 #000">*the math*</div></div>
+<img src="heads/s06-bouncer.png" style="display:none"><img src="assets/bodies/1-suit-arms-crossed.png" style="display:none"><img src="assets/bodies/1-suit-point-right.png" style="display:none"><img src="assets/bodies/5-physicist-professor-point.png" style="display:none">
+
+<script src="data/s06-edl.js"></script>
+<script src="lib/film.js"></script>
+<script>
+const f = window.__film, $ = (id) => document.getElementById(id), D = window.S06;
+const P = (t, a, b) => f.prog(t, a, b), ease = (p) => p * p * (3 - 2 * p), lerp = (a, b, p) => a + (b - a) * p;
+const step = (p, n) => Math.floor(p * n + 1e-6) / n;   // stop-frame motion: n discrete positions, no tween
+const show = (el, on) => { el.style.display = on ? '' : 'none'; };
+
+// ---------- slide 5 handoff: where the lab coat stands on the whiteboard in slide 5's last frame (neck point, scale). Change here when slide 5 exists.
+const S5_HANDOFF = { x: 215, y: 214, s: 0.42 };
+const FREEZE_AT = 27.40;          // tag: everything stops here
+const ADDR = 'ADLw7WkPsqngneGqoCKmGR17w16kmgA9q1WnxURt9Wod';   // vaults[].recipient_sol, artifacts/public-deployment.json
+const ADDR_SHORT = ADDR.slice(0, 6) + '…' + ADDR.slice(-8);
+
+// ---------- line timing (data/s06-edl.js) -> scene times of the beats
+const L = Object.fromEntries(D.edl.map((e) => [e.id, e]));
+const at = (id, src) => L[id].out_in + (src - L[id].src_in);     // a word's take time -> scene time
+const T = {
+  things: L.L1a.out_out, cool: L.L1b.out_in, sweep0: L.L1b.out_in, sweep1: L.L1b.out_in + 0.70,
+  narrIn: L.L2.out_in - 0.15, problem: at('L2', 340.40), secret: at('L2', 342.48), pw: at('L2', 343.28), l2end: L.L2.out_out,
+  whoever: L.L3.out_in, pw3: at('L3', 344.56), getsIn: at('L3', 345.44), l4: L.L4.out_in, nothing: at('L4', 347.28), where: at('L4', 348.32),
+  getInFirst: at('L5', 351.76), first: at('L5', 352.72), l5end: L.L5.out_out, l6: L.L6.out_in, sig: at('L6', 354.64),
+  withdrawal: at('L7', 356.56), address: at('L7', 358.14), nothingElse: at('L7', 359.55), elseEnd: at('L7', 360.56), l7end: L.L7.out_out,
+};
+window.__T = T;
+
+// ---------- characters: body PNG minus its grey oval + head + the same PNG below the collar line in front of the neck
+const BODY = {
+  suitX: { src: 'assets/bodies/1-suit-arms-crossed.png', ox: 511, chin: 306 },
+  suitP: { src: 'assets/bodies/1-suit-point-right.png', ox: 352, chin: 309 },
+  prof: { src: 'assets/bodies/5-physicist-professor-point.png', ox: 394.5, chin: 306 },
+};
+const HK = 0.326;                  // key px -> body px (chin to collar line; see film-plan-s06.md section 3)
+function makeFig(parent, bodyKey, headKind) {
+  const b = BODY[bodyKey], el = document.createElement('div'); el.className = 'fig';
+  const mask = `radial-gradient(ellipse 103px 119px at ${b.ox}px ${b.chin - 107}px,transparent 97%,#000 100%)`;
+  const o = b.ox, c = b.chin;
+  const clip = `polygon(0 ${c - 6}px,${o - 59}px ${c - 6}px,${o - 49}px ${c + 16}px,${o - 8}px ${c + 41}px,${o + 10}px ${c + 41}px,${o + 51}px ${c + 16}px,${o + 60}px ${c - 6}px,1024px ${c - 6}px,1024px 1536px,0 1536px)`;
+  const hl = o - 338 * HK, ht = c - 905 * HK, hs = (760 * HK) / 152;
+  let head;
+  if (headKind === 'narr') head = `<div class="hd" style="transform:translate(${hl}px,${ht}px) scale(${hs})">` + [0, 1, 2, 3].map((i) => `<img src="heads/s06-narr-0${i}.png">`).join('') + '</div>';
+  else head = `<img src="heads/s06-${headKind}.png" style="width:${760 * HK}px;height:${1100 * HK}px;left:${hl}px;top:${ht}px">`;
+  el.innerHTML = `<img src="${b.src}" width="1024" height="1536" style="-webkit-mask-image:${mask};mask-image:${mask}">${head}<img src="${b.src}" width="1024" height="1536" style="clip-path:${clip}">`;
+  el.dataset.ox = o; el.dataset.chin = c; parent.appendChild(el); return el;
+}
+// neck point (x,y) on screen, rotation deg, scale, mirror
+const place = (el, x, y, rot, s, flip = 1) => { el.style.transform = `translate(${x}px,${y}px) rotate(${rot}deg) scale(${s * flip},${s}) translate(${-el.dataset.ox}px,${-el.dataset.chin}px)`; };
+const SHEET = 192, CELL_W = 152, CELL_H = 220;
+const cum = []; D.edl.reduce((a, e, i) => ((cum[i] = a), a + e.frames), 0);
+function narrFrame(t) {   // lip-sync frame; holds the last frame of the previous line through every pause (freeze when silent)
+  let i = -1; for (let k = 0; k < D.edl.length; k++) if (t >= D.edl[k].out_in) i = k;
+  if (i < 0) return 0;
+  const e = D.edl[i]; return cum[i] + Math.min(e.frames - 1, Math.floor((t - e.out_in) * 30 + 1e-6));
+}
+function setHead(fig, idx) {
+  const imgs = fig.querySelectorAll('.hd img'), sh = Math.floor(idx / SHEET), c = idx % SHEET;
+  imgs.forEach((im, i) => { im.style.display = i === sh ? 'block' : 'none'; if (i === sh) { im.style.left = -(c % 16) * CELL_W + 'px'; im.style.top = -Math.floor(c / 16) * CELL_H + 'px'; } });
+}
+const bX = makeFig($('bouncer'), 'suitX', 'bouncer'), bP = makeFig($('bouncer'), 'suitP', 'bouncer');
+const narr = makeFig($('narr'), 'prof', 'narr'), wbNarr = makeFig($('wbNarr'), 'prof', 'narr');
+place(wbNarr, S5_HANDOFF.x, S5_HANDOFF.y, 0, S5_HANDOFF.s);
+const BNECK = [583.3, 294.8], BS = 0.3;
+
+// ---------- alley details (seeded)
+{ const r = f.rng(6); let g = ''; const W = 58, H = 22;
+  for (let y = 70, row = 0; y < 600; y += H, row++) for (let x = 170 - (row % 2) * W / 2; x < 1130; x += W) {
+    const v = 66 + Math.floor(r() * 40); g += `<rect x="${x + 2}" y="${y + 2}" width="${W - 4}" height="${H - 4}" fill="rgb(${v},${v - 4},${v - 6})"/>`; }
+  $('bricks').innerHTML = `<rect x="170" y="70" width="960" height="530" fill="#191919"/>` + g;
+  let s = ''; for (let i = 0; i <= 24; i++) { const yb = 70 + i * 22;
+    s += `<line x1="170" y1="${yb}" x2="0" y2="${(yb - 335) * 1.45 + 335}" stroke="#4a4a4a" stroke-width="2"/><line x1="1130" y1="${yb}" x2="1280" y2="${(yb - 335) * 1.45 + 335}" stroke="#454545" stroke-width="2"/>`; }
+  $('sideBricks').innerHTML = `<polygon points="0,0 170,70 170,600 0,720" fill="#454545"/><polygon points="1280,0 1130,70 1130,600 1280,720" fill="#3e3e3e"/>` + s;
+  let b = ''; const cx = 870, cy = 438;     // vault bolt ring + wheel, recast from components/Door.tsx
+  b += `<circle cx="${cx}" cy="${cy}" r="82" fill="#6a080d" stroke="#2a0204" stroke-width="3"/><circle cx="${cx}" cy="${cy}" r="62" fill="none" stroke="#a5141b" stroke-width="2"/>`;
+  for (let k = 0; k < 36; k++) { const a = k / 36 * Math.PI * 2; b += `<circle cx="${(cx + 74 * Math.cos(a)).toFixed(1)}" cy="${(cy + 74 * Math.sin(a)).toFixed(1)}" r="2.6" fill="url(#brass)"/>`; }
+  for (const a of [0, 120, 240]) b += `<g transform="rotate(${a + 15} ${cx} ${cy})"><rect x="${cx - 3}" y="${cy - 52}" width="6" height="40" fill="url(#brass)"/><circle cx="${cx}" cy="${cy - 56}" r="6" fill="url(#brass)"/></g>`;
+  b += `<circle cx="${cx}" cy="${cy}" r="15" fill="url(#brass)" stroke="#2a0204" stroke-width="2"/>`;
+  $('ring').innerHTML = b; }
+
+// ---------- marker helpers (whiteboard + stick man)
+function wob(pts, seed, amp = 2.5) {   // polyline through pts with a seeded hand wobble
+  const r = f.rng(seed); let d = `M${pts[0][0]},${pts[0][1]}`;
+  for (let i = 1; i < pts.length; i++) { const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], mx = (x0 + x1) / 2 + (r() - .5) * amp * 2, my = (y0 + y1) / 2 + (r() - .5) * amp * 2; d += ` Q${mx.toFixed(1)},${my.toFixed(1)} ${x1},${y1}`; }
+  return d;
+}
+const circ = (cx, cy, rad, seed) => { const r = f.rng(seed), n = 14, p = []; for (let i = 0; i <= n; i++) { const a = i / n * Math.PI * 2 - 1.2, k = 1 + (r() - .5) * .08; p.push([+(cx + Math.cos(a) * rad * k).toFixed(1), +(cy + Math.sin(a) * rad * k).toFixed(1)]); } return wob(p, seed + 1, 1); };
+// stick man (feet at 0,0; 294 px tall), white marker
+$('stickG').innerHTML = `<g class="marker" stroke="#fff" stroke-width="7">
+  <path d="${circ(0, -268, 26, 11)}"/><path d="${wob([[0, -242], [2, -180], [0, -118]], 12)}"/>
+  <path d="${wob([[0, -214], [-46, -160]], 13)}"/><path d="${wob([[0, -214], [46, -164]], 14)}"/>
+  <path d="${wob([[0, -118], [-36, 0]], 15)}"/><path d="${wob([[0, -118], [36, 0]], 16)}"/></g>`;
+
+// whiteboard plate (my stand-in for slide 5's last frame; plan R9)
+{ const B = '#1d3fbf', K = '#151515', R = '#c8102e', G = '#178a3a';
+  let g = `<rect width="1280" height="720" fill="#d9d8d2"/><rect x="0" y="650" width="1280" height="70" fill="#bdbab2"/>
+  <rect x="320" y="34" width="930" height="600" fill="#fbfbf8" stroke="#a9aeb4" stroke-width="12"/><rect x="420" y="634" width="420" height="12" fill="#9ea3a8"/>
+  <rect x="470" y="624" width="60" height="12" rx="4" fill="${B}"/><rect x="545" y="624" width="60" height="12" rx="4" fill="${R}"/>
+  <text x="372" y="112" font-family="Arial Black,Arial" font-weight="900" font-size="54" fill="${B}">HASHES</text>
+  <g class="marker" stroke="${K}" stroke-width="5"><path d="${wob([[690, 80], [1214, 84], [1210, 560], [688, 556], [690, 80]], 31, 4)}"/></g>
+  <text x="712" y="128" font-family="Arial" font-weight="700" font-size="30" fill="${K}">Bunker Program</text>
+  <text x="962" y="128" font-family="Arial" font-weight="700" font-size="30" fill="${K}" text-decoration="line-through">001</text>
+  <text x="1030" y="132" font-family="Arial" font-weight="900" font-size="40" fill="${R}" transform="rotate(-8 1060 120)">002</text>`;
+  const lv = [[955, 190], [835, 280], [1075, 280], [775, 370], [895, 370], [1015, 370], [1135, 370]]; let tr = '';
+  [[0, 1], [0, 2], [1, 3], [1, 4], [2, 5], [2, 6]].forEach(([a, b], i) => { tr += `<path d="${wob([lv[a], lv[b]], 40 + i)}"/>`; });
+  for (let i = 3; i < 7; i++) for (const dx of [-30, 30]) tr += `<path d="${wob([lv[i], [lv[i][0] + dx, 460]], 60 + i * 2 + (dx > 0))}"/>`;
+  g += `<g class="marker" stroke="${K}" stroke-width="4">${tr}</g><circle cx="955" cy="190" r="24" fill="#ffe14d" stroke="${K}" stroke-width="4"/>`;
+  for (let i = 0; i < 8; i++) g += `<rect x="${738 + i * 60}" y="462" width="28" height="28" fill="none" stroke="${G}" stroke-width="4"/>`;
+  g += `<text x="500" y="330" font-family="Arial" font-size="24" fill="#777">secret_1</text><text x="500" y="366" font-family="Arial" font-size="24" fill="#777">secret_2</text><text x="500" y="402" font-family="Arial" font-size="24" fill="#777">secret_3</text><text x="500" y="438" font-family="Arial" font-size="24" fill="#777">…</text><text x="500" y="474" font-family="Arial" font-size="24" fill="#777">secret_1000</text>
+  <text x="712" y="604" font-family="Arial" font-weight="700" font-size="34" fill="${R}" text-decoration="line-through">33,126 bytes</text><text x="960" y="604" font-family="Arial" font-weight="900" font-size="38" fill="${G}">390 bytes</text>`;
+  $('wbG').innerHTML = g; }
+
+// headlight beam: two soft lamps + a horizontal flare
+$('beam').innerHTML = `<div id="beamIn" style="position:absolute;left:0;top:0;width:900px;height:720px;transform-origin:450px 400px">
+  <div style="position:absolute;left:150px;top:180px;width:520px;height:440px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,250,.95),rgba(255,255,240,.55) 45%,rgba(255,255,240,0))"></div>
+  <div style="position:absolute;left:330px;top:250px;width:360px;height:300px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,1),rgba(255,255,255,0))"></div>
+  <div style="position:absolute;left:-200px;top:380px;width:1300px;height:40px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.8),rgba(255,255,255,0))"></div></div>
+  <div id="wash" style="position:absolute;inset:0;background:#fff;opacity:0"></div>`;
+
+// signature: seeded loops along the line, ending in a flourish (the slide-7 presentation signature idea, vaultscene.tsx signaturePath)
+{ const r = f.rng(5), pts = []; const n = 14, x0 = 96, w = 330, y0 = 470;
+  for (let i = 0; i <= n; i++) pts.push([x0 + i / n * w + (r() - .5) * 12, y0 - 18 + Math.sin(i * (1.4 + r() * .8)) * (14 + r() * 16) * (i % 3 === 1 ? -1 : 1)]);
+  pts.push([x0 + w + 40, y0 - 50], [x0 + w + 70, y0 - 10], [x0 + w - 20, y0 + 14], [x0 + 40, y0 + 10]);
+  let d = `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}`;
+  for (let i = 1; i < pts.length - 1; i++) { const m = [(pts[i][0] + pts[i + 1][0]) / 2, (pts[i][1] + pts[i + 1][1]) / 2]; d += ` Q${pts[i][0].toFixed(1)},${pts[i][1].toFixed(1)} ${m[0].toFixed(1)},${m[1].toFixed(1)}`; }
+  d += ` L${pts[pts.length - 1][0].toFixed(1)},${pts[pts.length - 1][1].toFixed(1)}`; $('sig').setAttribute('d', d); }
+const sigEl = $('sig'); let sigLen = 0;
+
+// rain: seeded streaks; brighter inside the light cone
+const R = f.rng(42), drops = Array.from({ length: 420 }, () => ({ x: R() * 1500 - 110, y: R() * 900, l: 16 + R() * 30, a: .12 + R() * .22, v: 1600 + R() * 700 }));
+const ctx = $('rain').getContext('2d');
+const inCone = (x, y) => { if (y < 146 || y > 660) return 0; const p = (y - 146) / 514, l = 662 - 222 * p, r = 718 + 202 * p; return x > l && x < r ? 1 - Math.abs((x - (l + r) / 2) / ((r - l) / 2)) * .6 : 0; };
+function rain(t) {
+  ctx.clearRect(0, 0, 1280, 720); ctx.lineCap = 'round';
+  for (const d of drops) { const y = ((d.y + d.v * t) % 900) - 90, x = d.x + y * .18, c = inCone(x, y);
+    ctx.strokeStyle = `rgba(225,225,225,${(d.a + c * .45).toFixed(3)})`; ctx.lineWidth = c ? 1.8 : 1.3; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - d.l * .18, y - d.l); ctx.stroke(); }
+  const S = f.rng(7 + Math.floor(t * 30)); ctx.strokeStyle = 'rgba(230,230,230,.35)'; ctx.lineWidth = 1;
+  for (let i = 0; i < 46; i++) { const x = 60 + S() * 1160, y = 610 + S() * 105, w = 3 + S() * 6; ctx.beginPath(); ctx.ellipse(x, y, w, w * .3, 0, 0, Math.PI * 2); ctx.stroke(); }
+}
+
+// hops: list of [t0, t1, x0, x1, y0, y1, height, rot]
+function hopPos(t, hops, start) {
+  let [x, y, r] = start;
+  for (const [t0, t1, x0, x1, y0, y1, h, rot = 0] of hops) { if (t < t0) break; const p = Math.min(1, (t - t0) / (t1 - t0)), q = step(p, 6);
+    x = lerp(x0, x1, q); y = lerp(y0, y1, q) - h * 4 * q * (1 - q); r = p < 1 ? rot : 0; }
+  return [x, y, r];
+}
+// stick man: hops in (beat 2), into the doorway after the door opens, knocked out by the devil (beat 4), in at the end (beat 6)
+function stickPos(t) {
+  return hopPos(t, [
+    [T.problem, T.problem + .2, -120, 60, 640, 640, 60], [T.problem + .3, T.problem + .5, 60, 220, 640, 640, 60], [T.problem + .6, T.problem + .8, 220, 420, 640, 640, 60],
+    [T.l2end + .12, T.l2end + .32, 420, 630, 640, 625, 70], [T.l2end + .42, T.l2end + .62, 630, 870, 625, 610, 60],
+    [T.getInFirst + .05, T.getInFirst + .2, 870, 780, 610, 630, 40, -14], [T.getInFirst + .26, T.getInFirst + .41, 780, 700, 630, 645, 30, -8],
+    [26.00, 26.22, 700, 870, 645, 610, 60],
+  ], [-200, 640, 0]);
+}
+
+f.onSeek((t0) => {
+  const t = Math.min(t0, FREEZE_AT);
+  const tr = t < T.things ? t : t < T.cool ? T.things : t;        // the math flash freezes the frame
+  const nf = narrFrame(tr);
+
+  // whiteboard plate, sweep, flash
+  const sw = P(t, T.sweep0, T.sweep1), bx = -350 + 1980 * sw;
+  show($('wb'), sw < 1); setHead(wbNarr, nf);
+  const m = sw > 0 ? `linear-gradient(to right,transparent ${bx - 60}px,#000 ${bx + 90}px)` : 'none';
+  $('wb').style.webkitMaskImage = m; $('wb').style.maskImage = m;
+  show($('beam'), sw > 0 && sw < 1); $('beamIn').style.transform = `translate(${bx - 450}px,0)`; $('wash').style.opacity = (Math.sin(sw * Math.PI) * .22).toFixed(3);
+  show($('mathFlash'), t0 >= T.things && t0 < T.cool);
+
+  // world push-in on L4 (cut back on the hook)
+  const pi = t >= T.l4 && t < T.l6 ? ease(P(t, T.l4, L.L4.out_out)) * .04 : 0; $('world').style.transform = `scale(${1 + pi})`;
+
+  // door: slot (eyes on beat 2), swing open after L2, slam on the shove, open for the form, close behind the stick man; tag slam
+  let sh = 0, eyes = false;                                  // shutter open fraction
+  if (t >= T.pw && t < T.l2end) { sh = step(P(t, T.pw, T.pw + .2), 4) * (1 - step(P(t, T.l2end - .1, T.l2end), 2)); eyes = true; }
+  if (t >= 24.66 && t < 25.50) sh = step(P(t, 24.66, 24.78), 3) * (1 - step(P(t, 25.42, 25.50), 2));
+  if (t >= 26.90) sh = t < 27.28 ? step(P(t, 26.90, 27.00), 3) : 1 - P(t, 27.28, 27.32);
+  $('shutter').setAttribute('transform', `translate(${-92 * sh} 0)`); show($('eyes'), eyes);
+  let ang = 0;
+  if (t >= T.l2end && t < T.first - .12) ang = 72 * ease(P(t, T.l2end, T.l2end + .42));
+  else if (t >= T.first - .12 && t < T.first + .01) ang = 72 * (1 - P(t, T.first - .12, T.first + .01));
+  if (t >= 25.70 && t < 26.45) ang = 72 * ease(P(t, 25.70, 26.20)) * (1 - P(t, 26.30, 26.45));
+  const shake = t >= T.first && t < T.first + .12 ? [3, -3, 2, -2][Math.floor((t - T.first) * 30) % 4] : 0;
+  $('doorPanel').style.transform = `translateX(${shake}px) rotateY(${ang}deg)`;
+  $('doorRefl').style.opacity = (.42 * Math.cos(ang * Math.PI / 180)).toFixed(3);
+
+  // bouncer: frozen head; arms-crossed, cut to point-right on "gets in" (waves the devil in); yanked off on the hook
+  const point = t >= T.getsIn && t < T.l4;
+  let bdx = 0, brot = 0; const h0 = T.l6 + .05;
+  const hk = [[h0, -380], [h0 + .1, 220], [h0 + .2, 500]], yank = [[h0 + .25, -260, -6], [h0 + .32, -560, -10], [h0 + .4, -950, -12]];
+  for (const [ty, dx, rr] of yank) if (t >= ty) { bdx = dx; brot = rr; }
+  show($('bouncer'), t < h0 + .4); show(bX, !point); show(bP, point);
+  place(bX, BNECK[0] + bdx, BNECK[1], brot, BS); place(bP, BNECK[0] + bdx, BNECK[1], brot, BS);
+  $('bShadow').setAttribute('opacity', t < h0 + .25 ? .85 : 0);
+  // hook: a cheap grey crook, stepped
+  let tip = null; for (const [th, x] of hk) if (t >= th) tip = x;
+  if (t >= h0 + .25) tip = 500 + bdx;
+  show($('hook'), tip !== null && t < h0 + .45);
+  if (tip !== null) { const d = `M-400,450 L${tip},450 Q${tip + 60},450 ${tip + 60},410 Q${tip + 60},375 ${tip + 25},375`; $('hookPath').setAttribute('d', d); $('hookEdge').setAttribute('d', d); }
+
+  // stick man
+  const [sx, sy, sr] = stickPos(t), stickIn = (t >= 26.22);
+  $('stickG').setAttribute('transform', `translate(${sx} ${sy}) rotate(${sr})`); show($('stick'), !stickIn && t >= T.problem - .01);
+
+  // devil: rises behind (L3), whispers, shoves in (L5); tag: his own form, the slot slams on his fingers
+  let dx = 700, dy = 820, dr = 0, dvis = false;
+  if (t >= T.whoever && t < T.first - .12) { dvis = true; dy = lerp(820, 330, step(P(t, T.whoever, T.whoever + .25), 5));
+    if (t >= T.pw3 + .14 && t < T.getsIn - .14) { const q = step(P(t, T.pw3 + .14, T.pw3 + .28), 3); dx = lerp(700, 668, q); dr = -14 * q; }
+    if (t >= T.getInFirst) { const q = step(P(t, T.getInFirst, T.getInFirst + .3), 5); dx = lerp(700, 870, q); dy = lerp(330, 345, q); dr = q < 1 ? 10 : 0; } }
+  if (t >= 26.45) { dvis = true; dx = 1095; dy = lerp(820, 330, step(P(t, 26.45, 26.65), 5)); if (t >= 27.30) dr = 9; }
+  const dsc = t >= T.getInFirst && t < T.first ? 1 - .08 * P(t, T.getInFirst, T.getInFirst + .3) : 1;
+  show($('devil'), dvis); $('devil').style.transform = `translate(${dx - 60}px,${dy - 87}px) rotate(${dr}deg) scale(${dsc})`;
+  // devil's hand + his own form (tag)
+  show($('devilHand'), t >= 26.75);
+  if (t >= 26.75) { const q = step(P(t, 26.80, 27.15), 6), hx = lerp(1060, 826, q), hy = lerp(420, 262, q), sq = t >= 27.30 ? 'scale(1.12,.8)' : '';
+    $('dhG').setAttribute('transform', `translate(${hx} ${hy})`);
+    $('dhCard').setAttribute('transform', `translate(0 4) scale(1,${Math.max(.001, 1 - P(t, 27.15, 27.28)).toFixed(3)})`); show($('dhCard'), t < 27.28);
+    $('dhFist').setAttribute('transform', sq); }
+
+  // narrator: pokes in from the top left for L2-L5 (mirrored), top right for L6-L7; lip-synced; frozen between lines
+  const TL = [T.narrIn, L.L5.out_out + .03], TR = [T.l6 + .40, 26.15];
+  let nOn = false, mir = false, pk = 0;
+  if (t >= TL[0] && t < TL[1] + .2) { nOn = true; mir = true; pk = t < TL[1] ? step(P(t, TL[0], TL[0] + .15), 3) : 1 - step(P(t, TL[1], TL[1] + .15), 3); }
+  if (t >= TR[0] && t < TR[1] + .2) { nOn = true; pk = t < TR[1] ? step(P(t, TR[0], TR[0] + .15), 3) : 1 - step(P(t, TR[1], TR[1] + .15), 3); }
+  show($('narrN'), nOn && pk > 0); setHead(narr, nf);
+  $('narrMirror').style.transform = mir ? 'scaleX(-1)' : '';
+  const back = (1 - pk) * 420, NX = 1130 - .643 * back, NY = 160 - .766 * back;
+  place(narr, NX, NY, 140, .42);
+
+  // bubbles, tags, glyphs
+  const sb = t >= T.secret && t < T.getInFirst, db = t >= T.pw3 && t < T.getInFirst;
+  show($('bubS'), sb); show($('bubD'), db);
+  const sbx = sx + (sx < 600 ? -20 : 30), sby = sy - 318, dbx = Math.min(dx, 700) - 60, dby = 146;
+  $('bubS').style.left = sbx + 'px'; $('bubS').style.top = sby + 'px'; $('bubD').style.left = dbx + 'px'; $('bubD').style.top = dby + 'px';
+  const tags = t >= T.where && t < T.getInFirst; show($('tagS'), tags); show($('tagD'), tags);
+  $('tagS').style.left = sbx + 92 + 'px'; $('tagS').style.top = sby + 30 + 'px'; $('tagD').style.left = dbx + 70 + 'px'; $('tagD').style.top = dby + 30 + 'px';
+  show($('psst'), t >= T.pw3 + .28 && t < T.getsIn - .14); $('psst').style.left = '548px'; $('psst').style.top = '168px';
+  show($('qmark'), t >= T.first && t < T.sig); $('qmark').style.left = sx + 'px'; $('qmark').style.top = sy - 300 + 'px';
+  show($('bang'), t >= 27.32); $('bang').style.left = '900px'; $('bang').style.top = '236px';
+
+  // the form: floats up on "signature", fills, signs, goes through the slot
+  const fm = $('form'); show(fm, t >= T.sig && t < 25.40);
+  let fx = 0, fy = (1 - ease(P(t, T.sig, T.sig + .48))) * 720, fs = 1, fsy = 1, frot = -2;
+  if (t >= 24.80) { const q = ease(P(t, 24.80, 25.20)); fx = lerp(0, 870 - 335, q); fy = lerp(0, 255 - 355, q); fs = lerp(1, .16, q); frot = lerp(-2, 0, q); fsy = 1 - P(t, 25.20, 25.38); }
+  fm.style.transform = `translate(${fx}px,${fy}px) rotate(${frot}deg) scale(${fs},${fs * fsy})`;
+  const type = (s, t1, cps = 25) => s.slice(0, Math.max(0, Math.floor((t - t1) * cps + 1e-6)));
+  $('fAmt').textContent = type('1.5 SOL', T.withdrawal);
+  $('fTo').textContent = type(ADDR_SHORT, T.address, 22); $('fToFull').textContent = t >= T.address + .7 ? ADDR : '';
+  if (!sigLen) sigLen = sigEl.getTotalLength();
+  const sp = P(t, T.nothingElse, T.elseEnd); sigEl.style.strokeDashoffset = (1 - sp).toFixed(4);
+  const q = $('quill'); show(q, t >= T.nothingElse - .3 && t < T.elseEnd + .3);
+  const pt = sigEl.getPointAtLength(sigLen * sp); q.style.transform = `translate(${pt.x - 3}px,${pt.y - 138}px)`;
+
+  // rain (stops in the freezes)
+  rain(tr);
+});
+</script></body></html>

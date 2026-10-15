@@ -104,3 +104,12 @@ Open questions for the composer: R2 (bouncer lip-sync vs voice-over), R3 (devil 
 ## 7. Look draft (rendered)
 
 `apps/web/film/s06-look.html` (draft scene, not the slide), `pipeline/s06/look-head.sh` (one head frame from the take at 341.0 s), `pipeline/s06/look-still.sh` (capture t=0.5 + grade). Output: dev-mac `~/video-work/solana-bunker/s06/out/s06-look-draft.png`. It shows the alley, the red door with the slot, the bouncer with Liam's real keyed head (grayscaled), the light cone, rain, grain and vignette.
+
+## 8. As built, v1 (after the plan review)
+
+Decisions from the review: R2, the bouncer never speaks (one closed-mouth frame, 360.90 s); the lab coat narrator lip-syncs every line: on the whiteboard for L1a/L1b, poked in diagonally from the top left (mirrored) for L2–L5, from the top right for L6–L7, holding his last frame through every pause. R3, the devil stays red (closed-mouth frame 353.00 s, red monochrome); the palette is "red only: door, devil, ink", plus the sepia form. "TO: ?" tags kept. No sound effects. Walls lifted (brick shades 66–106, softer wall falloff). R1, R9 and R11 fallbacks used.
+
+- Audio: L1a/L1b is cut at 339.165 s, the middle of the sibilant that "things" and "start" share (band-energy scan in `pipeline/s06/s06-timing.py`; the quietest point, 339.21, would have left "tart"), snapped to a zero crossing. L7 ends at 360.70 ("else" ends 360.56; a lip click at 361.04 is left out), so L7 is 19.20–24.62 in the scene.
+- Narrator pose: professor-point body rotated 140° with the neck at (1130,160) (mirrored about x=640 for the top-left poke), so the pointing arm points down; he enters and leaves along his body axis in 3 stop-frame steps.
+- Whiteboard stand-in for slide 5's last frame: `S5_HANDOFF` in `s06-signature.html` holds the lab coat's neck point and scale.
+- Files: `apps/web/film/s06-signature.html`, `data/s06-edl.js`, `pipeline/s06/{s06-timing.py,heads.py,capture.sh,stills.sh,build.sh}`. Outputs on dev-mac: `~/video-work/solana-bunker/s06/out/s06-v1.mp4`, `s06-v1-phone.mp4`.
