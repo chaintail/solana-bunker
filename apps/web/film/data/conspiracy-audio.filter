@@ -1,5 +1,5 @@
 [0:a]atrim=start=1.5:end=7.7,asetpts=PTS-STARTPTS,aresample=48000,afade=t=in:d=0.012,afade=t=out:st=6.188:d=0.012,adelay=400|400[a0];
-[0:a]atrim=start=53.7:end=55.95,asetpts=PTS-STARTPTS,aresample=48000,afade=t=in:d=0.012,afade=t=out:st=2.238:d=0.012,adelay=7250|7250[a1];
+[0:a]atrim=start=54.02:end=55.95,asetpts=PTS-STARTPTS,aresample=48000,afade=t=in:d=0.012,afade=t=out:st=1.918:d=0.012,adelay=7390|7390[a1];
 [0:a]atrim=start=56.28:end=60.0,asetpts=PTS-STARTPTS,aresample=48000,afade=t=in:d=0.012,afade=t=out:st=3.708:d=0.012,adelay=9800|9800[a2];
 [0:a]atrim=start=60.2:end=62.8,asetpts=PTS-STARTPTS,aresample=48000,afade=t=in:d=0.012,afade=t=out:st=2.588:d=0.012,adelay=13720|13720[a3];
 [0:a]atrim=start=63.15:end=66.2,asetpts=PTS-STARTPTS,aresample=48000,afade=t=in:d=0.012,afade=t=out:st=3.038:d=0.012,adelay=16620|16620[a4];
