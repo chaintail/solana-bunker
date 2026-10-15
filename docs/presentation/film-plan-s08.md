@@ -124,3 +124,16 @@ Files: `apps/web/film/s08-look.html` (a draft scene, not the slide), `pipeline/s
 - the engineer at the left side with Liam's keyed head under his hard hat, tilted down
 
 The 426x240 downscale was checked: GAME OVER, both numbers, the slot label and SCORE are readable.
+
+## 8. As built, v1
+
+Answers from the review: the take's wording as recorded; the 003-A card says "staged: 5 transactions / local SVM only / no devnet proof" with no QR, and the see-the-code (line 118) and proof (`CiZmcGsa…`) QR cards pop in on 003-B after it settles; tag 12 s; Joe on the win screen; the engineer speaks the main lines and the lab coat the sigh and "not cool"; no SFX, timing markers only (`SFX_<what>` in `data/s08-edl.js` `markers`). Beat 0 uses scene 7 v1's real last frame (`s07-v1.mp4`, film/s07 08bcea9, re-merged).
+
+- Wording check: I could not listen. E8 was re-transcribed on its own (484.30–486.75 s) and in context (482.2–495.4 s) with parakeet-tdt 0.6b v2 and v3 on dev-mac: both read "So we built that, and it worked." Used as recorded.
+- Audio: two real cuts. E5/C1 ("withdrawal" | "Not") is cut at 477.100 s, the quietest 10 ms frame in 477.00–477.15 s snapped to a zero crossing (R2 fallback was not needed beyond that). Scene 54.57 s (1637 frames): speech ends 42.30 s, tag 42.57–54.57 s.
+- Beat times come from `data/s08-edl.js` `T` (take word times mapped through the edit list); the five trucks arrive at 19.08, 19.98, 20.88, 21.78, 22.68 s.
+- Changes against the plan's beat table: the sawn chunks fly off to the left and each truck enters already loaded (no queue on screen); the TEMP ACCT box sits on a ledge at the right wall (clear of the slot when it widens); the five tx boxes, then the TEMP ACCT box, shrink away and a green "1 TX" box pops in at the same spot; a fresh 2,500 block spawns on "rescue" and drops through the 4,096 slot on "and it worked"; the win lines use 2x type at an 11 px advance so "1 TRANSACTION" fits inside the border; the engineer's head-down tilt runs from the end of E3 to the start of E4.
+- Tag (12 s): LEVEL COMPLETE flash (1 s), then 6 s of the rotation text box (2 px pixel type, lines crawl in), the 64-LED spent bitmap (7 turn red) and the NEXT LEVEL tree growing to a lit root with a ROTATE stamp; then the credits table (16 rows from `artifacts/public-deployment.json`) scrolls up over 3.9 s and holds 1.1 s.
+- Capture: headless Chrome painted one seek late with this scene (the SVG barrel filter), so every still showed the previous time. `scripts/capture.mjs` got an optional `--settle=N` (animation frames to wait after a seek, default 2 as before); scene 8 captures with `--settle=6`, which removed the lag.
+- QR: both cards decode with zxing-cpp on a graded 720p still and on its 960x540 downscale.
+- Files: `apps/web/film/s08-txsize.html`, `data/s08-edl.js`, `pipeline/s08/{s08-timing.py,heads.py,bodies.py,capture.sh,stills.sh,sheets.sh,build.sh}`. Output on dev-mac: `~/video-work/solana-bunker/s08/out/s08-v1.mp4`, `s08-v1-phone.mp4`.
