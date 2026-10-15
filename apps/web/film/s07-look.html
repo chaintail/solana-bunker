@@ -1,0 +1,58 @@
+<!doctype html><html data-duration="1" data-fps="30"><head><meta charset="utf-8">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
+<style>
+/* Slide 7 LOOK DRAFT (plan stage, not the scene): a 1979 seminar. Dim cream screen, the overhead projector's bright keystoned window with its hot-spot and
+   the dark shadow of the transparency's cardboard mount, a transparency with the Lamport card, and slide 6's alley alive in a small window top right
+   (assets/s07-alley-freeze.png = slide 6 v3's graded end frame; live rain drawn over it). Grain, warmth and vignette are added after capture (pipeline/s07/look-still.sh). */
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#cfc3a3}
+.L{position:absolute;left:0;top:0;width:1280px;height:720px}
+#room{background:radial-gradient(ellipse 900px 600px at 470px 380px,#ddd2b4 0%,#c9bc99 60%,#a89a76 100%)}
+#proj{position:absolute;left:60px;top:70px;width:820px;height:600px;transform-origin:50% 100%;transform:perspective(1400px) rotateX(-9deg)}
+#beam{position:absolute;inset:0;background:radial-gradient(ellipse 470px 380px at 46% 40%,#fffaf0 0%,#f7efdc 45%,#e9dec4 100%);box-shadow:0 0 40px rgba(255,248,225,.55)}
+#mount{position:absolute;inset:0;border:34px solid rgba(58,48,34,.86);border-radius:6px;box-shadow:inset 0 0 18px rgba(40,30,20,.6)}
+#sheet{position:absolute;left:34px;top:34px;right:34px;bottom:34px;color:#1e1a12;font-family:'Special Elite'}
+.ty{position:absolute;white-space:nowrap}
+#win{position:absolute;left:928px;top:30px;width:320px;height:180px;border:6px solid #1c1812;box-shadow:0 6px 18px rgba(0,0,0,.45);overflow:hidden;background:#000}
+#win img{position:absolute;left:0;top:0;width:320px;height:180px}
+#winRain{position:absolute;left:0;top:0}
+#winLbl{position:absolute;left:928px;top:216px;width:332px;text-align:center;font:18px 'Special Elite';color:#3a3122}
+</style></head><body>
+<div class="L" id="room"></div>
+<div id="proj"><div id="beam"></div>
+ <div id="sheet">
+  <svg width="752" height="532" style="position:absolute;left:0;top:0">
+   <!-- portrait placeholder: drawn silhouette in an oval (no photo) -->
+   <ellipse cx="170" cy="190" rx="120" ry="146" fill="none" stroke="#1d3fbf" stroke-width="5"/>
+   <path d="M170 92c-38 0-62 28-62 66 0 26 8 44 18 58 2 26 18 46 44 46s42-20 44-46c10-14 18-32 18-58 0-38-24-66-62-66z" fill="#2a2418" opacity=".88"/>
+   <path d="M126 214c4 34 20 60 44 60s40-26 44-60c-10 16-26 22-44 22s-34-6-44-22z" fill="#3b3326"/>
+   <path d="M86 334c8-44 40-62 84-66 44 4 76 22 84 66" fill="#2a2418" opacity=".88"/>
+   <path d="M150 300l20 16 20-16" stroke="#efe6cf" stroke-width="3" fill="none"/>
+   <!-- tiny coin vs huge name -->
+   <g transform="translate(688 196) scale(.9)"><circle r="17" fill="#000"/><polygon points="-11,-12 15,-12 11,-6 -15,-6" fill="#14f195"/><polygon points="-15,-2 11,-2 15,4 -11,4" fill="#9945ff"/><polygon points="-11,8 15,8 11,14 -15,14" fill="#14f195"/></g>
+   <path d="M300 268 H700" stroke="#c4161c" stroke-width="4" stroke-dasharray="2 9" stroke-linecap="round"/>
+  </svg>
+  <div class="ty" style="left:52px;top:356px;font-size:40px">Leslie Lamport · 1979</div>
+  <div class="ty" style="left:52px;top:410px;font-size:21px;color:#5a4e38">one-time signatures from a hash function</div>
+  <div class="ty" style="left:300px;top:138px;font-size:88px;letter-spacing:-1px">lamport</div>
+  <div class="ty" style="left:302px;top:288px;font-size:27px">1 lamport = 0.000000001 SOL</div>
+  <div class="ty" style="left:470px;top:466px;font-size:22px;color:#c4161c;transform:rotate(-3deg)">(yes, <u>that</u> Lamport)</div>
+ </div>
+ <div id="mount"></div>
+</div>
+<div id="win"><img src="assets/s07-alley-freeze.png"><canvas id="winRain" width="320" height="180"></canvas></div>
+<div id="winLbl">meanwhile, in the alley…</div>
+<canvas id="dust" width="1280" height="720" style="position:absolute;left:0;top:0"></canvas>
+<script src="lib/film.js"></script>
+<script>
+const f = window.__film;
+const R = f.rng(42), drops = Array.from({ length: 70 }, () => ({ x: R() * 380 - 40, y: R() * 230, l: 5 + R() * 9, a: .15 + R() * .25, v: 420 + R() * 200 }));
+const c = document.getElementById('winRain').getContext('2d'), dc = document.getElementById('dust').getContext('2d');
+f.onSeek((t) => {
+  c.clearRect(0, 0, 320, 180); c.lineWidth = .8;
+  for (const d of drops) { const y = ((d.y + d.v * t) % 230) - 25, x = d.x + y * .18; c.strokeStyle = `rgba(230,230,230,${d.a.toFixed(2)})`; c.beginPath(); c.moveTo(x, y); c.lineTo(x - d.l * .18, y - d.l); c.stroke(); }
+  // projector dust and hairs drifting in the beam (seeded per frame)
+  dc.clearRect(0, 0, 1280, 720); const S = f.rng(9 + Math.floor(t * 30));
+  dc.fillStyle = 'rgba(60,48,30,.35)'; for (let i = 0; i < 26; i++) { dc.beginPath(); dc.arc(100 + S() * 760, 70 + S() * 560, .6 + S() * 1.6, 0, 7); dc.fill(); }
+  dc.strokeStyle = 'rgba(60,48,30,.28)'; dc.lineWidth = 1; for (let i = 0; i < 2; i++) { const x = 140 + S() * 700, y = 90 + S() * 520; dc.beginPath(); dc.moveTo(x, y); dc.quadraticCurveTo(x + 14, y - 10, x + 26 + S() * 10, y + 6); dc.stroke(); }
+});
+</script></body></html>
