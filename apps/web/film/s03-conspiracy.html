@@ -55,15 +55,15 @@
 .sl .c{position:absolute;left:0;right:0;top:80px;text-align:center;font:400 92px/1 'Anton';color:#141310}
 .sl .c.z{color:#a3161c}
 .tk{position:absolute;width:34px;height:34px}
-#tw{position:absolute;left:362px;top:66px;width:324px;height:168px}
-#fslip{left:0;top:0;width:540px;height:280px;background:#f7f4ea;transform-origin:0 0;transform:scale(.6) rotate(-1.6deg)}
+#tw{position:absolute;left:412px;top:74px;width:297px;height:154px}
+#fslip{left:0;top:0;width:540px;height:280px;background:#f7f4ea;transform-origin:0 0;transform:scale(.55) rotate(-1.6deg)}
 #fslip .av{position:absolute;left:22px;top:22px;width:62px;height:62px;border-radius:50%;background:#4a5a6a}
 #fslip .nm{position:absolute;left:100px;top:24px;font:800 28px/1 'Inter';color:#111}
 #fslip .hd{position:absolute;left:100px;top:56px;font:500 22px/1 'Inter';color:#555}
 #fslip .tx{position:absolute;left:24px;top:108px;right:24px;font:700 30px/1.22 'Inter';color:#111}
-#card{left:190px;top:390px;width:520px;height:110px;transform:rotate(-.4deg)}
+#card{left:385px;top:268px;width:345px;height:70px;transform:rotate(-.4deg)}
 #l1{left:34px;top:28px;font-size:36px;line-height:44px}
-#l2{left:34px;top:32px;font-size:36px;line-height:44px}
+#l2{left:20px;top:13px;font-size:32px;line-height:44px}
 /* polaroid pip frame */
 #pol{position:absolute;left:999px;top:331px;width:250px;height:361px;transform-origin:125px 161px;transform:rotate(-2deg);opacity:0}
 #pol .ph{position:absolute;left:17px;top:17px;width:216px;height:288px;background:linear-gradient(160deg,#6d7d70,#3d4a42)}
@@ -86,7 +86,7 @@
     <div id="slot"><div class="out"></div><div class="w">CRYPTOGRAPHY</div></div>
     <div id="note" class="hand abs">math checks out?</div></div>
   <div id="cork"><div id="citems" class="abs" style="inset:0"></div><div id="slipwrap" class="abs" style="inset:0"></div></div>
-  <div id="bd"><div id="wld"><div id="wbg"></div><div id="wtn"></div><svg id="wstr" class="abs" width="2730" height="800" viewBox="0 0 2730 800" style="left:0;top:0;overflow:visible;filter:drop-shadow(2px 4px 2px rgba(0,0,0,.5))"></svg><div id="wsl"></div></div>
+  <div id="bd"><div id="wld"><div id="wbg"></div><div id="wtn"></div><svg id="wstr" class="abs" width="2730" height="1560" viewBox="0 0 2730 1560" style="left:0;top:0;overflow:visible;filter:drop-shadow(2px 4px 2px rgba(0,0,0,.5))"></svg><div id="wsl"></div></div>
     <div id="tw"><div id="fslip" class="paper"><div class="av"></div><div class="nm">@crypto_bro_88</div><div class="hd">Crypto Twitter</div><div class="tx">BREAKING: they stopped publishing math in WW2 too. Same thing is happening NOW. Wake up.</div><div class="pin" style="left:257px;top:-10px"></div></div></div>
     <div id="card" class="paper"><div id="l2" class="ty abs"></div></div></div>
   <div id="plateS" class="abs" style="inset:0;transform-origin:24px 696px"><div id="plate"><div class="n" id="pn">0</div><div class="l">PAPERS</div></div></div>
@@ -212,17 +212,17 @@ D.slam(unv, tRep, -9, 3.0, .13);
 const tShelf = L(42.85), tFp = L(52.55);
 const bd = $('bd'), wld = $('wld'), wsl = $('wsl'), wstr = $('wstr');
 film.anim(bd, [{ transform: 'translateY(780px)' }, { transform: 'translateY(0)' }], tShelf, .55, { easing: EO });
-const X = (i) => 480 + 230 * i, Y = (c) => 700 - 24 * c;
+const X = (i) => 480 + 230 * i, Y = (c) => 1392 - 51 * c;
 const DATA = [[1938, 0], [1939, 17], [1940, 22], [1941, 17], [1942, 0], [1943, 0], [1944, 0], [1945, 2], [1946, 6], [1947, 18]];
 const TP = [44.30, 44.95, 45.60, 46.40, 47.40, 48.30, 49.10, 49.90, 50.55, 51.15].map(L);
 const SV = 'http://www.w3.org/2000/svg';
-const sheet = mk('div', 'paper', 'left:90px;top:190px;width:330px;height:430px;background:#f6f1e3;transform:rotate(-2deg)', wld, `<div class="ty" style="position:absolute;left:0;right:0;top:44px;text-align:center;font:400 130px/1 Anton;color:#a3161c">9,923</div><div style="position:absolute;left:0;right:0;top:196px;text-align:center;font:700 40px/1.12 Oswald;color:#141310;text-transform:uppercase">Physical Review<br>papers,<br>1920-1947,</div><div class="ty" style="position:absolute;left:0;right:0;top:350px;text-align:center;font-size:44px;line-height:1">investigated</div>`);
-const sheetPin = mk('div', 'pin tk', 'left:238px;top:196px', wld);
+const sheet = mk('div', 'paper', 'left:90px;top:1070px;width:330px;height:430px;background:#f6f1e3;transform:rotate(-2deg)', wld, `<div class="ty" style="position:absolute;left:0;right:0;top:44px;text-align:center;font:400 130px/1 Anton;color:#a3161c">9,923</div><div style="position:absolute;left:0;right:0;top:196px;text-align:center;font:700 40px/1.12 Oswald;color:#141310;text-transform:uppercase">Physical Review<br>papers,<br>1920-1947,</div><div class="ty" style="position:absolute;left:0;right:0;top:350px;text-align:center;font-size:44px;line-height:1">investigated</div>`);
+const sheetPin = mk('div', 'pin tk', 'left:238px;top:1076px', wld);
 A(sheet, [{ opacity: 0, transform: 'translateY(-420px) rotate(7deg) scale(1.3)' }, { opacity: 1, transform: 'translateY(0) rotate(-2deg) scale(1)' }], L(43.35) - .25, .25, EI);
 A(sheetPin, [{ opacity: 0, transform: 'scale(2.4)' }, { opacity: 1, transform: 'scale(1)' }], L(43.35), .1, EI);
-const head = mk('div', 'paper', 'left:150px;top:20px;width:2560px;height:64px;background:#ece0b6', wld, [0, 1, 2].map((k) => `<div class="ty" style="position:absolute;left:${60 + k * 840}px;top:9px;font-size:42px;line-height:46px">ATOMIC RESEARCH PAPERS, BY YEAR</div>`).join(''));
+const head = mk('div', 'paper', 'left:80px;top:10px;width:740px;height:54px;background:#ece0b6;z-index:5', $('bd'), `<div class="ty" style="position:absolute;left:0;right:0;text-align:center;top:5px;font-size:38px;line-height:44px">ATOMIC RESEARCH PAPERS, BY YEAR</div>`);
 A(head, [{ opacity: 0, transform: 'translateY(-160px) scale(1.2)' }, { opacity: 1, transform: 'translateY(0) scale(1)' }], L(43.35) + .25, .25, EI);
-[170, 1300, 2540].forEach((x, k) => A(mk('div', 'pin tk', `left:${x}px;top:30px`, wld), [{ opacity: 0, transform: 'scale(2.4)' }, { opacity: 1, transform: 'scale(1)' }], L(43.35) + .5, .1, EI));
+[90, 800].forEach((x) => A(mk('div', 'pin tk', `left:${x}px;top:4px;z-index:6`, $('bd')), [{ opacity: 0, transform: 'scale(2.4)' }, { opacity: 1, transform: 'scale(1)' }], L(43.35) + .5, .1, EI));
 [sheet, sheetPin].forEach((e) => A(e, [{ visibility: 'visible' }, { visibility: 'hidden' }], L(51.15) + .3, .01));
 const tkL = mk('div', 'abs', 'left:0;top:0', wld);
 DATA.forEach(([yr, c], i) => {
@@ -243,11 +243,11 @@ DATA.forEach(([yr, c], i) => {
   }
 });
 { // camera: follows the newest slip at scale .8, then pulls back to the whole board
-  const S = .76, Sf = 898 / 2420, pts = [];
-  const at = (i) => [449 - (X(i) + 170) * S, 311 - 400 * S, S];
+  const S = .7, Sf = 898 / 2310, pts = [];
+  const at = (i) => { const c = DATA[i][1]; return [449 - (X(i) + 170) * S, 175 + (22 - c) / 22 * 270 - Y(c) * S, S]; };
   pts.push([TP[0] - 1.6, ...at(0)]);
   for (let i = 1; i < DATA.length; i++) { pts.push([TP[i] - 0.55, ...at(i - 1)]); pts.push([TP[i] - 0.08, ...at(i)]); }
-  const fin = [-330 * Sf, 30, Sf];
+  const fin = [-390 * Sf, 15.3, Sf];
   pts.push([TP[9] + .55, ...at(9)]); pts.push([TP[9] + 1.9, ...fin]);
   const t0 = pts[0][0], t1 = pts[pts.length - 1][0];
   const kf = pts.map((p, i) => ({ transform: `translate(${p[1].toFixed(1)}px,${p[2].toFixed(1)}px) scale(${p[3].toFixed(4)})`, offset: (p[0] - t0) / (t1 - t0), easing: 'cubic-bezier(.45,0,.25,1)' }));
@@ -266,7 +266,7 @@ D.slam(chk, tChk, 6, 3.2, .14);
 const card = $('card');
 A(card, [{ opacity: 0, transform: 'translateY(420px) rotate(3deg)' }, { opacity: 1, transform: 'translateY(0) rotate(-.4deg)' }], tSev - .6, .5, EO);
 D.type($('l2'), '719 papers, 2026', tSev, t26 + .05, true);
-D.hide($('plateS'), L(57.5), .2);
+D.hide($('plateS'), L(51.6), .25);
 // ---- beat 10: the silence is real: the lamp flickers once
 const tReal = W('p13', 'real');
 A($('dim'), [{ opacity: 0 }, { opacity: .62, offset: .12 }, { opacity: .08, offset: .3 }, { opacity: .5, offset: .5 }, { opacity: 0 }], tReal - .05, .4, 'linear');
