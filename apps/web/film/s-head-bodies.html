@@ -1,0 +1,167 @@
+<!doctype html><html data-duration="12" data-fps="30"><head><meta charset="utf-8">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
+<style>
+/* Floating head r2: five cartoon bodies, one silent scene. Layers (same convention as s-head-test):
+     ?layer=back   wall, floor, bodies (three stop-frame poses), props, wig back hair, labels. The head clip is composited over this by ffmpeg.
+     ?layer=front  collars / neckline / tie knot / hard hat / wig fringe, drawn over the bottom of the neck and the top of the head
+   no ?layer  both (preview, no head) */
+html,body{font-family:'Inter',sans-serif;color:#fff}
+body.layer-front .back,body.layer-back .front{display:none}
+html:not([data-layer]) body,html[data-layer="back"] body{background:#26334a}
+svg{position:absolute;left:0;top:0}
+</style></head><body>
+<div class="back"><svg width="1280" height="720" viewBox="0 0 1280 720"><defs>
+  <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#43546f"/><stop offset="1" stop-color="#2b3951"/></linearGradient>
+</defs><rect width="1280" height="720" fill="url(#wall)"/>
+<g id="wallLines" stroke="#ffffff" stroke-opacity=".05" stroke-width="2"></g>
+<rect y="618" width="1280" height="102" fill="#1b2435"/><rect y="618" width="1280" height="3" fill="#0f1623"/>
+<g id="backG"></g><g id="labels"></g></svg></div>
+<div class="front"><svg width="1280" height="720" viewBox="0 0 1280 720"><g id="frontG"></g></svg></div>
+<script src="lib/film.js"></script>
+<script>
+const f = window.__film, L = new URLSearchParams(location.search).get('layer');
+if (L) { document.documentElement.dataset.layer = L; document.body.classList.add('layer-' + L); }
+const $ = (id) => document.getElementById(id);
+const OL = '#0b1120', SK = '#e0a77f', SKD = '#c68a68';
+const CX = [100, 308, 516, 724, 932, 1140];           // figure centres (head overlay uses the same list in pipeline/head-bodies/comp.sh)
+const NECK = 3;                                   // neck centre offset vs figure centre (the key clip's head leans a little)
+const POSES = ['A', 'B', 'C'];
+// Proportions: a figure is 7 heads tall (hair top to shoes = 7 x hair-top-to-chin). S scales the whole figure; the body drawing (550 px
+// tall at 6.04 heads) is stretched vertically by KY about the floor so its neckline lands one head-height below the figure's top.
+const S = 0.86, KY = 1.0274, FLOOR = 618, HF = 550 * S, HEAD = HF / 7, HS = HEAD / 825, CHIN = FLOOR - HF + HEAD, TY = CHIN - 880 * HS, HK = HS / 0.11;
+
+// ---------- helpers (all coordinates local to the figure: x 0 = centre, y absolute) ----------
+const poly = (pts) => pts.map((p) => p.join(',')).join(' ');
+const limb = (pts, w, col) => `<polyline points="${poly(pts)}" fill="none" stroke="${OL}" stroke-width="${w + 4}" stroke-linecap="round" stroke-linejoin="round"/><polyline points="${poly(pts)}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+const shape = (d, fill, extra = '') => `<path d="${d}" fill="${fill}" stroke="${OL}" stroke-width="2.5" stroke-linejoin="round" ${extra}/>`;
+const unit = (a, b) => { const dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy); return [dx / l, dy / l]; };
+const add = (a, d, k) => [a[0] + d[0] * k, a[1] + d[1] * k];
+const mx = (s, pts) => pts.map(([x, y]) => [s * x, y]);
+
+// hand: kind rest | point | open ; col = skin or glove colour
+function hand(kind, el, wr, col) {
+  const d = unit(el, wr), c = add(wr, d, 7);
+  let g = '';
+  if (kind === 'point') {
+    const tip = add(c, d, 19);
+    g += `<line x1="${c[0]}" y1="${c[1]}" x2="${tip[0]}" y2="${tip[1]}" stroke="${OL}" stroke-width="8" stroke-linecap="round"/><line x1="${c[0]}" y1="${c[1]}" x2="${tip[0]}" y2="${tip[1]}" stroke="${col}" stroke-width="4" stroke-linecap="round"/>`;
+  }
+  if (kind === 'open') {
+    for (const a of [-34, -12, 10, 32]) { const r = a * Math.PI / 180, fd = [d[0] * Math.cos(r) - d[1] * Math.sin(r), d[0] * Math.sin(r) + d[1] * Math.cos(r)], tip = add(c, fd, 17);
+      g += `<line x1="${c[0]}" y1="${c[1]}" x2="${tip[0]}" y2="${tip[1]}" stroke="${OL}" stroke-width="7" stroke-linecap="round"/><line x1="${c[0]}" y1="${c[1]}" x2="${tip[0]}" y2="${tip[1]}" stroke="${col}" stroke-width="3.5" stroke-linecap="round"/>`; }
+  }
+  return g + `<circle cx="${c[0]}" cy="${c[1]}" r="8.5" fill="${col}" stroke="${OL}" stroke-width="2.5"/>`;
+}
+// arm key-points, for the outward side s (+1 = viewer's right). shoulder (56,188)
+const SH = [50, 190];
+const ARM = {
+  rest:   [SH, [63, 264], [62, 336]],
+  point:  [SH, [97, 136], [135, 87]],
+  up:     [SH, [92, 160], [94, 100]],
+  pocket: [SH, [60, 264], [47, 328]],
+  mag:    [SH, [66, 262], [84, 208]],
+};
+// full arm: sleeve colour over skin; sleeveFrac 1 = long sleeve to the wrist, 0.5 = short sleeve to mid upper-arm...
+function arm(s, kind, hk, o) {
+  const pts = mx(s, ARM[kind]), [sh, el, wr] = pts;
+  let g = limb(pts, o.skinW || 14, o.skin || SK);
+  const sleeveEnd = o.sleeve === 'short' ? [sh[0] + (el[0] - sh[0]) * .55, sh[1] + (el[1] - sh[1]) * .55] : wr;
+  const sp = o.sleeve === 'short' ? [sh, sleeveEnd] : pts;
+  g += limb(sp, o.w || 20, o.col);
+  if (o.cuff) { const d = unit(el, wr), a = add(wr, d, -5), b = add(wr, d, 1); g += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${o.cuff}" stroke-width="${(o.w || 20) + 1}" stroke-linecap="butt"/>`; }
+  if (hk !== 'none') g += hand(hk, el, wr, o.glove || o.skin || SK);
+  return g;
+}
+const key = (x, y, ang) => `<g transform="translate(${x} ${y}) rotate(${ang})"><rect x="-3.5" y="-42" width="7" height="86" rx="2" fill="#e3b93c" stroke="${OL}" stroke-width="2"/><rect x="3.5" y="30" width="11" height="6" fill="#e3b93c" stroke="${OL}" stroke-width="2"/><rect x="3.5" y="20" width="8" height="5" fill="#e3b93c" stroke="${OL}" stroke-width="2"/><circle cx="0" cy="-54" r="12.5" fill="none" stroke="${OL}" stroke-width="9"/><circle cx="0" cy="-54" r="12.5" fill="none" stroke="#e3b93c" stroke-width="5"/></g>`;
+const mag = (x, y, ang) => `<g transform="translate(${x} ${y}) rotate(${ang})"><rect x="-3" y="-30" width="6" height="52" rx="3" fill="#6b4423" stroke="${OL}" stroke-width="2"/><circle cx="0" cy="-48" r="19" fill="rgba(190,225,255,.45)" stroke="${OL}" stroke-width="9"/><circle cx="0" cy="-48" r="19" fill="none" stroke="#d1a83a" stroke-width="5"/><path d="M-9 -56 Q-5 -62 2 -63" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".8"/></g>`;
+
+// legs / torso generators ------------------------------------------------------------
+const legs = (col, shoe, cuffCol, hemY = 600) => shape(`M-46 346 L-40 ${hemY} L-6 ${hemY} L-1 388 L1 388 L6 ${hemY} L40 ${hemY} L46 346 Z`, col)
+  + (cuffCol ? `<rect x="-40" y="${hemY - 8}" width="34" height="6" fill="${cuffCol}"/><rect x="6" y="${hemY - 8}" width="34" height="6" fill="${cuffCol}"/>` : '')
+  + shape(`M-60 618 Q-61 603 -44 600 L-6 600 L-6 618 Z`, shoe) + shape(`M60 618 Q61 603 44 600 L6 600 L6 618 Z`, shoe);
+const torso = (col, hem = 352, sw = 58) => shape(`M-22 176 L${-sw} 188 Q${-sw - 4} 194 ${-sw - 2} 208 L-48 300 L-47 ${hem} L47 ${hem} L48 300 L${sw + 2} 208 Q${sw + 4} 194 ${sw} 188 L22 176 Z`, col);
+const shadow = '<ellipse cx="0" cy="620" rx="74" ry="9" fill="#000" opacity=".35"/>';
+
+// ---------- the five figures ----------
+// each: back(pose) -> svg for the back layer, front -> svg for the front layer (collar etc.), s = pointing side
+const FIG = [
+ { name: 'SUIT', s: 1,
+   back(p, s) { const o = { col: '#272d3b', cuff: '#f4f6fa', w: 20 };
+     const body = shadow + legs('#272d3b', '#161a22') + torso('#272d3b') +
+       shape('M-14 178 L14 178 L8 300 L-8 300Z', '#f4f6fa') + shape('M-7 196 L7 196 L11 312 L0 322 L-11 312Z', '#9c2a3a') +
+       shape('M-20 176 L-6 182 L-30 266 L-52 240Z', '#2f3646') + shape('M20 176 L6 182 L30 266 L52 240Z', '#2f3646') + `<path d="M-1 330 L-1 352 M1 330 L1 352" stroke="${OL}" stroke-width="1.5"/><circle cx="-4" cy="318" r="2" fill="#0f131b"/>`;
+     const a = { A: [arm(s, 'rest', 'rest', o), arm(-s, 'rest', 'rest', o)], B: [arm(s, 'point', 'point', o), arm(-s, 'rest', 'rest', o)], C: [arm(s, 'up', 'open', o), arm(-s, 'up', 'open', o)] }[p];
+     return body + a.join(''); },
+   front() { return shape('M-22 166 L25 166 L25 180 L-22 180Z', '#f4f6fa') + shape('M-22 172 L-1 190 L-12 198 L-26 182Z', '#f4f6fa') + shape('M25 172 L5 190 L16 198 L29 182Z', '#f4f6fa') + shape('M-6 186 L10 186 L8 200 L-4 200Z', '#9c2a3a'); } },
+ { name: 'MAN ON THE STREET', s: 1,
+   back(p, s) { const o = { col: '#d9a441', sleeve: 'short', w: 24, skinW: 15 };
+     const body = shadow + legs('#3d5d92', '#f1f1ee', null) + `<path d="M-40 596 L-6 596 M6 596 L40 596" stroke="#c8332d" stroke-width="3"/>` + torso('#d9a441', 332, 56) +
+       `<path d="M-46 346 L-30 372 M46 346 L30 372" stroke="${OL}" stroke-width="2" fill="none"/><path d="M-1 388 L-1 440" stroke="#2c4570" stroke-width="2"/>`;
+     const pk = (side) => arm(side, 'pocket', 'none', o) + `<circle cx="${side * 46}" cy="336" r="6" fill="${SK}" stroke="${OL}" stroke-width="2"/>`;
+     const a = { A: [pk(s), pk(-s)], B: [arm(s, 'point', 'point', o), pk(-s)], C: [arm(s, 'up', 'open', o), arm(-s, 'up', 'open', o)] }[p];
+     return body + a.join(''); },
+   front() { return `<path d="M-24 168 Q3 160 27 168 L27 182 Q3 198 -24 182Z" fill="#b9852b" stroke="${OL}" stroke-width="2.5"/><path d="M-20 178 Q3 190 23 178" stroke="#e9bf6a" stroke-width="3" fill="none"/>`; } },
+ { name: 'DETECTIVE', s: 1,
+   back(p, s) { const o = { col: '#b69a68', cuff: '#8e7547', w: 24, skinW: 14 };
+     const coat = shape('M-22 176 L-64 190 Q-68 196 -66 212 L-54 300 L-62 478 L62 478 L54 300 L66 212 Q68 196 64 190 L22 176 Z', '#b69a68') +
+       shape('M-3 188 L3 188 L3 478 L-3 478Z', '#a1865a') + shape('M-54 296 L54 296 L54 312 L-54 312Z', '#7d6437') + shape('M-8 293 L8 293 L8 315 L-8 315Z', '#cfa93f') +
+       `<circle cx="-1" cy="236" r="3" fill="#6f592f"/><circle cx="-1" cy="344" r="3" fill="#6f592f"/><circle cx="-1" cy="400" r="3" fill="#6f592f"/>`;
+     const body = shadow + shape('M-34 470 L-30 600 L-6 600 L-1 480 Z M34 470 L30 600 L6 600 L1 480Z', '#4a3a2a') + shape('M-60 618 Q-61 603 -44 600 L-6 600 L-6 618Z', '#2a1f17') + shape('M60 618 Q61 603 44 600 L6 600 L6 618Z', '#2a1f17') + coat;
+     const m = -s; // magnifier hand side
+     const pm = () => arm(m, 'mag', 'rest', o) + mag(m * 87, 200, m * 18);
+     const up = () => { const ar = arm(m, 'up', 'rest', o); return ar + mag(m * 94, 86, m * 6); };
+     const a = { A: [arm(s, 'rest', 'rest', o), pm()], B: [arm(s, 'point', 'point', o), pm()], C: [arm(s, 'up', 'open', o), up()] }[p];
+     return body + a.join(''); },
+   front() { return shape('M-28 162 L-8 168 L-14 200 L-40 178Z', '#a1865a') + shape('M32 162 L12 168 L18 200 L44 178Z', '#a1865a') + shape('M-26 163 Q3 156 28 163 L28 174 L-26 174Z', '#b69a68'); } },
+ { name: 'BUNKER ENGINEER', s: 1,
+   back(p, s) { const o = { col: '#7c8794', w: 22, cuff: '#e8892b', glove: '#d49a34', skinW: 15 };
+     const body = shadow + legs('#7c8794', '#3a2c20', '#e8892b') + shape('M-60 618 Q-61 600 -42 598 L-6 598 L-6 618Z', '#3a2c20') + torso('#7c8794', 352) +
+       `<rect x="-47" y="258" width="94" height="7" fill="#e8892b" opacity=".95"/><rect x="-44" y="470" width="35" height="7" fill="#e8892b"/><rect x="9" y="470" width="35" height="7" fill="#e8892b"/><path d="M0 184 L0 352" stroke="${OL}" stroke-width="2"/><rect x="12" y="214" width="20" height="18" rx="2" fill="#69727e" stroke="${OL}" stroke-width="2"/><rect x="-47" y="320" width="94" height="6" fill="#5f6873" opacity=".7"/>`;
+     const m = -s;
+     const kA = () => arm(m, 'rest', 'rest', o) + key(m * 66, 332, m * -14);
+     const kC = () => arm(m, 'up', 'open', o) + key(m * 95, 52, m * 6);
+     const a = { A: [arm(s, 'rest', 'rest', o), kA()], B: [arm(s, 'point', 'point', o), kA()], C: [arm(s, 'up', 'open', o), kC()] }[p];
+     return body + a.join(''); },
+   front() { return shape('M-24 166 L27 166 L27 184 L-24 184Z', '#6a7480') + `<rect x="-24" y="178" width="51" height="6" fill="#e8892b"/><path d="M-2 166 L-2 184" stroke="${OL}" stroke-width="2"/>`; },
+   head() { return shape('M-40 86 Q-40 52 -2 50 Q40 52 40 86 Z', '#f2c12e') + shape('M-45 86 L45 86 L45 91 L-45 91Z', '#d9a51a') + `<path d="M-6 52 L-6 85 M2 52 L2 85" stroke="#d9a51a" stroke-width="3"/>`
+     + shape('M-8 66 L10 66 L10 80 L-8 80Z', '#4a525c') + `<circle cx="1" cy="73" r="5" fill="#fff9c9"/><path d="M-4 85 L6 85 L26 108 L-24 108Z" fill="#fff9c9" opacity=".18"/>`; } },
+ { name: 'PHYSICIST', s: 1,
+   back(p, s) { const o = { col: '#eceff3', cuff: '#d4d9e0', w: 23, skinW: 14 };
+     const coat = shape('M-22 176 L-62 190 Q-66 196 -64 212 L-53 300 L-60 476 L60 476 L53 300 L64 212 Q66 196 62 190 L22 176 Z', '#eceff3') +
+       shape('M-14 178 L14 178 L10 300 L-10 300Z', '#cfd6e2') + shape('M-6 196 L6 196 L9 300 L0 310 L-9 300Z', '#3a3f55') +
+       `<path d="M0 300 L0 476" stroke="#b8bfcc" stroke-width="2.5"/><rect x="-46" y="360" width="30" height="34" rx="3" fill="#e2e6ec" stroke="${OL}" stroke-width="2"/><rect x="16" y="360" width="30" height="34" rx="3" fill="#e2e6ec" stroke="${OL}" stroke-width="2"/><rect x="-44" y="318" width="22" height="26" rx="2" fill="#e2e6ec" stroke="${OL}" stroke-width="2"/><path d="M-38 318 L-38 306 M-31 318 L-31 304" stroke="#2a4fa0" stroke-width="3" stroke-linecap="round"/><circle cx="-4" cy="346" r="2.4" fill="#aab2c0"/><circle cx="-4" cy="420" r="2.4" fill="#aab2c0"/>`;
+     const body = shadow + shape('M-34 470 L-30 600 L-6 600 L-1 480 Z M34 470 L30 600 L6 600 L1 480Z', '#5d6370') + shape('M-60 618 Q-61 603 -44 600 L-6 600 L-6 618Z', '#4a3322') + shape('M60 618 Q61 603 44 600 L6 600 L6 618Z', '#4a3322') + coat;
+     const m = -s;
+     const board = (x, y, a) => `<g transform="translate(${x} ${y}) rotate(${a})"><rect x="-21" y="-27" width="42" height="54" rx="3" fill="#8b5a2b" stroke="${OL}" stroke-width="2.5"/><rect x="-16" y="-20" width="32" height="42" fill="#fbfbf6"/><rect x="-7" y="-29" width="14" height="8" rx="2" fill="#9aa2ae" stroke="${OL}" stroke-width="2"/><path d="M-9 -9 H9 M-9 -3 H9 M-9 3 H9 M-9 9 H4" stroke="#6f7787" stroke-width="1.6"/></g>`;
+     const cA = () => arm(m, 'mag', 'none', o) + board(m * 78, 222, m * 10) + `<circle cx="${m * 88}" cy="232" r="8.5" fill="${SK}" stroke="${OL}" stroke-width="2.5"/>`;
+     const cC = () => board(m * 94, 62, m * 8) + arm(m, 'up', 'open', o);
+     const a = { A: [arm(s, 'rest', 'rest', o), cA()], B: [arm(s, 'point', 'point', o), cA()], C: [arm(s, 'up', 'open', o), cC()] }[p];
+     return body + a.join(''); },
+   front() { return shape('M-30 164 L-10 170 L-16 200 L-42 180Z', '#d4d9e0') + shape('M34 164 L14 170 L20 200 L46 180Z', '#d4d9e0') + shape('M-23 160 Q3 155 27 160 L29 175 Q3 183 -25 175Z', '#f4f6fa'); },
+   head() { return `<path d="M11 137 L30 143" stroke="${OL}" stroke-width="6" stroke-linecap="round"/><path d="M11 137 L30 143" stroke="#6b4423" stroke-width="3" stroke-linecap="round"/><path d="M27 141 Q34 138 36 146 Q38 156 30 157 Q24 157 25 148Z" fill="#4a2c14" stroke="${OL}" stroke-width="2.5"/><ellipse cx="31" cy="143" rx="3.5" ry="1.8" fill="#1a0d05"/>`; } },
+ { name: 'BLONDE WIG', s: 1,
+   back(p, s) { const o = { col: '#c9a0dc', sleeve: 'short', w: 20, skinW: 13 };
+     const body = shadow + shape('M-40 440 L-32 596 L-8 596 L-2 440Z M40 440 L32 596 L8 596 L2 440Z', SK) +
+       shape('M-58 618 Q-58 604 -40 600 L-10 600 L-10 618Z', '#a3283a') + shape('M58 618 Q58 604 40 600 L10 600 L10 618Z', '#a3283a') +
+       shape('M-38 292 L38 292 L66 472 L-66 472Z', '#5b2a52') + shape('M-22 176 L-52 188 Q-56 194 -54 208 L-42 292 L42 292 L54 208 Q56 194 52 188 L22 176Z', '#c9a0dc') +
+       `<path d="M-42 292 L42 292" stroke="#3e1b38" stroke-width="5"/>`;
+     // long hair behind the head, falling over the shoulders (head clip is composited on top of this)
+     const a = { A: [arm(s, 'rest', 'rest', o), arm(-s, 'rest', 'rest', o)], B: [arm(s, 'point', 'point', o), arm(-s, 'rest', 'rest', o)], C: [arm(s, 'up', 'open', o), arm(-s, 'up', 'open', o)] }[p];
+     return body + a.join(''); },
+   headBack() { return `<path d="M-30 90 L30 90 L30 206 L-30 206Z" fill="#e6c565"/>` + shape('M-33 80 Q-38 100 -40 130 Q-44 170 -42 206 Q-30 216 -20 206 L-20 120Z', '#e6c565') + shape('M33 80 Q38 100 40 130 Q44 170 42 206 Q30 216 20 206 L20 120Z', '#e6c565') + shape('M-34 70 Q-38 52 0 50 Q38 52 34 70 L30 110 L-30 110Z', '#e6c565'); },
+   front() { return `<path d="M-22 168 Q3 176 28 168 L24 188 Q3 200 -19 188Z" fill="#fff" stroke="${OL}" stroke-width="2.5"/><path d="M3 184 L-10 200 L-4 204 L3 190 L10 204 L16 200Z" fill="#fff" stroke="${OL}" stroke-width="2"/>`; },
+   head() { return `<path d="M-33 122 Q-40 100 -38 80 Q-36 52 0 50 Q36 52 38 80 Q40 100 33 122 Q29 118 28 108 Q27 94 18 90 Q2 80 -12 88 Q-24 94 -26 108 Q-27 118 -33 122Z" fill="#edcf72" stroke="${OL}" stroke-width="2.5" stroke-linejoin="round"/>`
+     + `<path d="M-30 108 Q-34 90 -26 72 M-14 90 Q-12 72 0 62 M10 86 Q20 78 30 70 M32 106 Q36 90 32 76" stroke="#c9a640" stroke-width="2" fill="none" stroke-linecap="round"/>`; } },];
+const backG = $('backG'), frontG = $('frontG'), labels = $('labels');
+let wl = ''; for (let x = 0; x < 1280; x += 160) wl += `<line x1="${x}" y1="0" x2="${x}" y2="618"/>`; for (let y = 120; y < 618; y += 120) wl += `<line x1="0" y1="${y}" x2="1280" y2="${y}"/>`; $('wallLines').innerHTML = wl;
+FIG.forEach((fg, i) => {
+  const cx = CX[i];
+  const bt = `translate(${cx} ${FLOOR}) scale(${S} ${S * KY}) translate(0 ${-FLOOR})`, ht = `translate(${cx} ${TY}) scale(${HK}) translate(0 -62)`;
+  backG.insertAdjacentHTML('beforeend', `<g transform="${bt}">` + POSES.map((p) => `<g class="pose pose-${p}" data-p="${p}">${fg.back(p, fg.s)}</g>`).join('') + '</g>' + (fg.headBack ? `<g transform="${ht}">${fg.headBack()}</g>` : ''));
+  frontG.insertAdjacentHTML('beforeend', `<g transform="${bt}">${fg.front()}</g>` + (fg.head ? `<g transform="${ht}">${fg.head()}</g>` : ''));
+  labels.insertAdjacentHTML('beforeend', `<text x="${cx}" y="668" text-anchor="middle" font-family="Oswald" font-weight="700" font-size="21" letter-spacing="1" fill="#dbe8ff">${fg.name}</text>`);
+});
+// stop-frame poses: hold A 3 s, cut to B 3 s, cut to C 3 s, back to A 3 s. No tweening.
+const poseAt = (t) => (t < 3 ? 'A' : t < 6 ? 'B' : t < 9 ? 'C' : 'A');
+f.onSeek((t) => { const p = poseAt(t); for (const g of document.querySelectorAll('.pose')) g.style.display = g.dataset.p === p ? '' : 'none'; });
+</script></body></html>
