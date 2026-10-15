@@ -82,7 +82,7 @@ html,body{background:#06374c}
 // film.js waits for document.fonts.ready, which can resolve before a font used only by late-created text has been requested: load the ones this scene uses explicitly
 { const fl = Promise.all(['400 40px "Architects Daughter"', '400 20px "Special Elite"', '400 20px Anton', '500 20px Inter', '700 20px Inter', '800 20px Inter'].map((f) => document.fonts.load(f, 'AaBb\u2212\u00b2\u00b7?')));
   try { Object.defineProperty(document.fonts, 'ready', { get: () => fl.then(() => undefined), configurable: true }); } catch (e) {} }
-</script><script src="data/s04-timing.js"></script><script src="assets/bodies/anchors.js"></script>
+</script><script src="data/s04-timing.js"></script><script src="assets/bodies/holed/anchors.js"></script>
 <script>
 const D = __D, film = __film, $ = (i) => document.getElementById(i), mk = D.mk;
 D.defs();
@@ -122,10 +122,10 @@ film.onSeek((t) => {
 draw(path('M22 22H1258V698H22Z', { 'stroke-width': 4 }), 1.0, 2.4, { ease: eo });
 draw(path('M34 34H1246V686H34Z', { 'stroke-width': 1.5 }), 1.2, 2.6, { ease: eo });
 for (const d of ['M640 22V46', 'M640 698V674', 'M22 360H46', 'M1258 360H1234']) draw(path(d), 1.4, 2.4);
-const TB = { x: 740, y: 596, w: 360, h: 94 };
+const TB = { x: 700, y: 596, w: 300, h: 94 };
 draw(path(`M${TB.x} ${TB.y}H${TB.x + TB.w}V${TB.y + TB.h}H${TB.x}Z`, { 'stroke-width': 3.5 }), 1.8, 3.0, { ease: eo });
-draw(path(`M${TB.x} ${TB.y + 44}H${TB.x + TB.w}M${TB.x + 200} ${TB.y + 44}V${TB.y + TB.h}`, { 'stroke-width': 2 }), 2.4, 3.4);
-dtext('SOLANA BUNKER', TB.x + 14, TB.y + 3, 36, 2.7, 3.7, { css: 'letter-spacing:.04em' });
+draw(path(`M${TB.x} ${TB.y + 44}H${TB.x + TB.w}M${TB.x + 170} ${TB.y + 44}V${TB.y + TB.h}`, { 'stroke-width': 2 }), 2.4, 3.4);
+dtext('SOLANA BUNKER', TB.x + 12, TB.y + 5, 31, 2.7, 3.7, { css: 'letter-spacing:.04em' });
 // ---------- 1. the equation ("nerding out on math"), the question, the headline ----------
 const tMath = W('a2', 'math'), tNerd = W('a2', 'nerding'), tFasc = W('c1', 'fascinating'), tResearch = W('b2', 'research');
 const tCan = W('c2', 'Can'), tBunkE = W('c2', 'bunker', false);
@@ -156,7 +156,7 @@ film.onSeek((t) => {
 // ---------- 2. the Ed25519 curve, keyholes, the PDA off the curve ----------
 const L2 = group(ink), L2T = mk('div', 'abs', 'inset:0', texts);
 film.onSeek((t) => { const o = 1 - .86 * pr(t, 31.1, 31.7) - .14 * pr(t, 40.9, 41.5); L2.style.opacity = o; L2T.style.opacity = o; });
-const CV = { x: 680, y: 390, R: 150 }, rad = (th) => CV.R * (1 + .09 * Math.cos(4 * th + .5) + .045 * Math.sin(2 * th + 1));
+const CV = { x: 760, y: 400, R: 150 }, rad = (th) => CV.R * (1 + .09 * Math.cos(4 * th + .5) + .045 * Math.sin(2 * th + 1));
 const pt = (th, k = 1) => [CV.x + k * rad(th) * Math.cos(th), CV.y + k * rad(th) * Math.sin(th)];
 {
   let d = ''; for (let i = 0; i <= 200; i++) { const th = i / 200 * Math.PI * 2, p = pt(th); d += (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1); }
@@ -171,7 +171,7 @@ const pt = (th, k = 1) => [CV.x + k * rad(th) * Math.cos(th), CV.y + k * rad(th)
   });
   dtext('every point on the curve\nhas a private key\nsomewhere', CV.x, CV.y - 30, 25, tAddr + .25, tAddr + 1.55, { center: true, parent: L2T, css: 'text-align:center' });
   // compass swings (pivot = curve centre) and plots one point OFF the curve
-  const RO = 255, tPDA = W('d3', 'PDA'), A0 = 25 * Math.PI / 180, A1 = -52 * Math.PI / 180, tc0 = tPDA - .12, tc1 = tPDA + .55;
+  const RO = 225, tPDA = W('d3', 'PDA'), A0 = 25 * Math.PI / 180, A1 = -12 * Math.PI / 180, tc0 = tPDA - .12, tc1 = tPDA + .55;
   const OFF = [CV.x + RO * Math.cos(A1), CV.y + RO * Math.sin(A1)];
   const arc = path(`M${CV.x + RO * Math.cos(A0)} ${CV.y + RO * Math.sin(A0)}A${RO} ${RO} 0 0 0 ${OFF[0]} ${OFF[1]}`, { 'stroke-width': 3, stroke: ACC }, L2);
   draw(arc, tc0 + .05, tc1);
@@ -193,31 +193,33 @@ const pt = (th, k = 1) => [CV.x + k * rad(th) * Math.cos(th), CV.y + k * rad(th)
   const og = group(L2, { style: 'opacity:0' }); el('circle', { cx: OFF[0], cy: OFF[1], r: 13, fill: ACC, stroke: 'none' }, og); el('circle', { cx: OFF[0], cy: OFF[1], r: 27, stroke: ACC, 'stroke-width': 5 }, og);
   const tO = tc1 + .05, tThink = W('e1', 'think');
   film.onSeek((t) => { const p = pr(t, tO, tO + .2); let o = p > 0 ? 1 : 0; if (t > 23.45 && t < 26.9) o = (Math.floor((t - 23.45) * 3.5) % 2) ? .15 : 1; og.style.opacity = o; og.style.transformBox = 'fill-box'; og.style.transformOrigin = 'center'; og.style.transform = `scale(${p > 0 ? eb(p) : 0})`; });
-  dtext('NO PRIVATE KEY\nEXISTS', OFF[0] + 44, OFF[1] - 34, 40, tO + .08, 23.4, { cls: 'acc', parent: L2T });
+  dtext('NO PRIVATE\nKEY EXISTS', OFF[0] + 30, OFF[1] + 30, 34, tO + .08, 23.4, { cls: 'acc', parent: L2T });
 }
 // ---------- the characters ----------
-const HK = 120.4, CHINX = 345, CHINY = 890;   // head height in figure units; chin position in the 760x1100 key
-const KS = { phys: .879, other: .704 };       // scene px per PNG px (body 800 / 500 px tall)
+const CHINX = 345, FACE_TOP = 225, FACE_H = 665;   // key frame (760x1100): chin x, hairline y, hairline-to-chin px (the face)
 const edl = S4.edl;
 const pyr = (x) => { const f = Math.floor(x), d = x - f; return d < .5 ? f : d > .5 ? f + 1 : (f % 2 === 0 ? f : f + 1); };   // python round(): pipeline/s04-heads.py numbers the frames with it
 const spriteInfo = (who) => { const s = edl.filter((x) => x.who === who), f0 = pyr(s[0].out_in * 30), l = s[s.length - 1]; return { f0, n: pyr(l.out_in * 30) - f0 + pyr((l.out_out - l.out_in) * 30) + 3 }; };
-function makeChar(id, who, poses, k, hat) {
-  const root = mk('div', 'char', '', stage); root.id = id;
-  const info = spriteInfo(who), A = BODIES[poses[0]], hs = HK * A.S / 845, imgs = {};
-  const bodies = {}, fronts = {};
-  for (const p of poses) bodies[p] = mk('img', '', 'left:0;top:0;display:none', root);
-  const hd = mk('div', 'hd', `left:${A.anchor.x - CHINX * hs}px;top:${A.anchor.y - CHINY * hs}px;width:${760 * hs}px;height:${1100 * hs}px`, root);
-  for (const p of poses) fronts[p] = mk('img', '', 'left:0;top:0;display:none', root);
-  for (const p of poses) { bodies[p].src = `assets/bodies/${p}.png`; fronts[p].src = `assets/bodies/${p}-front.png`; }
-  const dw = 760 * hs, dh = 1100 * hs, cols = 20, rows = Math.ceil(info.n / cols);   // one sprite sheet per character (pipeline/s04-heads.py)
+// A character = Liam's head sprite (behind) + a generated body PNG with the face oval cut out (in front, so the collar covers the neck) [+ hat overlay].
+// poses: { name: { file, mirror, hat } }; k = scene px per PNG px (chosen so the face, hairline to chin, equals the oval's height on that body); pivot = PNG point the transform turns about.
+function makeChar(id, who, poses, k, pivot) {
+  const root = mk('div', 'char', `width:1024px;height:1536px;transform-origin:${pivot[0]}px ${pivot[1]}px`, stage); root.id = id;
+  const info = spriteInfo(who), hs = GEN.FACE / FACE_H, dw = 760 * hs, dh = 1100 * hs, cols = 20, rows = Math.ceil(info.n / cols);
+  const hd = mk('div', 'hd', `width:${dw}px;height:${dh}px`, root);
   const sp = mk('div', '', `position:absolute;left:0;top:0;width:${dw}px;height:${dh}px;background:url(heads/${who}.png) 0 0/${cols * dw}px ${rows * dh}px no-repeat`, hd);
-  if (hat) hd.insertAdjacentHTML('beforeend', `<svg viewBox="0 0 760 1100" width="${760 * hs}" height="${1100 * hs}" style="position:absolute;left:0;top:0;overflow:visible"><path d="M-30 262Q-40 -70 340 -80Q720 -70 700 262Z" fill="#f2c12e" stroke="#0b1120" stroke-width="14"/><path d="M-70 250H740V300H-70Z" fill="#d9a51a" stroke="#0b1120" stroke-width="14" stroke-linejoin="round"/><path d="M300 -80V250M380 -80V250" stroke="#d9a51a" stroke-width="22"/><circle cx="340" cy="120" r="62" fill="#4a525c" stroke="#0b1120" stroke-width="12"/><circle cx="340" cy="120" r="38" fill="#fff9c9"/></svg>`);
+  const wr = {};
+  for (const [name, d] of Object.entries(poses)) {
+    const w = mk('div', '', `position:absolute;left:0;top:0;width:1024px;height:1536px;display:none;${d.mirror ? 'transform:scaleX(-1);' : ''}`, root);
+    mk('img', '', 'left:0;top:0', w).src = 'assets/bodies/holed/' + d.file + '.png';
+    const g = GEN.bodies[d.file]; d.cx = d.mirror ? 1024 - g.cx : g.cx; d.top = g.bot - GEN.FACE;
+    if (d.hat) mk('img', '', `left:${g.cx - 512}px;top:0`, w).src = 'assets/bodies/4-engineer-overlay-hardhat.png';
+    wr[name] = w;
+  }
   let cur = -1, pose = '';
-  const api = { root, k,
+  return { root, k,
     setHead(t) { const i = Math.max(0, Math.min(info.n - 1, Math.round(t * 30 + 1e-6) - info.f0)); if (i !== cur) { sp.style.backgroundPosition = `${-(i % cols) * dw}px ${-Math.floor(i / cols) * dh}px`; cur = i; } },
-    setPose(p) { if (p === pose) return; pose = p; for (const q of poses) { const on = q === p ? 'block' : 'none'; bodies[q].style.display = on; fronts[q].style.display = on; } },
-    place(px, py, rot, sc) { root.style.transform = `translate(${px - 320}px,${py - 700}px) rotate(${rot}deg) scale(${k * sc})`; } };
-  return api;
+    setPose(p) { if (p === pose) return; pose = p; for (const q in wr) wr[q].style.display = q === p ? 'block' : 'none'; const d = poses[p]; hd.style.left = (d.cx - CHINX * hs) + 'px'; hd.style.top = (d.top - FACE_TOP * hs) + 'px'; },
+    place(px, py, rot, sc) { root.style.transform = `translate(${px - pivot[0]}px,${py - pivot[1]}px) rotate(${rot}deg) scale(${k * sc})`; } };
 }
 // ---------- 3. the pump-style page, coins, the shatter ----------
 const PUMP = { x: 370, y: 125, w: 560, h: 460 };
@@ -278,36 +280,39 @@ const CC = [PUMP.x + 290, PUMP.y + 220];
   film.onSeek((t) => { const p = pr(t, tS, tS + .16); sp.style.opacity = (p > 0 ? 1 : 0) * (1 - pr(t, 41, 41.6)); sp.style.transform = `rotate(-6deg) scale(${lerp(2.6, 1, p)})`; });
 }
 // ---------- the three characters ----------
-const phys = makeChar('phys', 'physicist', ['physicist-point'], KS.phys), joe = makeChar('joe', 'joe', ['joe-rest', 'joe-up'], KS.other), eng = makeChar('eng', 'engineer', ['eng-walk1', 'eng-walk2', 'eng-point'], KS.other, true);
+const KP = .5795, KO = .3598;   // 153 px / 95 px head sprites over a 231 px face
+const phys = makeChar('phys', 'physicist', { pt: { file: '5-physicist-professor-point' } }, KP, [395, 900]);
+const joe = makeChar('joe', 'joe', { walk: { file: '2-street-walking' }, rest: { file: '2-street-hands-in-pockets' }, up: { file: '2-street-celebrate' } }, KO, [512, 1450]);
+const eng = makeChar('eng', 'engineer', { pt: { file: '4-engineer-point-clipboard', mirror: 1, hat: 1 }, key: { file: '4-engineer-holding-key', mirror: 1, hat: 1 }, thumb: { file: '4-engineer-thumbs-up', mirror: 1, hat: 1 } }, KO, [512, 1450]);
 const FLOOR_Y = 712;
 // physicist: tilts in from the left edge at 25 degrees, points at the curve, freezes when his part is over
 {
   const tIn = W('d1', 'As') - .55, tOut = W('e1', 'is', false) + .35;
-  film.onSeek((t) => { phys.setPose('physicist-point'); phys.setHead(t);
+  film.onSeek((t) => { phys.setPose('pt'); phys.setHead(t);
     const p = pr(t, tIn, tIn + .9), e = eb(p), sway = (1 - pr(t, tOut, tOut + .01)) * Math.sin((t - tIn) * 2.4) * 1.1;
     phys.root.style.display = t >= tIn ? 'block' : 'none';
-    phys.place(lerp(-300, 78, e), 758 + (1 - e) * 50, lerp(8, 25, e) + sway, 1); });
+    phys.place(lerp(-330, 147, e), 670 + (1 - e) * 50, lerp(8, 25, e) + sway, 1); });
 }
-// Joe: slides up small from the bottom centre, grows while tilting from side to side, hands up on "risk", freezes
+// Joe: slides up small from the bottom centre, grows while tilting from side to side (walking pose), rests, hands up on "risk", freezes
 {
-  const tIn = W('f1', 'So') - .45, tGrow = tIn + 3.5, tEnd = W('f2', 'risk', false) + .4, tUp = tShat + .08;
-  film.onSeek((t) => { joe.setHead(t); joe.setPose(t >= tUp ? 'joe-up' : 'joe-rest');
+  const tIn = W('f1', 'So') - .45, tGrow = tIn + 3.5, tUp = tShat + .08;
+  film.onSeek((t) => { joe.setHead(t); joe.setPose(t >= tUp ? 'up' : t >= tGrow ? 'rest' : 'walk');
     const p = pr(t, tIn, tGrow), sc = lerp(.15, 1, eo(p)), tilt = 7 * Math.sin((t - tIn) * 2 * Math.PI / .85) * (1 - pr(t, tGrow - .6, tGrow + .35));
     joe.root.style.display = t >= tIn ? 'block' : 'none';
     joe.place(600, FLOOR_Y + (1 - eo(p)) * 80, tilt, sc); });
 }
-// engineer: walks in from the right (two stop-frame leg poses), stops in the right third, points at the vault with the clipboard on the other arm
+// engineer: cue = the vault door starts drafting. Walks in off the right (two stop-frame poses), fully in frame 1.5 s later, then points (mirrored so he points left at the door)
 {
-  const tIn = W('g1', 'So') - .95, tStop = tIn + 2.9, tPoint = W('g2', 'A') - .2, tRest = W('g3', 'algorithm', false) + .25, tPoint2 = W('h1', 'we') - .1;
+  const tA = W('g2', 'Solana') - .1, tIn = tA - .3, tStop = tIn + 1.5, tRest = W('g3', 'algorithm', false) + .25, tPoint2 = W('h1', 'we') - .1, X = 1086;
   film.onSeek((t) => { eng.setHead(t);
-    const walking = t >= tIn && t < tStop, ph = Math.floor((t - tIn) / .22) % 2;
-    eng.setPose(walking ? (ph ? 'eng-walk2' : 'eng-walk1') : (t >= tPoint && (t < tRest || t >= tPoint2) ? 'eng-point' : 'eng-walk1'));
+    const walking = t >= tIn && t < tStop, ph = Math.floor((t - tIn) / .2) % 2;
+    eng.setPose(walking ? (ph ? 'key' : 'pt') : (t >= tRest && t < tPoint2 ? 'thumb' : 'pt'));
     eng.root.style.display = t >= tIn ? 'block' : 'none';
-    const p = pr(t, tIn, tStop), bob = walking ? -Math.abs(Math.sin((t - tIn) * Math.PI / .22)) * 9 : 0;
-    eng.place(lerp(1560, 1165, p), FLOOR_Y + bob, 0, 1); });
+    const p = pr(t, tIn, tStop), bob = walking ? -Math.abs(Math.sin((t - tIn) * Math.PI / .2)) * 9 : 0, sway = walking ? 3 * Math.sin((t - tIn) * Math.PI / .2) : 0;
+    eng.place(lerp(1560, X, p), FLOOR_Y + bob, sway, 1); });
 }
 // ---------- 4. the vault door drafts itself ----------
-const VC = { x: 935, y: 262, R: 150 };
+const VC = { x: 880, y: 262, R: 150 };
 function vault(parent, cx, cy, R, level, anim) {
   const o = { rings: [], bolts: [], spokes: [], hinges: [], extra: [] }, sw = [3, 3.5, 4.5][level], mp = (d, a) => path(d, Object.assign({ 'stroke-width': sw }, a), parent);
   const circ = (r) => `M${cx} ${cy}m${-r} 0a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 ${-2 * r} 0`;
@@ -336,9 +341,9 @@ function vault(parent, cx, cy, R, level, anim) {
   dtext('SOLANA BUNKER VAULT DOOR', VC.x, VC.y - VC.R - 62, 24, tA + .2, tA + 1.4, { center: true });
   // title block cells
   const tShe = tA + 6.0;
-  dtext('SHEET 1 OF 3', TB.x + 14, TB.y + 52, 24, tShe, tShe + .7);
+  dtext('SHEET 1 OF 3', TB.x + 10, TB.y + 54, 21, tShe, tShe + .7);
   const revs = [['A', tShe + .8, W('h2', 'three')], ['B', W('h2', 'three'), W('h2', 'times')], ['C', W('h2', 'times'), 999]];
-  for (const [ch, a, b] of revs) { const e = mk('div', 'dt acc', `left:${TB.x + 212}px;top:${TB.y + 48}px;font-size:28px;transform-origin:0 50%`, texts, 'REV ' + ch);
+  for (const [ch, a, b] of revs) { const e = mk('div', 'dt acc', `left:${TB.x + 182}px;top:${TB.y + 50}px;font-size:26px;transform-origin:0 50%`, texts, 'REV ' + ch);
     film.onSeek((t) => { const p = pr(t, a, a + .12); e.style.opacity = (t >= a && t < b) ? 1 : 0; e.style.transform = `scaleY(${p > 0 ? p : 0})`; }); }
   // everything of beat 2 is already faded: the sheet is clean for the door
   window.VAULT_T = tA;
