@@ -1,0 +1,28 @@
+/* Shared dossier world for s01-title and s03-conspiracy: desk seen from above, dark green blotter, warm lamp top left,
+   manila folders, photocopied paper with toner grain. Fonts come from fonts.css; the hand font is a macOS system font on dev-mac. */
+:root{--toner:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='n' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='7' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1.1 -.42'/></filter><rect width='320' height='320' filter='url(%23n)'/></svg>");
+--fibre:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='n' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='fractalNoise' baseFrequency='.04 .5' numOctaves='3' seed='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .25  0 0 0 0 .15  0 0 0 0 .05  0 0 0 .55 -.12'/></filter><rect width='400' height='400' filter='url(%23n)'/></svg>");
+--ink:#1b1a17;--red:#c4161c;--hand:'Bradley Hand','Bradley Hand Bold','Segoe Print',cursive}
+html,body{background:#0b1a13;font-family:'Special Elite','Liberation Serif',serif;color:var(--ink)}
+.world{position:absolute;inset:0;overflow:hidden;background:#17382a}
+.blotter{position:absolute;inset:-40px;background:
+  radial-gradient(ellipse 70% 80% at 18% 0%,#2a5a43 0,#1d4332 40%,#12291f 100%)}
+.blotter:before{content:"";position:absolute;inset:0;background:var(--fibre);opacity:.9;mix-blend-mode:overlay}
+.blotter:after{content:"";position:absolute;inset:0;background:var(--toner);opacity:.45}
+#cam{position:absolute;left:0;top:0;width:1280px;height:720px;transform-origin:0 0}
+.paper{position:absolute;background:#eee5cd;box-shadow:0 2px 3px rgba(0,0,0,.35),0 10px 22px rgba(0,0,0,.45)}
+.paper:before{content:"";position:absolute;inset:0;background:var(--toner);opacity:.55;pointer-events:none}
+.paper:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,240,200,.35),rgba(120,90,40,.10) 70%);pointer-events:none}
+.ty{font-family:'Special Elite',serif;white-space:pre;color:#141310;text-shadow:.6px 0 0 rgba(20,19,16,.55),-.4px .3px 0 rgba(20,19,16,.35)}
+.manila{background:linear-gradient(135deg,#dfbb78,#cfa75c 60%,#c29a4e);box-shadow:0 3px 4px rgba(0,0,0,.35),0 16px 30px rgba(0,0,0,.5)}
+.manila:before{content:"";position:absolute;inset:0;background:var(--fibre),var(--toner);background-blend-mode:multiply;opacity:.6;pointer-events:none}
+.stamp{position:absolute;font-family:'Anton',sans-serif;text-transform:uppercase;color:var(--red);border:7px solid var(--red);border-radius:8px;padding:2px 22px 0;letter-spacing:.06em;line-height:1.08;mix-blend-mode:multiply;filter:url(#rough);white-space:nowrap;opacity:.93}
+.lamp{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 75% 70% at 10% -8%,rgba(255,214,140,.40),rgba(255,190,100,.10) 50%,transparent 75%),radial-gradient(ellipse 100% 100% at 45% 45%,transparent 55%,rgba(0,0,0,.55) 100%);mix-blend-mode:normal}
+.dim{position:absolute;inset:0;pointer-events:none;background:#050403;opacity:0}
+.grain{position:absolute;inset:0;pointer-events:none;background:var(--toner);opacity:.14;mix-blend-mode:multiply}
+.hand{font-family:var(--hand);font-weight:700}
+.pin{position:absolute;width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ff8f8f,#d11 55%,#700);box-shadow:3px 5px 5px rgba(0,0,0,.5)}
+.pin.b{background:radial-gradient(circle at 35% 30%,#9cc8ff,#2a63d8 55%,#10306f)}
+.pin.y{background:radial-gradient(circle at 35% 30%,#fff4a0,#e0b800 55%,#7a6200)}
+.clip{position:absolute;width:44px;height:120px}
+.puff{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(235,225,200,.75),rgba(235,225,200,0) 70%);opacity:0}

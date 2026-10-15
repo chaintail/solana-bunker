@@ -1,0 +1,78 @@
+<!doctype html><html data-duration="7" data-fps="30"><head><meta charset="utf-8">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css"><link rel="stylesheet" href="dossier.css">
+<style>
+#fdrop{position:absolute;left:290px;top:62px;width:700px;height:600px;transform-origin:350px 300px}
+.abs{position:absolute}
+#fold{position:absolute;inset:0;perspective:2400px;perspective-origin:50% 50%}
+#shadow{position:absolute;left:-10px;top:12px;width:720px;height:610px;border-radius:14px;background:rgba(0,0,0,.55);filter:blur(22px);opacity:0}
+#base{left:0;top:0;width:700px;height:600px;border-radius:6px 14px 14px 14px}
+#base .tab{position:absolute;right:50px;top:-44px;width:220px;height:48px;border-radius:12px 12px 0 0;background:#c9a255}
+#pg{left:30px;top:26px;width:640px;height:548px;transform:rotate(-.6deg)}
+#pg .bars{position:absolute;left:44px;right:44px;bottom:50px;height:150px;background:repeating-linear-gradient(180deg,rgba(40,38,32,.5) 0 6px,transparent 6px 26px);opacity:.5}
+#cover{position:absolute;left:0;top:0;width:700px;height:600px;transform-origin:0 50%;transform-style:preserve-3d}
+#cover .face{position:absolute;inset:0;border-radius:6px 14px 14px 14px;backface-visibility:hidden}
+#cover .front .tab{position:absolute;left:44px;top:-46px;width:240px;height:50px;border-radius:12px 12px 0 0;background:#d9b46c;box-shadow:0 -2px 3px rgba(0,0,0,.2)}
+#cover .back{transform:rotateY(180deg);background:linear-gradient(135deg,#c79f55,#b88d44);box-shadow:inset 0 0 30px rgba(80,50,10,.45)}
+#label{left:44px;top:70px;width:500px;height:104px}
+#label .ty{position:absolute;left:24px;top:20px;font-size:56px;line-height:64px;letter-spacing:.02em}
+#cls{left:96px;top:280px;font-size:104px;border-width:10px;padding:4px 28px 0}
+#sticky{position:absolute;left:408px;top:370px;width:250px;height:214px;background:linear-gradient(160deg,#ffe96a,#f6d63c);box-shadow:0 3px 3px rgba(0,0,0,.3),6px 12px 18px rgba(0,0,0,.35);transform-origin:50% 0}
+#sticky .hand{position:absolute;left:18px;top:34px;width:216px;font-size:56px;line-height:56px;color:#2a2410;text-align:center}
+.puff{width:150px;height:110px}
+</style></head><body>
+<div class="world" id="w"><div class="blotter"></div>
+<div id="cam"><div id="thump" style="position:absolute;inset:0">
+  <div id="shadow"></div>
+  <div id="fdrop"><div id="fshake" class="abs" style="inset:0"><div id="flift" class="abs" style="inset:0;transform-origin:350px 300px"><div id="fold">
+    <div id="base" class="manila abs"><div class="tab"></div><div id="pg" class="paper"><div class="bars"></div></div></div>
+    <div id="cover"><div class="face back"></div>
+      <div class="face front manila" id="front"><div class="tab"></div>
+        <div id="label" class="paper"><div class="ty" id="lt"></div></div>
+        <div id="cls" class="stamp">Classified</div>
+        <div id="sticky"><div class="hand">don't close the tab</div></div>
+      </div></div>
+  </div></div></div></div>
+</div></div>
+<div class="lamp"></div><div class="dim" id="dim"></div><div class="grain"></div>
+</div>
+<script src="lib/film.js"></script><script src="lib/dossier.js"></script><script src="data/conspiracy-timing.js"></script>
+<script>
+const D = __D, film = __film, $ = (i) => document.getElementById(i);
+D.defs();
+const cam = $('cam'), fd = $('fdrop'), W = (p, w) => D.W(p, w);
+// 1 drop (0.00-0.95), lands slightly askew; dust puff + camera thump
+film.anim(fd, [
+  { transform: 'translateY(-860px) rotate(6deg)' },
+  { transform: 'translateY(0) rotate(-3deg)', offset: .72, easing: 'ease-out' },
+  { transform: 'translateY(-34px) rotate(-3.6deg)', offset: .86, easing: 'ease-in' },
+  { transform: 'translateY(0) rotate(-3deg)' }], 0.0, 0.95, { easing: 'cubic-bezier(.55,0,.95,.5)' });
+film.anim($('shadow'), [{ opacity: 0, transform: 'translate(120px,-50px) scale(.8) rotate(6deg)' }, { opacity: .85, transform: 'translate(0,0) scale(1) rotate(-3deg)', offset: .72 }, { opacity: .85, transform: 'rotate(-3deg)' }], 0, 0.95);
+film.anim($('thump'), [{ transform: 'translate(0,0)' }, { transform: 'translate(0,8px)', offset: .25 }, { transform: 'translate(0,-3px)', offset: .6 }, { transform: 'translate(0,0)' }], 0.68, 0.3);
+const rnd = film.rng(11);
+[[110, 650, -1], [260, 668, -.4], [420, 672, .3], [600, 664, .8], [820, 654, 1.2], [950, 600, 1.6], [330, 640, -.8]].forEach(([x, y, d], i) => {
+  const p = D.mk('div', 'puff', `left:${x - 75}px;top:${y - 55}px;transform-origin:50% 60%`, $('cam'));
+  film.anim(p, [{ opacity: 0, transform: 'translate(0,0) scale(.3)' }, { opacity: .85, transform: `translate(${d * 30}px,-18px) scale(1)`, offset: .25 }, { opacity: 0, transform: `translate(${d * 90}px,-50px) scale(2.3)` }], 0.72 + i * .015, 0.85, { easing: 'ease-out' });
+});
+// 2 label types itself, then CLASSIFIED slams
+D.type($('lt'), 'SOLANA BUNKER', 1.05, 2.25, true);
+D.slam($('cls'), 2.38, -13, 3.2, .13);
+film.anim($('fshake'), [{ transform: 'translate(0,0) rotate(0)' }, { transform: 'translate(0,5px) rotate(.4deg)', offset: .3 }, { transform: 'translate(0,-2px)', offset: .6 }, { transform: 'translate(0,0)' }], 2.5, .3);
+// 3 "Nobody?": sticky slides in, clip drops on, wobble on "close the tab"
+const tN = W('t1', 'Nobody');
+const st = $('sticky');
+st.style.opacity = 0;
+film.anim(st, [{ opacity: 0, transform: 'translateX(620px) rotate(14deg)' }, { opacity: 1, transform: 'translateX(0) rotate(5deg)', offset: .85 }, { opacity: 1, transform: 'translateX(0) rotate(4deg)' }], tN, .42, { easing: D.ease.out });
+const clipWrap = D.mk('div', '', 'position:absolute;left:0;top:0;width:100%;height:100%', st);
+const clp = D.clipSvg(clipWrap, 'left:104px;top:-52px');
+film.anim(clp, [{ opacity: 0, transform: 'translateY(-80px)' }, { opacity: 1, transform: 'translateY(0)' }], tN + .38, .14, { easing: 'ease-in' });
+const tClose = W('t1', 'close');
+film.anim(clipWrap, [{ transform: 'rotate(0)' }, { transform: 'rotate(-3deg)' }, { transform: 'rotate(2.4deg)' }, { transform: 'rotate(-1.6deg)' }, { transform: 'rotate(0)' }], tClose, .5);
+// 4 "I swear this gets good": the cover lifts, then we push in on the first page
+const tSw = W('t1', 'swear') - .18;
+film.anim($('cover'), [{ transform: 'rotateY(0deg)' }, { transform: 'rotateY(-34deg)', offset: .22 }, { transform: 'rotateY(-176deg)' }], tSw, 1.15, { easing: 'cubic-bezier(.5,0,.3,1)' });
+film.anim($('flift'), [{ transform: 'rotate(0) scale(1)' }, { transform: 'rotate(.8deg) scale(1.01)' }], tSw, 1.15, { easing: 'ease-in-out' });
+film.anim($('pg'), [{ transform: 'rotate(-.6deg) translateY(0)' }, { transform: 'rotate(-.6deg) translateY(-3px)' }], tSw, 1.1);
+const P = { x: 640, y: 235 }, S = 2.7;
+film.anim(cam, [{ transform: 'translate(0,0) scale(1)' }, { transform: `translate(${640 - P.x * S}px,${360 - P.y * S}px) scale(${S})` }], 5.35, 1.6, { easing: 'cubic-bezier(.55,0,.25,1)' });
+// the shadow stays under the base once the cover has gone: keep it
+</script></body></html>
