@@ -191,13 +191,16 @@ function makeFig(parent, bodyKey, headKind) {
   const clip = `polygon(0 ${c - 6}px,${o - 59}px ${c - 6}px,${o - 49}px ${c + 16}px,${o - 8}px ${c + 41}px,${o + 10}px ${c + 41}px,${o + 51}px ${c + 16}px,${o + 60}px ${c - 6}px,1024px ${c - 6}px,1024px 1536px,0 1536px)`;
   const hl = o - 338 * HK, ht = c - 905 * HK, hs = (760 * HK) / 152;
   let head;
-  if (headKind === 'narr') head = `<div class="hd" style="transform:translate(${hl}px,${ht}px) scale(${hs})">` + [0, 1, 2, 3].map((i) => `<img src="heads/s06-narr-0${i}.png">`).join('') + '</div>';
+  if (headKind === 'narr') head = `<div class="hd" data-base="translate(${hl}px,${ht}px) scale(${hs})" style="transform:translate(${hl}px,${ht}px) scale(${hs})">` + [0, 1, 2, 3].map((i) => `<img src="heads/s06-narr-0${i}.png">`).join('') + '</div>';
   else head = `<img src="heads/s06-${headKind}.png" style="width:${760 * HK}px;height:${1100 * HK}px;left:${hl}px;top:${ht}px">`;
   el.innerHTML = `<img src="${b.src}" width="1024" height="1536" style="-webkit-mask-image:${mask};mask-image:${mask}">${head}<img src="${b.src}" width="1024" height="1536" style="clip-path:${clip}">`;
   el.dataset.ox = o; el.dataset.chin = c; parent.appendChild(el); return el;
 }
-// neck point (x,y) on screen, rotation deg, scale, mirror
-const place = (el, x, y, rot, s, flip = 1) => { el.style.transform = `translate(${x}px,${y}px) rotate(${rot}deg) scale(${s * flip},${s}) translate(${-el.dataset.ox}px,${-el.dataset.chin}px)`; };
+// neck point (x,y) on screen, rotation deg, scale, mirror. A mirrored body keeps an unmirrored head (the head is flipped back about the neck line x = ox).
+const place = (el, x, y, rot, s, flip = 1) => {
+  el.style.transform = `translate(${x}px,${y}px) rotate(${rot}deg) scale(${s * flip},${s}) translate(${-el.dataset.ox}px,${-el.dataset.chin}px)`;
+  const hd = el.querySelector('.hd'); if (hd) hd.style.transform = (flip < 0 ? `translate(${el.dataset.ox}px,0) scale(-1,1) translate(${-el.dataset.ox}px,0) ` : '') + hd.dataset.base;
+};
 const SHEET = 192, CELL_W = 152, CELL_H = 220;
 const cum = []; D.edl.reduce((a, e, i) => ((cum[i] = a), a + e.frames), 0);
 function narrFrame(t) {   // lip-sync frame; holds the last frame of the previous line through every pause (freeze when silent)
@@ -369,15 +372,15 @@ f.onSeek((t0) => {
     $('dhCard').setAttribute('transform', `translate(0 4) scale(1,${Math.max(.001, 1 - P(t, 27.15, 27.28)).toFixed(3)})`); show($('dhCard'), t < 27.28);
     $('dhFist').setAttribute('transform', sq); }
 
-  // narrator: pokes in from the top left for L2-L5 (mirrored), top right for L6-L7; lip-synced; frozen between lines
-  const TL = [T.narrIn, L.L5.out_out + .03], TR = [T.l6 + .40, 26.15];
-  let nOn = false, mir = false, pk = 0;
-  if (t >= TL[0] && t < TL[1] + .2) { nOn = true; mir = true; pk = t < TL[1] ? step(P(t, TL[0], TL[0] + .15), 3) : 1 - step(P(t, TL[1], TL[1] + .15), 3); }
-  if (t >= TR[0] && t < TR[1] + .2) { nOn = true; pk = t < TR[1] ? step(P(t, TR[0], TR[0] + .15), 3) : 1 - step(P(t, TR[1], TR[1] + .15), 3); }
-  show($('narrN'), nOn && pk > 0); setHead(narr, nf);
-  $('narrMirror').style.transform = mir ? 'scaleX(-1)' : '';
-  const back = (1 - pk) * 420, NX = 1130 - .643 * back, NY = 160 - .766 * back;
-  place(narr, NX, NY, 140, .42);
+  // narrator: side pokes, never more than 35 deg from upright (slide 4 style). L2-L5 from the LEFT edge, tilted 27 deg in, legs cut off by the edge,
+  // professor-point arm pointing right/down at the bouncer and the door; L6-L7 from the RIGHT edge, body mirrored (head not), pointing left at the form.
+  // Slides in and out horizontally in 3 stop-frame steps; lip-synced; frozen between lines.
+  const TL = [T.narrIn, L.L5.out_out + .03], TR = [T.l6 + .40, 26.15], NARR = { left: [118, 282, 27], right: [1162, 262, -27] };
+  let side = null, pk = 0;
+  if (t >= TL[0] && t < TL[1] + .2) { side = 'left'; pk = t < TL[1] ? step(P(t, TL[0], TL[0] + .15), 3) : 1 - step(P(t, TL[1], TL[1] + .15), 3); }
+  if (t >= TR[0] && t < TR[1] + .2) { side = 'right'; pk = t < TR[1] ? step(P(t, TR[0], TR[0] + .15), 3) : 1 - step(P(t, TR[1], TR[1] + .15), 3); }
+  show($('narrN'), side && pk > 0); setHead(narr, nf);
+  if (side) { const [x, y, r] = NARR[side], back = (1 - pk) * 380, fl = side === 'left' ? 1 : -1; place(narr, x - fl * back, y, r, .42, fl); }
 
   // bubbles, tags, glyphs
   const sb = t >= T.secret && t < T.getInFirst, db = t >= T.pw3 && t < T.getInFirst;
