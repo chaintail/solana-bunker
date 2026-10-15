@@ -5,7 +5,7 @@
 // With --still, writes <out>/still-<t>.png for each time instead of the frame sequence.
 // CHROME env overrides the browser binary (macOS: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome").
 import { spawn } from 'node:child_process';
-import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -20,7 +20,18 @@ const out = resolve(opt.out || join(here, '../../render', scene + (layer ? '-' +
 mkdirSync(out, { recursive: true });
 
 const port = 9800 + Math.floor(Math.random() * 400);
-const chrome = spawn(process.env.CHROME || '/usr/bin/google-chrome', ['--headless=new', `--remote-debugging-port=${port}`, `--user-data-dir=${mkdtempSync(join(tmpdir(), 'film-chrome-'))}`, '--no-first-run', '--hide-scrollbars', '--force-color-profile=srgb', '--allow-file-access-from-files', 'about:blank'], { stdio: 'ignore' });
+const profile = mkdtempSync(join(tmpdir(), 'film-chrome-'));
+const chrome = spawn(process.env.CHROME || '/usr/bin/google-chrome', ['--headless=new', `--remote-debugging-port=${port}`, `--user-data-dir=${profile}`, '--no-first-run', '--hide-scrollbars', '--force-color-profile=srgb', '--allow-file-access-from-files', 'about:blank'], { stdio: 'ignore', detached: true });   // own process group so helper processes die with it
+// Always quit this Chrome and delete its user-data-dir, on normal exit, errors, and SIGINT/SIGTERM/SIGHUP (leaked profiles filled dev-mac's disk).
+let cleaned = false;
+const cleanup = () => {
+  if (cleaned) return; cleaned = true;
+  try { process.kill(-chrome.pid, 'SIGKILL'); } catch { try { chrome.kill('SIGKILL'); } catch {} }
+  try { rmSync(profile, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 }); } catch {}
+};
+process.on('exit', cleanup);
+for (const sig of ['SIGINT', 'SIGTERM', 'SIGHUP']) process.on(sig, () => { cleanup(); process.exit(130); });
+process.on('uncaughtException', (e) => { console.error(e); cleanup(); process.exit(1); });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let ws;
 for (let i = 0; i < 60; i++) {
@@ -58,5 +69,5 @@ try {
     }
   }
   console.log('done ->', out);
-} finally { chrome.kill(); }
+} finally { cleanup(); }
 process.exit(0);
