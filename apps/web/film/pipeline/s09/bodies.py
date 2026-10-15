@@ -19,6 +19,17 @@ for n in POSES:
     chin = int(ys.max()); cx = float((xs.min() + xs.max()) / 2)
     m2 = ndi.binary_dilation(m, iterations=15); m2[chin + 8:] = False
     out = im.copy(); out[m2, 3] = 0
-    Image.fromarray(out.astype('uint8'), 'RGBA').save(DST + n.split('-', 1)[1] + '.png', optimize=True)
+    Image.fromarray(out.astype('uint8')).save(DST + n.split('-', 1)[1] + '.png', optimize=True)
     anch[n.split('-', 1)[1]] = {'cx': cx, 'chin': chin, 'top': int(ys.min())}
+# the lab coat's hand on its own layer (skin plus its outline), so the enlarged WHITEPAPER clipboard can sit between the body and the hand
+im = np.array(Image.open(SRC + '5-physicist-holding-clipboard.png').convert('RGBA')).astype(int)
+r, g, b, a = im[..., 0], im[..., 1], im[..., 2], im[..., 3]
+box = np.zeros(a.shape, bool); box[520:720, 300:470] = True
+skin = box & (r > 200) & (g > 160) & (g < 235) & (b > 110) & (b < 200) & (r - b > 40) & (a > 200)
+skin = ndi.binary_fill_holes(ndi.binary_closing(skin, iterations=3))
+lab, k = ndi.label(skin); skin = lab == (np.argmax(ndi.sum(skin, lab, range(1, k + 1))) + 1)
+ring = ndi.binary_dilation(skin, iterations=7) & ~skin & (r + g + b < 200) & (a > 120)
+hand = im.copy(); hand[~(ndi.binary_fill_holes(skin | ring) | ring), 3] = 0
+Image.fromarray(hand.astype('uint8')).save(DST + 'physicist-hand.png', optimize=True)
+ys, xs = np.nonzero(skin); print('hand bbox', xs.min(), xs.max(), ys.min(), ys.max())
 open(DST + 'anchors.js', 'w').write('window.ANCHORS_S09 = ' + json.dumps(anch) + ';\n'); print(anch)
