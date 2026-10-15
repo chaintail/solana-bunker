@@ -1,4 +1,4 @@
-<!doctype html><html data-duration="28.1" data-fps="30"><head><meta charset="utf-8">
+<!doctype html><html data-duration="30" data-fps="30"><head><meta charset="utf-8">
 <link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
 <style>
 /* Slide 6, a password is not a signature (docs/presentation/film-plan-s06.md; decisions from the plan review: the bouncer never speaks, the lab coat
@@ -148,6 +148,8 @@ svg{position:absolute;left:0;top:0;overflow:visible}
 
 <div class="L" id="wb"><svg width="1280" height="720" viewBox="0 0 1280 720"><g id="wbG"></g></svg><div id="wbNarr"></div></div>
 <div class="L" id="beam" style="mix-blend-mode:screen"></div>
+<svg width="0" height="0" style="position:absolute"><defs><filter id="rough" x="-8%" y="-8%" width="116%" height="116%"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="2" result="w"/><feDisplacementMap in="SourceGraphic" in2="w" scale="5" result="d"/><feTurbulence type="fractalNoise" baseFrequency=".75" numOctaves="2" seed="5" result="s"/><feColorMatrix in="s" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -3.2 3.05" result="m"/><feComposite in="d" in2="m" operator="in"/></filter></defs></svg>
+<div class="L" id="stampL" style="display:none"><div id="stamp" style="position:absolute;left:640px;top:350px;width:0;height:0"><div id="stampIn" style="position:absolute;left:0;top:0;transform-origin:0 0"><div style="position:absolute;left:0;top:0;transform:translate(-50%,-50%);font-family:Anton;font-size:190px;line-height:1.08;letter-spacing:.06em;text-transform:uppercase;color:#ff2b31;border:14px solid #ff2b31;border-radius:12px;padding:6px 40px 0;white-space:nowrap;filter:url(#rough)">Rejected</div></div></div></div>
 <div class="L" id="mathFlash" style="display:none"><div style="position:absolute;left:640px;top:360px;transform:translate(-50%,-50%) rotate(-4deg);font:150px Anton;color:#ffe600;-webkit-text-stroke:6px #000;paint-order:stroke fill;white-space:nowrap;text-shadow:6px 8px 0 #000">*the math*</div></div>
 <img src="heads/s06-bouncer.png" style="display:none"><img src="assets/bodies/1-suit-arms-crossed.png" style="display:none"><img src="assets/bodies/1-suit-point-right.png" style="display:none"><img src="assets/bodies/5-physicist-professor-point.png" style="display:none">
 
@@ -161,7 +163,6 @@ const show = (el, on) => { el.style.display = on ? '' : 'none'; };
 
 // ---------- slide 5 handoff: where the lab coat stands on the whiteboard in slide 5's last frame (neck point, scale). Change here when slide 5 exists.
 const S5_HANDOFF = { x: 215, y: 214, s: 0.42 };
-const FREEZE_AT = 27.40;          // tag: everything stops here
 const ADDR = 'ADLw7WkPsqngneGqoCKmGR17w16kmgA9q1WnxURt9Wod';   // vaults[].recipient_sol, artifacts/public-deployment.json
 const ADDR_SHORT = ADDR.slice(0, 6) + '…' + ADDR.slice(-8);
 
@@ -173,8 +174,14 @@ const T = {
   narrIn: L.L2.out_in - 0.15, problem: at('L2', 340.40), secret: at('L2', 342.48), pw: at('L2', 343.28), l2end: L.L2.out_out,
   whoever: L.L3.out_in, pw3: at('L3', 344.56), getsIn: at('L3', 345.44), l4: L.L4.out_in, nothing: at('L4', 347.28), where: at('L4', 348.32),
   getInFirst: at('L5', 351.76), first: at('L5', 352.72), l5end: L.L5.out_out, l6: L.L6.out_in, sig: at('L6', 354.64),
-  withdrawal: at('L7', 356.56), address: at('L7', 358.14), nothingElse: at('L7', 359.55), elseEnd: at('L7', 360.56), l7end: L.L7.out_out,
+  withdrawal: at('L7a', 356.56), address: at('L7a', 358.14), l7aEnd: L.L7a.out_out, l7b: L.L7b.out_in, slam: D.markers.find((m) => m.id === 'SFX_SLOT_SLAM').t,
 };
+// v3 tag timing: sign right after "address", form through the slot, door opens for the stick man and shuts, a speech pause on the shut door,
+// then the devil's attempt under "and nothing else", the slot slams on "else" (SFX_SLOT_SLAM in data/s06-edl.js), REJECTED, long hold
+Object.assign(T, { sign0: T.address + .80, sign1: T.address + 1.80, slot0: 24.00, shrink0: 24.10, squash0: 24.50, slotShut: 24.72,
+  door0: 24.95, hopIn: 25.15, doorClose: 25.45, narrOut: 25.30, devilUp: 26.40, hand0: T.l7b + .10, hand1: T.l7b + .45, dslot0: T.l7b + .20 });
+Object.assign(T, { stamp: T.slam + .35 }); T.freeze = T.stamp + .20;
+const FREEZE_AT = T.freeze;          // everything stops here (grain keeps running)
 window.__T = T;
 
 // ---------- characters: body PNG minus its grey oval + head + the same PNG below the collar line in front of the neck
@@ -305,7 +312,7 @@ function stickPos(t) {
     [T.problem, T.problem + .2, -120, 60, 640, 640, 60], [T.problem + .3, T.problem + .5, 60, 220, 640, 640, 60], [T.problem + .6, T.problem + .8, 220, 420, 640, 640, 60],
     [T.l2end + .12, T.l2end + .32, 420, 630, 640, 625, 70], [T.l2end + .42, T.l2end + .62, 630, 870, 625, 610, 60],
     [T.getInFirst + .05, T.getInFirst + .2, 870, 780, 610, 630, 40, -14], [T.getInFirst + .26, T.getInFirst + .41, 780, 700, 630, 645, 30, -8],
-    [26.00, 26.22, 700, 870, 645, 610, 60],
+    [T.hopIn, T.hopIn + .22, 700, 870, 645, 610, 60],
   ], [-200, 640, 0]);
 }
 
@@ -328,13 +335,13 @@ f.onSeek((t0) => {
   // door: slot (eyes on beat 2), swing open after L2, slam on the shove, open for the form, close behind the stick man; tag slam
   let sh = 0, eyes = false;                                  // shutter open fraction
   if (t >= T.pw && t < T.l2end) { sh = step(P(t, T.pw, T.pw + .2), 4) * (1 - step(P(t, T.l2end - .1, T.l2end), 2)); eyes = true; }
-  if (t >= 24.66 && t < 25.50) sh = step(P(t, 24.66, 24.78), 3) * (1 - step(P(t, 25.42, 25.50), 2));
-  if (t >= 26.90) sh = t < 27.28 ? step(P(t, 26.90, 27.00), 3) : 1 - P(t, 27.28, 27.32);
+  if (t >= T.slot0 && t < T.slotShut + .08) sh = step(P(t, T.slot0, T.slot0 + .12), 3) * (1 - step(P(t, T.slotShut, T.slotShut + .08), 2));
+  if (t >= T.dslot0) sh = t < T.slam - .04 ? step(P(t, T.dslot0, T.dslot0 + .10), 3) : 1 - P(t, T.slam - .04, T.slam);
   $('shutter').setAttribute('transform', `translate(${-92 * sh} 0)`); show($('eyes'), eyes);
   let ang = 0;
   if (t >= T.l2end && t < T.first - .12) ang = 72 * ease(P(t, T.l2end, T.l2end + .42));
   else if (t >= T.first - .12 && t < T.first + .01) ang = 72 * (1 - P(t, T.first - .12, T.first + .01));
-  if (t >= 25.70 && t < 26.45) ang = 72 * ease(P(t, 25.70, 26.20)) * (1 - P(t, 26.30, 26.45));
+  if (t >= T.door0 && t < T.doorClose + .15) ang = 72 * ease(P(t, T.door0, T.door0 + .45)) * (1 - P(t, T.doorClose, T.doorClose + .15));
   const shake = t >= T.first && t < T.first + .12 ? [3, -3, 2, -2][Math.floor((t - T.first) * 30) % 4] : 0;
   $('doorPanel').style.transform = `translateX(${shake}px) rotateY(${ang}deg)`;
   $('doorRefl').style.opacity = (.42 * Math.cos(ang * Math.PI / 180)).toFixed(3);
@@ -354,7 +361,7 @@ f.onSeek((t0) => {
   if (tip !== null) { const d = `M-400,450 L${tip},450 Q${tip + 60},450 ${tip + 60},410 Q${tip + 60},375 ${tip + 25},375`; $('hookPath').setAttribute('d', d); $('hookEdge').setAttribute('d', d); }
 
   // stick man
-  const [sx, sy, sr] = stickPos(t), stickIn = (t >= 26.22);
+  const [sx, sy, sr] = stickPos(t), stickIn = (t >= T.hopIn + .22);
   $('stickG').setAttribute('transform', `translate(${sx} ${sy}) rotate(${sr})`); show($('stick'), !stickIn && t >= T.problem - .01);
 
   // devil: rises behind (L3), whispers, shoves in (L5); tag: his own form, the slot slams on his fingers
@@ -362,20 +369,20 @@ f.onSeek((t0) => {
   if (t >= T.whoever && t < T.first - .12) { dvis = true; dy = lerp(820, 330, step(P(t, T.whoever, T.whoever + .25), 5));
     if (t >= T.pw3 + .14 && t < T.getsIn - .14) { const q = step(P(t, T.pw3 + .14, T.pw3 + .28), 3); dx = lerp(700, 668, q); dr = -14 * q; }
     if (t >= T.getInFirst) { const q = step(P(t, T.getInFirst, T.getInFirst + .3), 5); dx = lerp(700, 870, q); dy = lerp(330, 345, q); dr = q < 1 ? 10 : 0; } }
-  if (t >= 26.45) { dvis = true; dx = 1095; dy = lerp(820, 330, step(P(t, 26.45, 26.65), 5)); if (t >= 27.30) dr = 9; }
+  if (t >= T.devilUp) { dvis = true; dx = 1095; dy = lerp(820, 330, step(P(t, T.devilUp, T.devilUp + .2), 5)); if (t >= T.slam) dr = 9; }
   const dsc = t >= T.getInFirst && t < T.first ? 1 - .08 * P(t, T.getInFirst, T.getInFirst + .3) : 1;
   show($('devil'), dvis); $('devil').style.transform = `translate(${dx - 60}px,${dy - 87}px) rotate(${dr}deg) scale(${dsc})`;
   // devil's hand + his own form (tag)
-  show($('devilHand'), t >= 26.75);
-  if (t >= 26.75) { const q = step(P(t, 26.80, 27.15), 6), hx = lerp(1060, 826, q), hy = lerp(420, 262, q), sq = t >= 27.30 ? 'scale(1.12,.8)' : '';
+  show($('devilHand'), t >= T.hand0 - .05);
+  if (t >= T.hand0 - .05) { const q = step(P(t, T.hand0, T.hand1), 6), hx = lerp(1060, 826, q), hy = lerp(420, 262, q), sq = t >= T.slam ? 'scale(1.12,.8)' : '';
     $('dhG').setAttribute('transform', `translate(${hx} ${hy})`);
-    $('dhCard').setAttribute('transform', `translate(0 4) scale(1,${Math.max(.001, 1 - P(t, 27.15, 27.28)).toFixed(3)})`); show($('dhCard'), t < 27.28);
+    $('dhCard').setAttribute('transform', `translate(0 4) scale(1,${Math.max(.001, 1 - P(t, T.hand1, T.hand1 + .13)).toFixed(3)})`); show($('dhCard'), t < T.hand1 + .13);
     $('dhFist').setAttribute('transform', sq); }
 
   // narrator: side pokes, never more than 35 deg from upright (slide 4 style). L2-L5 from the LEFT edge, tilted 27 deg in, legs cut off by the edge,
   // professor-point arm pointing right/down at the bouncer and the door; L6-L7 from the RIGHT edge, body mirrored (head not), pointing left at the form.
   // Slides in and out horizontally in 3 stop-frame steps; lip-synced; frozen between lines.
-  const TL = [T.narrIn, L.L5.out_out + .03], TR = [T.l6 + .40, 26.15], NARR = { left: [118, 282, 27], right: [1162, 262, -27] };
+  const TL = [T.narrIn, L.L5.out_out + .03], TR = [T.l6 + .40, T.narrOut], NARR = { left: [118, 282, 27], right: [1162, 262, -27] };
   let side = null, pk = 0;
   if (t >= TL[0] && t < TL[1] + .2) { side = 'left'; pk = t < TL[1] ? step(P(t, TL[0], TL[0] + .15), 3) : 1 - step(P(t, TL[1], TL[1] + .15), 3); }
   if (t >= TR[0] && t < TR[1] + .2) { side = 'right'; pk = t < TR[1] ? step(P(t, TR[0], TR[0] + .15), 3) : 1 - step(P(t, TR[1], TR[1] + .15), 3); }
@@ -391,21 +398,27 @@ f.onSeek((t0) => {
   $('tagS').style.left = sbx + 92 + 'px'; $('tagS').style.top = sby + 30 + 'px'; $('tagD').style.left = dbx + 70 + 'px'; $('tagD').style.top = dby + 30 + 'px';
   show($('psst'), t >= T.pw3 + .28 && t < T.getsIn - .14); $('psst').style.left = '548px'; $('psst').style.top = '168px';
   show($('qmark'), t >= T.first && t < T.sig); $('qmark').style.left = sx + 'px'; $('qmark').style.top = sy - 300 + 'px';
-  show($('bang'), t >= 27.32); $('bang').style.left = '900px'; $('bang').style.top = '236px';
+  show($('bang'), t >= T.slam + .02); $('bang').style.left = '900px'; $('bang').style.top = '236px';
 
   // the form: floats up on "signature", fills, signs, goes through the slot
-  const fm = $('form'); show(fm, t >= T.sig && t < 25.40);
+  const fm = $('form'); show(fm, t >= T.sig && t < T.squash0 + .18);
   let fx = 0, fy = (1 - ease(P(t, T.sig, T.sig + .48))) * 720, fs = 1, fsy = 1, frot = -2;
-  if (t >= 24.80) { const q = ease(P(t, 24.80, 25.20)); fx = lerp(0, 870 - 335, q); fy = lerp(0, 255 - 355, q); fs = lerp(1, .16, q); frot = lerp(-2, 0, q); fsy = 1 - P(t, 25.20, 25.38); }
+  if (t >= T.shrink0) { const q = ease(P(t, T.shrink0, T.squash0)); fx = lerp(0, 870 - 335, q); fy = lerp(0, 255 - 355, q); fs = lerp(1, .16, q); frot = lerp(-2, 0, q); fsy = 1 - P(t, T.squash0, T.squash0 + .18); }
   fm.style.transform = `translate(${fx}px,${fy}px) rotate(${frot}deg) scale(${fs},${fs * fsy})`;
   const type = (s, t1, cps = 25) => s.slice(0, Math.max(0, Math.floor((t - t1) * cps + 1e-6)));
   $('fAmt').textContent = type('1.5 SOL', T.withdrawal);
   $('fTo').textContent = type(ADDR_SHORT, T.address, 22); $('fToFull').textContent = t >= T.address + .7 ? ADDR : '';
   if (!sigLen) sigLen = sigEl.getTotalLength();
-  const sp = P(t, T.nothingElse, T.elseEnd); sigEl.style.strokeDashoffset = (1 - sp).toFixed(4);
-  const q = $('quill'); show(q, t >= T.nothingElse - .3 && t < T.elseEnd + .3);
+  const sp = P(t, T.sign0, T.sign1); sigEl.style.strokeDashoffset = (1 - sp).toFixed(4);
+  const q = $('quill'); show(q, t >= T.sign0 - .3 && t < T.sign1 + .3);
   const pt = sigEl.getPointAtLength(sigLen * sp); q.style.transform = `translate(${pt.x - 3}px,${pt.y - 138}px)`;
 
+  // REJECTED: slams in after the slot (dossier.js D.slam curve: scale 3 -> .96 -> 1 in 0.14 s, -8 deg), with a camera thump on the world
+  show($('stampL'), t0 >= T.stamp);
+  if (t0 >= T.stamp) { const p = P(t0, T.stamp, T.stamp + .14), sc = p < .8 ? lerp(3, .96, Math.pow(p / .8, 2)) : lerp(.96, 1, (p - .8) / .2);
+    $('stampIn').style.transform = `rotate(-8deg) scale(${sc.toFixed(4)})`; $('stampIn').style.opacity = Math.min(1, p / .8).toFixed(3); }
+  { const d = t0 - T.stamp - .14; const y = d >= 0 && d < .45 ? 9 * Math.exp(-d * 9) * Math.sin(d * 52) : 0;
+    $('world').style.transform += ` translateY(${y.toFixed(2)}px)`; }
   // rain (stops in the freezes)
   rain(tr);
 });

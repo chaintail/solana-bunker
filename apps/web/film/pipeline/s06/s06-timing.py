@@ -19,16 +19,22 @@ lines = [  # id, text, src_in, src_out, out_in (None = right after the previous 
     ('L4', 'But a password says nothing about where the money should go.', 346.58, 349.58, 10.00),
     ('L5', 'So if someone steals it on the way to the vault, they can get in first.', 349.80, 353.02, 13.20),
     ('L6', 'What we actually want is a signature.', 353.42, 355.08, 16.90),
-    ('L7', 'Something that says this exact withdrawal, to this exact address, and nothing else.', 355.28, 360.70, 19.20),  # "else" ends 360.56 (silence to 361.02, then a lip click at 361.04)
+    # v3 (Liam): the line is split at the pause after "address" (silence 359.43-359.55); our form is signed and goes through the slot in the gap,
+    # the speech pauses (about 0.8 s of bed on the shut door), then "and nothing else" plays over the devil's attempt and the slot slams on "else".
+    ('L7a', 'Something that says this exact withdrawal, to this exact address,', 355.28, 359.49, 19.20),
+    ('L7b', 'and nothing else.', 359.49, 360.70, 26.65),  # "else" ends 360.56 (silence to 361.02, then a lip click at 361.04)
 ]
-TOTAL, FREEZE = 28.10, 0.50
+TOTAL, FREEZE = 30.00, 0.50
 edl = []
 for i, (id_, text, si, so, oi) in enumerate(lines):
     if oi is None: oi = round(edl[-1]['out_out'] + FREEZE, 3)
     d = so - si
     edl.append({'id': id_, 'text': text, 'src_in': round(si, 4), 'src_out': round(so, 4), 'out_in': oi, 'out_out': round(oi + d, 4), 'frames': int(round(d * 30))})
 for i in range(1, len(edl)): assert edl[i]['out_in'] >= edl[i - 1]['out_out'] - 1e-6, edl[i]['id']
-doc = {'total': TOTAL, 'fps': 30, 'freeze': [edl[0]['out_out'], edl[1]['out_in']], 'edl': edl}
+l7b = edl[-1]
+# SFX marker for Liam's slam sound (not in the mix): the slot shutter hits the devil's fingers at the end of "else" (take 360.56 s)
+markers = [{'id': 'SFX_SLOT_SLAM', 't': round(l7b['out_in'] + 360.56 - l7b['src_in'], 3), 'note': 'slot shutter slams on the devil fingers; Liam supplies the sound, put its transient here'}]
+doc = {'total': TOTAL, 'fps': 30, 'freeze': [edl[0]['out_out'], edl[1]['out_in']], 'edl': edl, 'markers': markers}
 json.dump(doc, open('out/s06-edl.json', 'w'), indent=1)
 open('film/data/s06-edl.js', 'w').write('window.S06 = ' + json.dumps(doc) + ';\n')
 f = []
@@ -39,3 +45,4 @@ f.append(f"anullsrc=r=48000:cl=mono,atrim=0:{TOTAL},asetpts=PTS-STARTPTS[base];"
 f.append('[base]' + ''.join(f'[a{i}]' for i in range(len(edl))) + f"amix=inputs={len(edl) + 1}:normalize=0:duration=longest,pan=mono|c0=c0,apad=whole_dur={TOTAL},atrim=0:{TOTAL},asetpts=PTS-STARTPTS[mix]")
 open('out/s06-audio.filter', 'w').write('\n'.join(f) + '\n')
 for e in edl: print(e['id'], e['src_in'], e['src_out'], '->', e['out_in'], e['out_out'], e['frames'])
+for m in markers: print('marker', m['id'], m['t'])
