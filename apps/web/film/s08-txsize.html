@@ -1,0 +1,413 @@
+<!doctype html><html data-duration="54.57" data-fps="30"><head><meta charset="utf-8">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
+<style>
+/* Scene 8, one transaction (film-plan-s08.md). An eighties arcade cabinet; the engineer (the player) at its left side.
+   Playfield = a 160x120 canvas drawn in true pixels from t (own 5x7 bitmap font, no smoothing) shown at 4x; the tag's small type is a 320x240 canvas at 2x.
+   CRT: phosphor-glow copy (blurred, screen blend), scanlines, aperture grille, barrel displacement (SVG feDisplacementMap) and undistorted glass on top.
+   Cabinet, room, characters and the program/QR cards are ordinary art (the mixed-style joke). Characters: generated bodies with the oval erased
+   (pipeline/s08/bodies.py, head drawn behind the body), lip-synced head sprites (pipeline/s08/heads.py); stop-frame, whole-figure moves only.
+   Timing: data/s08-edl.js (pipeline/s08/s08-timing.py). Post (pipeline/s08/build.sh): light grain + vignette. */
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#07040c}
+.L{position:absolute;left:0;top:0;width:1280px;height:720px}
+svg{position:absolute;left:0;top:0}
+canvas.px{image-rendering:pixelated;position:absolute;left:0;top:0}
+#world{position:absolute;left:0;top:0;width:1280px;height:720px;transform-origin:0 0}
+#screenBox{position:absolute;left:350px;top:96px;width:640px;height:480px;border-radius:30px/26px;overflow:hidden;background:#000}
+#crt{position:absolute;left:0;top:0;width:640px;height:480px}
+#crtIn{position:absolute;left:0;top:0;width:640px;height:480px;transform-origin:320px 240px}
+#pf,#fine,#glow{width:640px;height:480px}
+#glow{filter:blur(5px) brightness(1.5);mix-blend-mode:screen;opacity:.75}
+#s7{position:absolute;left:0;top:60px;width:640px;height:360px}
+#flash,#white{position:absolute;inset:0;opacity:0}
+#flash{background:#ff1030;mix-blend-mode:screen}
+#white{background:#fff}
+#lines{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.42) 0 1.6px,transparent 1.6px 4px)}
+#grille{position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,40,40,.07) 0 1px,rgba(40,255,40,.07) 1px 2px,rgba(60,60,255,.07) 2px 3px);mix-blend-mode:screen}
+#glass{position:absolute;inset:0;border-radius:30px/26px;box-shadow:inset 0 0 38px 10px rgba(0,0,0,.85),inset 0 0 4px 2px rgba(0,0,0,.9);
+  background:radial-gradient(ellipse 60% 45% at 32% 22%,rgba(255,255,255,.07),transparent 70%),radial-gradient(ellipse 90% 90% at 50% 50%,transparent 62%,rgba(0,0,0,.35) 100%)}
+#s7full{position:absolute;left:0;top:0;width:1280px;height:720px}
+.fig{position:absolute;left:0;top:0;width:1024px;height:1536px;transform-origin:0 0}
+.fig>img,.fig>.hd{position:absolute;left:0;top:0}
+.hd{width:152px;height:220px;overflow:hidden;transform-origin:0 0}
+.hd img{position:absolute;left:0;top:0;display:none}
+.lit{position:absolute;left:0;top:0;filter:brightness(.92) saturate(1.05) drop-shadow(10px 0 18px rgba(95,184,255,.22))}
+/* flat cards outside the CRT (see-the-code / proof style of slides 5 and 7) */
+.card{position:absolute;left:1032px;width:236px;box-sizing:border-box;border:3px solid #000;background:#fff;padding:6px 6px 8px;text-align:center;font-family:Arial,Helvetica,sans-serif;color:#000;box-shadow:0 8px 18px rgba(0,0,0,.45);transform-origin:50% 50%}
+.card-h{font:700 21px/1.15 Arial,Helvetica,sans-serif}
+.card-t{font:400 14px/1.25 Arial,Helvetica,sans-serif;white-space:nowrap}
+.card svg.mk{position:relative;width:21px;height:21px;vertical-align:-4px;margin-right:2px}
+.card svg.qr{position:relative;display:block;margin:4px auto}
+#prog{top:14px;height:74px;padding-top:4px}
+#progH{font:700 19px/1.1 Arial,Helvetica,sans-serif;letter-spacing:.02em}
+#progN{position:relative;font:700 36px/1.1 Arial,Helvetica,sans-serif;height:40px}
+#progN span{position:absolute;top:0}
+#coin{position:absolute;left:0;top:0;width:30px;height:30px}
+</style></head><body>
+<div id="world">
+<!-- room + cabinet (vector art, as the look draft) -->
+<svg width="1280" height="720" viewBox="0 0 1280 720"><defs>
+  <radialGradient id="room" cx="640" cy="300" r="760" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#1d1030"/><stop offset=".55" stop-color="#0d0718"/><stop offset="1" stop-color="#040208"/></radialGradient>
+  <radialGradient id="neonM" cx="120" cy="120" r="300" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ff2bd6" stop-opacity=".18"/><stop offset="1" stop-color="#ff2bd6" stop-opacity="0"/></radialGradient>
+  <radialGradient id="neonC" cx="1180" cy="200" r="320" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#19e3ff" stop-opacity=".14"/><stop offset="1" stop-color="#19e3ff" stop-opacity="0"/></radialGradient>
+  <linearGradient id="side" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#140a22"/><stop offset="1" stop-color="#2a1745"/></linearGradient>
+  <linearGradient id="bezel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16121d"/><stop offset=".5" stop-color="#0b090f"/><stop offset="1" stop-color="#121018"/></linearGradient>
+  <linearGradient id="marq" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a0f3f"/><stop offset=".5" stop-color="#4b1460"/><stop offset="1" stop-color="#22093a"/></linearGradient>
+  <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b1b45"/><stop offset="1" stop-color="#170d29"/></linearGradient>
+  <linearGradient id="steel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8d93a0"/><stop offset="1" stop-color="#4b505b"/></linearGradient>
+  <radialGradient id="spill" cx="670" cy="700" r="420" gradientTransform="translate(0 525) scale(1 .25)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#5fb8ff" stop-opacity=".22"/><stop offset="1" stop-color="#5fb8ff" stop-opacity="0"/></radialGradient>
+  <filter id="soft"><feGaussianBlur stdDeviation="8"/></filter>
+</defs>
+<rect width="1280" height="720" fill="url(#room)"/><rect width="1280" height="720" fill="url(#neonM)"/><rect width="1280" height="720" fill="url(#neonC)"/>
+<g opacity=".8"><polygon points="1110,34 1280,22 1280,700 1110,700" fill="#0b0614"/><polygon points="1110,34 1280,22 1280,84 1110,92" fill="#2a0f3f"/>
+  <rect x="1128" y="130" width="152" height="190" rx="14" fill="#06121a"/><rect x="1128" y="130" width="152" height="190" rx="14" fill="#19e3ff" opacity=".10" filter="url(#soft)"/>
+  <g fill="#19e3ff" opacity=".35"><rect x="1150" y="170" width="12" height="12"/><rect x="1176" y="196" width="12" height="12"/><rect x="1214" y="160" width="12" height="12"/><rect x="1240" y="230" width="12" height="12"/></g>
+  <polygon points="1110,330 1280,322 1280,384 1100,392" fill="#170d29"/></g>
+<rect y="700" width="1280" height="20" fill="#0a0612"/><g id="carpet"></g>
+<ellipse cx="670" cy="704" rx="430" ry="16" fill="#000" opacity=".7"/>
+<polygon points="292,14 318,8 318,700 292,700" fill="url(#side)"/>
+<path d="M296 90 L314 86 L314 560 L296 600 Z" fill="#ff2bd6" opacity=".55"/><path d="M296 610 L314 572 L314 640 L296 668 Z" fill="#19e3ff" opacity=".5"/>
+<rect x="318" y="8" width="704" height="692" fill="#140c22"/>
+<rect x="318" y="8" width="704" height="78" fill="#0a0612"/><rect x="330" y="14" width="680" height="66" rx="4" fill="url(#marq)"/>
+<rect x="330" y="14" width="680" height="66" rx="4" fill="#ff7ad9" opacity=".18" filter="url(#soft)"/>
+<rect x="318" y="86" width="704" height="506" fill="url(#bezel)"/>
+<rect x="338" y="84" width="664" height="504" rx="36" fill="none" stroke="#ff2bd6" stroke-width="3" opacity=".8"/>
+<rect x="344" y="90" width="652" height="492" rx="33" fill="none" stroke="#19e3ff" stroke-width="2" opacity=".6"/>
+<polygon points="318,592 1022,592 1048,652 292,652" fill="url(#panel)"/><polygon points="292,652 1048,652 1048,662 292,662" fill="#0a0612"/>
+<path d="M330 600 L1010 600" stroke="#ff2bd6" stroke-width="2" opacity=".6"/>
+<ellipse cx="520" cy="628" rx="26" ry="9" fill="#0a0612"/><rect x="516" y="600" width="8" height="28" fill="#1b1b1b"/><circle cx="520" cy="598" r="13" fill="#e8202e"/><circle cx="515" cy="593" r="4" fill="#fff" opacity=".55"/>
+<ellipse cx="690" cy="624" rx="17" ry="8" fill="#ffd400"/><ellipse cx="690" cy="621" rx="17" ry="8" fill="#ffe94d"/>
+<ellipse cx="750" cy="624" rx="17" ry="8" fill="#16c7ff"/><ellipse cx="750" cy="621" rx="17" ry="8" fill="#7fe3ff"/>
+<rect x="318" y="662" width="704" height="38" fill="#120a1f"/>
+<rect x="590" y="664" width="160" height="36" rx="3" fill="url(#steel)" stroke="#2a2d33" stroke-width="2"/>
+<rect x="606" y="670" width="40" height="24" rx="2" fill="#5a0d12"/><rect id="slotLit" x="608" y="672" width="36" height="20" rx="2" fill="#e01b2b"/><rect x="624" y="674" width="4" height="16" fill="#1a0306"/>
+<rect x="694" y="670" width="40" height="24" rx="2" fill="#3a3d44"/><rect x="712" y="674" width="4" height="16" fill="#111"/>
+<ellipse id="slotGlow" cx="626" cy="682" rx="34" ry="20" fill="#ff2030" opacity=".22" filter="url(#soft)"/>
+<rect width="1280" height="720" fill="url(#spill)"/>
+</svg>
+<canvas id="marquee" class="px" width="132" height="12" style="left:340px;top:20px;width:660px;height:60px"></canvas>
+
+<div id="screenBox">
+  <div id="crt"><div id="crtIn">
+    <img id="s7" src="assets/s08-s07-last.png">
+    <canvas id="pf" class="px" width="160" height="120"></canvas><canvas id="fine" class="px" width="320" height="240"></canvas><canvas id="glow" class="px" width="320" height="240"></canvas>
+    <div id="flash"></div><div id="white"></div>
+  </div><div id="lines"></div><div id="grille"></div></div>
+  <div id="glass"></div>
+</div>
+
+<!-- program card (003-A -> 003-B) and its cards -->
+<div class="card" id="prog"><div id="progH">BUNKER PROGRAM</div><div id="progN"><span style="left:58px">003</span><span id="sufA" style="left:126px">-A</span><span id="sufB" style="left:126px">-B</span></div></div>
+<div class="card" id="stat" style="top:96px"><div class="card-h" style="font-size:19px">staged: 5 transactions</div><div class="card-t" style="font-size:17px;margin-top:3px">local SVM only</div><div class="card-t" style="color:#555">no devnet proof</div></div>
+<div class="card" id="cCode" style="top:96px"><div class="card-h"><svg class="mk" viewBox="0 0 24 24"><path fill="#000" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.070 3.633 17.700 3.633 17.700c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.070 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.930 0-1.310.465-2.380 1.235-3.220-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.230.96-.267 1.98-.399 3-.405 1.020.006 2.040.138 3 .405 2.280-1.552 3.285-1.230 3.285-1.230.645 1.653.24 2.873.12 3.176.765.84 1.230 1.910 1.230 3.220 0 4.610-2.805 5.625-5.475 5.920.42.36.81 1.096.81 2.220 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>see the code</div><div id="qrCode"></div><div class="card-t">program/src/lib.rs line 118</div></div>
+<div class="card" id="cProof" style="top:308px"><div class="card-h"><svg class="mk" viewBox="0 0 24 24"><path d="M19.9,18.4 A9.6,9.6 0 1 1 21.4,14.2" fill="none" stroke="#00e8b5" stroke-width="4.8"/><circle cx="12" cy="10.6" r="4.9" fill="#c74ae3"/></svg>proof it works</div><div id="qrProof"></div><div class="card-t" id="pfTx"></div></div>
+
+<div class="lit" id="engL"></div>
+<div class="lit" id="joeL"></div>
+<div class="lit" id="labL"></div>
+<svg id="coin" viewBox="0 0 64 64"><circle cx="32" cy="32" r="29" fill="#000" stroke="#000" stroke-width="3"/><polygon points="21,19 47,19 43,25 17,25" fill="#14f195"/><polygon points="17,29 43,29 47,35 21,35" fill="#9945ff"/><polygon points="21,39 47,39 43,45 17,45" fill="#14f195"/></svg>
+</div>
+<img id="s7full" src="assets/s08-s07-last.png">
+
+<svg width="0" height="0" style="position:absolute"><filter id="barrel" filterUnits="userSpaceOnUse" x="0" y="0" width="640" height="480" color-interpolation-filters="sRGB">
+  <feImage id="bmap" x="0" y="0" width="640" height="480" preserveAspectRatio="none" result="m"/>
+  <feDisplacementMap in="SourceGraphic" in2="m" scale="64" xChannelSelector="R" yChannelSelector="G"/>
+</filter></svg>
+
+<script src="data/s08-edl.js"></script><script src="data/s07-qr.js"></script>
+<script>
+document.documentElement.dataset.duration = String(window.S08.total);
+// barrel map (see s08-look.html): offset = (u, v) * r^2 * 6 px
+{ const W = 640, H = 480, c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d'), im = x.createImageData(W, H);
+  for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) { const u = (i + .5) / W * 2 - 1, v = (j + .5) / H * 2 - 1, r2 = u * u + v * v, k = (j * W + i) * 4;
+    im.data[k] = Math.round(255 * (.5 + u * r2 * 6 / 64)); im.data[k + 1] = Math.round(255 * (.5 + v * r2 * 6 / 64)); im.data[k + 2] = 128; im.data[k + 3] = 255; }
+  x.putImageData(im, 0, 0); document.getElementById('bmap').setAttribute('href', c.toDataURL()); }
+</script>
+<script src="lib/film.js"></script>
+<script>
+const f = window.__film, $ = (id) => document.getElementById(id), D = window.S08, T = D.T;
+const P = (t, a, b) => f.prog(t, a, b), step = (p, n) => Math.min(1, Math.floor(p * n + 1e-9) / n), lerp = (a, b, p) => a + (b - a) * p;
+const fmt = (n) => Math.round(n).toLocaleString('en-US'), WIN = D.edl[10].out_in - .05;
+const G = {
+ '0':'.###.#...##..###.#.###..##...#.###.','1':'..#...##....#....#....#....#...###.','2':'.###.#...#....#...#...#...#...#####','3':'#####...#...#.....#.....##...#.###.',
+ '4':'...#...##..#.#.#..#.#####...#....#.','5':'######....####.....#....##...#.###.','6':'..##..#...#....####.#...##...#.###.','7':'#####....#...#...#...#....#....#...',
+ '8':'.###.#...##...#.###.#...##...#.###.','9':'.###.#...##...#.####....#...#..##..',A:'.###.#...##...#######...##...##...#',B:'####.#...##...#####.#...##...#####.',
+ C:'.###.#...##....#....#....#...#.###.',D:'###..#..#.#...##...##...##..#.###..',E:'######....#....####.#....#....#####',F:'######....#....####.#....#....#....',
+ G:'.###.#...##....#.####...##...#.####',H:'#...##...##...#######...##...##...#',I:'.###...#....#....#....#....#...###.',J:'..###...#....#....#....#.#..#..##..',
+ K:'#...##..#.#.#..##...#.#..#..#.#...#',L:'#....#....#....#....#....#....#####',M:'#...###.###.#.##.#.##...##...##...#',N:'#...##...###..##.#.##..###...##...#',
+ O:'.###.#...##...##...##...##...#.###.',P:'####.#...##...#####.#....#....#....',Q:'.###.#...##...##...##.#.##..#..##.#',R:'####.#...##...#####.#.#..#..#.#...#',
+ S:'.#####....#.....###.....#....#####.',T:'#####..#....#....#....#....#....#..',U:'#...##...##...##...##...##...#.###.',V:'#...##...##...##...##...#.#.#...#..',
+ W:'#...##...##...##.#.##.#.##.#.#.#.#.',X:'#...##...#.#.#...#...#.#.#...##...#',Y:'#...##...#.#.#...#....#....#....#..',Z:'#####....#...#...#...#...#....#####',
+ ',':'.....................##....#...#...','.':'..........................##...##..','>':'#.....#.....#.....#...#...#...#....','<':'....#...#...#...#.....#.....#.....#',
+ '!':'..#....#....#....#....#.........#..','-':'...............#####...............',':':'......##...##........##...##.......','?':'.###.#...#....#...#...#.........#..',
+ '/':'....#...#....#...#...#....#...#....',' ':'...................................','^':'............#...#.#.#...#..........','`':'..........#...#.#.#...#............' };
+function text(cx, s, x, y, col, k = 1, adv = 6 * k) { cx.fillStyle = col; x = Math.round(x); y = Math.round(y); for (const ch of s) { const g = G[ch] || G['?']; for (let i = 0; i < 35; i++) if (g[i] === '#') cx.fillRect(x + (i % 5) * k, y + Math.floor(i / 5) * k, k, k); x += adv; } }
+const tw = (s, k = 1, adv = 6 * k) => s.length * adv - (adv - 5 * k);
+const ctext = (cx, s, y, col, k = 1, cxm = 80, adv = 6 * k) => text(cx, s, cxm - Math.ceil(tw(s, k, adv) / 2), y, col, k, adv);
+// sprite from char rows; pal maps chars to colours ('.' = transparent)
+function sprite(cx, rows, x, y, k, pal) { for (let j = 0; j < rows.length; j++) for (let i = 0; i < rows[j].length; i++) { const c = pal[rows[j][i]]; if (c) { cx.fillStyle = c; cx.fillRect(Math.round(x) + i * k, Math.round(y) + j * k, k, k); } } }
+
+// ---------- marquee, carpet
+{ const m = $('marquee').getContext('2d'); const s = 'SOLANA  BUNKER', x0 = Math.round((132 - tw(s)) / 2);
+  text(m, s, x0, 2, '#ffd23f'); m.globalCompositeOperation = 'source-atop'; m.fillStyle = '#ff8a3d'; m.fillRect(0, 5, 132, 2); m.fillStyle = '#ff4f9a'; m.fillRect(0, 7, 132, 3);
+  m.globalCompositeOperation = 'destination-over'; text(m, s, x0 + 1, 3, '#1a0326'); }
+{ const r = f.rng(31); let g = ''; for (let i = 0; i < 160; i++) { const c = ['#ff2bd6', '#19e3ff', '#ffd400', '#7c4dff'][Math.floor(r() * 4)]; g += `<rect x="${(r() * 1280).toFixed(0)}" y="${(701 + r() * 18).toFixed(0)}" width="3" height="2" fill="${c}" opacity=".45"/>`; } $('carpet').innerHTML = g; }
+
+// ---------- QR cards (data/s07-qr.js: line 118 on main, Solscan devnet CiZmcGsa..., uqr ECC L)
+const qrSvg = (q, size) => `<svg class="qr" viewBox="-4 -4 ${q.n + 8} ${q.n + 8}" width="${size}" height="${size}" shape-rendering="crispEdges"><rect x="-4" y="-4" width="${q.n + 8}" height="${q.n + 8}" fill="#fff"/><path d="${q.d}" fill="#000"/></svg>`;
+$('qrCode').innerHTML = qrSvg(S07_QR.code, 146); $('qrProof').innerHTML = qrSvg(S07_QR.proof, 146); $('pfTx').textContent = 'devnet tx ' + S07_QR.tx.slice(0, 8) + '…';
+
+// ---------- characters: s08 bodies (oval erased, head behind the body), head sprite sheets heads/s08-head-NN.png (all lines, 16 x 12 cells of 152x220)
+const AN = { clip: [411.5, 303, 'engineer-point-clipboard'], thumbs: [511.5, 306, 'engineer-thumbs-up'], shrug: [511.5, 308, 'physicist-shrug'], prof: [394.5, 308, 'physicist-professor-point'], joe: [511.0, 344, 'street-celebrate'] };
+const HK = 0.326, HS = 760 * HK / 152;
+function makeFig(parent, poses) {
+  const el = document.createElement('div'); el.className = 'fig';
+  el.innerHTML = '<div class="hd">' + [0, 1, 2, 3, 4, 5].map((i) => `<img src="heads/s08-head-0${i}.png">`).join('') + '</div>' + poses.map((p) => `<img data-pose="${p}" src="assets/s08/${AN[p][2]}.png" width="1024" height="1536">`).join('');
+  parent.appendChild(el); el._pose = poses[0]; return el; }
+function setPose(el, p) { el._pose = p; el.querySelectorAll('img[data-pose]').forEach((im) => (im.style.display = im.dataset.pose === p ? 'block' : 'none')); }
+// neck point (x,y), rotation, scale, mirror (a mirrored body keeps an unmirrored head), head tilt in degrees about the chin
+function place(el, x, y, rot, s, flip = 1, tilt = 0) {
+  const [cx, chin] = AN[el._pose];
+  el.style.transform = `translate(${x}px,${y}px) rotate(${rot}deg) scale(${s * flip},${s}) translate(${-cx}px,${-chin}px)`;
+  let tr = `translate(${cx - 338 * HK}px,${chin + 3 - 905 * HK}px) scale(${HS})` + (tilt ? ` translate(67.6px,181px) rotate(${tilt}deg) translate(-67.6px,-181px)` : '');
+  if (flip < 0) tr = `translate(${cx}px,0) scale(-1,1) translate(${-cx}px,0) ` + tr;
+  el.querySelector('.hd').style.transform = tr; }
+const cum = []; D.edl.reduce((a, e, i) => ((cum[i] = a), a + e.frames), 0);
+function headFrame(t, sp) {   // that speaker's lip-sync frame; holds the last frame of his previous line through every pause
+  let i = -1; D.edl.forEach((e, k) => { if (e.speaker === sp && t >= e.out_in - 1e-6) i = k; });
+  if (i < 0) return cum[D.edl.findIndex((e) => e.speaker === sp)];
+  const e = D.edl[i]; return cum[i] + Math.min(e.frames - 1, Math.floor((t - e.out_in) * 30 + 1e-6)); }
+function setHead(el, idx) { const sh = Math.floor(idx / 192), c = idx % 192;
+  el.querySelectorAll('.hd img').forEach((im, i) => { im.style.display = i === sh ? 'block' : 'none'; if (i === sh) { im.style.left = -(c % 16) * 152 + 'px'; im.style.top = -Math.floor(c / 16) * 220 + 'px'; } }); }
+const eng = makeFig($('engL'), ['clip', 'thumbs']), lab = makeFig($('labL'), ['shrug', 'prof']), joe = makeFig($('joeL'), ['joe']);
+const JOE_FRAME = cum[0];   // first frame of E1 (456.40 s, before he speaks), mouth closed
+const POKE = [1162, 305, -27];
+const show = (el, v) => { el.style.display = v ? 'block' : 'none'; };
+
+// ---------- playfield
+const pf = $('pf').getContext('2d'), fn = $('fine').getContext('2d'), gl = $('glow').getContext('2d');
+const tmp = document.createElement('canvas'); tmp.width = 160; tmp.height = 120; const tc = tmp.getContext('2d');
+const FLOOR = 96, BW = 73, BH = 14;
+const R = f.rng(8), STARS = Array.from({ length: 46 }, () => [Math.floor(R() * 160), Math.floor(12 + R() * 80), R()]);
+const PR = f.rng(77), PARTS = Array.from({ length: 260 }, () => ({ x: PR() * 160, y: 74 + PR() * 22, vx: (PR() - .5) * 120, vy: -30 - PR() * 90, c: ['#ff2bd6', '#ff7ae0', '#d01aa8', '#ffffff'][Math.floor(PR() * 4)], s: PR() < .2 ? 2 : 1, l: .55 + PR() * .4 }));
+const TRUCK = ['.WWWWWWW....', '.WWWWWWW.BB.', '.WRRRRRW.BBB', '.WWWWWWWWWWW', '.WBBBBBWWWWW', '.WWWWWWWWWWW', '..KK...KK...', '..KK...KK...'];
+const TRUCK2 = TRUCK.slice(0, 6).concat(['..K....K....', '...K....K...']);
+const TPAL = { W: '#f2f2f2', R: '#e8202e', B: '#3a7bff', K: '#222' };
+const THUMB = ['...WWWWWW...', '..XXXXXXXX..', '.XOOOOOOOOX.', '.XOOOOOOOOX.', '.XXXXXXXXOX.', '.XOOOOOOOOX.', '.XXXXXXXXOX.', '.XOOOOOOOOX.', '.XXXXXXXXOX.', '.XOOOOOOOX..', '..XOOXXXX...', '..XOOX......', '..XOOX......', '..XOOX......', '...XX.......'];   // thumbs down: cuff on top, curled fingers, thumb pointing down
+const CHECK = ['........#', '.......##', '#.....##.', '##...##..', '.##.##...', '..###....', '...#.....'];
+function block(c, x, y, label = '2,500', showLabel = true, sag = 0) {
+  c.fillStyle = '#0088c0'; c.fillRect(x, y, BW, BH);
+  if (sag) { c.fillRect(x + 21, y + BH, 31, sag); c.fillRect(x + 25, y + BH + sag, 23, sag); }
+  c.fillStyle = '#7ff3ff'; c.fillRect(x, y, BW, 1); c.fillRect(x, y, 1, BH);
+  c.fillStyle = '#005f80'; c.fillRect(x, y + BH - 1, BW, 1); c.fillRect(x + BW - 1, y, 1, BH);
+  if (showLabel) { const lx = x + Math.floor(BW / 2) - Math.ceil(tw(label) / 2); text(c, label, lx + 1, y + 5, '#002233'); text(c, label, lx, y + 4, '#ffffff'); } }
+function floor(c, sw, plankY, fallP) {
+  const SL = 80 - sw / 2;
+  for (let y = FLOOR; y < 120; y += 6) for (let x = -((y / 6) % 2) * 6; x < 160; x += 12) {
+    c.fillStyle = '#1f2fd0'; c.fillRect(x, y, 12, 6); c.fillStyle = '#4c66ff'; c.fillRect(x, y, 11, 1); c.fillRect(x, y, 1, 5); c.fillStyle = '#10187a'; c.fillRect(x, y + 5, 12, 1); c.fillRect(x + 11, y, 1, 6); }
+  if (sw > 0) {
+    c.fillStyle = '#000'; c.fillRect(Math.round(SL), FLOOR, Math.round(sw), 24);
+    if (fallP < 1) { const dy = Math.round(fallP * fallP * 40); for (let x = Math.round(SL); x < SL + sw; x += 12) { c.fillStyle = '#1f2fd0'; c.fillRect(x, FLOOR + dy, Math.min(12, SL + sw - x), 6); } }
+    c.fillStyle = '#ffffff'; c.fillRect(Math.round(SL) - 1, FLOOR, 1, 24); c.fillRect(Math.round(SL + sw), FLOOR, 1, 24); }
+  if (plankY !== null) { c.fillStyle = '#b06a2a'; c.fillRect(Math.round(SL) - 3, FLOOR + plankY, Math.round(sw) + 6, 2); c.fillStyle = '#5a300c'; for (let x = Math.round(SL); x < SL + sw; x += 5) c.fillRect(x, FLOOR + plankY + 1, 1, 1); }
+  return SL; }
+
+function draw(t) {
+  const c = pf; c.fillStyle = '#000'; c.fillRect(0, 0, 160, 120); fn.clearRect(0, 0, 320, 240);
+  for (const [x, y, b] of STARS) { c.fillStyle = b > .8 ? '#9fb4ff' : b > .5 ? '#4a5aa8' : '#262c55'; c.fillRect(x, y, 1, 1); }
+  if (t >= T.tag) return drawTag(t);
+  if (t >= WIN) return drawWin(t);
+  // ---- HUD
+  const score = t < T.smaller + .1 ? 0 : Math.round(5692 * step(P(t, T.smaller + .1, T.smaller + .8), 21));
+  text(c, 'SCORE', 3, 2, '#ffffff'); text(c, String(score).padStart(5, '0'), 3 + tw('SCORE ') + 1, 2, '#ffe000');
+  const nArr = T.trucks.filter((a) => t >= a).length;
+  const hud = t < T.iguess ? 'LV 1' : t < T.c1end ? `TX ${nArr}/5` : t >= T.oh + .45 ? 'CREDIT 1' : '';
+  if (hud) text(c, hud, 160 - tw(hud) - 3, 2, '#19e3ff');
+  // ---- floor, slot, plank
+  const sw = t < T.ah ? 0 : t < T.n4096 ? 36 : 36 + 84 * step(P(t, T.n4096, T.n4096 + 1.2), 4);
+  const plankY = t >= T.pieces + .5 && t < T.oh + .3 ? Math.round(step(P(t, T.oh, T.oh + .3), 3) * 26) : null;
+  const SL = floor(c, sw, plankY, P(t, T.ah, T.ah + .3));
+  if (sw > 0 && t >= T.n1232) {   // dimension line + label
+    const v = t < T.n4096 ? 1232 : Math.round(lerp(1232, 4096, P(t, T.n4096, T.n4096 + 1.2)));
+    const pop = t < T.n1232 + .07 ? '#ffffff' : '#ffe000';
+    c.fillStyle = pop; c.fillRect(Math.round(SL) + 1, 104, Math.round(sw) - 2, 1); c.fillRect(Math.round(SL) + 1, 102, 1, 5); c.fillRect(Math.round(SL + sw) - 2, 102, 1, 5);
+    const lab = sw >= 90 ? 'TX LIMIT ' + fmt(v) : fmt(v);
+    text(c, lab, 80 - Math.ceil(tw(lab) / 2), 108, pop);
+    if (sw < 40) text(c, 'TX LIMIT', SL - tw('TX LIMIT') - 5, 108, pop); }
+  // ---- beat 1: LAMPORT block, XMSS block, explosion
+  if (t >= T.xmss && t < T.smaller) {
+    const y = Math.round(lerp(-22, 74, Math.pow(P(t, T.xmss, T.xmss + .42), 2)));
+    c.fillStyle = '#d01aa8'; c.fillRect(0, y, 160, 22); c.fillStyle = '#ff7ae0'; c.fillRect(0, y, 160, 1); c.fillStyle = '#6a0a55'; c.fillRect(0, y + 21, 160, 1);
+    if (y === 74) { c.fillStyle = '#6a0a55'; for (const [x, yy] of [[0, 78], [1, 79], [1, 80], [2, 81], [159, 83], [158, 84], [158, 85], [157, 86]]) c.fillRect(x, yy, 1, 1); }
+    ctext(c, 'LAMPORT 8,192', y + 8, '#ffffff'); }
+  if (t >= T.smaller && t < T.smaller + 1) for (const p of PARTS) { const u = t - T.smaller; if (u > p.l) continue;
+    c.fillStyle = p.c; c.fillRect(Math.round(p.x + p.vx * u), Math.round(p.y + p.vy * u + 80 * u * u), p.s, p.s); }
+  // ---- the 2,500 block through beats 1-3
+  let bx = null, by = null, sag = 0, lbl = true;
+  if (t >= T.awesome && t < T.smaller) { bx = 4; by = Math.round(lerp(-14, 60, Math.pow(P(t, T.awesome, T.awesome + .42), 2))); }
+  else if (t >= T.smaller && t < T.n1232 + .3) { bx = 4; by = Math.round(lerp(60, 82, Math.pow(P(t, T.smaller, T.smaller + .3), 2))); }
+  else if (t >= T.n1232 + .3 && t < T.transaction) { const p = step(P(t, T.n1232 + .3, T.n1232 + .9), 6); bx = Math.round(lerp(4, 44, p)); by = Math.round(lerp(82, 40, p) - Math.sin(p * Math.PI) * 18); }
+  else if (t >= T.transaction && t < T.pieces) { const p = P(t, T.transaction, T.transaction + .2); bx = 44; by = Math.round(lerp(40, 82, p * p)); sag = p >= 1 ? 2 : 0; }
+  if (t >= T.only && t < T.bytes1 + .3) lbl = Math.floor((t - T.only) * 4) % 2 === 0;
+  if (bx !== null) { block(c, bx, by, '2,500', lbl, sag); if (t >= T.bytes1 && t < T.ah) ctext(c, 'BYTES', by - 9, '#ffffff', 1, bx + 36); }
+  if (sag) { const sp = Math.floor(t * 15) % 2; c.fillStyle = sp ? '#ffffff' : '#ffe000';
+    for (const [sx, s] of [[SL + 1, 1], [SL + 34, -1]]) for (const [dx, dy] of [[0, 4], [1, 6], [3, 5], [2, 8], [4, 7]]) c.fillRect(Math.round(sx + s * dx * (1 + sp * .5)), FLOOR + dy - sp, 1, 1);
+    if (t < T.iguess) { text(c, '!', 36, 84, '#ff2030'); text(c, '!', 120, 84, '#ff2030'); } }
+  // ---- beat 2: GAME OVER + comparison (the comparison stays to the win screen; the > flips in beat 4)
+  if (t >= T.limit + .1 && t < T.iguess && Math.floor((t - T.limit) * 4) % 2 === 0) { ctext(c, 'GAME OVER', 25, '#400008', 2, 81); ctext(c, 'GAME OVER', 24, '#ff2030', 2); }
+  if (t >= T.limit + .1) cmp(c, t);
+  // ---- beat 3: workaround level
+  if (t >= T.iguess && t < T.c1end) {
+    if (t < T.tempacct) { const p = step(P(t, T.iguess, T.iguess + .4), 4), x = lerp(160, 80, p);
+      ctext(c, 'WORKAROUND', 14, '#19e3ff', 2, x); ctext(c, 'LEVEL', 30, '#19e3ff', 2, x); }
+    else ctext(c, 'WORKAROUND LEVEL', 12, '#19e3ff'); }
+  // saw (three cuts) and pieces flying off to the trucks
+  if (t >= T.upload && t < T.pieces) { const k = Math.min(2, Math.floor((t - T.upload) / .27)), u = P(t, T.upload + k * .27, T.upload + (k + 1) * .27);
+    c.fillStyle = '#000'; for (let j = 0; j < k; j++) c.fillRect(44 + 18 * (j + 1), 82, 1, BH + 2);
+    const sx = 44 + 18 * (k + 1), sy = Math.round(lerp(72, 96, u));
+    sprite(c, ['..#.#..', '.#####.', '##...##', '.#.o.#.', '##...##', '.#####.', '..#.#..'], sx - 3, sy - 3, 1, { '#': '#d8d8e0', o: '#555' });
+    c.fillStyle = Math.floor(t * 30) % 2 ? '#ffe000' : '#fff'; c.fillRect(sx + 4, sy, 1, 1); c.fillRect(sx - 5, sy + 1, 1, 1); }
+  if (t >= T.pieces && t < T.pieces + .7) { const u = P(t, T.pieces, T.pieces + .7);
+    for (let j = 0; j < 4; j++) { const x0 = 44 + 18 * j + 2 * j, y0 = 82 - (u < .2 ? 4 : 0), xx = u < .2 ? x0 : lerp(x0, -20 - 10 * j, step(P(u, .2, 1), 5)), yy = u < .2 ? y0 : lerp(y0, 70, step(P(u, .2, 1), 5));
+      c.fillStyle = '#0088c0'; c.fillRect(Math.round(xx), Math.round(yy), j === 3 ? 19 : 18, BH); c.fillStyle = '#7ff3ff'; c.fillRect(Math.round(xx), Math.round(yy), j === 3 ? 19 : 18, 1); } }
+  // TEMP ACCT box on a ledge at the right wall; the tx boxes above it; later the single new box
+  if (t >= T.tempacct && t < WIN) {
+    c.fillStyle = '#5a6070'; c.fillRect(126, 82, 34, 2);
+    const boxGone = T.so + 1.3, newBox = T.so + 1.35;
+    if (t < boxGone + .1) { const s = t < T.tempacct + .07 ? .5 : t >= boxGone ? 1 - P(t, boxGone, boxGone + .1) : 1;
+      const w = Math.round(30 * s), h = Math.round(22 * s), x = 145 - w / 2, y = 82 - h;
+      if (w > 1) { c.fillStyle = '#2e3442'; c.fillRect(x, y, w, h); c.fillStyle = '#8a92a6'; c.fillRect(x, y, w, 1); c.fillRect(x, y, 1, h); c.fillRect(x + w - 1, y, 1, h); c.fillStyle = '#151922'; c.fillRect(x, y + h - 1, w, 1);
+        if (s === 1) { text(c, 'TEMP', 133, 63, '#ffe000'); text(c, 'ACCT', 133, 72, '#ffe000'); } } }
+    for (let i = 0; i < 5; i++) { if (t < T.trucks[i]) continue; const g = T.so + .3 + i * .2; if (t >= g + .1) continue;
+      const s = t < g ? 5 : t < g + .033 ? 3 : 1; c.fillStyle = i === 4 ? '#ff2030' : '#19e3ff'; c.fillRect(132 + i * 6 + (5 - s) / 2, 53 + (5 - s) / 2, s, s); }
+    if (t >= newBox) { const s = t < newBox + .07 ? 1.3 : 1, w = Math.round(30 * s), h = Math.round(22 * s), x = 145 - w / 2, y = 82 - h;
+      c.fillStyle = '#18a84a'; c.fillRect(x, y, w, h); c.fillStyle = '#7dffa8'; c.fillRect(x, y, w, 1); c.fillStyle = '#0a5a24'; c.fillRect(x, y + h - 1, w, 1); if (s === 1) text(c, '1 TX', 134, 68, '#ffffff'); } }
+  // trucks: each arrives at the box (T.trucks[i]) after 0.8 s on the floor, then drives out to the right
+  for (let i = 0; i < 5; i++) { const a = T.trucks[i], d0 = a - .8; if (t < d0 || t >= a + .25) continue;
+    const x = t < a ? Math.round(lerp(-14, 128, P(t, d0, a))) : Math.round(lerp(128, 162, P(t, a, a + .25)));
+    sprite(c, Math.floor(t * 15) % 2 ? TRUCK : TRUCK2, x, 87, 1, TPAL);
+    if (t < a) { if (i < 4) { c.fillStyle = '#0088c0'; c.fillRect(x + 2, 83, 6, 4); c.fillStyle = '#7ff3ff'; c.fillRect(x + 2, 83, 6, 1); }
+      else { c.fillStyle = '#ff2030'; c.fillRect(x + 2, 81, 1, 6); c.fillRect(x + 3, 81, 4, 3); text(c, 'EXEC', x - 6, 72, '#ff2030'); } }
+    else if (t < a + .12 && i < 4) { c.fillStyle = '#0088c0'; c.fillRect(x + 2, Math.round(lerp(83, 64, P(t, a, a + .12))), 6, 4); } }
+  // thumbs-down stamp
+  if (t >= T.cool && t < T.c1end + .3) { const k = [6, 5, 4, 3][Math.min(3, Math.floor((t - T.cool) * 30))];
+    sprite(c, THUMB, 80 - 6 * k, 56 - 7.5 * k, k, { X: '#3a0006', O: '#ff2030', W: '#ffffff' }); }
+  // ---- beat 4: INSERT COIN, banner + NEW, the fresh block falling through the wide slot
+  if (t >= T.c1end + .05 && t < T.oh + .45 && Math.floor((t - T.c1end) * 6) % 2 === 0) ctext(c, 'INSERT COIN', 18, '#ffe000', 2);
+  if (t >= T.solana) { const x = Math.round(lerp(160, 80 - Math.ceil(tw('SOLANA TRANSACTIONS V1') / 2), P(t, T.solana, T.rescue)));
+    c.fillStyle = '#9a0c24'; c.fillRect(0, 18, 160, 12); c.fillStyle = '#ffe000'; c.fillRect(0, 18, 160, 1); c.fillRect(0, 29, 160, 1);
+    text(c, 'SOLANA TRANSACTIONS V1', x, 21, '#ffffff'); }
+  if (t >= T.v1) ctext(c, 'NEW!', 10, Math.floor((t - T.v1) * 4) % 2 ? '#ff2030' : '#ffe000');
+  if (t >= T.rescue && t < T.worked + .7) { const y = t < T.worked + .2 ? 72 : Math.round(lerp(72, 130, Math.pow(P(t, T.worked + .2, T.worked + .6), 2))); block(c, 44, y); }
+}
+function cmp(c, t) {   // 2,500 > 1,232  ->  2,500 < 4,096 ; the symbol grows, spins and settles (Liam's direction)
+  const F0 = T.n4096 + .6;
+  const v = t < T.n4096 ? 1232 : Math.round(lerp(1232, 4096, P(t, T.n4096, T.n4096 + 1.2)));
+  let sym = '>', k = 2;
+  if (t >= F0 && t < F0 + .3) k = [2, 3, 4][Math.min(2, Math.floor((t - F0) * 10))];
+  else if (t >= F0 + .3 && t < F0 + .9) { k = 4; sym = ['>', '`', '<', '^'][Math.floor((t - F0 - .3) * 15) % 4]; }
+  else if (t >= F0 + .9 && t < F0 + 1.2) { sym = '<'; k = [4, 3, 2][Math.min(2, Math.floor((t - F0 - .9) * 10))]; }
+  else if (t >= F0 + 1.2) sym = '<';
+  const a = '2,500', b = fmt(v), w = tw(a) + 6 + 5 * k + 6 + tw(b), x0 = 80 - Math.ceil(w / 2), cy = 55;
+  text(c, a, x0, cy - 3, '#19e3ff'); text(c, sym, x0 + tw(a) + 6, cy - Math.round(3.5 * k), sym === '<' && t >= F0 + .9 ? '#20e040' : '#ff2030', k); text(c, b, x0 + tw(a) + 6 + 5 * k + 6, cy - 3, '#ffe000'); }
+function drawWin(t) {
+  const c = pf; c.fillStyle = '#ffd400'; c.fillRect(3, 3, 154, 2); c.fillRect(3, 115, 154, 2); c.fillRect(3, 3, 2, 114); c.fillRect(155, 3, 2, 114);
+  ctext(c, 'HIGH SCORE', 7, '#ffd400');
+  const pop = (t0) => (t < t0 ? null : t < t0 + .07 ? '#ffffff' : 0);
+  const L = [[T.one, '1 TRANSACTION', 18, '#ffffff', 2], [T.n3100, '3,117 BYTES', 38, '#19e3ff', 2], [T.compute, '518,509 CU', 58, '#ffe000', 2]];
+  for (const [t0, s, y, col, k] of L) { const p = pop(t0); if (p === null) continue; ctext(c, s, y, p || col, k, 80, 11); }   // 2x type at an 11 px advance so 1 TRANSACTION fits inside the border
+  const ty = (s, a, b) => s.slice(0, Math.max(0, Math.min(s.length, Math.floor(P(t, a, b) * s.length + 1e-6))));
+  if (t >= T.verifies) ctext(c, ty('SIGNATURE VERIFIED', T.verifies, T.onchain), 82, '#20e040');
+  if (t >= T.onchain) ctext(c, ty('ON CHAIN', T.onchain, T.onchain + .3), 92, '#20e040');
+  if (t >= T.single) { const n = Math.min(3, Math.floor((t - T.single) / ((T.shot + .15 - T.single) / 4))), k = [3, 6, 10, 15][n];
+    const x = 80 - 4.5 * k, y = 60 - 3.5 * k; sprite(c, CHECK, x + Math.max(1, k / 5), y + Math.max(1, k / 5), k, { '#': '#063a12' }); sprite(c, CHECK, x, y, k, { '#': '#20e040' }); }
+}
+const BOX = 'AND BECAUSE EVERY ONE TIME KEY GETS USED EXACTLY ONCE, THE VAULT KEEPS A BITMAP OF WHICH LEAVES ARE SPENT. WHEN YOU RUN LOW, OR YOU JUST GET PARANOID, YOU SIGN ONE MORE MESSAGE THAT INSTALLS A BRAND NEW TREE. NEW ROOT, NEW KEYS, SAME ADDRESS, SAME BALANCE. THE NEW TREE COMES FROM THE SAME TWELVE WORD SEED PHRASE, JUST THE NEXT GENERATION. SO RECOVERY IS ONE INSTRUCTION: ROTATE.';
+const BOXL = []; { let l = ''; for (const w of BOX.split(' ')) { if ((l + ' ' + w).trim().length > 33) { BOXL.push(l); l = w; } else l = (l + ' ' + w).trim(); } BOXL.push(l); }
+// credits: artifacts/public-deployment.json confirmed_transactions (devnet), bytes / compute units
+const CRED = [['XMSS VAULT  V3', '', '', ''], ['WITHDRAW SOL', 'V1', 3117, 518509], ['WITHDRAW MOCK USDC', 'V1', 3214, 532564], ['BURN TWO LEAVES', 'V1', 3086, 529687], ['ROTATE ROOT', 'V1', 3146, 483319],
+  ['NEW-ROOT WITHDRAW SOL', 'V1', 3117, 506910], ['NEW-ROOT WITHDRAW USDC', 'V1', 3214, 578944], ['MERKLE VAULT  V2', '', '', ''], ['WITHDRAW SOL', 'LEG', 805, 8003], ['WITHDRAW MOCK USDC', 'LEG', 902, 10413],
+  ['ARRAY VAULT  V1', '', '', ''], ['WITHDRAW SOL', 'LEG', 677, 7101], ['WITHDRAW MOCK USDC', 'LEG', 774, 9512], ['PROGRAM', '', '', ''], ['DEPLOY PROGRAM', 'LEG', 542, 2820], ['CREATE MOCK USDC MINT', 'LEG', 430, 502]];
+function drawTag(t) {
+  const c = pf, t0 = T.tag;
+  if (t < t0 + 1) { if (Math.floor((t - t0) * 4) % 2 === 0) { ctext(c, 'LEVEL', 40, '#ffe000', 2); ctext(c, 'COMPLETE', 58, '#ffe000', 2); } return; }
+  const C0 = t0 + 7.0;   // credits start; the text box holds before that
+  const F = fn;
+  if (t < C0) {
+    text(F, 'LEVEL COMPLETE', 160 - Math.ceil(tw('LEVEL COMPLETE') / 2), 4, '#ffe000');
+    F.fillStyle = '#ffffff'; F.fillRect(4, 16, 208, 1); F.fillRect(4, 16 + 9 * BOXL.length + 10, 208, 1); F.fillRect(4, 16, 1, 9 * BOXL.length + 11); F.fillRect(211, 16, 1, 9 * BOXL.length + 11);
+    BOXL.forEach((l, i) => { if (t >= t0 + 1 + i * .12) text(F, l, 10, 22 + i * 9, '#ffffff'); });
+    // spent-leaf bitmap (slide 5's LEDs): 16 x 4, spent ones turn red one by one
+    text(F, 'SPENT LEAVES', 268 - Math.ceil(tw('SPENT LEAVES') / 2), 18, '#19e3ff');
+    const nSpent = Math.min(7, Math.floor(Math.max(0, t - t0 - 1.3) / .18));
+    for (let i = 0; i < 64; i++) { const x = 228 + (i % 16) * 5, y = 30 + Math.floor(i / 16) * 5; F.fillStyle = i < nSpent ? '#ff2030' : '#20c050'; F.fillRect(x, y, 3, 3); }
+    // NEXT LEVEL: a new tree grows from 8 leaves to a root; ROTATE stamps under it
+    if (t >= t0 + 2.6) {
+      text(F, 'NEXT LEVEL', 268 - Math.ceil(tw('NEXT LEVEL') / 2), 60, '#ffe000');
+      const lv = Math.min(4, Math.floor((t - t0 - 2.6) / .45) + 1);
+      const node = (x, y, col) => { F.fillStyle = col; F.fillRect(x - 2, y - 2, 5, 5); };
+      for (let L = 0; L < lv; L++) { const n = 8 >> L, y = 150 - L * 22, sp = 80 / n;
+        for (let i = 0; i < n; i++) { const x = Math.round(228 + sp / 2 + i * sp); if (L > 0) { F.fillStyle = '#7c8cff'; const cl = x - sp / 4, cr = x + sp / 4; F.fillRect(Math.round(cl), y + 2, 1, 20); F.fillRect(Math.round(cr), y + 2, 1, 20); F.fillRect(Math.round(cl), y + 2, Math.round(cr - cl) + 1, 1); }
+          node(x, y, L === 3 ? (Math.floor(t * 6) % 2 ? '#ffe000' : '#fff7a0') : L === 0 ? '#20c050' : '#7c8cff'); } }
+      if (t >= t0 + 4.6) { const k = t < t0 + 4.67 ? 3 : 2; text(F, 'ROTATE', 268 - Math.ceil(tw('ROTATE', k) / 2), 166, '#ff2030', k); } }
+    return; }
+  // credits roll: the table of transactions built, scrolls up and stops with everything on screen
+  const y0 = Math.round(lerp(244, 8, Math.min(1, (t - C0) / 3.9)));
+  const row = (s, y, col) => { if (y > -8 && y < 240) text(F, s, 6, y, col); };
+  row('TRANSACTIONS WE BUILT, ALL CONFIRMED ON DEVNET', y0, '#ffe000');
+  row('OPERATION'.padEnd(24) + 'TX ' + 'BYTES'.padStart(7) + 'CU'.padStart(9), y0 + 12, '#19e3ff');
+  CRED.forEach(([n, v, b, cu], i) => row(v ? (n.padEnd(24) + v.padEnd(3) + fmt(b).padStart(7) + fmt(cu).padStart(9)) : n, y0 + 24 + i * 10, v ? '#ffffff' : '#ff7ae0'));
+}
+
+// ---------- seek
+const coinPath = [[352, 300], [452, 282], [540, 404], [598, 560], [612, 664]];
+f.onSeek((t) => {
+  // beat 0: scene 7's last frame, sucked into the cabinet, CRT power-off line, pixel load
+  show($('s7full'), t < .25);
+  const k = t < .25 ? 2 : lerp(2, 1, 1 - Math.pow(1 - P(t, .25, .6), 3)), px = lerp(640, 670, (2 - k)), py = lerp(360, 336, (2 - k));
+  $('world').style.transform = `translate(${px - 670 * k}px,${py - 336 * k}px) scale(${k})`;
+  $('crt').style.filter = t >= .25 ? 'url(#barrel)' : 'none';
+  const fx = String(P(t, .25, .6)); $('lines').style.opacity = fx; $('grille').style.opacity = fx; $('glass').style.opacity = fx;
+  const pre = t < .75; show($('s7'), pre); for (const id of ['pf', 'fine', 'glow']) $(id).style.opacity = pre ? '0' : '1';
+  let sy = 1, br = 1, wh = 0;
+  if (t >= .6 && t < .75) { const p = step(P(t, .6, .72), 4); sy = lerp(1, .012, p); br = 1 + 3 * p; wh = p; }
+  else if (t >= .75 && t < .85) { const p = step(P(t, .75, .85), 3); sy = lerp(.012, 1, p); wh = 1 - p; }
+  // shakes: LAMPORT landing, XMSS landing, the wedge, the stamp
+  let dx = 0, dy = 0; const sh = (t0, n, a) => { const fr = Math.floor((t - t0) * 30 + 1e-6); if (fr >= 0 && fr < n) { const r = f.rng(Math.round(t0 * 100) + fr); dx = Math.round((r() - .5) * 2 * a) * 4; dy = Math.round((r() - .5) * 2 * a) * 4; } };
+  sh(T.xmss + .42, 2, 1); sh(T.awesome + .42, 2, 1); sh(T.transaction + .2, 6, 2); sh(T.cool, 3, 1);
+  $('crtIn').style.transform = `translate(${dx}px,${dy}px) scaleY(${sy})`; $('crtIn').style.filter = br !== 1 ? `brightness(${br})` : 'none';
+  $('white').style.opacity = String(wh);
+  $('flash').style.opacity = String(t >= T.limit && t < T.limit + .25 ? .55 * (1 - P(t, T.limit, T.limit + .25)) : 0);
+  // playfield, mosaic load, glow
+  draw(t);
+  if (t >= .75 && t < 1.2) { const b = [16, 8, 4, 2][Math.min(3, Math.floor((t - .75) / .1125))];
+    tc.imageSmoothingEnabled = true; tc.clearRect(0, 0, 160, 120); tc.drawImage($('pf'), 0, 0, 160 / b, 120 / b);
+    pf.imageSmoothingEnabled = false; pf.drawImage(tmp, 0, 0, 160 / b, 120 / b, 0, 0, 160, 120); }
+  gl.imageSmoothingEnabled = false; gl.clearRect(0, 0, 320, 240); gl.drawImage($('pf'), 0, 0, 320, 240); gl.drawImage($('fine'), 0, 0);
+  // coin door light: blinks with INSERT COIN, bright when the coin goes in
+  const blink = t >= T.c1end + .05 && t < T.oh + .45 ? Math.floor((t - T.c1end) * 6) % 2 === 0 : false, hit = t >= T.oh + .45 && t < T.oh + .8;
+  $('slotLit').setAttribute('fill', hit || blink ? '#ff5a66' : '#e01b2b'); $('slotGlow').setAttribute('opacity', hit ? '.75' : blink ? '.55' : '.22');
+  // coin: from the engineer's glove to the slot in 4 stop-frame positions
+  const cv = t >= T.oh && t < T.oh + .5; show($('coin'), cv);
+  if (cv) { const i = Math.min(4, Math.floor((t - T.oh) / .1)); $('coin').style.transform = `translate(${coinPath[i][0] - 15}px,${coinPath[i][1] - 15}px)`; }
+  // cards: 003-A + "local SVM only" -> 003-B + see-the-code (line 118) + proof (CiZmcGsa...)
+  const cIn = (el, t0, d = .2) => { if (t < t0) { show(el, false); return; } show(el, true); const p = P(t, t0, t0 + d); el.style.transform = `scale(${p < 1 ? (p < .6 ? lerp(.2, 1.08, p / .6) : lerp(1.08, 1, (p - .6) / .4)) : 1})`; };
+  cIn($('prog'), T.tempacct);
+  if (t < T.so + .8) { cIn($('stat'), T.tempacct + .3); } else { const p = P(t, T.so + .8, T.so + 1.0); show($('stat'), p < 1); $('stat').style.transform = `scale(${1 - p})`; }
+  { const p = P(t, T.so, T.so + .35), a = $('sufA'); show(a, p < 1); a.style.transform = `translate(${110 * p}px,${-90 * p + 160 * p * p}px) rotate(${220 * p}deg)`;
+    const b = $('sufB'), q = P(t, T.so + .35, T.so + .8); show(b, t >= T.so + .35); b.style.transform = `translate(${lerp(140, 0, Math.min(1, q / .6))}px,0) scale(${q < .6 ? lerp(1.7, .9, q / .6) : lerp(.9, 1, (q - .6) / .4)})`; }
+  if (t < T.so + 1.0) { show($('cCode'), false); show($('cProof'), false); } else { cIn($('cCode'), T.so + 1.0, .25); cIn($('cProof'), T.so + 1.2, .25); }
+  // engineer: speaks every E line; frozen head-down tilt after "limit" (no facepalm pose); thumbs-up from "verifies"
+  setHead(eng, headFrame(t, 'eng'));
+  const up = t >= T.verifies; setPose(eng, up ? 'thumbs' : 'clip');
+  place(eng, 146.1, up ? 282.5 : 290.1, 0, .36, 1, t >= D.edl[2].out_out && t < D.edl[4].out_in ? 11 : 0);
+  // lab coat: right-edge side pokes, 27 deg, mirrored body / unmirrored head, 3 stop-frame steps in and out
+  const pk = (a, b) => (t < a || t >= b + .15 ? -1 : t < a + .15 ? step(P(t, a, a + .15), 3) : t < b ? 1 : 1 - step(P(t, b, b + .15), 3));
+  const s1 = pk(D.edl[3].out_in - .3, D.edl[3].out_out + .06), c1 = pk(D.edl[6].out_in - .3, D.edl[6].out_out + .1), lp = Math.max(s1, c1);
+  show($('labL'), lp > 0);
+  if (lp > 0) { setPose(lab, s1 > 0 ? 'shrug' : 'prof'); setHead(lab, headFrame(t, 'lab')); place(lab, POKE[0] + (1 - lp) * 380, POKE[1] + (c1 > 0 ? 25 : 0), POKE[2], .42, -1); }
+  // Joe: pops up from the bottom on "single shot" and freezes (closed-mouth frame)
+  const jp = t < T.single ? -1 : step(P(t, T.single, T.single + .3), 3); show($('joeL'), jp > 0);
+  if (jp > 0) { setHead(joe, JOE_FRAME); place(joe, 1150, lerp(1010, 607, jp), 0, .26, 1); }
+});
+setPose(eng, 'clip'); setPose(lab, 'shrug'); setPose(joe, 'joe');
+</script></body></html>
