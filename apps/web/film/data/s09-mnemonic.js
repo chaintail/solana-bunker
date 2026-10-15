@@ -1,0 +1,1 @@
+window.S09_WORDS = ["odor", "assume", "hurdle", "safe", "unknown", "refuse", "barrel", "laptop", "theory", "bind", "diamond", "security", "struggle", "feature", "say", "happy", "suspect", "worth", "search", "ramp", "tumble", "digital", "rocket", "speed"];
