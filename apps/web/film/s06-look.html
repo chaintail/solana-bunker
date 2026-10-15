@@ -1,0 +1,136 @@
+<!doctype html><html data-duration="2" data-fps="30"><head><meta charset="utf-8">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
+<style>
+/* Slide 6 LOOK DRAFT (plan stage, not the scene): the noir alley, the red speakeasy door recast from the vault elevation (components/Door.tsx),
+   the suit bouncer (arms-crossed body PNG) with Liam's keyed head, rain. Grain + vignette are added after capture (pipeline/s06/look-still.sh).
+   Layer order: alley (grey) < door (colour) < bouncer back < head < bouncer collar (front) < rain < light cone.
+   Everything except #door goes through the noir filter; the door keeps its red. */
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#000}
+.L{position:absolute;left:0;top:0;width:1280px;height:720px}
+.noir{filter:grayscale(1) contrast(1.28) brightness(.92)}
+svg{position:absolute;left:0;top:0}
+#fig{position:absolute;left:0;top:0;width:1024px;height:1536px;transform-origin:0 0}
+#fig img{position:absolute;left:0;top:0}
+/* the body PNG minus its grey placeholder oval */
+#body{-webkit-mask-image:radial-gradient(ellipse 103px 119px at 511px 196px,transparent 97%,#000 100%);mask-image:radial-gradient(ellipse 103px 119px at 511px 196px,transparent 97%,#000 100%)}
+/* collar layer: the same PNG below the collar line, minus the drawn neck V, so the real neck slides behind the collar */
+#collar{clip-path:polygon(0 300px,452px 300px,462px 322px,503px 347px,521px 347px,562px 322px,571px 300px,1024px 300px,1024px 1536px,0 1536px)}
+/* head key 760x1100: chin at (338,905); k = 0.326 puts the chin on the collar line (511,306) */
+#head{width:248px;height:359px;left:401px!important;top:11px!important}
+#rain{position:absolute;left:0;top:0}
+.cone{mix-blend-mode:screen}
+</style></head><body>
+<div class="L noir" id="alley"><svg width="1280" height="720" viewBox="0 0 1280 720"><defs>
+  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#050505"/><stop offset="1" stop-color="#1a1a1a"/></linearGradient>
+  <radialGradient id="wallLight" cx="690" cy="300" r="520" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset=".6" stop-color="#000" stop-opacity=".45"/><stop offset="1" stop-color="#000" stop-opacity=".8"/></radialGradient>
+  <linearGradient id="sideL" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".9"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></linearGradient>
+  <linearGradient id="sideR" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".97"/><stop offset="1" stop-color="#000" stop-opacity=".6"/></linearGradient>
+  <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c1c1c"/><stop offset="1" stop-color="#070707"/></linearGradient>
+  <radialGradient id="pool" cx="690" cy="640" r="330" gradientTransform="translate(0 448) scale(1 .3)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity=".42"/><stop offset=".6" stop-color="#fff" stop-opacity=".08"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+  <filter id="soft"><feGaussianBlur stdDeviation="6"/></filter>
+  <filter id="smear"><feGaussianBlur stdDeviation="3 14"/></filter>
+</defs>
+<rect width="1280" height="720" fill="url(#sky)"/>
+<g id="bricks"></g>
+<rect x="170" y="70" width="960" height="530" fill="url(#wallLight)"/>
+<!-- drainpipe -->
+<rect x="236" y="70" width="14" height="530" fill="#2a2a2a"/><rect x="230" y="160" width="26" height="8" fill="#333"/><rect x="230" y="420" width="26" height="8" fill="#333"/>
+<!-- side walls -->
+<g id="sideBricks"></g>
+<polygon points="0,0 170,70 170,600 0,720" fill="url(#sideL)"/>
+<polygon points="1280,0 1130,70 1130,600 1280,720" fill="url(#sideR)"/>
+<!-- fire escape silhouette on the right wall -->
+<g stroke="#000" stroke-width="5" fill="none" opacity=".9"><path d="M1140 150 L1280 96 M1140 196 L1280 148 M1140 150 L1140 196 M1170 138 L1170 186 M1200 126 L1200 174 M1230 115 L1230 162 M1260 104 L1260 152"/><path d="M1145 330 L1280 290 M1145 372 L1280 336 M1145 330 L1145 372 M1180 320 L1180 362 M1215 309 L1215 352 M1250 299 L1250 342"/><path d="M1150 196 L1250 300" stroke-width="7"/></g>
+<polygon points="150,78 170,70 170,600 150,610" fill="#fff" opacity=".10"/>
+<circle cx="690" cy="160" r="150" fill="#fff" opacity=".06" filter="url(#soft)"/>
+<!-- ground: wet asphalt, a gutter line and puddles -->
+<polygon points="0,720 170,600 1130,600 1280,720" fill="url(#ground)"/>
+<rect x="170" y="598" width="960" height="5" fill="#2b2b2b"/>
+<ellipse cx="690" cy="650" rx="380" ry="60" fill="url(#pool)"/>
+<g fill="#000" opacity=".55"><ellipse cx="420" cy="672" rx="120" ry="14"/><ellipse cx="1000" cy="690" rx="150" ry="16"/><ellipse cx="700" cy="705" rx="90" ry="8"/></g>
+<!-- lamp reflection streak in the wet ground -->
+<rect x="676" y="606" width="28" height="110" fill="#fff" opacity=".35" filter="url(#smear)"/>
+<!-- wall-bracket street lamp above, left of the door -->
+<path d="M560 70 L560 104 Q560 118 600 118 L690 118" stroke="#0b0b0b" stroke-width="7" fill="none"/>
+<path d="M664 118 L716 118 L728 142 L652 142 Z" fill="#111"/>
+<ellipse cx="690" cy="144" rx="30" ry="6" fill="#fff"/>
+<circle cx="690" cy="146" r="46" fill="#fff" opacity=".18" filter="url(#soft)"/>
+<!-- stone door surround (the door itself is the colour layer) -->
+<rect x="744" y="166" width="252" height="436" fill="#202020"/><rect x="736" y="160" width="268" height="14" fill="#2c2c2c"/>
+<rect x="736" y="592" width="268" height="12" fill="#262626"/>
+<!-- bouncer's shadow -->
+<ellipse cx="584" cy="641" rx="70" ry="7" fill="#000" opacity=".85"/>
+</svg></div>
+
+<div class="L" id="door"><svg width="1280" height="720" viewBox="0 0 1280 720"><defs>
+  <linearGradient id="red" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8e0c13"/><stop offset=".4" stop-color="#5c060b"/><stop offset="1" stop-color="#1e0103"/></linearGradient>
+  <linearGradient id="brass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c29a52"/><stop offset=".5" stop-color="#7a5820"/><stop offset="1" stop-color="#3a290c"/></linearGradient>
+  <radialGradient id="doorLight" cx="740" cy="260" r="300" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ff9c8c" stop-opacity=".20"/><stop offset="1" stop-color="#ff9c8c" stop-opacity="0"/></radialGradient>
+  <linearGradient id="doorShade" x1="0" y1="0" x2="1" y2="0"><stop offset=".35" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".55"/></linearGradient>
+  <linearGradient id="lintel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".7"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
+  <filter id="refl"><feGaussianBlur stdDeviation="2 10"/></filter>
+</defs>
+<!-- reflection of the door in the wet ground -->
+<g filter="url(#refl)" opacity=".42"><rect x="758" y="604" width="224" height="120" fill="#6a080d"/><rect x="822" y="606" width="96" height="10" fill="#7a5820"/></g>
+<!-- door panel (vault elevation recast: hinges on the left, address plate -> sliding slot at eye height, bolt ring + 3-spoke wheel) -->
+<rect x="758" y="176" width="224" height="420" rx="3" fill="url(#red)" stroke="#1a0203" stroke-width="3"/>
+<rect x="776" y="300" width="188" height="276" fill="none" stroke="#4a0508" stroke-width="3"/>
+<rect x="779" y="303" width="182" height="270" fill="none" stroke="#c02028" stroke-width="1" opacity=".5"/>
+<rect x="764" y="214" width="9" height="40" rx="2" fill="url(#brass)"/><rect x="764" y="500" width="9" height="40" rx="2" fill="url(#brass)"/>
+<g id="ring"></g>
+<!-- slot: brass frame, dark opening, shutter (the shutter slides left to open) -->
+<rect x="818" y="240" width="104" height="30" rx="2" fill="url(#brass)"/>
+<rect x="824" y="246" width="92" height="18" fill="#080303"/>
+<rect id="shutter" x="824" y="246" width="92" height="18" fill="#5e070b" stroke="#2a0204" stroke-width="1.5"/>
+<rect x="958" y="400" width="12" height="44" rx="5" fill="url(#brass)"/>
+<rect x="758" y="176" width="224" height="420" fill="url(#doorLight)"/><rect x="758" y="176" width="224" height="420" fill="url(#doorShade)"/><rect x="758" y="176" width="224" height="34" fill="url(#lintel)"/>
+</svg></div>
+
+<div class="L noir" id="bouncer"><div id="fig" style="transform:translate(430px,203px) scale(.3)">
+  <img id="body" src="assets/bodies/1-suit-arms-crossed.png" width="1024" height="1536">
+  <img id="head" src="heads/s06-look-head.png">
+  <img id="collar" src="assets/bodies/1-suit-arms-crossed.png" width="1024" height="1536">
+</div></div>
+
+<canvas id="rain" width="1280" height="720"></canvas>
+<svg class="L cone" width="1280" height="720" viewBox="0 0 1280 720"><defs>
+  <linearGradient id="coneG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".30"/><stop offset="1" stop-color="#fff" stop-opacity=".03"/></linearGradient>
+  <filter id="coneBlur"><feGaussianBlur stdDeviation="10"/></filter>
+</defs><polygon points="662,146 718,146 920,660 440,660" fill="url(#coneG)" filter="url(#coneBlur)"/></svg>
+
+<script src="lib/film.js"></script>
+<script>
+const f = window.__film, $ = (id) => document.getElementById(id);
+// brick back wall (seeded per-brick shade so the wall has texture under the grade)
+{ const r = f.rng(6); let g = ''; const W = 58, H = 22;
+  for (let y = 70, row = 0; y < 600; y += H, row++) for (let x = 170 - (row % 2) * W / 2; x < 1130; x += W) {
+    const v = 52 + Math.floor(r() * 34); g += `<rect x="${x + 2}" y="${y + 2}" width="${W - 4}" height="${H - 4}" fill="rgb(${v},${v - 4},${v - 6})"/>`; }
+  $('bricks').innerHTML = `<rect x="170" y="70" width="960" height="530" fill="#151515"/>` + g;
+  // side walls: brick courses converging to the vanishing point
+  let s = ''; for (let i = 0; i <= 24; i++) { const yb = 70 + i * 22;
+    s += `<line x1="170" y1="${yb}" x2="0" y2="${(yb - 335) * 1.45 + 335}" stroke="#3a3a3a" stroke-width="2"/><line x1="1130" y1="${yb}" x2="1280" y2="${(yb - 335) * 1.45 + 335}" stroke="#3a3a3a" stroke-width="2"/>`; }
+  $('sideBricks').innerHTML = `<polygon points="0,0 170,70 170,600 0,720" fill="#3c3c3c"/><polygon points="1280,0 1130,70 1130,600 1280,720" fill="#353535"/>` + s;
+  // vault bolt ring and wheel, recast from components/Door.tsx (36 bolts on r=243 of 640x700 -> r=74 here)
+  let b = ''; const cx = 870, cy = 438;
+  b += `<circle cx="${cx}" cy="${cy}" r="82" fill="#6a080d" stroke="#2a0204" stroke-width="3"/><circle cx="${cx}" cy="${cy}" r="62" fill="none" stroke="#a5141b" stroke-width="2"/>`;
+  for (let k = 0; k < 36; k++) { const a = k / 36 * Math.PI * 2; b += `<circle cx="${(cx + 74 * Math.cos(a)).toFixed(1)}" cy="${(cy + 74 * Math.sin(a)).toFixed(1)}" r="2.6" fill="url(#brass)"/>`; }
+  for (const a of [0, 120, 240]) b += `<g transform="rotate(${a + 15} ${cx} ${cy})"><rect x="${cx - 3}" y="${cy - 52}" width="6" height="40" fill="url(#brass)"/><circle cx="${cx}" cy="${cy - 56}" r="6" fill="url(#brass)"/></g>`;
+  b += `<circle cx="${cx}" cy="${cy}" r="15" fill="url(#brass)" stroke="#2a0204" stroke-width="2"/>`;
+  $('ring').innerHTML = b; }
+// rain: seeded streaks falling at 1900 px/s with a slight wind slant; brighter inside the light cone
+const R = f.rng(42), drops = Array.from({ length: 420 }, () => ({ x: R() * 1500 - 110, y: R() * 900, l: 16 + R() * 30, a: .10 + R() * .22, v: 1600 + R() * 700 }));
+const ctx = $('rain').getContext('2d');
+const inCone = (x, y) => { if (y < 146 || y > 660) return 0; const p = (y - 146) / 514, l = 662 - 222 * p, r = 718 + 202 * p; return x > l && x < r ? 1 - Math.abs((x - (l + r) / 2) / ((r - l) / 2)) * .6 : 0; };
+f.onSeek((t) => {
+  ctx.clearRect(0, 0, 1280, 720); ctx.lineCap = 'round';
+  for (const d of drops) {
+    const y = ((d.y + d.v * t) % 900) - 90, x = d.x + y * .18, c = inCone(x, y);
+    ctx.strokeStyle = `rgba(225,225,225,${(d.a + c * .45).toFixed(3)})`; ctx.lineWidth = c ? 1.6 : 1.1;
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - d.l * .18, y - d.l); ctx.stroke();
+  }
+  // splashes on the ground
+  const S = f.rng(7 + Math.floor(t * 30));
+  ctx.strokeStyle = 'rgba(230,230,230,.35)'; ctx.lineWidth = 1;
+  for (let i = 0; i < 46; i++) { const x = 60 + S() * 1160, y = 610 + S() * 105, w = 3 + S() * 6; ctx.beginPath(); ctx.ellipse(x, y, w, w * .3, 0, 0, Math.PI * 2); ctx.stroke(); }
+});
+</script></body></html>
