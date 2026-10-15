@@ -1,0 +1,1 @@
+window.ANCHORS = {"physicist-professor-point": {"cx": 394.5, "chin": 308}, "physicist-shrug": {"cx": 511.5, "chin": 308}, "physicist-holding-clipboard": {"cx": 511.5, "chin": 308}, "street-celebrate": {"cx": 511.0, "chin": 344}, "engineer-thumbs-up": {"cx": 511.5, "chin": 306}};
