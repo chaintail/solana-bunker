@@ -1,5 +1,6 @@
 // Render a film scene to PNG frames with headless Chrome (CDP, no dependencies).
-//   node film/scripts/capture.mjs <scene> [--layer=front|back] [--still=<t>[,<t>...]] [--from=<s>] [--to=<s>] [--out=<dir>]
+//   node film/scripts/capture.mjs <scene> [--layer=front|back] [--still=<t>[,<t>...]] [--from=<s>] [--to=<s>] [--fresh] [--out=<dir>]
+// --fresh reloads the page before every frame (slower). Headless Chrome occasionally drops a paint after an incremental update; a fresh page does not.
 // Frames: apps/web/render/<scene>[-<layer>]/f%05d.png (fps from data-fps), gitignored.
 // With --layer the page background is transparent, so the PNGs carry alpha.
 // With --still, writes <out>/still-<t>.png for each time instead of the frame sequence.
@@ -51,9 +52,14 @@ try {
   await send('Page.enable');
   await send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
   if (layer) await send('Emulation.setDefaultBackgroundColorOverride', { color: { r: 0, g: 0, b: 0, a: 0 } });
+  const load = async () => {
   await send('Page.navigate', { url: `file://${resolve(here, '..', scene + '.html')}?capture${layer ? '&layer=' + layer : ''}` });
+  await sleep(150);
   for (let i = 0; i < 300; i++) { if (await ev("document.documentElement.dataset.filmReady==='1'")) break; await sleep(100); }
+  };
+  await load();
   const shot = async (t, file) => {
+    if (opt.fresh) await load();
     await ev(`(async()=>{window.__film.seek(${t});await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));return 1})()`);
     const { data } = await send('Page.captureScreenshot', { format: 'png', fromSurface: true, captureBeyondViewport: false });
     writeFileSync(file, Buffer.from(data, 'base64'));

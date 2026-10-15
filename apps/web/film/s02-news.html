@@ -32,12 +32,15 @@ html:not([data-layer]) body,html[data-layer="back"] body{background:#05070d}
 .ticker{position:absolute;left:0;right:0;bottom:0;height:56px;background:#f4f5f7;display:flex;align-items:center;box-shadow:0 -4px 14px rgba(0,0,0,.4);overflow:hidden}
 .ticker .lbl{position:relative;z-index:2;height:100%;background:#0d1830;color:#fff;font:800 22px/56px 'Inter';padding:0 20px;letter-spacing:.12em;white-space:nowrap}
 .ticker .win{position:relative;flex:1;height:100%;overflow:hidden}
-.ticker .run{position:absolute;left:0;top:0;height:100%;white-space:nowrap;font:700 28px/56px 'Inter';color:#141821;will-change:transform}
+.ticker .run{position:absolute;left:0;top:0;height:100%;white-space:nowrap;font:700 28px/56px 'Inter';color:#141821}
 .ticker .run span{display:inline-block;padding-right:0}
 .ticker .run b{color:#e30613;margin:0 22px}
 /* over-the-shoulder box */
-.ots{position:absolute;right:36px;top:36px;width:410px;height:230px;border:5px solid #fff;background:#000;box-shadow:0 10px 30px rgba(0,0,0,.6);overflow:hidden;transform-origin:100% 0}
-.ots .pan{position:absolute;left:0;top:0;width:410px;height:230px;transform-origin:0 0}
+.ots{position:absolute;right:36px;top:36px;width:410px;height:230px;background:#000;box-shadow:0 10px 30px rgba(0,0,0,.6);overflow:hidden;transform-origin:100% 0}
+/* rev 7: the white outline is its own layer above the image (.obrd), the image sits in a clip box under it, so the image can never cover or flicker over the border during the zoom */
+.ots .clip{position:absolute;inset:0;overflow:hidden}
+.ots .obrd{position:absolute;inset:0;border:5px solid #fff;z-index:5;pointer-events:none}
+.ots .pan{position:absolute;left:5px;top:5px;width:410px;height:230px;transform-origin:0 0}
 .ots img{position:absolute;left:0;top:0;width:410px;height:230px;display:block}
 .ots svg.pen{position:absolute;left:0;top:0;width:410px;height:230px;overflow:visible}
 .ots svg.pen path{fill:none;stroke:#ff1f2d;stroke-width:3.6;stroke-linecap:round;stroke-linejoin:round}
@@ -47,7 +50,7 @@ html:not([data-layer]) body,html[data-layer="back"] body{background:#05070d}
 .tweet .thead,.tweet .tfoot{display:block;width:428px;height:auto;position:relative;z-index:2;background:#000}
 .tweet .tfoot{border-top:1px solid #2a2f35}
 .tweet .twin{position:relative;width:428px;height:358px;overflow:hidden;border-top:1px solid #1d2126}
-.tweet .tscroll{position:absolute;left:0;top:0;width:428px;will-change:transform}
+.tweet .tscroll{position:absolute;left:0;top:0;width:428px}
 .tweet .tinner{position:relative;width:1290px;transform-origin:0 0;transform:scale(.33178)}
 .tweet .tinner img{display:block;width:1290px}
 .tweet .hlg{position:absolute;left:0;top:0;width:1290px;height:1px}
@@ -81,9 +84,9 @@ html:not([data-layer]) body,html[data-layer="back"] body{background:#05070d}
   <div class="desk"></div>
   <div class="qday" id="qday"><b>Q-DAY?</b><i>(fake)</i></div>
   <div id="otsw" style="position:absolute;inset:0"><div class="otstag" id="otstag">BANKLESS</div>
-  <div class="ots" id="ots"><div class="pan" id="pan">
+  <div id="otse" style="position:absolute;inset:0"><div class="ots" id="ots"><div class="clip"><div class="pan" id="pan">
     <img src="assets/bankless-debate-thumb.jpg">
-    <svg class="pen" id="penw" viewBox="0 0 410 230"><path id="pen" d="M0 0"/></svg></div></div></div>
+    <svg class="pen" id="penw" viewBox="0 0 410 230"><path id="pen" d="M0 0"/></svg></div></div><div class="obrd"></div></div></div></div>
   <div class="tweetw" id="tweetw" style="position:absolute;inset:0"><div class="tweet" id="tweet">
     <img class="thead" src="assets/tweet-header-v4.jpg">
     <div class="twin"><div class="tscroll" id="tscroll"><div class="tinner" id="tinner"><img src="assets/tweet-body.jpg"></div></div></div>
@@ -134,7 +137,7 @@ f.onSeek((t) => { // text swap is a hard cut on the frame, keyed on time; white 
 A('chbug', [{opacity:0},{opacity:1}], 0.4, 0.4);
 if (new URLSearchParams(location.search).get('live') === 'tl') { const l = $('live'); l.classList.add('tl'); $('front').append(l); }   // A/B: LIVE top-left instead of beside CNN
 // over-the-shoulder box: in at "this lead Ethereum researcher" (0.96) with the FULL thumbnail (Anatoly and Justin), held for a beat
-A('ots', [{opacity:0,transform:'translateY(-30px)'},{opacity:1,transform:'none'}], 0.9 + OFF, 0.35, {easing:'ease-out'});
+A('otse', [{opacity:0,transform:'translateY(-30px)'},{opacity:1,transform:'none'}], 0.9 + OFF, 0.35, {easing:'ease-out'});
 A('otstag', [{opacity:0},{opacity:1}], 1.1 + OFF, 0.2);
 // face geometry in 410x230 box coordinates (thumbnail face centre ~ (170,395)/1280 * 410)
 const fx = 170 * 410 / 1280, fy = 395 * 410 / 1280, fr = 150 * 410 / 1280;
@@ -151,8 +154,14 @@ A('pen', [{strokeDasharray:`${penLen} ${penLen}`,strokeDashoffset:penLen},{strok
 A('penw', [{opacity:1},{opacity:1,offset:.81},{opacity:0}], tc, 3.2);   // finished circle (drawn by 4.5) holds ~0.7 s, fades out by 5.8, before the zoom at 5.9
 // zoom: box becomes a square, image zooms until the face fills it, slow, starts after the circle has faded
 const z0 = 5.9 + OFF, zd = 2.2, S = 2.45, sq = 260;
-A('ots', [{width:'410px',height:'230px'},{width:sq + 'px',height:sq + 'px'}], z0, zd, {easing:'ease-in-out'});
-A('pan', [{transform:'translate(0,0) scale(1)'},{transform:`translate(${(sq / 2 - 5) - S * fx}px,${(sq / 2 - 5) - S * fy}px) scale(${S})`}], z0, zd, {easing:'ease-in-out'});
+// rev 7: the zoom is driven from the seek hook, not by Web Animations. The two composited/animated layers (box size, image transform) painted the image over the
+// outline (and dropped the box shadow) on some frames; set directly per frame, with the same ease-in-out curve, the outline layer (.obrd) always paints on top.
+const bez = (x, x1 = .42, y1 = 0, x2 = .58, y2 = 1) => { let lo = 0, hi = 1; for (let i = 0; i < 40; i++) { const u = (lo + hi) / 2, bx = 3 * (1 - u) ** 2 * u * x1 + 3 * (1 - u) * u * u * x2 + u ** 3; if (bx < x) lo = u; else hi = u; }
+  const u = (lo + hi) / 2; return 3 * (1 - u) ** 2 * u * y1 + 3 * (1 - u) * u * u * y2 + u ** 3; };
+{ const otsEl = $('ots'), panEl = $('pan'), tx = (sq / 2 - 5) - S * fx, ty = (sq / 2 - 5) - S * fy;
+  f.onSeek((t) => { const e = bez(f.prog(t, z0, z0 + zd));
+    otsEl.style.width = (410 + (sq - 410) * e) + 'px'; otsEl.style.height = (230 + (sq - 230) * e) + 'px';
+    panEl.style.transform = `translate(${tx * e}px,${ty * e}px) scale(${1 + (S - 1) * e})`; }); }
 // rev 4: the zoomed face stays up until the tweet discussion ends ("... hidden until you actually sign something", 28.9), then exits as before
 A('otsw', [{opacity:1,transform:'none'},{opacity:0,transform:'translateY(-40px)'}], MP(29.0), 0.45, {easing:'ease-in'});
 // tweet component slides up on the other side at "He said, get ready for bunker mode" (7.12)

@@ -1,0 +1,13 @@
+[0:v]format=yuv420p,fps=30,trim=duration=37.8333,setpts=PTS-STARTPTS[bg];
+[1:v]fps=30,scale=525:700:flags=lanczos,despill=type=green:mix=0.6:expand=0.2,format=rgb24,setpts=PTS-STARTPTS,split[c1][c2];
+[c1]trim=end_frame=286,setpts=PTS-STARTPTS[ca];
+[c2]trim=start_frame=444,setpts=PTS-STARTPTS[cb];
+[ca][cb]concat=n=2:v=1:a=0[c];
+[2:v]fps=30,scale=525:700:flags=lanczos,format=gray,setpts=PTS-STARTPTS,split[a1][a2];
+[a1]trim=end_frame=286,setpts=PTS-STARTPTS[aa];
+[a2]trim=start_frame=444,setpts=PTS-STARTPTS[ab];
+[aa][ab]concat=n=2:v=1:a=0[a];
+[c][a]alphamerge[liam];
+[bg][liam]overlay=x=377:y=-20:format=auto[bgl];
+[3:v]format=yuva420p[fr];
+[bgl][fr]overlay=format=auto,format=yuv420p,setsar=1[desk]
