@@ -26,7 +26,7 @@ html,body{background:#06374c}
   repeating-linear-gradient(0deg,rgba(234,247,251,.16) 0 1.5px,transparent 1.5px 100px),repeating-linear-gradient(90deg,rgba(234,247,251,.16) 0 1.5px,transparent 1.5px 100px),
   repeating-linear-gradient(0deg,rgba(234,247,251,.06) 0 1px,transparent 1px 20px),repeating-linear-gradient(90deg,rgba(234,247,251,.06) 0 1px,transparent 1px 20px)}
 #sheet .gn{position:absolute;inset:0;background:var(--toner);opacity:.20;mix-blend-mode:multiply}
-#roll{position:absolute;top:-10px;bottom:-10px;width:56px;background:linear-gradient(90deg,#052b3b,#1b7a9c 35%,#9fd8ea 50%,#1b7a9c 65%,#052b3b);box-shadow:8px 0 18px rgba(0,0,0,.45)}
+#roll{position:absolute;top:-14px;bottom:-14px;width:84px;border-radius:42px/16px;background:linear-gradient(90deg,#03222f,#14708f 20%,#c6ecf7 44%,#3a9dbd 64%,#06323f);box-shadow:-16px 0 26px rgba(0,0,0,.38),10px 0 22px rgba(0,0,0,.4)}
 #ink{position:absolute;left:0;top:0}
 .dt{position:absolute;font-family:var(--draft);color:var(--ink);white-space:pre;line-height:1.08;text-shadow:0 0 1px rgba(234,247,251,.6)}
 .acc{color:var(--acc)}
@@ -53,7 +53,7 @@ html,body{background:#06374c}
 .pmeta span{color:#e6edf3;float:right;font-weight:700}
 .pchart{position:absolute;left:240px;top:60px}
 #cracks{position:absolute;left:370px;top:125px}
-.shard{position:absolute;left:370px;top:125px;width:560px;height:460px;overflow:hidden;border-radius:14px;display:none}
+.shard{position:absolute;overflow:hidden;display:none}
 .coin{position:absolute;border-radius:50%;object-fit:cover;box-shadow:0 3px 8px rgba(0,0,0,.5);border:3px solid #f4f1e6;background:#fff}
 /* ---------- the fan of three sheets ---------- */
 #fanDim{position:absolute;inset:0;background:#01202c;opacity:0}
@@ -113,50 +113,60 @@ const fold = $('fold');
 film.onSeek((t) => {
   const p = eio(pr(t, .05, 1.05));
   fold.style.transform = `translate(${p * 1000}px,${p * 90}px) rotate(${p * 11}deg)`;
-  $('lamp').style.opacity = 1 - pr(t, .6, 1.8);
-  $('desk').style.display = t > 1.9 ? 'none' : '';
-  const u = eio(pr(t, .25, 1.7));
-  $('sheet').style.clipPath = `inset(0 ${(1 - u) * 100}% 0 0)`;
-  $('roll').style.left = (u * 1280 - 40) + 'px'; $('roll').style.display = (u > 0 && u < 1) ? '' : 'none';
+  $('lamp').style.opacity = 1 - pr(t, .8, 2.2);
+  $('desk').style.display = t > 2.5 ? 'none' : '';
+  // the sheet comes off a rolled tube that sits at the left edge and rolls to the right until it leaves the frame (nothing is drawn before the sheet is open)
+  const u = eio(pr(t, .45, 2.45)), tx = 44 + u * 1290;
+  $('sheet').style.clipPath = `inset(0 ${Math.max(0, 1 - tx / 1280) * 100}% 0 0)`;
+  const R = $('roll'); R.style.left = (tx - 42) + 'px'; R.style.display = (t > .1 && tx < 1330) ? '' : 'none'; R.style.opacity = pr(t, .1, .4);
+  R.style.transform = `rotate(${Math.sin(t * 9) * (u > 0 && u < 1 ? .6 : 0)}deg)`;
 });
-draw(path('M22 22H1258V698H22Z', { 'stroke-width': 4 }), 1.0, 2.4, { ease: eo });
-draw(path('M34 34H1246V686H34Z', { 'stroke-width': 1.5 }), 1.2, 2.6, { ease: eo });
-for (const d of ['M640 22V46', 'M640 698V674', 'M22 360H46', 'M1258 360H1234']) draw(path(d), 1.4, 2.4);
+draw(path('M22 22H1258V698H22Z', { 'stroke-width': 4 }), 2.3, 3.6, { ease: eo });
+draw(path('M34 34H1246V686H34Z', { 'stroke-width': 1.5 }), 2.5, 3.8, { ease: eo });
+for (const d of ['M640 22V46', 'M640 698V674', 'M22 360H46', 'M1258 360H1234']) draw(path(d), 2.6, 3.6);
 const TB = { x: 700, y: 596, w: 300, h: 94 };
-draw(path(`M${TB.x} ${TB.y}H${TB.x + TB.w}V${TB.y + TB.h}H${TB.x}Z`, { 'stroke-width': 3.5 }), 1.8, 3.0, { ease: eo });
-draw(path(`M${TB.x} ${TB.y + 44}H${TB.x + TB.w}M${TB.x + 170} ${TB.y + 44}V${TB.y + TB.h}`, { 'stroke-width': 2 }), 2.4, 3.4);
-dtext('SOLANA BUNKER', TB.x + 12, TB.y + 5, 31, 2.7, 3.7, { css: 'letter-spacing:.04em' });
+draw(path(`M${TB.x} ${TB.y}H${TB.x + TB.w}V${TB.y + TB.h}H${TB.x}Z`, { 'stroke-width': 3.5 }), 2.5, 3.5, { ease: eo });
+draw(path(`M${TB.x} ${TB.y + 44}H${TB.x + TB.w}M${TB.x + 170} ${TB.y + 44}V${TB.y + TB.h}`, { 'stroke-width': 2 }), 3.0, 3.8);
+dtext('SOLANA BUNKER', TB.x + 12, TB.y + 5, 31, 3.1, 3.9, { css: 'letter-spacing:.04em' });
 // ---------- 1. the equation ("nerding out on math"), the question, the headline ----------
 const tMath = W('a2', 'math'), tNerd = W('a2', 'nerding'), tFasc = W('c1', 'fascinating'), tResearch = W('b2', 'research');
 const tCan = W('c2', 'Can'), tBunkE = W('c2', 'bunker', false);
-const eq = dtext('−x² + y² = 1 + d·x²y²', 640, 112, 72, tNerd - .1, tMath + .8, { center: true, out: [11.3, 11.9] });
+const eq = dtext('\u2212x\u00b2 + y\u00b2 = 1 \u2212 (121665/121666)\u00b7x\u00b2\u00b7y\u00b2', 640, 92, 50, tNerd - .3, tMath + .9, { center: true, out: [11.3, 11.9] });
+{ // scratched handwritten side note with an arrow at the equation
+  const o = { out: [11.3, 11.9] }, tN = tMath + .5;
+  const note = dtext('elliptic curve', 700, 196, 42, tN, tN + .8, Object.assign({ cls: 'acc', css: 'transform:rotate(-6deg);transform-origin:0 50%' }, o));
+  draw(path('M708 246q40 -10 70 4t68 -6t60 4', { stroke: ACC, 'stroke-width': 3 }), tN + .85, tN + 1.2, o);          // scratch under the note
+  draw(path('M690 214C650 200 640 168 700 140', { stroke: ACC, 'stroke-width': 4 }), tN + 1.0, tN + 1.4, o);
+  draw(path('M676 136L702 138L694 164', { stroke: ACC, 'stroke-width': 4 }), tN + 1.35, tN + 1.6, o);              // arrow head, aimed up at the equation
+}
 { // faint construction circle + cross, drawn on "cool research question", rubbed out before the headline
   const o = { out: [11.3, 11.9] };
-  draw(path('M640 250m-150 0a150 150 0 1 0 300 0a150 150 0 1 0 -300 0', { 'stroke-width': 2 }), tResearch - .1, tResearch + 1.5, Object.assign({ ease: eo }, o));
-  draw(path('M640 70V430M450 250H830', { 'stroke-width': 1.5 }), tResearch + .3, tResearch + 1.5, o);
+  draw(path('M640 400m-120 0a120 120 0 1 0 240 0a120 120 0 1 0 -240 0', { 'stroke-width': 2 }), tResearch - .1, tResearch + 1.5, Object.assign({ ease: eo }, o));
+  draw(path('M640 270V530M500 400H780', { 'stroke-width': 1.5 }), tResearch + .3, tResearch + 1.5, o);
 }
+const HLX = 770;   // headline centre: right of the narrator, who is on screen before it is written
 const HL = mk('div', 'abs', 'left:0;top:0;width:1280px;height:720px;transform-origin:0 0', texts);
-const hl1 = dtext('CAN WE BUILD A', 640, 196, 100, tFasc - .1, tFasc + 1.6, { center: true, parent: HL });
-const hl2 = dtext('SOLANA BUNKER?', 640, 316, 100, tCan + .05, tBunkE + .1, { center: true, parent: HL });
+const hl1 = dtext('CAN WE BUILD A', HLX, 196, 100, tFasc - .1, tFasc + 1.6, { center: true, parent: HL });
+const hl2 = dtext('SOLANA BUNKER?', HLX, 316, 100, tCan + .05, tBunkE + .1, { center: true, parent: HL });
 const qg = group(ink), qBox = path('M0 0', { 'stroke-width': 5, stroke: ACC }, qg);   // box round the "?" (path set once the font has laid the line out)
 draw(qBox, tBunkE - .1, tBunkE + .4, { ease: eo });
 const pen = $('pencil');
 film.onSeek((t) => {
-  if (!qBox.dataset.set && hl2.offsetWidth) { const x2 = 640 + hl2.offsetWidth / 2 + 4, x1 = x2 - 74; qBox.setAttribute('d', `M${x1} 322H${x2}V424H${x1}Z`); qBox.dataset.set = 1; }
+  if (!qBox.dataset.set && hl2.offsetWidth) { const x2 = HLX + hl2.offsetWidth / 2 + 4, x1 = x2 - 74; qBox.setAttribute('d', `M${x1} 322H${x2}V424H${x1}Z`); qBox.dataset.set = 1; }
   const s = eio(pr(t, 16.5, 17.3));
   const tr = `translate(${lerp(0, 36, s)}px,${lerp(0, 30, s)}px) scale(${lerp(1, .3, s)})`;
   HL.style.transform = tr; qg.style.transform = tr; qg.style.transformOrigin = '0 0';
   let on = 0, nx = 0, ny = 0; const w = (e) => e.offsetWidth;
-  const p1 = pr(t, tFasc - .1, tFasc + 1.6), p2 = pr(t, tCan + .05, tBunkE + .1), pe = pr(t, tNerd - .1, tMath + .8);
-  if (pe > 0 && pe < 1) { on = 1; nx = 640 - w(eq) / 2 + pe * w(eq); ny = 180; }
-  else if (p1 > 0 && p1 < 1) { on = 1; nx = 640 - w(hl1) / 2 + p1 * w(hl1); ny = 290; }
-  else if (p2 > 0 && p2 < 1) { on = 1; nx = 640 - w(hl2) / 2 + p2 * w(hl2); ny = 410; }
+  const p1 = pr(t, tFasc - .1, tFasc + 1.6), p2 = pr(t, tCan + .05, tBunkE + .1), pe = pr(t, tNerd - .3, tMath + .9);
+  if (pe > 0 && pe < 1) { on = 1; nx = 640 - w(eq) / 2 + pe * w(eq); ny = 150; }
+  else if (p1 > 0 && p1 < 1) { on = 1; nx = HLX - w(hl1) / 2 + p1 * w(hl1); ny = 290; }
+  else if (p2 > 0 && p2 < 1) { on = 1; nx = HLX - w(hl2) / 2 + p2 * w(hl2); ny = 410; }
   pen.style.opacity = on; pen.style.transform = `translate(${nx - 4}px,${ny - 20 + 3 * Math.sin(t * 41)}px) rotate(-10deg)`;
 });
 // ---------- 2. the Ed25519 curve, keyholes, the PDA off the curve ----------
 const L2 = group(ink), L2T = mk('div', 'abs', 'inset:0', texts);
 film.onSeek((t) => { const o = 1 - .86 * pr(t, 31.1, 31.7) - .14 * pr(t, 40.9, 41.5); L2.style.opacity = o; L2T.style.opacity = o; });
-const CV = { x: 760, y: 400, R: 150 }, rad = (th) => CV.R * (1 + .09 * Math.cos(4 * th + .5) + .045 * Math.sin(2 * th + 1));
+const CV = { x: 640, y: 400, R: 150 }, rad = (th) => CV.R * (1 + .09 * Math.cos(4 * th + .5) + .045 * Math.sin(2 * th + 1));
 const pt = (th, k = 1) => [CV.x + k * rad(th) * Math.cos(th), CV.y + k * rad(th) * Math.sin(th)];
 {
   let d = ''; for (let i = 0; i <= 200; i++) { const th = i / 200 * Math.PI * 2, p = pt(th); d += (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1); }
@@ -221,42 +231,47 @@ function makeChar(id, who, poses, k, pivot) {
     setPose(p) { if (p === pose) return; pose = p; for (const q in wr) wr[q].style.display = q === p ? 'block' : 'none'; const d = poses[p]; hd.style.left = (d.cx - CHINX * hs) + 'px'; hd.style.top = (d.top - FACE_TOP * hs) + 'px'; },
     place(px, py, rot, sc) { root.style.transform = `translate(${px - pivot[0]}px,${py - pivot[1]}px) rotate(${rot}deg) scale(${k * sc})`; } };
 }
-// ---------- 3. the pump-style page, coins, the shatter ----------
-const PUMP = { x: 370, y: 125, w: 560, h: 460 };
+// ---------- 3. the pump.fun page (real screenshot of the live site, header included), with our fake $BUNKER card and rising chart drawn over its feed ----------
+const PUMP = { x: 222, y: 165, w: 835, h: 522 }, PSC = 835 / 1440;
 const pump = mk('div', '', 'position:absolute;left:0;top:0', stage);
-const pumpP = mk('div', '', `position:absolute;left:${PUMP.x}px;top:${PUMP.y}px;width:560px;height:460px;background:#0d1117;border:2px solid #2b3340;border-radius:14px;overflow:hidden;font-family:Inter,sans-serif;color:#e6edf3;box-shadow:0 20px 40px rgba(0,0,0,.5);opacity:0`, pump);
+const pumpP = mk('div', '', `position:absolute;left:${PUMP.x}px;top:${PUMP.y}px;width:${PUMP.w}px;height:${PUMP.h}px;overflow:hidden;border-radius:10px;border:2px solid #2b3340;box-shadow:0 20px 40px rgba(0,0,0,.55);opacity:0`, pump);
 const candles = [];
 function panel(parent) {
-  const c = mk('div', 'pcl', '', parent);
-  c.insertAdjacentHTML('beforeend', `<div class="pbar"><b>launch.fun</b><i>LIVE</i></div><div class="pcard"><div class="av">SB</div><div class="nm">$BUNKER</div><div class="tk">Solana Bunker Coin · 2m ago</div><div class="mc">$4.20M</div><div class="ch">▲ 312% today</div></div><div class="pbuy">BUY</div><div class="pmeta">Holders<span>1,337</span><br>Liquidity<span>$212K</span><br>Bonding curve<span>98%</span></div>`);
-  const sv = document.createElementNS(NS, 'svg'); sv.setAttribute('class', 'pchart'); sv.setAttribute('width', 310); sv.setAttribute('height', 390); sv.setAttribute('viewBox', '0 0 310 390'); c.appendChild(sv);
-  const r = film.rng(77); let g = ''; for (let i = 1; i < 6; i++) g += `<line x1="0" x2="310" y1="${i * 64}" y2="${i * 64}" stroke="#1d2631" stroke-width="1"/>`;
-  sv.innerHTML = g; const cs = [];
-  let price = 330; const n = 30;
-  for (let i = 0; i < n; i++) { const up = r() < .72, step = (i > 24 ? 22 : 8) + r() * 10, o = price, cl = up ? price - step : price + step * .6; price = cl; const col = up ? '#26d97a' : '#ff5d6c', hi = Math.min(o, cl) - 6 - r() * 10, lo = Math.max(o, cl) + 4 + r() * 8;
-    const x = 12 + i * 10, gg = el('g', {}, sv); el('line', { x1: x, x2: x, y1: hi, y2: lo, stroke: col, 'stroke-width': 2 }, gg); el('rect', { x: x - 3.5, y: Math.min(o, cl), width: 7, height: Math.max(3, Math.abs(o - cl)), fill: col, stroke: 'none' }, gg); cs.push(gg); }
-  el('text', { x: 300, y: 28, 'text-anchor': 'end', fill: '#26d97a', stroke: 'none', 'font-size': 22, 'font-weight': 800, 'font-family': 'Inter' }, sv).textContent = '+312%';
+  const c = mk('div', '', 'position:absolute;left:0;top:0;width:100%;height:100%;overflow:hidden;background:#0b0d10', parent);
+  const inner = mk('div', '', `position:absolute;left:0;top:0;width:1440px;height:900px;transform:scale(${PSC});transform-origin:0 0;font-family:Inter,sans-serif;color:#e6edf3`, c);
+  mk('img', '', 'position:absolute;left:0;top:0;width:1440px;height:900px', inner).src = 'assets/pumpfun/pumpfun-live.png';
+  const card = mk('div', '', 'position:absolute;left:530px;top:108px;width:894px;height:782px;background:#0d1015;border-left:1px solid #26303c;border-radius:12px 0 0 0', inner);
+  card.insertAdjacentHTML('beforeend', `<div style="position:absolute;left:30px;top:28px;width:84px;height:84px;border-radius:18px;background:radial-gradient(circle at 35% 30%,#ffe27a,#e0a100);font:800 36px/84px Inter;text-align:center;color:#3a2800">SB</div>
+    <div style="position:absolute;left:132px;top:26px;font:800 44px/50px Inter">$BUNKER <span style="font:600 24px Inter;color:#8b98a8">Solana Bunker Coin</span></div>
+    <div style="position:absolute;left:132px;top:84px;font:500 24px Inter;color:#8b98a8">created 2m ago · 3,402 holders</div>
+    <div style="position:absolute;right:34px;top:20px;text-align:right"><div style="font:500 22px Inter;color:#8b98a8">Market cap</div><div style="font:800 62px/66px Inter;color:#4ade80">$4.20M</div><div style="font:700 26px Inter;color:#4ade80">▲ 312%</div></div>
+    <div style="position:absolute;left:30px;bottom:26px;width:834px;height:74px;border-radius:14px;background:#86efac;color:#04210f;font:800 32px/74px Inter;text-align:center">Buy $BUNKER</div>`);
+  const sv = document.createElementNS(NS, 'svg'); sv.setAttribute('width', 834); sv.setAttribute('height', 520); sv.setAttribute('viewBox', '0 0 834 520'); sv.style.cssText = 'position:absolute;left:30px;top:170px'; card.appendChild(sv);
+  const r = film.rng(77); let g = ''; for (let i = 1; i < 6; i++) g += `<line x1="0" x2="834" y1="${i * 86}" y2="${i * 86}" stroke="#1d2631" stroke-width="2"/>`;
+  sv.innerHTML = g; const cs = []; let price = 470; const n = 34;
+  for (let i = 0; i < n; i++) { const up = r() < .72, step = (i > 28 ? 34 : 10) + r() * 12, o = price, cl = up ? price - step : price + step * .6; price = Math.max(40, cl); const col = up ? '#26d97a' : '#ff5d6c', hi = Math.min(o, cl) - 8 - r() * 14, lo = Math.max(o, cl) + 6 + r() * 10;
+    const x = 22 + i * 23.5, gg = el('g', {}, sv); el('line', { x1: x, x2: x, y1: hi, y2: lo, stroke: col, 'stroke-width': 3 }, gg); el('rect', { x: x - 8, y: Math.min(o, cl), width: 16, height: Math.max(5, Math.abs(o - cl)), fill: col, stroke: 'none' }, gg); cs.push(gg); }
   return { c, cs };
 }
-const live = panel(pumpP); live.cs.forEach((g, i) => candles.push([g, 31.4 + i * .15]));
+const live = panel(pumpP); live.cs.forEach((g, i) => candles.push([g, 31.4 + i * .13]));
 film.onSeek((t) => { pumpP.style.opacity = t < tShat ? pr(t, 31.2, 31.8) : 0; for (const [g, ts] of candles) g.style.opacity = t >= ts ? 1 : 0; });
 // cracks and shards
 const tShat = W('f2', 'risk') - .05;
 const crackSvg = document.createElementNS(NS, 'svg'); crackSvg.setAttribute('width', 1280); crackSvg.setAttribute('height', 720); crackSvg.style.cssText = 'position:absolute;left:0;top:0'; stage.appendChild(crackSvg);
-const CC = [PUMP.x + 290, PUMP.y + 220];
+const CC = [PUMP.x + 440, PUMP.y + 250], CP = [440, 250];
 {
   const r = film.rng(5), ang = [], rin = [];
-  for (let j = 0; j < 8; j++) { ang.push((j * 45 + (r() - .5) * 26) * Math.PI / 180); rin.push(95 + r() * 70); }
+  for (let j = 0; j < 8; j++) { ang.push((j * 45 + (r() - .5) * 26) * Math.PI / 180); rin.push(130 + r() * 90); }
   ang.push(ang[0] + Math.PI * 2); rin.push(rin[0]);
-  ang.forEach((a, j) => { if (j < 8) { const L = 340, w = [0, 0].map(() => 0); let d = `M${CC[0]} ${CC[1]}`; let x = CC[0], y = CC[1]; for (let s = 1; s <= 4; s++) { const aa = a + (r() - .5) * .35, ll = L / 4; x += Math.cos(aa) * ll; y += Math.sin(aa) * ll; d += `L${x.toFixed(1)} ${y.toFixed(1)}`; }
+  ang.forEach((a, j) => { if (j < 8) { const L = 460, w = [0, 0].map(() => 0); let d = `M${CC[0]} ${CC[1]}`; let x = CC[0], y = CC[1]; for (let s = 1; s <= 4; s++) { const aa = a + (r() - .5) * .35, ll = L / 4; x += Math.cos(aa) * ll; y += Math.sin(aa) * ll; d += `L${x.toFixed(1)} ${y.toFixed(1)}`; }
     const p = path(d, { stroke: '#fff', 'stroke-width': 3 }, crackSvg); draw(p, tShat - .22, tShat, { out: [tShat + .02, tShat + .05] }); } });
-  const shards = [], P = (a, rr) => [(Math.cos(a) * rr + 280).toFixed(1), (Math.sin(a) * rr + 230).toFixed(1)];
+  const shards = [], P = (a, rr) => [(Math.cos(a) * rr + CP[0]).toFixed(1), (Math.sin(a) * rr + CP[1]).toFixed(1)];
   const defs = [];
   for (let j = 0; j < 8; j++) { const a0 = ang[j], a1 = ang[j + 1], r0 = rin[j], r1 = rin[j + 1];
-    defs.push({ poly: [[280, 230], P(a0, r0), P(a1, r1)], a: (a0 + a1) / 2, rr: 70, v: 330 + r() * 160, w: (r() - .5) * 420 });
-    defs.push({ poly: [P(a0, r0), P(a1, r1), P(a1, 900), P(a0, 900)], a: (a0 + a1) / 2, rr: 230, v: 170 + r() * 150, w: (r() - .5) * 300 }); }
-  for (const s of defs) { const sh = mk('div', 'shard', `left:${PUMP.x}px;top:${PUMP.y}px;border:2px solid #2b3340;background:#0d1117;clip-path:polygon(${s.poly.map((p) => p[0] + 'px ' + p[1] + 'px').join(',')});display:none`, pump);
-    sh.appendChild(panel(sh).c); s.el = sh; s.cx = 280 + Math.cos(s.a) * s.rr; s.cy = 230 + Math.sin(s.a) * s.rr; sh.style.transformOrigin = `${s.cx}px ${s.cy}px`; shards.push(s); }
+    defs.push({ poly: [CP, P(a0, r0), P(a1, r1)], a: (a0 + a1) / 2, rr: 90, v: 330 + r() * 160, w: (r() - .5) * 420 });
+    defs.push({ poly: [P(a0, r0), P(a1, r1), P(a1, 1400), P(a0, 1400)], a: (a0 + a1) / 2, rr: 300, v: 170 + r() * 150, w: (r() - .5) * 300 }); }
+  for (const s of defs) { const sh = mk('div', 'shard', `left:${PUMP.x}px;top:${PUMP.y}px;width:${PUMP.w}px;height:${PUMP.h}px;border:2px solid #2b3340;background:#0d1117;clip-path:polygon(${s.poly.map((p) => p[0] + 'px ' + p[1] + 'px').join(',')});display:none`, pump);
+    sh.appendChild(panel(sh).c); s.el = sh; s.cx = CP[0] + Math.cos(s.a) * s.rr; s.cy = CP[1] + Math.sin(s.a) * s.rr; sh.style.transformOrigin = `${s.cx}px ${s.cy}px`; shards.push(s); }
   film.onSeek((t) => { const dt = t - tShat;
     for (const s of shards) { if (dt < 0 || dt > 1.4) { s.el.style.display = 'none'; continue; } s.el.style.display = 'block';
       const x = Math.cos(s.a) * s.v * dt, y = Math.sin(s.a) * s.v * dt + 1150 * dt * dt / 2 - 120 * dt;
@@ -271,27 +286,37 @@ const CC = [PUMP.x + 290, PUMP.y + 220];
   film.onSeek((t) => { for (const c of coins) { const dt = t - c.t0; if (dt < 0 || dt > 2.2) { c.im.style.display = 'none'; continue; } c.im.style.display = 'block';
     c.im.style.transform = `translate(${c.x}px,${-110 + c.v * dt}px) rotate(${c.rot0 + c.w * dt}deg)`; } });
 }
-// "ARTIFICIAL" struck through, "SUPER" stamped, small ink note above the page
+// "ARTIFICIAL INTELLIGENCE" written in full, ARTIFICIAL scratched out, SUPER written under it: reads SUPER INTELLIGENCE
 {
-  const tA = W('f1', 'artificial'), tS = W('f1', 'super');
-  dtext('ARTIFICIAL', 440, 44, 46, tA - .2, tA + .5, { out: [41, 41.6] });
-  draw(path('M436 70L664 66', { 'stroke-width': 5, stroke: ACC }), tS - .35, tS - .05, { out: [41, 41.6] });
-  const sp = mk('div', 'dt acc', 'left:700px;top:36px;font-size:62px;font-weight:700;border:5px solid #ffd23f;padding:0 14px;transform-origin:50% 50%', texts, 'SUPER');
-  film.onSeek((t) => { const p = pr(t, tS, tS + .16); sp.style.opacity = (p > 0 ? 1 : 0) * (1 - pr(t, 41, 41.6)); sp.style.transform = `rotate(-6deg) scale(${lerp(2.6, 1, p)})`; });
+  const tA = W('f1', 'artificial'), tS = W('f1', 'super'), tI = W('f1', 'intelligence', false), out = [41, 41.6];
+  dtext('ARTIFICIAL INTELLIGENCE', 420, 30, 46, tA - .25, tI - .1, { out });
+  draw(path('M424 54L650 50M426 64L648 60', { 'stroke-width': 4, stroke: ACC }), tS - .3, tS + .05, { out });   // scratch-out
+  const sp = dtext('SUPER', 440, 76, 52, tS + .05, tS + .5, { cls: 'acc', out, css: 'transform:rotate(-4deg);transform-origin:0 50%' });
+}
+// big key words: PDA (with what it stands for) and Ed25519
+{
+  const cards = mk('div', '', 'position:absolute;inset:0;pointer-events:none', $('shake')); $('shake').insertBefore(cards, $('fanDim'));
+  const tP = W('d3', 'PDA') - .05, tE = W('g3', 'ED25519') - .1, tEe = W('g3', 'algorithm') + .4;
+  const pda = mk('div', '', 'position:absolute;left:770px;top:30px;width:480px;text-align:center;opacity:0', cards, '<div style="font:400 210px/1.0 Anton,Impact,sans-serif;color:#ffd23f;text-shadow:0 5px 0 rgba(0,20,30,.55)">PDA</div><div style="font:400 36px/1.1 \'Architects Daughter\',cursive;color:#eaf7fb;margin-top:-6px;text-shadow:0 2px 0 rgba(0,20,30,.6)">program derived address</div>');
+  film.onSeek((t) => { const p = pr(t, tP, tP + .22); pda.style.opacity = (p > 0 ? 1 : 0) * (1 - pr(t, 25.1, 25.4)); pda.style.transform = `scale(${lerp(.4, 1, eb(p))})`; });
+  const dim = mk('div', '', 'position:absolute;inset:0;background:#01202c;opacity:0', cards);
+  const ed = mk('div', '', 'position:absolute;left:0;top:190px;width:1280px;text-align:center;opacity:0', cards, '<div style="font:400 250px/1.0 Anton,Impact,sans-serif;color:#ffd23f;text-shadow:0 6px 0 rgba(0,20,30,.6),0 0 40px rgba(0,20,30,.6)">Ed25519</div><div style="font:400 44px/1.1 \'Architects Daughter\',cursive;color:#eaf7fb;text-shadow:0 2px 0 rgba(0,20,30,.7)">immune to any future weakness in Ed25519</div>');
+  film.onSeek((t) => { const p = pr(t, tE, tE + .2), o = (p > 0 ? 1 : 0) * (1 - pr(t, tEe, tEe + .3)); ed.style.opacity = o; dim.style.opacity = .5 * o; ed.style.transform = `scale(${lerp(.5, 1, eb(p))})`; });
 }
 // ---------- the three characters ----------
-const KP = .5795, KO = .3598;   // 153 px / 95 px head sprites over a 231 px face
+const KP = .5795 * .8, KO = .3598 * .8;   // 153 px / 95 px head sprites over a 231 px face
+const NAR = { x: -40, y: 625, rot: 25 };   // narrator: pivot (screen px), rotation (deg); scale = KP
 const phys = makeChar('phys', 'physicist', { pt: { file: '5-physicist-professor-point' } }, KP, [395, 900]);
 const joe = makeChar('joe', 'joe', { walk: { file: '2-street-walking' }, rest: { file: '2-street-hands-in-pockets' }, up: { file: '2-street-celebrate' } }, KO, [512, 1450]);
 const eng = makeChar('eng', 'engineer', { pt: { file: '4-engineer-point-clipboard', mirror: 1, hat: 1 }, key: { file: '4-engineer-holding-key', mirror: 1, hat: 1 }, thumb: { file: '4-engineer-thumbs-up', mirror: 1, hat: 1 } }, KO, [512, 1450]);
 const FLOOR_Y = 712;
 // physicist: tilts in from the left edge at 25 degrees, points at the curve, freezes when his part is over
 {
-  const tIn = W('d1', 'As') - .55, tOut = W('e1', 'is', false) + .35;
+  const tIn = W('c1', 'fascinating') - 2.4, tOut = W('e1', 'is', false) + .35;
   film.onSeek((t) => { phys.setPose('pt'); phys.setHead(t);
     const p = pr(t, tIn, tIn + .9), e = eb(p), sway = (1 - pr(t, tOut, tOut + .01)) * Math.sin((t - tIn) * 2.4) * 1.1;
     phys.root.style.display = t >= tIn ? 'block' : 'none';
-    phys.place(lerp(-330, 147, e), 670 + (1 - e) * 50, lerp(8, 25, e) + sway, 1); });
+    phys.place(lerp(-340, NAR.x, e), NAR.y + (1 - e) * 50, lerp(8, NAR.rot, e) + sway, 1); });
 }
 // Joe: slides up small from the bottom centre, grows while tilting from side to side (walking pose), rests, hands up on "risk", freezes
 {
@@ -303,7 +328,7 @@ const FLOOR_Y = 712;
 }
 // engineer: cue = the vault door starts drafting. Walks in off the right (two stop-frame poses), fully in frame 1.5 s later, then points (mirrored so he points left at the door)
 {
-  const tA = W('g2', 'Solana') - .1, tIn = tA - .3, tStop = tIn + 1.5, tRest = W('g3', 'algorithm', false) + .25, tPoint2 = W('h1', 'we') - .1, X = 1086;
+  const tA = W('g2', 'Solana') - .1, tIn = tA - .3, tStop = tIn + 1.5, tRest = W('g3', 'algorithm', false) + .25, tPoint2 = W('h1', 'we') - .1, X = 1105;
   film.onSeek((t) => { eng.setHead(t);
     const walking = t >= tIn && t < tStop, ph = Math.floor((t - tIn) / .2) % 2;
     eng.setPose(walking ? (ph ? 'key' : 'pt') : (t >= tRest && t < tPoint2 ? 'thumb' : 'pt'));
