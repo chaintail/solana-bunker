@@ -2,7 +2,7 @@ anoisesrc=d=59:c=brown:a=0.3:r=48000,lowpass=f=220,volume=0.05,afade=t=in:d=0.3,
 [1:a]aresample=48000,pan=mono|c0=0.5*c0+0.5*c1,asetpts=PTS-STARTPTS,asplit=2[l1][l2];
 [l1]atrim=0:9.5433,asetpts=PTS-STARTPTS,afade=t=out:st=9.5353:d=0.008[la];
 [l2]atrim=14.79:42.5,asetpts=PTS-STARTPTS,afade=t=in:d=0.008[lb];
-[la][lb]concat=n=2:v=0:a=1,loudnorm=I=-16:TP=-1.5:LRA=9,afade=t=out:st=37.0333:d=0.2,adelay=19900,apad=whole_dur=58.1333[liamA];
-[2:a]aresample=48000,adelay=5500,apad=whole_dur=58.1333[vo];
-[3:a]aresample=48000,apad=whole_dur=58.1333[spons];
-[rt][vo][liamA][spons]amix=inputs=4:normalize=0:duration=longest,atrim=0:58.1333,asetpts=PTS-STARTPTS,alimiter=limit=0.95[aout]
+[la][lb]concat=n=2:v=0:a=1,loudnorm=I=-16:TP=-1.5:LRA=9,afade=t=out:st=37.0333:d=0.2,adelay=19900,apad=whole_dur=57.7333[liamA];
+[2:a]aresample=48000,adelay=5500,apad=whole_dur=57.7333[vo];
+[3:a]aresample=48000,apad=whole_dur=57.7333[spons];
+[rt][vo][liamA][spons]amix=inputs=4:normalize=0:duration=longest,atrim=0:57.7333,asetpts=PTS-STARTPTS,alimiter=limit=0.95[aout]

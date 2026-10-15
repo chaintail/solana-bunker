@@ -1,4 +1,4 @@
-<!doctype html><html data-duration="38.2333" data-fps="30"><head><meta charset="utf-8">
+<!doctype html><html data-duration="37.8333" data-fps="30"><head><meta charset="utf-8">
 <link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
 <style>
 /* Two layers are rendered separately and composited around the matted footage on dev-mac:
@@ -105,8 +105,8 @@ const $ = (id) => document.getElementById(id);
 const OFF = 0.08; // desk t0 = 8.16 s in Liam's recording; words below are transcript times minus 8.24, plus OFF
 // rev 5: the take is cut. Footage kept = recording 8.16..17.6933 (frames 0-285), then 22.96.. (frame 444 on). Everything after the cut moves earlier by GAP.
 // The take also ends 0.5 s sooner (v4 44.4 s -> 43.9 s, minus GAP = 38.6333 s). MP(w) maps a v4 'word time' (transcript - 8.24) to the new scene clock.
-// rev 6: the out-point moves another 0.4 s (12 frames) earlier: 1159 -> 1147 frames = 38.2333 s; the wipe starts and ends 0.4 s sooner with it.
-const CUT = 286 / 30, GAP = (444 - 286) / 30, END = 1147 / 30;
+// rev 6: the out-point moves 0.8 s (24 frames) earlier in total: 1159 -> 1135 frames = 37.8333 s; the wipe starts and ends with it, face fully covered by about desk frame 1103.
+const CUT = 286 / 30, GAP = (444 - 286) / 30, END = 1135 / 30;
 const MP = (w) => { const t = w + OFF; return t <= CUT ? t : t - GAP; };
 
 // ---- back: skyline (seeded) ----
@@ -181,6 +181,6 @@ const run = $('run'); const unit = document.createElement('span'); unit.innerHTM
 run.append(unit, unit.cloneNode(true));
 let unitW = 0;
 f.onSeek((t) => { if (!unitW) unitW = unit.getBoundingClientRect().width || 0; if (unitW) run.style.transform = `translateX(${-((t * 150) % unitW)}px)`; });
-// exit: SPECIAL REPORT wipe, fully covering at END (38.2333)
+// exit: SPECIAL REPORT wipe, fully covering at END (37.8333)
 A('wipe', [{transform:'translateX(-1500px)'},{transform:'translateX(-220px)',offset:.55,easing:'linear'},{transform:'translateX(0)'}], END - 1.7, 1.7, {easing:'cubic-bezier(.5,0,.2,1)'});
 </script></body></html>
