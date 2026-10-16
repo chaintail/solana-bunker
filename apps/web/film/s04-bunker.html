@@ -124,7 +124,7 @@ film.onSeek((t) => {
 draw(path('M22 22H1258V698H22Z', { 'stroke-width': 4 }), 2.3, 3.6, { ease: eo });
 draw(path('M34 34H1246V686H34Z', { 'stroke-width': 1.5 }), 2.5, 3.8, { ease: eo });
 for (const d of ['M640 22V46', 'M640 698V674', 'M22 360H46', 'M1258 360H1234']) draw(path(d), 2.6, 3.6);
-const TB = { x: 700, y: 596, w: 300, h: 94 };
+const TB = { x: 700, y: 556, w: 300, h: 94 };   // v6: title block raised a little so the engineer (now kept at his normal place) points at the REV cell
 draw(path(`M${TB.x} ${TB.y}H${TB.x + TB.w}V${TB.y + TB.h}H${TB.x}Z`, { 'stroke-width': 3.5 }), 2.5, 3.5, { ease: eo });
 draw(path(`M${TB.x} ${TB.y + 44}H${TB.x + TB.w}M${TB.x + 170} ${TB.y + 44}V${TB.y + TB.h}`, { 'stroke-width': 2 }), 3.0, 3.8);
 dtext('SOLANA BUNKER', TB.x + 12, TB.y + 5, 31, 3.1, 3.9, { css: 'letter-spacing:.04em' });
@@ -307,7 +307,7 @@ const CC = [PUMP.x + 440, PUMP.y + 250], CP = [440, 250];
 const KP = .5795 * .8, KO = .3598 * .8;   // 153 px / 95 px head sprites over a 231 px face
 const NAR = { x: -40, y: 625, rot: 25 };   // narrator: pivot (screen px), rotation (deg); scale = KP
 const phys = makeChar('phys', 'physicist', { pt: { file: '5-physicist-professor-point' } }, KP, [395, 900]);
-const joe = makeChar('joe', 'joe', { walk: { file: '2-street-walking' }, rest: { file: '2-street-hands-in-pockets' }, up: { file: '2-street-celebrate' } }, KO, [512, 1450]);
+const joe = makeChar('joe', 'joe', { walk: { file: '2-street-walking' }, rest: { file: '2-street-hands-in-pockets' }, up: { file: '2-street-celebrate' }, fr: { file: '2-street-hands-on-head' } }, KO, [512, 1450]);
 const eng = makeChar('eng', 'engineer', { pt: { file: '4-engineer-point-clipboard', mirror: 1, hat: 1 }, key: { file: '4-engineer-holding-key', mirror: 1, hat: 1 }, thumb: { file: '4-engineer-thumbs-up', mirror: 1, hat: 1 }, pd: { file: '4-engineer-point-down', mirror: 1, hat: 1 } }, KO, [512, 1450]);
 const FLOOR_Y = 712;
 // physicist: tilts in from the left edge at 25 degrees, points at the curve, freezes when his part is over
@@ -318,24 +318,32 @@ const FLOOR_Y = 712;
     phys.root.style.display = t >= tIn ? 'block' : 'none';
     phys.place(lerp(-340, NAR.x, e), NAR.y + (1 - e) * 50, lerp(8, NAR.rot, e) + sway, 1); });
 }
-// Joe: slides up small from the bottom centre, grows while tilting from side to side (walking pose), rests, hands up on "risk", freezes
+// correction flash: he mis-says "off-chain"; "*off-curve*" pops beside the lab coat, holds, pops out
 {
-  const tIn = W('f1', 'So') - .45, tGrow = tIn + 3.5, tUp = tShat + .08;
-  film.onSeek((t) => { joe.setHead(t); joe.setPose(t >= tUp ? 'up' : t >= tGrow ? 'rest' : 'walk');
+  const tF = W('d2', 'off-chain') + .05, fl = mk('div', '', `position:absolute;left:175px;top:232px;font:400 64px/72px var(--draft);color:${ACC};white-space:nowrap;z-index:50;transform-origin:0 50%;text-shadow:0 0 3px #06374c,3px 3px 0 #06374c,-3px 3px 0 #06374c,3px -3px 0 #06374c,-3px -3px 0 #06374c;opacity:0`, stage, '*off-curve*');
+  film.onSeek((t) => { const a = pr(t, tF, tF + .16), b = pr(t, tF + .84, tF + 1.0); fl.style.opacity = (a > 0 && b < 1) ? 1 : 0; fl.style.transform = `rotate(-4deg) scale(${a <= 0 || b >= 1 ? 0 : b > 0 ? 1 - eo(b) : eb(a)})`; });
+}
+// Joe: slides up small from the bottom centre, grows while tilting from side to side (walking pose), rests, hands up on "risk", then (v6) hard-cuts to hands-on-head as the glass shatters and freezes
+{
+  const tIn = W('f1', 'So') - .45, tGrow = tIn + 3.5, tUp = tShat + .08, tFr = tUp + .4;
+  film.onSeek((t) => { joe.setHead(t); joe.setPose(t >= tFr ? 'fr' : t >= tUp ? 'up' : t >= tGrow ? 'rest' : 'walk');
     const p = pr(t, tIn, tGrow), sc = lerp(.15, 1, eo(p)), tilt = 7 * Math.sin((t - tIn) * 2 * Math.PI / .85) * (1 - pr(t, tGrow - .6, tGrow + .35));
     joe.root.style.display = t >= tIn ? 'block' : 'none';
     joe.place(600, FLOOR_Y + (1 - eo(p)) * 80, tilt, sc); });
 }
 // engineer: cue = the vault door starts drafting. Walks in off the right (two stop-frame poses), fully in frame 1.5 s later, then points (mirrored so he points left at the door)
 {
+  const CLN = { pt: [413, 1441], key: [511.5, 1464], thumb: [512, 1465], pd: [412.5, 1442] };   // measured on holed/<pose>.png: zip centre x, boot baseline y (PNG px, unmirrored); all four poses are mirrored
+  const ENGOFF = {}; for (const n in CLN) ENGOFF[n] = [-KO * ((1024 - CLN[n][0]) - (1024 - CLN.pt[0])), -KO * (CLN[n][1] - CLN.pt[1])];
   const tA = W('g2', 'Solana') - .1, tIn = tA - .3, tStop = tIn + 1.5, tRest = W('g3', 'algorithm', false) + .25, tPoint2 = W('h1', 'we') - .1, X = 1105, tPD = W('h2', 'Actually') - .05;   // v4: hard cut to the point-down pose at "Actually, we built it three times"; frozen there, fingertip just above the REV cell of the title block
   film.onSeek((t) => { eng.setHead(t);
     const walking = t >= tIn && t < tStop, ph = Math.floor((t - tIn) / .2) % 2;
     const pd = t >= tPD;
     eng.setPose(pd ? 'pd' : walking ? (ph ? 'key' : 'pt') : (t >= tRest && t < tPoint2 ? 'thumb' : 'pt'));
     eng.root.style.display = t >= tIn ? 'block' : 'none';
-    const p = pr(t, tIn, tStop), bob = walking ? -Math.abs(Math.sin((t - tIn) * Math.PI / .2)) * 9 : 0, sway = walking ? 3 * Math.sin((t - tIn) * Math.PI / .2) : 0;
-    if (pd) eng.place(1113, 837, 0, 1); else eng.place(lerp(1560, X, p), FLOOR_Y + bob, sway, 1); });
+    const env = 1 - eio(pr(t, tStop - .35, tStop)), p = pr(t, tIn, tStop), bob = walking ? -Math.abs(Math.sin((t - tIn) * Math.PI / .2)) * 9 * env : 0, sway = walking ? 3 * Math.sin((t - tIn) * Math.PI / .2) * env : 0;
+    const pn = pd ? 'pd' : walking ? (ph ? 'key' : 'pt') : (t >= tRest && t < tPoint2 ? 'thumb' : 'pt'), o = ENGOFF[pn];   // v6: every pose lands its torso centre line (zip) and its feet on the clipboard pose's x and baseline
+    eng.place(lerp(1560, X, p) + o[0], FLOOR_Y + bob + o[1], sway, 1); });
 }
 // ---------- 4. the vault door drafts itself ----------
 const VC = { x: 880, y: 262, R: 150 };
