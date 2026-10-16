@@ -1,4 +1,4 @@
-<!doctype html><html data-duration="68.13" data-fps="30"><head><meta charset="utf-8">
+<!doctype html><html data-duration="63.9" data-fps="30"><head><meta charset="utf-8">
 <link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css"><link rel="stylesheet" href="dossier.css">
 <style>
 :root{--cork:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='360' height='360'><filter id='n' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='3' seed='9' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .28  0 0 0 0 .16  0 0 0 0 .05  0 0 0 1.5 -.55'/></filter><rect width='360' height='360' filter='url(%23n)'/></svg>")}
@@ -106,7 +106,8 @@ const rs = film.rng(719);
 { const S = 2.7, P = { x: 620, y: 200 };
   A($('cam'), [{ transform: `translate(${640 - P.x * S}px,${360 - P.y * S}px) scale(${S})` }, { transform: 'translate(0,0) scale(1)' }], 0.12, 2.1, 'cubic-bezier(.35,0,.15,1)'); }
 // ---- open folder: the cover is lying open on the left; it closes at the end (cover is above everything while closing)
-const tClose = L(71.85), tShut = L(72.9), tQ = L(73.28);
+// x12b (Liam, 2026-10-16): the close runs on "We'll let you draw your own conclusions" (68.853-70.413 s) and lands on the end of the line; the ? slams 0.2 s after
+const tClose = L(69.23), tShut = L(70.28), tQ = L(70.48);
 film.anim($('cover'), [{ transform: 'rotateY(-176deg)' }, { transform: 'rotateY(-176deg)', offset: tClose / tShut, easing: 'cubic-bezier(.5,0,.4,1)' }, { transform: 'rotateY(0deg)' }], 0, tShut);
 film.onSeek((t) => { $('fold3').style.zIndex = t >= tClose ? 80 : 'auto'; });
 D.slam($('qm'), tQ, -9, 2.2, .14);
@@ -258,7 +259,7 @@ DATA.forEach(([yr, c], i) => {
 }
 D.hide(cork, L(43.55));
 // close: the corkboard (with the tweet and typed card) fades off the desk before the folder shuts, so the stamp lands on the folder over the plain desk
-D.hide(bd, L(70.55), .4);
+D.hide(bd, L(68.78), .4);
 D.hide(idx, tCork + .7);
 // ---- beat 9: the tweet slip returns over the pulled-back board with TRUST ME, BRO; CHECKED lands on "checked"; typed lines on a card
 const tTwit = W('p10', 'We') - .1, tChk = W('p10', 'checked'), tJ = W('p11', '9,923'), tSev = W('p12', '719'), t26 = W('p12', '2026', false);
@@ -279,7 +280,7 @@ const tReal = W('p13', 'real');
 const hits = [[W('p8b', 'kept'), 7], [tCens, 6], [tChk, 9], [tShut, 8], [tQ, 11]];
 film.onSeek((t) => { let y = 0, r = 0; for (const [h, a] of hits) { const d = t - h; if (d >= 0 && d < .45) { const e = Math.exp(-d * 9) * Math.sin(d * 52); y += a * e; r += a * e * .05; } } $('shake').style.transform = `translate(0,${y.toFixed(2)}px) rotate(${r.toFixed(3)}deg)`; });
 // hard cut to black for the next scene
-A($('cut'), [{ opacity: 0 }, { opacity: 1, offset: .0001 }, { opacity: 1 }], 68.13 - .1, .1, 'steps(1,end)');
+A($('cut'), [{ opacity: 0 }, { opacity: 1, offset: .0001 }, { opacity: 1 }], 63.9 - .1, .1, 'steps(1,end)');
 // ---- polaroid frame for Liam (the video is overlaid at the same place by ffmpeg)
 const pol = $('pol'), tPi = L(9.75), tPo = L(57.45);
 film.anim(pol, [{ opacity: 0 }, { opacity: 1, offset: .15 / (tPo + .15 - tPi) }, { opacity: 1, offset: (tPo - tPi) / (tPo + .15 - tPi) }, { opacity: 0 }], tPi, tPo + .15 - tPi);

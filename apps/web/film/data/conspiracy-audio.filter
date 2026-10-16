@@ -14,7 +14,6 @@
 [0:a]atrim=start=109.82:end=114.5,asetpts=PTS-STARTPTS,aresample=48000,afade=t=in:d=0.02,afade=t=out:st=4.66:d=0.02,adelay=52830|52830[a13];
 [0:a]atrim=start=115.4:end=120.45,asetpts=PTS-STARTPTS,aresample=48000,afade=t=in:d=0.02,afade=t=out:st=5.03:d=0.02,adelay=57810|57810[a14];
 [0:a]atrim=start=121.22:end=124.7,asetpts=PTS-STARTPTS,aresample=48000,afade=t=in:d=0.02,afade=t=out:st=3.46:d=0.02,adelay=63080|63080[a15];
-[0:a]atrim=start=125.45:end=127.85,asetpts=PTS-STARTPTS,aresample=48000,afade=t=in:d=0.02,afade=t=out:st=2.38:d=0.02,adelay=67260|67260[a16];
-[0:a]atrim=start=128.08:end=131.15,asetpts=PTS-STARTPTS,aresample=48000,afade=t=in:d=0.02,afade=t=out:st=3.05:d=0.02,adelay=70160|70160[a17];
-anullsrc=r=48000:cl=mono,atrim=0:75.13,asetpts=PTS-STARTPTS[base];
-[base][a0][a1][a2][a3][a4][a5][a6][a7][a8][a9][a10][a11][a12][a13][a14][a15][a16][a17]amix=inputs=19:normalize=0:duration=longest,pan=mono|c0=c0,apad=whole_dur=75.13,atrim=0:75.13,asetpts=PTS-STARTPTS[mix]
+[0:a]atrim=start_sample=2007200:end_sample=2029812,asetpts=PTS-STARTPTS[j0];[0:a]atrim=start_sample=2049601:end_sample=2084803,asetpts=PTS-STARTPTS[j1];[j0][j1]concat=n=2:v=0:a=1,aresample=48000,afade=t=in:d=0.02,afade=t=out:st=3.5934:d=0.02,adelay=67260|67260[a16];
+anullsrc=r=48000:cl=mono,atrim=0:70.92,asetpts=PTS-STARTPTS[base];
+[base][a0][a1][a2][a3][a4][a5][a6][a7][a8][a9][a10][a11][a12][a13][a14][a15][a16]amix=inputs=18:normalize=0:duration=longest,pan=mono|c0=c0,apad=whole_dur=70.92,atrim=0:70.92,asetpts=PTS-STARTPTS[mix]
