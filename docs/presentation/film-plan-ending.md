@@ -224,3 +224,10 @@ Rulings applied: Q5 the wipe's "WE NOW RETURN TO THE STUDIO", Q6 UPDATE, Q7 the 
 ### Scene 10 v3 (scene 9 v3 underneath the wipe)
 - The frame under the SPECIAL REPORT wipe (0–0.55 s) is now the last frame of `s09-v3.mp4` (bd2c428, the testimonial's results grid). It was built with `S09V=v3 build.sh assets` and `build.sh video v3`, with no recapture. Nothing else changed.
 - Output: dev-mac `s10/out/s10-v3.mp4` and `s10-v3-phone.mp4`, 33.40 s, 1002 frames, −16.4 LUFS / −1.9 dBTP. The whitepaper QR decodes on master and phone frames (12.5 and 14.5 s) at 720p and 540p.
+
+### Scene 10 v4 (Liam's notes)
+- **No name bar anywhere.** The lower third slides in at 6.17 s (0.40 s before "crypto") already reading CRYPTO NERD. NERD slides and GRAPHY fades in as in v2. After COMING UP NEXT (B7, from 23.84) it reads CRYPTOGRAPHY NERD again. The sub line "Liam C. · Bunker Correspondent, Chaintail Labs" stays under it. The CNN bug still fades in at 1.60.
+- **No punch-in.** B2 is composited at B1's size and place (525x700 at 377,-20), so the head keeps one size for the whole scene. The jump cut is hidden by a 2-frame white flash in the front layer: frame 401 is solid white, frame 402 is half white, and both sit above the chyron. The wipe's own flash (1.10–1.40) is unchanged.
+- **Head match across the cut:** master frames 400 and 403, glasses outer temples at row 285 are 510–775 (265 px) and 508–771 (263 px). The rims are rows 240–319 on both. B2's head is turned very slightly (the bridge sits about 11 px left).
+- **Composite fix:** the front layer's FFV1 Matroska chunks carry millisecond timestamps, so the overlay took the previous front frame on about a third of frames (in v1–v3 too). It is now retimed (`settb=1/30,setpts=N`), so master frame n carries front frame n (checked on frames 398–404).
+- Output: dev-mac `s10/out/s10-v4.mp4` and `s10-v4-phone.mp4`, 33.40 s, 1002 frames, −16.4 LUFS / −1.9 dBTP. Cut strip (frames 400/401/402): `s10-v4-cut.png`. The whitepaper QR decodes on master and phone at 720p and 540p.

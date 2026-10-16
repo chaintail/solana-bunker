@@ -25,7 +25,7 @@ T = {'wipe_in': 0.0, 'cover': .55, 'out_start': 1.10, 'out_end': 2.00, 'l3_in': 
 T.update({'graphy': round(T['nerd'] + .30, 3), 'ots_out': round(T['cook'] - .25, 3)})
 T['graphy_end'] = round(T['graphy'] + .35, 3)
 assert T['graphy_end'] < T['us_end'], 'GRAPHY must finish before "us" ends'
-doc = {'total': TOTAL, 'fps': FPS, 'edl': edl, 'T': T, 'footage_src0': round(SEG[0][0] - SEG[0][2], 3), 'punch': {'at': SEG[1][2], 'scale': 1.08}}
+doc = {'total': TOTAL, 'fps': FPS, 'edl': edl, 'T': T, 'footage_src0': round(SEG[0][0] - SEG[0][2], 3)}   # v4: no punch-in at the cut (Liam): the head keeps one size
 json.dump(doc, open('out/s10-edl.json', 'w'), indent=1)
 open('film/data/s10-edl.js', 'w').write('window.S10 = ' + json.dumps(doc) + ';\n')
 f = []

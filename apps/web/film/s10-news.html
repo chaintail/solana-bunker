@@ -149,8 +149,8 @@ const OUT = window.vaultDraw($('vsv'), 205, 115, 92, 2), INN = window.vaultDraw(
 const vaultParts = (v) => [...v.rings, ...v.spokes, ...v.hinges, ...v.extra];
 // ---- lower third text states (hard cuts on the frame)
 function l3(t) {
-  let tag = 'UPDATE', sub = 'Liam C. \u00a0·\u00a0 Bunker Correspondent, Chaintail Labs', bar = '<span class="w">LIAM</span>';   // Liam: name · title, company
-  if (t >= T.crypto && t < T.stateless) {
+  let tag = 'UPDATE', sub = 'Liam C. \u00a0·\u00a0 Bunker Correspondent, Chaintail Labs', bar = '';   // v4 (Liam): no name bar anywhere; the bar is CRYPTO(GRAPHY) NERD, the sub line under it
+  if (t < T.stateless || t >= T.favorite) {   // before COMING UP NEXT, and again after it (B7) as CRYPTOGRAPHY NERD
     // Liam: it first reads CRYPTO NERD; then NERD slides to the right and GRAPHY fades in between (yellow)
     const slide = easeIO(P(t, T.graphy, T.graphy + .25)), fade = P(t, T.graphy + .12, T.graphy_end);
     bar = `<span class="w">CRYPTO</span><span class="ins" id="ins"><i id="insi">GRAPHY</i></span><span class="w"> NERD</span>`;
@@ -168,11 +168,14 @@ f.onSeek((t) => {
   $('wipe').style.transform = `translateX(${t < T.out_start ? lerp(-1500, 0, wi) : lerp(0, -1500, wo)}px)`;
   const msg = 'WE NOW RETURN TO THE STUDIO'; $('ret').textContent = msg.slice(0, Math.round(msg.length * P(t, T.cover + .05, T.cover + .45)));
   $('desk1').style.visibility = t >= T.cover ? 'visible' : 'hidden';           // under the full cover the desk replaces scene 9
-  $('flash').style.opacity = String(t >= T.out_start ? .55 * (1 - P(t, T.out_start, T.out_start + .3)) : 0);
+  const fcut = Math.round(t * 30) - Math.ceil(T.cut * 30 - 1e-6);   // v4: the jump cut (frame 401) is hidden by a 2-frame white flash (1, .5), no punch-in
+  $('flash').style.zIndex = fcut === 0 || fcut === 1 ? '11' : '';   // the cut flash covers everything, the CT LIVE label included; the wipe's flash stays under the wipe
+  $('flash').style.opacity = String(fcut === 0 ? 1 : fcut === 1 ? .5 : t >= T.out_start ? .55 * (1 - P(t, T.out_start, T.out_start + .3)) : 0);
   $('livedot').style.opacity = String(.25 + .75 * Math.abs(Math.cos(t * Math.PI / 1.2)));
   if (!unitW) unitW = unit.getBoundingClientRect().width || 0; if (unitW) run.style.transform = `translateX(${-((t * 150) % unitW)}px)`;
   // lower third: slides in as in the opening, then the text states
-  const li = easeO(P(t, T.l3_in, T.l3_in + .45)), ls = easeO(P(t, T.l3_in + .1, T.l3_in + .55));
+  const L3IN = T.crypto - .40;   // v4: first appears as CRYPTO NERD, in place as he says "crypto"
+  const li = easeO(P(t, L3IN, L3IN + .45)), ls = easeO(P(t, L3IN + .1, L3IN + .55));
   $('l3').style.transform = `translateX(${lerp(-120, 0, li)}%)`; $('l3sub').style.transform = `translateX(${lerp(-120, 0, ls)}%)`;
   $('chbug').style.opacity = String(P(t, T.l3_in, T.l3_in + .4));
   l3(t);
