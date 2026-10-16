@@ -37,7 +37,7 @@ function init(f) {
   return { rain: (ctx, t) => { rainCtx = ctx; rain(t); } };
 }
 let rainCtx = null;
-function figs(f, sprite, D) {
+function figs(f, sprite, D, chinKX = 338) {   // chinKX: key-px x of the narrator sprite's chin centre (slide 7 measures 308)
   const BODY = {
     suitX: { src: 'assets/bodies/1-suit-arms-crossed.png', ox: 511, chin: 306 },
     suitP: { src: 'assets/bodies/1-suit-point-right.png', ox: 352, chin: 309 },
@@ -49,9 +49,9 @@ function figs(f, sprite, D) {
     const mask = `radial-gradient(ellipse 103px 119px at ${b.ox}px ${b.chin - 107}px,transparent 97%,#000 100%)`;
     const o = b.ox, c = b.chin;
     const clip = `polygon(0 ${c - 6}px,${o - 59}px ${c - 6}px,${o - 49}px ${c + 16}px,${o - 8}px ${c + 41}px,${o + 10}px ${c + 41}px,${o + 51}px ${c + 16}px,${o + 60}px ${c - 6}px,1024px ${c - 6}px,1024px 1536px,0 1536px)`;
-    const hl = o - 338 * HK, ht = c - 905 * HK, hs = (760 * HK) / 152;
+    const hl = o - 338 * HK, hn = o - chinKX * HK, ht = c - 905 * HK, hs = (760 * HK) / 152;
     let head;
-    if (headKind === 'narr') head = `<div class="hd" data-base="translate(${hl}px,${ht}px) scale(${hs})" style="transform:translate(${hl}px,${ht}px) scale(${hs})">` + [0, 1, 2, 3, 4, 5].map((i) => `<img src="heads/${sprite}-0${i}.png">`).join('') + '</div>';
+    if (headKind === 'narr') head = `<div class="hd" data-base="translate(${hn}px,${ht}px) scale(${hs})" style="transform:translate(${hn}px,${ht}px) scale(${hs})">` + [0, 1, 2, 3, 4, 5].map((i) => `<img src="heads/${sprite}-0${i}.png">`).join('') + '</div>';
     else head = `<img src="heads/s06-${headKind}.png" style="width:${760 * HK}px;height:${1100 * HK}px;left:${hl}px;top:${ht}px">`;
     el.innerHTML = `<img src="${b.src}" width="1024" height="1536" style="-webkit-mask-image:${mask};mask-image:${mask}">${head}<img src="${b.src}" width="1024" height="1536" style="clip-path:${clip}">`;
     el.dataset.ox = o; el.dataset.chin = c; parent.appendChild(el); return el;

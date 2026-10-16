@@ -161,7 +161,7 @@ const T = {
 window.__T = T;
 
 // ---------- figures (slide 6's compositing; seminar narrator in colour, alley narrator in the noir filter)
-const FG = NoirAlley.figs(f, 's07-narr', D);
+const FG = NoirAlley.figs(f, 's07-narr', D, 308);
 const narrS = FG.makeFig($('narrS'), 'prof', 'narr'), narrA = FG.makeFig($('narrA'), 'prof', 'narr');
 const POKE = { left: [118, 282, 27], right: [1162, 305, -27] };      // side pokes, 27 deg from upright, legs cut by the edge
 function poke(fig, side, pk) { const [x, y, r] = POKE[side], fl = side === 'left' ? 1 : -1; FG.place(fig, x - fl * (1 - pk) * 380, y, r, .42, fl); }
