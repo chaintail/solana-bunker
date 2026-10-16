@@ -1,0 +1,94 @@
+<!doctype html><html data-duration="1" data-fps="30"><head><meta charset="utf-8">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
+<style>
+/* Look draft for the scene 9 testimonial (film-plan-ending.md part A), not the scene. One frame: the beat on "rotation".
+   The lab coat (professor-point, lip-synced head from the take) points at the results: the checklist of claims so far and the featured
+   results card with its Solscan QR. FREE tag (on the packshot) and the CALL NOW bar stay on screen. Every account and signature comes from
+   data/s09-results.js (pipeline/s09/qr-results.mjs reads artifacts/public-deployment.json). Head: heads/s09-look-lab.png (keyed at 528.45 s with the recentred jaw masks, see testimonial-look.sh). */
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#000}
+svg{position:absolute;left:0;top:0}
+.fig{position:absolute;left:0;top:0;width:1024px;height:1536px;transform-origin:0 0}
+.fig>img{position:absolute;left:0;top:0}
+#bip{position:absolute;left:22px;top:18px;width:380px;height:134px;transform-origin:0 0;transform:scale(.42) rotate(-6deg)}
+#bipIn{position:absolute;inset:0;border-radius:22px;border:5px solid #15103d;box-sizing:border-box;overflow:hidden;
+  background:linear-gradient(135deg,#fff6b8,#ffd02a 42%,#ff9800);box-shadow:0 12px 26px rgba(0,0,0,.55),inset 0 -8px 0 rgba(160,70,0,.35)}
+#bip b{position:absolute;left:0;right:0;top:4px;text-align:center;font:400 108px/1.05 Anton;color:#1c2bb0;letter-spacing:.01em;
+  text-shadow:-2px -2px 0 #fff,2px -2px 0 #fff,-2px 2px 0 #fff,2px 2px 0 #fff,6px 6px 0 #0b0f40}
+#free{position:absolute;left:0;top:0;width:200px;height:290px;transform-origin:100px 0}
+#tagBody{position:absolute;left:5px;top:44px;width:190px;height:240px;background:linear-gradient(180deg,#f3dc9e,#e6c47c);
+  clip-path:polygon(28px 0,162px 0,190px 28px,190px 240px,0 240px,0 28px);filter:drop-shadow(0 8px 10px rgba(0,0,0,.4))}
+#tagBody .hole{position:absolute;left:83px;top:12px;width:24px;height:24px;border-radius:50%;background:#1a2c9e;box-shadow:0 0 0 5px #c9a85e}
+#tagBody .old{position:absolute;left:0;right:0;top:50px;text-align:center;font:400 46px/1 Anton;color:#2a2418}
+#tagBody .strike{position:absolute;left:30px;width:130px;top:72px;height:7px;background:#e3101f;transform:rotate(-12deg);border-radius:3px}
+#tagBody .fr{position:absolute;left:0;right:0;top:112px;text-align:center;font:400 100px/1 Anton;color:#e3101f;text-shadow:3px 3px 0 #6a0008}
+/* checklist of claims (results so far) */
+#list{position:absolute;left:664px;top:118px;width:300px}
+.ck{display:flex;align-items:center;gap:12px;height:52px;font:400 34px/1 Anton;color:#fff;letter-spacing:.02em;white-space:nowrap;
+  text-shadow:-2px -2px 0 #0b0f40,2px -2px 0 #0b0f40,-2px 2px 0 #0b0f40,2px 2px 0 #0b0f40,4px 4px 0 rgba(0,0,0,.5)}
+.ck i{flex:0 0 36px;height:36px;border-radius:7px;background:#19b34a;border:3px solid #0b0f40;box-sizing:border-box;position:relative}
+.ck i:after{content:"";position:absolute;left:9px;top:2px;width:10px;height:19px;border:solid #fff;border-width:0 5px 5px 0;transform:rotate(40deg)}
+.ck small{font:800 20px/1 Inter;letter-spacing:0;color:#ffe600;text-shadow:1px 1px 0 #0b0f40;margin-left:-4px;align-self:flex-end;padding-bottom:8px}
+.ck.now{color:#ffe600}
+.ck.now i{background:#ffd400}
+.ck.now i:after{border-color:#0b0f40}
+/* featured results card */
+#card{position:absolute;left:962px;top:156px;width:300px;box-sizing:border-box;border:4px solid #0b0f40;background:#fff;text-align:center;color:#000;
+  box-shadow:0 14px 26px rgba(0,0,0,.55);transform:rotate(2deg)}
+#card .hd{background:linear-gradient(180deg,#ffe24a,#ffc400);border-bottom:4px solid #0b0f40;font:400 38px/1 Anton;color:#c6001a;padding:9px 0 7px;letter-spacing:.02em}
+#card .qr{position:relative;display:block;margin:10px auto 4px}
+#card .t1{font:800 17px/1.25 Inter;color:#0b0f40}
+#card .t2{font:700 15px/1.3 Inter;color:#333;padding-bottom:10px;white-space:nowrap}
+#card .t2 svg{position:relative;width:20px;height:20px;vertical-align:-4px;margin-right:4px}
+#burst{position:absolute;left:1150px;top:34px;width:120px;height:120px;transform:rotate(12deg)}
+#burst b{position:absolute;left:0;right:0;top:40px;text-align:center;font:400 30px/1 Anton;color:#fff;letter-spacing:.02em;text-shadow:2px 2px 0 #6a0008}
+/* name card (lower third) */
+#name{position:absolute;left:26px;top:500px}
+#name .tab{display:inline-block;background:#ffd400;color:#c6001a;font:400 26px/1 Anton;letter-spacing:.06em;padding:6px 14px 5px;border:3px solid #0b0f40;border-bottom:0}
+#name .bar{width:560px;box-sizing:border-box;padding:8px 18px 9px;background:linear-gradient(180deg,#1f3fd0,#0f238f);border:3px solid #0b0f40;box-shadow:0 10px 22px rgba(0,0,0,.5)}
+#name .n{font:800 38px/1 Inter;color:#fff;letter-spacing:-.01em}
+#name .r{font:italic 700 24px/1.2 Inter;color:#ffe600}
+/* CALL NOW strip */
+#call{position:absolute;left:0;top:648px;width:1280px;height:72px;display:flex;border-top:4px solid #ffd400;box-shadow:0 -6px 18px rgba(0,0,0,.45)}
+#call .cn{width:300px;background:#e3101f;color:#ffe600;font:400 52px/68px Anton;letter-spacing:.04em;text-align:center}
+#call .u{flex:1;background:linear-gradient(180deg,#1f3fd0,#0f238f);font:800 34px/68px Inter;color:#fff;padding-left:26px;white-space:nowrap;letter-spacing:-.01em}
+</style></head><body>
+<svg width="1280" height="720" viewBox="0 0 1280 720"><defs>
+  <radialGradient id="edge" cx="420" cy="330" r="900" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#5a8bff" stop-opacity=".35"/><stop offset=".45" stop-color="#0a0f3a" stop-opacity="0"/><stop offset="1" stop-color="#05061c" stop-opacity=".85"/></radialGradient>
+</defs><rect width="1280" height="720" fill="#1a2c9e"/><g id="rays"></g><rect width="1280" height="720" fill="url(#edge)"/></svg>
+<div id="bip"><div id="bipIn"><b>BIP-39</b></div></div>
+<svg width="1280" height="720" viewBox="0 0 1280 720"><path id="string" d="" stroke="#3a2a10" stroke-width="3" fill="none"/></svg>
+<div id="free"><div id="tagBody"><div class="hole"></div><div class="old">$1,000</div><div class="strike"></div><div class="fr">FREE</div></div></div>
+<div id="labL"></div>
+<div id="list"></div>
+<svg id="burst" viewBox="-60 -60 120 120"><polygon id="burstP" fill="#e3101f" stroke="#ffd400" stroke-width="4"/></svg>
+<div id="card"><div class="hd">ROOT ROTATED!</div><div id="cq"></div><div class="t1" id="ct1"></div><div class="t2" id="ct2"></div></div>
+<div style="position:absolute;left:1150px;top:34px;width:120px;height:120px;transform:rotate(12deg)"><b style="position:absolute;left:0;right:0;top:36px;text-align:center;font:400 28px/1.05 Anton;color:#fff;letter-spacing:.02em;text-shadow:2px 2px 0 #6a0008">REAL<br>RESULTS</b></div>
+<div id="name"><div class="tab">SATISFIED CUSTOMER</div><div class="bar"><div class="n">Dr. L. C.</div><div class="r">cryptography nerd</div></div></div>
+<div id="call"><div class="cn">CALL NOW!</div><div class="u">github.com/chaintail/solana-bunker</div></div>
+<script src="data/s09-results.js"></script><script src="assets/s09/anchors.js"></script>
+<script src="lib/film.js"></script>
+<script>
+const f = window.__film, $ = (id) => document.getElementById(id), R = window.S09_RESULTS;
+{ let g = ''; const cx = 420, cy = 300, n = 28; for (let i = 0; i < n; i += 2) { const a0 = (i / n) * Math.PI * 2 + .05, a1 = ((i + 1) / n) * Math.PI * 2 + .05, L = 1800;
+    g += `<polygon points="${cx},${cy} ${cx + L * Math.cos(a0)},${cy + L * Math.sin(a0)} ${cx + L * Math.cos(a1)},${cy + L * Math.sin(a1)}" fill="#2c4ce0"/>`; } $('rays').innerHTML = g; }
+// the FREE tag hangs from the packshot's right corner (still: at rest)
+{ const pv = [22 + 368 * .42, 18 + 98 * .42]; $('free').style.transform = `translate(${pv[0] - 100 * .5}px,${pv[1]}px) scale(.5)`; $('free').style.transformOrigin = '0 0';
+  $('string').setAttribute('d', `M${pv[0]} ${pv[1] - 4} L${pv[0]} ${pv[1] + 28}`); }
+// the lab coat: professor-point, chin at (LAB.x, LAB.y); lip-synced head behind the body, chin centre (KEY_CHIN_X, 905) of the key crop on the collar centre
+const HK = 0.326, A9 = window.ANCHORS_S09, KCX = window.KEY_CHIN_X, LAB = { x: 330, y: 318, s: .52 };
+{ const a = A9['physicist-professor-point'], el = document.createElement('div'); el.className = 'fig';
+  el.innerHTML = `<img src="heads/s09-look-lab.png" style="width:${760 * HK}px;height:${1100 * HK}px;left:${a.hx - KCX * HK}px;top:${a.chin + 3 - 905 * HK}px"><img src="assets/s09/physicist-professor-point.png" width="1024" height="1536">`;
+  el.style.transform = `translate(${LAB.x}px,${LAB.y}px) scale(${LAB.s}) translate(${-a.cx}px,${-a.chin}px)`; $('labL').appendChild(el); }
+// checklist: the claims named so far; the robbery has no devnet signature (risk RA1), so its line says so
+const items = [['LIVE ON DEVNET'], ['3 VAULTS'], ['SOL'], ['USDC', 'mock'], ['ROBBERY', 'dramatized'], ['REJECTED', 'simulated'], ['ROTATION', '', 'now']];
+$('list').innerHTML = items.map(([t, s, c]) => `<div class="ck ${c || ''}"><i></i>${t}${s ? `<small>${s}</small>` : ''}</div>`).join('');
+// starburst sticker
+{ const p = []; for (let i = 0; i < 28; i++) { const r = i % 2 ? 44 : 58, a = i / 28 * Math.PI * 2; p.push(`${(r * Math.cos(a)).toFixed(1)},${(r * Math.sin(a)).toFixed(1)}`); } $('burstP').setAttribute('points', p.join(' ')); }
+// featured card: the rotation. QR at whole pixels per module (4 px), 4-module quiet zone
+const SOL = '<svg viewBox="0 0 24 24"><path d="M19.9,18.4 A9.6,9.6 0 1 1 21.4,14.2" fill="none" stroke="#00e8b5" stroke-width="4.8"/><circle cx="12" cy="10.6" r="4.9" fill="#c74ae3"/></svg>';
+const qrSvg = (q, px) => { const s = (q.n + 8) * px; return `<svg class="qr" viewBox="-4 -4 ${q.n + 8} ${q.n + 8}" width="${s}" height="${s}" shape-rendering="crispEdges"><rect x="-4" y="-4" width="${q.n + 8}" height="${q.n + 8}" fill="#fff"/><path d="${q.d}" fill="#000"/></svg>`; };
+$('cq').innerHTML = qrSvg(R.rotation.qr, 4);
+$('ct1').textContent = `XMSS vault: new root, epoch ${R.rotation.epoch}`;
+$('ct2').innerHTML = `${SOL}devnet tx ${R.rotation.short}`;
+f.onSeek(() => {});
+</script></body></html>

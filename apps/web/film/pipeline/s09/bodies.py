@@ -9,7 +9,8 @@ import numpy as np
 from PIL import Image
 from scipy import ndimage as ndi
 SRC = 'assets/bodies/'; DST = 'assets/s09/'; os.makedirs(DST, exist_ok=True)
-POSES = ['2-street-hands-in-pockets', '2-street-celebrate', '1-suit-standing', '1-suit-point-right', '5-physicist-holding-clipboard']
+POSES = ['2-street-hands-in-pockets', '2-street-celebrate', '1-suit-standing', '1-suit-point-right', '5-physicist-holding-clipboard',
+         '5-physicist-professor-point']   # the testimonial (film-plan-ending.md part A): the lab coat points at the results cards
 anch = {}
 for n in POSES:
     im = np.array(Image.open(SRC + n + '.png').convert('RGBA')).astype(int)
