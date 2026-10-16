@@ -1,4 +1,4 @@
-<!doctype html><html data-duration="43.54" data-fps="30"><head><meta charset="utf-8">
+<!doctype html><html data-duration="38.83" data-fps="30"><head><meta charset="utf-8">
 <link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
 <style>
 /* Scene 9, the seed phrase (film-plan-s09.md). A 1990s late-night infomercial playing on scene 8's arcade CRT.
@@ -442,7 +442,7 @@ $('tTray').innerHTML = [['ROBBED!', RS.robbery], ['REJECTED!', RS.rejection]].ma
   `<div class="tc">${qrPx(r.qr, 3)}<div class="tx"><div class="th">${h}</div><div class="lbl">${r.label}</div><div class="tn">${GHM}not on devnet:<br>${r.ref.replace(' line ', '<br>line ')}</div></div></div>`).join('');
 const TEL = [...$('tTray').children], TPOS = [[645, 503], [960, 503]];
 const labT = makeFig($('tLabL'), ['clip', 'prof'], BOARD); setPose(labT, 'clip');
-const LABT = { x: 330, y: 318, s: .52 }, MOVE = .40, DROP = .22;   // scene s (x11: 0.364 s and 0.2 s); the move starts .04 s after the cut, so the
+const LABT = { x: 330, y: 318, s: .52 }, MOVE = .26, DROP = .14;   // scene s (v11, Liam "speed it up massively"; v9-v10: .40 and .22); the move starts .04 s after the cut, so the
 // first testimonial frame (x11 and 1x) shows him exactly as the tag's last frame
 function testi(t) {
   $('tRays').setAttribute('transform', `rotate(${2 * (t - T.testi)} 420 300)`);
@@ -545,30 +545,31 @@ f.onSeek((t0) => {
       const gl = P(t, T.key + .15, T.key + .35), gs = Math.sin(gl * Math.PI); $('glint').setAttribute('transform', `translate(${KEY[0] + 30} ${KEY[1] - 16}) rotate(${gl * 90}) scale(${gs})`); }
     // the suit: arms at sides from the snap (says "what if", then frozen on S2's last frame through the breath), points on "yeah" (pose cut, head and
     // collar pinned), speaks S3-S4, steps out left at the tag
-    { const so = step(P(t, T.suit_out, T.suit_out + .3), 3); show($('suitCL'), so < 1); setPose(suitC, t >= T.yeah ? 'point' : 'stand');
+    { const so = step(P(t, T.suit_out, T.suit_out + .15), 3); show($('suitCL'), so < 1); setPose(suitC, t >= T.yeah ? 'point' : 'stand');
       setHead(suitC, headFrame(t, 'suit')); place(suitC, SUITC.x - so * 520, SUITC.y, 0, SUITC.s); }
     // stamp, BUT WAIT, the proof boxes
     { const p = P(t, T.stamp, T.stamp + 4 / 30), out = P(t, T.butwait, T.butwait + .12); show($('stamp'), t >= T.stamp && out < 1);
       $('stamp').style.transform = `rotate(-5deg) scale(${lerp(2.6, 1, p) * (1 - out)})`;
       let sx = 0, sy = 0; if (t >= T.stamp + 4 / 30 && t < T.stamp + 6 / 30) { const k2 = Math.floor((t - T.stamp) * 30) % 2 ? -1 : 1; sx = 6 * k2; sy = -4 * k2; }
       $('studio').style.transform = `translate(${sx}px,${sy}px)`;
-      const bu = easeO(P(t, T.butwait, T.butwait + .3)), bd = P(t, T.suit_out, T.suit_out + .25); show($('butwait'), t >= T.butwait && bd < 1);
+      const bu = easeO(P(t, T.butwait, T.butwait + .3)), bd = P(t, T.suit_out, T.suit_out + .12); show($('butwait'), t >= T.butwait && bd < 1);
       $('butwait').style.transform = `translateY(${lerp(220, 0, bu) + 260 * bd * bd}px)`;
       const drop = (el, at) => { const p2 = P(t, at, at + .3); show(el, t >= at); el.style.transform = `translateY(${lerp(-420, 0, backO(p2))}px)`; };
       drop($('cCode'), T.check); drop($('cPaper'), T.itout); }
     // tag: the product shrinks up; FREE swings in from the card's corner; CALL NOW flashes and flips into the repo link and QR; the lab coat pokes in
-    { const sh = easeIO(P(t, T.shrink, T.shrink + .3)); $('prod').style.transform = `scale(${lerp(1, .78, sh)})`;
-      const pv = [690 + (868 - 690) * .78, 66 + (190 - 66) * .78], tau = t - T.free; show($('free'), tau >= 0);
+    // (v11: the whole tag runs in 0.95 s from the end of "it out": shrink .18 s, the FREE swing 3x faster, flip .2 s, poke .18 s; v3-v10: .3, 1x, .4, .3)
+    { const sh = easeIO(P(t, T.shrink, T.shrink + .18)); $('prod').style.transform = `scale(${lerp(1, .78, sh)})`;
+      const pv = [690 + (868 - 690) * .78, 66 + (190 - 66) * .78], tau = 3 * (t - T.free); show($('free'), tau >= 0);
       const th = tau < 0 ? 0 : tau > 2.4 ? 0 : 75 * Math.exp(-2.6 * tau) * Math.cos(2 * Math.PI * .95 * tau);
       $('free').style.transform = `translate(${pv[0] - 100}px,${pv[1]}px) rotate(${th}deg)`;
       const r = th * Math.PI / 180; $('string').setAttribute('d', tau >= 0 ? `M${pv[0]} ${pv[1]} L${pv[0] - 56 * Math.sin(r)} ${pv[1] + 56 * Math.cos(r)}` : '');
       show($('call'), t >= T.callnow);
-      const fl = P(t, T.flip, T.flip + .4), on = Math.floor((t - T.callnow) * 8) % 2 === 0;
+      const fl = P(t, T.flip, T.flip + .2), on = Math.floor((t - T.callnow) * 8) % 2 === 0;
       $('callA').style.background = on ? '#e3101f' : '#ffd400'; $('callA').style.color = on ? '#ffe600' : '#c6001a';
       $('callA').style.transform = `rotateX(${fl < .5 ? fl * 180 : 90}deg)`; show($('callA'), fl < .5);
       $('callB').style.transform = `rotateX(${fl < .5 ? -90 : (1 - fl) * 180 - 0}deg)`; show($('callB'), fl >= .5);
       $('callA').style.display = fl < .5 ? 'flex' : 'none';
-      const lp = step(P(t, T.lab, T.lab + .3), 3); show($('labL'), t >= T.lab);
+      const lp = step(P(t, T.lab, T.lab + .18), 3); show($('labL'), t >= T.lab);
       setHead(lab, LAB_FRAME); place(lab, LAB.x - (1 - lp) * 300, LAB.y, LAB.rot, LAB.s, 1); }   // v9: unmirrored
   }
 });

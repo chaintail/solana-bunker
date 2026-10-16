@@ -14,8 +14,15 @@ import json
 FPS = 30
 IN0 = 1.55            # scene time of segment A's first sample (after the TV static and the push-in)
 REVEAL = 0.56         # bed-only gap between the segments (v9, composer: a 0.60 s breath at x11 between the end of "what if" (514.15) and "yeah" (515.23): (0.05 + REVEAL + 0.05) / 1.1 = 0.600; v1-v8: 2.60)
-TAG = 5.40            # tag after the last word (v2: 6.60, its last 2.00 s a frozen hold; v3 trims that hold to 0.80 s, ruling Q2)
-TA_LEAD = 0.27        # the testimonial's hard cut leads its first sample (518.62) by 0.27 s
+TAG = 0.89            # the testimonial's cut after S4's out point 517.36 (v11, Liam "start that animation sooner ... cut it down to a maximum of one second":
+                      # the tag starts on the end of "it out" (517.30) and is cut 0.95 s later; v3-v10: 5.40 with a 0.80 s frozen hold; v2: 6.60)
+TA_LEAD = 0.07        # the cut leads segment C's row start (518.62) by 0.07 s, so "And" (518.85) is 0.30 s after the cut (v3-v10: 0.27, "And" 0.50 s after it)
+HOLD0 = 0.10          # the tag's frozen last stretch before the cut (v3-v10: 0.80)
+# v11: the speech-free stretch from the end of "it out" (517.30) to "And" (518.85) is 0.06 + TAG + TA_LEAD + 0.23 = 1.25 s scene = 0.962 s at x13
+# (v10: 5.96 s scene = 4.967 s at x12). The audio splices at zero crossings of the take: segment B's audio ends at 517.3604 (the "out" tail is
+# below -55 dB) and segment C's audio starts at 518.8003, 45 ms before "And" (the 0.18 s of take pause before it is cut). The rows, and so the
+# lip-synced heads, keep their v10 in/out points.
+AUD = [(497.30, 514.20), (515.18, 517.3604), (518.8003, 533.30)]
 HOLD = 2.00           # the frozen handoff hold at the end
 SEG = [(497.30, 514.20), (515.18, 517.36), (518.62, 533.30)]
 OFF = [IN0 - SEG[0][0]]; OFF.append(IN0 + (SEG[0][1] - SEG[0][0]) + REVEAL - SEG[1][0])
@@ -46,7 +53,7 @@ T = {'static': .12, 'static_end': .62, 'push_end': IN0, 'okay': S(497.37), 'anno
      'derive': S(506.18), 'secret': S(507.08), 'from': S(507.69), 'something': S(508.63), 'memorable': S(509.08), 'youknow': S(510.46),
      'rather': S(510.67), 'memorizing': S(511.00), 'thousands': S(511.64), 'strings': S(512.20), 'gibberish': S(512.56), 'whatif': S(513.67),
      'whatif_end': S(514.15), 'cut': edl[3]['out_out'], 'yeah': S(515.23), 'didthat': S(515.76), 'too_end': S(516.41), 'go': S(516.68),
-     'check': S(516.84), 'itout': S(517.00), 'out_end': S(517.30), 'end': END, 'hold0': TESTI - 0.80, 'testi': TESTI,
+     'check': S(516.84), 'itout': S(517.00), 'out_end': S(517.30), 'end': END, 'hold0': TESTI - HOLD0, 'testi': TESTI,
      'ta_in': edl[6]['out_in'], 'and': S(518.85), 'all': S(520.75), 'live': S(521.32), 'devnet': S(521.78), 'three': S(523.09), 'vaults': S(523.31),
      'sol': S(524.11), 'usdc': S(524.62), 'we': S(525.73), 'robbery': S(526.29), 'rejection': S(526.86), 'and2': S(527.84), 'rotation': S(528.17),
      'every': S(529.62), 'number': S(530.00), 'screen': S(530.60), 'transaction': S(531.16), 'open': S(531.90), 'explorer': S(532.42),
@@ -57,16 +64,19 @@ T['hold0'] = round(T['hold0'], 3)
 b = round(T['yeah'] - .50, 3)
 T.update({'scratch': S(513.52), 'snap': T['whatif'], 'bip': b, 'parch': round(b + .50, 3), 'words': round(b + .65, 3),
           'ghost': round(b + 1.65, 3), 'key': round(b + 1.95, 3), 'fork': round(b + 2.05, 3)})
-T.update({'stamp': T['didthat'], 'butwait': round(T['go'] - .05, 3), 'tag': round(END + .07, 3)})
+# v11: the tag starts on the end of "it out" (T.out_end) and every step runs about 5x sooner than v10 (v3-v10: tag END + .07, shrink +.17, free +.47,
+# callnow +1.67, flip +2.87, lab +3.37); the move durations are in s09-seed.html
+T.update({'stamp': T['didthat'], 'butwait': round(T['go'] - .05, 3), 'tag': T['out_end']})
 g = T['tag']
-T.update({'suit_out': g, 'shrink': round(g + .17, 3), 'free': round(g + .47, 3), 'callnow': round(g + 1.67, 3), 'flip': round(g + 2.87, 3), 'lab': round(g + 3.37, 3)})
+T.update({'suit_out': g, 'shrink': round(g + .06, 3), 'free': round(g + .15, 3), 'callnow': round(g + .36, 3), 'flip': round(g + .52, 3), 'lab': round(g + .66, 3)})
+assert abs(T['testi'] - (g + .95)) < 2e-3 and T['lab'] + .18 <= T['hold0'] + 1e-6, (T['testi'], g)
 markers = [{'id': k, 't': round(v, 3)} for k, v in [('SFX_TV_STATIC', T['static']), ('SFX_RECORD_SCRATCH', T['scratch']), ('SFX_STAMP', T['stamp'] + .03),
            ('SFX_WHOOSH', T['butwait']), ('SFX_CASH_REGISTER', T['free'])]]
 doc = {'total': TOTAL, 'fps': FPS, 'edl': edl, 'heads': heads, 'T': T, 'markers': markers, 'note': 'markers are timing only (no SFX in the mix)'}
 json.dump(doc, open('out/s09-edl.json', 'w'), indent=1)
 open('film/data/s09-edl.js', 'w').write('window.S09 = ' + json.dumps(doc) + ';\n')
 f = []
-for i, (a, b) in enumerate(SEG):   # 20 ms fades on every cut
+for i, (a, b) in enumerate(AUD):   # 20 ms fades on every cut (v11: B's out and C's in are zero crossings of the take)
     d = b - a; ms = int(round((a + OFF[i]) * 1000))
     f.append(f"[0:a]atrim=start={a}:end={b},asetpts=PTS-STARTPTS,aresample=48000,afade=t=in:d=0.02,afade=t=out:st={d - 0.02:.4f}:d=0.02,adelay={ms}|{ms}[a{i}];")
 f.append(f"anullsrc=r=48000:cl=mono,atrim=0:{TOTAL},asetpts=PTS-STARTPTS[base];")
