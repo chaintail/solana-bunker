@@ -9,7 +9,7 @@ is moved by the measured collar offset, so a place() call with the same chin poi
   suit: suit-point-right is pinned to suit-standing (section 2: arms at sides on the snap, points on "yeah").
   lab coat: physicist-holding-clipboard is pinned to physicist-professor-point (section 3 switches on "live"; professor-point keeps its v1-v8 anchor,
   so the section-3 call and the hand-off frame are unchanged).
-  professor-point's legs: the sprite is split at the coat hem and its legs are moved so they land on holding-clipboard's legs (collar-pinned).
+  professor-point's legs: v10 uses the re-seated -notch art from film/floating-head 20ae821 as authored (v9's local hem split is removed).
 usage: /usr/bin/python3 pipeline/s09/bodies.py"""
 import json, os
 import numpy as np
@@ -80,43 +80,7 @@ h = oval(L0); h.update({'oval_cx': h['cx'], 'oval_chin': h['chin'], 'cx': oval(L
 legL, legR = match(L0, L1, (270, 480, 1250, 1470), base), match(L0, L1, (520, 830, 1250, 1470), base)
 print('lab collar offset (professor-point - holding-clipboard, beyond the oval offset):', cdx, cdy, '-> holding-clipboard anchor', h['cx'], h['chin'],
       '| legs left', legL, 'right', legR, '| clipboard', match(L0, L1, (250, 440, 420, 720), base))
-# professor-point's legs: the art draws them (and the coat) 10-17 px right of its collar compared with holding-clipboard. Split at the coat hem: the
-# coat (white panels plus their outline) stays put; everything else from row Y0 down (trousers, the lining between the legs, shoes) is moved left by
-# the leg offset minus the collar offset, the left leg and the right leg each by its own amount, with the seam down the middle of the gap between the
-# legs (lining white, then empty background: nothing to cut). Under the coat the trousers are continued straight up from below the hem, so the moved
-# legs never pull coat white into the opening. In the coat opening the move ramps in from 0 at Y0 to full at the hem row Y1 (a slope change of the
-# trouser lines of a few degrees; rows below about 943 lie under the CALL NOW strip at the section-3 placement, so Y0 = 960 keeps every visible pixel
-# of professor-point, and the hand-off frame, unchanged).
-Y0, Y1 = 960, 1100
-sL, sR = -(legL[0] - cdx), -(legR[0] - cdx)
-P = np.array(Image.open(DST + 'physicist-professor-point.png').convert('RGBA')).astype(int)
-r, g, b, a = P[..., 0], P[..., 1], P[..., 2], P[..., 3]
-white = (r > 215) & (g > 215) & (b > 215) & (a > 200); lab, k = ndi.label(white)
-panels = np.zeros_like(white)
-for i, sl in enumerate(ndi.find_objects(lab), 1):   # the coat's two lower panels: white regions running from above the belt line to below row 1000
-    if sl[0].start < 850 and sl[0].stop > 1000: panels |= lab == i
-panels = ndi.binary_fill_holes(panels)
-lumP = (r + g + b) / 3
-grey = (lumP > 70) & (lumP < 150) & (np.ptp(P[..., :3], axis=-1) < 30) & (a > 200)   # trouser grey (the outline and its anti-aliasing are darker)
-coat = (ndi.binary_dilation(panels, iterations=12) & ~grey) | panels   # the panels plus their whole black outline, not the trousers
-coat[:Y0 - 40] = False
-legs = P.copy(); H = P.shape[0]
-for x in range(P.shape[1]):   # under the coat: continue whatever is below the coat in this column straight up
-    ys = np.nonzero(coat[Y0 - 40:, x])[0] + Y0 - 40
-    if len(ys):
-        yb = ys.max() + 1; legs[ys, x] = P[min(yb, H - 1), x] if yb < H else 0
-gapc = np.nonzero((lumP[1150:1300] > 200).all(0) | (a[1150:1300] < 40).all(0))[0]   # columns clear of both legs below the hem
-mid = int(np.median(gapc[(gapc > 330) & (gapc < 480)]))
-out = P.copy()
-for y in range(Y0, H):
-    w = min(1.0, (y - Y0) / (Y1 - Y0)); dl, dr = sL * w, sR * w
-    xs = np.arange(P.shape[1]); srcL, srcR = xs - dl, xs - dr
-    srcx = np.where(srcL < mid, srcL, srcR)
-    x0 = np.floor(srcx).astype(int); f = (srcx - x0)[:, None]; x0c, x1c = np.clip(x0, 0, P.shape[1] - 1), np.clip(x0 + 1, 0, P.shape[1] - 1)
-    row = legs[y, x0c] * (1 - f) + legs[y, x1c] * f; row[(x0 < 0) | (x0 + 1 >= P.shape[1])] = 0
-    c = coat[y]; row[c] = P[y, c]; out[y] = np.rint(row).astype(int)
-Image.fromarray(out.astype('uint8')).save(DST + 'physicist-professor-point.png', optimize=True)
-print(f'professor-point legs moved: left {sL:+d} px, right {sR:+d} px (seam x {mid}, ramp rows {Y0}-{Y1}); after the move, legs (professor-point - holding-clipboard,',
-      'collar-pinned): left', match(L0, DST + 'physicist-professor-point.png', (270, 480, 1250, 1470), base), 'right', match(L0, DST + 'physicist-professor-point.png', (520, 830, 1250, 1470), base),
-      '(minus the collar offset', cdx, ')')
+# professor-point's legs: v10 uses the re-seated art (film/floating-head 20ae821: the legs sit at the coat hem, collar-pinned to holding-clipboard; rows above
+# 1064 are byte-identical to the v9 -notch art), drawn as authored. The v9 local hem split (left -10, right -15 px) is gone.
+print('professor-point legs (professor-point - holding-clipboard, collar-pinned): left', legL[0] - cdx, 'right', legR[0] - cdx)
 open(DST + 'anchors.js', 'w').write('window.ANCHORS_S09 = ' + json.dumps(anch) + ';\nwindow.KEY_CHIN_X = 289;\n'); print(anch)
