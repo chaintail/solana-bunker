@@ -107,12 +107,7 @@ svg{position:absolute;left:0;top:0;overflow:visible}
  <div class="L noir" id="narrAL"><div id="narrA"></div></div>
  <div class="L" id="devilL">
   <div id="devil" style="position:absolute;left:0;top:0;width:120px;height:174px">
-   <img src="heads/s06-devil.png" style="position:absolute;left:0;top:0;width:120px;height:174px">
-   <svg width="120" height="174" viewBox="0 0 152 220">
-    <path d="M38,40 Q16,8 18,-22 Q46,2 60,26 Z" fill="#d00000" stroke="#000" stroke-width="5" stroke-linejoin="round"/>
-    <path d="M114,40 Q136,8 134,-22 Q106,2 92,26 Z" fill="#d00000" stroke="#000" stroke-width="5" stroke-linejoin="round"/>
-    <path fill-rule="evenodd" fill="#050505" d="M8,64 Q76,52 146,64 L146,96 Q76,104 8,96 Z M30,80 a16,10 0 1,0 32,0 a16,10 0 1,0 -32,0 Z M88,80 a16,10 0 1,0 32,0 a16,10 0 1,0 -32,0 Z"/>
-    <path d="M146,70 Q160,66 170,74 M146,84 Q160,90 168,98" stroke="#050505" stroke-width="6" fill="none" stroke-linecap="round"/></svg></div>
+   <img src="heads/s06-devil-v2.png" style="position:absolute;left:-9.47px;top:-31.58px;width:157.9px;height:205.3px"></div>
   <div id="dForm" style="position:absolute;left:0;top:0;width:150px;height:185px;transform-origin:75px 92px"><div class="card" style="width:150px;height:185px" id="dCard">
    <div class="ty" style="left:12px;top:10px;font-size:17px;letter-spacing:1px">WITHDRAWAL</div>
    <div class="ty" style="left:10px;top:58px;font-size:12px">TO: ADLw7W…xURt9Wod</div>
@@ -225,7 +220,7 @@ const WR = f.rng(43), wdrops = Array.from({ length: 60 }, () => ({ x: WR() * 300
 const wctx = $('winRain').getContext('2d'), dctx = $('dust').getContext('2d'), drctx = $('drips').getContext('2d');
 
 const sheetY = (t, tin, tout) => (t < tin ? 480 : t < tin + .35 ? 480 * (1 - eo(P(t, tin, tin + .35))) : t < tout ? 0 : t < tout + .3 ? -480 * ease(P(t, tout, tout + .3)) : -480);
-const SH = { sTweet: [L.M1.out_in, T.curves - .5], sCurve: [T.curves - .45, L.M3.out_in - .1], sLamport: [L.M3.out_in - .05, T.unfort], sX: [26.25, 99] };
+const SH = { sTweet: [L.M1.out_in, T.curves - .5], sCurve: [T.curves - 1.0, L.M3.out_in + .35], sLamport: [L.M3.out_in + .35, T.unfort], sX: [26.25, 99] };
 const slam = (p, rot, from = 3) => { const sc = p < .8 ? lerp(from, .96, Math.pow(p / .8, 2)) : lerp(.96, 1, (p - .8) / .2); return `rotate(${rot}deg) scale(${sc.toFixed(4)})`; };
 const type = (s, t, t1, cps) => s.slice(0, Math.max(0, Math.floor((t - t1) * cps + 1e-6)));
 
