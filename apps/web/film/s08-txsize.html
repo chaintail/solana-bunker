@@ -157,7 +157,7 @@ const qrSvg = (q, size) => `<svg class="qr" viewBox="-4 -4 ${q.n + 8} ${q.n + 8}
 $('qrCode').innerHTML = qrSvg(S07_QR.code, 146); $('qrProof').innerHTML = qrSvg(S07_QR.proof, 146); $('pfTx').textContent = 'devnet tx ' + S07_QR.tx.slice(0, 8) + '…';
 
 // ---------- characters: s08 bodies (oval erased, head behind the body), head sprite sheets heads/s08-head-NN.png (all lines, 16 x 12 cells of 152x220)
-const AN = { clip: [411.5, 303, 'engineer-point-clipboard'], thumbs: [511.5, 306, 'engineer-thumbs-up'], shrug: [511.5, 308, 'physicist-shrug'], prof: [394.5, 308, 'physicist-professor-point'], joe: [511.0, 344, 'street-celebrate'] };
+const AN = { clip: [411.5, 303, 'engineer-point-clipboard', 305], thumbs: [511.5, 306, 'engineer-thumbs-up', 305], shrug: [511.5, 308, 'physicist-shrug', 297.5], prof: [394.5, 308, 'physicist-professor-point', 297.5], joe: [511.0, 344, 'street-celebrate', 307.5] };
 const HK = 0.326, HS = 760 * HK / 152;
 function makeFig(parent, poses) {
   const el = document.createElement('div'); el.className = 'fig';
@@ -166,9 +166,9 @@ function makeFig(parent, poses) {
 function setPose(el, p) { el._pose = p; el.querySelectorAll('img[data-pose]').forEach((im) => (im.style.display = im.dataset.pose === p ? 'block' : 'none')); }
 // neck point (x,y), rotation, scale, mirror (a mirrored body keeps an unmirrored head), head tilt in degrees about the chin
 function place(el, x, y, rot, s, flip = 1, tilt = 0) {
-  const [cx, chin] = AN[el._pose];
+  const [cx, chin, , kx] = AN[el._pose];   // kx: the chin centre line in the key crop (jaw midpoint, median over that speaker's s08 head frames), which goes on the collar centre cx
   el.style.transform = `translate(${x}px,${y}px) rotate(${rot}deg) scale(${s * flip},${s}) translate(${-cx}px,${-chin}px)`;
-  let tr = `translate(${cx - 338 * HK}px,${chin + 3 - 905 * HK}px) scale(${HS})` + (tilt ? ` translate(67.6px,181px) rotate(${tilt}deg) translate(-67.6px,-181px)` : '');
+  let tr = `translate(${cx - kx * HK}px,${chin + 3 - 905 * HK}px) scale(${HS})` + (tilt ? ` translate(${kx / 5}px,181px) rotate(${tilt}deg) translate(${-kx / 5}px,-181px)` : '');
   if (flip < 0) tr = `translate(${cx}px,0) scale(-1,1) translate(${-cx}px,0) ` + tr;
   el.querySelector('.hd').style.transform = tr; }
 const cum = []; D.edl.reduce((a, e, i) => ((cum[i] = a), a + e.frames), 0);
