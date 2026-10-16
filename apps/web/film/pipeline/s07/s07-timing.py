@@ -2,7 +2,10 @@
 """Runs ON dev-mac from ~/video-work/solana-bunker/s07. Slide 7 edit list (film-plan-s07.md section 1) -> out/s07-edl.json, film/data/s07-edl.js,
 out/s07-audio.filter. Lines come from the take's second read-through of this passage (413-457 s); in/out points sit in the pauses found with
 silencedetect (n=-38dB, d=0.12) on the denoised take,
-with each out point pushed 0.06-0.12 s later so word tails decay inside the 20 ms fade. "Eight kilobytes each." (431.92-433.84) is not in the script and is left out."""
+with each out point pushed 0.06-0.12 s later so word tails decay inside the 20 ms fade. "Eight kilobytes each." (431.92-433.84) is not in the script and is left out.
+v6 (Liam 16718): 0.55 s of the bed-only pause after "massive" (M5 ends 17.47, M6 starts 18.70) is cut at scene 17.49: every line from M6 on starts 0.55 s
+earlier and the scene is 41.4667 s (1244 frames). 0.55 s = 15 frames of the x11 output (15 x 1.1 / 30), so the x11 picture after the cut is v5's shifted by
+exactly 15 frames; the pause after "massive" goes from 1.48 to 0.93 s of scene time. The trim is written into the EDL (trim) for the scene."""
 import json
 lines = [  # id, text, src_in, src_out, out_in
     ('M1', 'And lucky for us, it turns out you can build a signature out of nothing but hash functions.', 413.95, 418.30, 0.70),
@@ -17,13 +20,15 @@ lines = [  # id, text, src_in, src_out, out_in
     ('M10', "So when the attacker copies our transaction and swaps the destination, the signature doesn't match anymore.", 448.77, 454.00, 33.10),
     ('M11', 'The program throws it out.', 454.42, 455.55, 38.45),
 ]
-TOTAL = 42.00
+TRIM_AT, TRIM_D = 17.49, 0.55   # v6
+TOTAL = round(1244 / 30, 4)    # 42.00 - 0.55, on the frame grid (41.4667 s, 1244 frames; x11: 1131 frames)
 edl = []
 for id_, text, si, so, oi in lines:
     d = so - si
+    if oi >= TRIM_AT: oi = round(oi - TRIM_D, 6)
     edl.append({'id': id_, 'text': text, 'src_in': si, 'src_out': so, 'out_in': oi, 'out_out': round(oi + d, 4), 'frames': int(round(d * 30))})
 for i in range(1, len(edl)): assert edl[i]['out_in'] >= edl[i - 1]['out_out'] - 1e-6, edl[i]['id']
-doc = {'total': TOTAL, 'fps': 30, 'edl': edl}
+doc = {'total': TOTAL, 'fps': 30, 'edl': edl, 'trim': {'at': TRIM_AT, 'd': TRIM_D}}
 json.dump(doc, open('out/s07-edl.json', 'w'), indent=1)
 open('film/data/s07-edl.js', 'w').write('window.S07 = ' + json.dumps(doc) + ';\n')
 f = []

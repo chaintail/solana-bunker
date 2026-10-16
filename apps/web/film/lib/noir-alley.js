@@ -42,6 +42,11 @@ function figs(f, sprite, D, chinKX = 338) {   // chinKX: key-px x of the narrato
     suitX: { src: 'assets/bodies/1-suit-arms-crossed.png', ox: 511, chin: 306 },
     suitP: { src: 'assets/bodies/1-suit-point-right.png', ox: 352, chin: 309 },
     prof: { src: 'assets/bodies/5-physicist-professor-point.png', ox: 394.5, chin: 306 },
+    // the same lab coat holding the clipboard (no point), registered on prof's torso (slide 7 v6): centre line (collar / tie knot) x 511.7 vs prof's 397.1, so
+    // ox = 394.5 + 115; tie top y 400 = 400, shoulder outline within 1 px for 140 px either side of the neck, baseline 1462 vs 1463, so chin is unchanged.
+    // This sprite is drawn 3.3 % wider than prof (clipboard edge +107, pocket +118 px): sx squeezes it horizontally about its centre line (best fit of
+    // clipboard, collar, lapels, buttons, pocket and the clipboard shoulder: sx 0.967, mean abs diff 24.0 -> 11.1), so the torso edges coincide too.
+    profC: { src: 'assets/bodies/5-physicist-holding-clipboard.png', ox: 509.5, chin: 306, sx: 0.967 },
   };
   const HK = 0.326;                  // key px -> body px (chin to collar line; see film-plan-s06.md section 3)
   function makeFig(parent, bodyKey, headKind) {
@@ -53,7 +58,8 @@ function figs(f, sprite, D, chinKX = 338) {   // chinKX: key-px x of the narrato
     let head;
     if (headKind === 'narr') head = `<div class="hd" data-base="translate(${hn}px,${ht}px) scale(${hs})" style="transform:translate(${hn}px,${ht}px) scale(${hs})">` + [0, 1, 2, 3, 4, 5].map((i) => `<img src="heads/${sprite}-0${i}.png">`).join('') + '</div>';
     else head = `<img src="heads/s06-${headKind}.png" style="width:${760 * HK}px;height:${1100 * HK}px;left:${hl}px;top:${ht}px">`;
-    el.innerHTML = `<img src="${b.src}" width="1024" height="1536" style="-webkit-mask-image:${mask};mask-image:${mask}">${head}<img src="${b.src}" width="1024" height="1536" style="clip-path:${clip}">`;
+    const sx = b.sx ? `transform-origin:${o}px 0;transform:scaleX(${b.sx});` : '';   // optional horizontal squeeze about the centre line (the head is not scaled)
+    el.innerHTML = `<img src="${b.src}" width="1024" height="1536" style="${sx}-webkit-mask-image:${mask};mask-image:${mask}">${head}<img src="${b.src}" width="1024" height="1536" style="${sx}clip-path:${clip}">`;
     el.dataset.ox = o; el.dataset.chin = c; parent.appendChild(el); return el;
   }
   // neck point (x,y) on screen, rotation deg, scale, mirror. A mirrored body keeps an unmirrored head (the head is flipped back about the neck line x = ox).

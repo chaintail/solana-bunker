@@ -1,10 +1,12 @@
-<!doctype html><html data-duration="42" data-fps="30"><head><meta charset="utf-8">
+<!doctype html><html data-duration="41.4667" data-fps="30"><head><meta charset="utf-8">
 <link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
 <style>
 /* Slide 7, a signature made of hashes (docs/presentation/film-plan-s07.md). One seekable scene, captured whole.
    0-33.0 s: a 1979 seminar (cream screen, keystoned overhead-projector window, transparencies sliding up from the bottom, slide 6's alley alive in a corner window).
    33.0 s-end: hard cut to slide 6's noir alley (lib/noir-alley.js), the devil's swapped form is checked and thrown out into the gutter.
-   Heads: lip-synced narrator sprites (pipeline/s07/heads.py), slide 6's red devil head. Timing: data/s07-edl.js. Grades are added after capture (pipeline/s07/build.sh). */
+   Heads: lip-synced narrator sprites (pipeline/s07/heads.py), slide 6's red devil head. Timing: data/s07-edl.js. Grades are added after capture (pipeline/s07/build.sh).
+   v6: the narrator holds the clipboard (no point) until the Lamport sheet comes in, then points (body swap at the same neck point, torso registered);
+   0.55 s of the bed-only pause after "massive" is cut (D.trim): every event after it is 0.55 s earlier, ambient motion (rain, dust) runs on the uncut clock. */
 html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#000}
 .L{position:absolute;left:0;top:0;width:1280px;height:720px}
 .noir{filter:grayscale(1) contrast(1.28) brightness(.92)}
@@ -148,7 +150,9 @@ const show = (el, on) => { el.style.display = on ? '' : 'none'; };
 const L = Object.fromEntries(D.edl.map((e) => [e.id, e]));
 const ASR0 = { M1: 413.60, M2: 418.48, M3: 420.08, M4: 424.00, M5: 428.56, M6: 433.84, M7: 437.92, M8: 442.24, M9: 446.40, M10: 448.64, M11: 454.24 };
 const at = (id, tok) => L[id].out_in + (tok - ASR0[id]);
-const CUT = 33.0;   // hard cut to the alley
+// v6 trim: scene time from D.trim.at on is D.trim.d earlier than v5; fixed times written against the v5 clock go through sh(), ambient motion through amb()
+const TRIM = D.trim || { at: 1e9, d: 0 }, sh = (x) => (x >= TRIM.at ? x - TRIM.d : x), amb = (t) => (t >= TRIM.at ? t + TRIM.d : t);
+const CUT = sh(33.0);   // hard cut to the alley
 const T = {
   signature: at('M1', 416.16), nothing: at('M1', 416.88), hashFn: at('M1', 417.44), curves: at('M2', 418.80), leslie: at('M3', 420.80),
   thatL: at('M4', 424.48), smallest: at('M4', 426.56), solana: at('M4', 427.44), unfort: L.M5.out_in, massive: at('M5', 431.28),
@@ -159,7 +163,8 @@ window.__T = T;
 
 // ---------- figures (slide 6's compositing; seminar narrator in colour, alley narrator in the noir filter)
 const FG = NoirAlley.figs(f, 's07-narr', D, 308);
-const narrS = FG.makeFig($('narrS'), 'prof', 'narr'), narrA = FG.makeFig($('narrA'), 'prof', 'narr');
+const narrS0 = FG.makeFig($('narrS'), 'profC', 'narr'), narrS = FG.makeFig($('narrS'), 'prof', 'narr'), narrA = FG.makeFig($('narrA'), 'prof', 'narr');
+const POSE_T = L.M3.out_in + .35;   // v6: clipboard pose until the Lamport sheet comes in (SH.sLamport[0]), the point from then on
 const POKE = { left: [118, 282, 27], right: [1162, 305, -27] };      // side pokes, 27 deg from upright, legs cut by the edge
 function poke(fig, side, pk) { const [x, y, r] = POKE[side], fl = side === 'left' ? 1 : -1; FG.place(fig, x - fl * (1 - pk) * 380, y, r, .42, fl); }
 const inOut = (t, t0, t1) => (t < t0 || t >= t1 + .15 ? 0 : t < t1 ? step(P(t, t0, t0 + .15), 3) : 1 - step(P(t, t1, t1 + .15), 3));
@@ -217,12 +222,12 @@ const WR = f.rng(43), wdrops = Array.from({ length: 60 }, () => ({ x: WR() * 300
 const wctx = $('winRain').getContext('2d'), dctx = $('dust').getContext('2d'), drctx = $('drips').getContext('2d');
 
 const sheetY = (t, tin, tout) => (t < tin ? 480 : t < tin + .35 ? 480 * (1 - eo(P(t, tin, tin + .35))) : t < tout ? 0 : t < tout + .3 ? -480 * ease(P(t, tout, tout + .3)) : -480);
-const SH = { sTweet: [L.M1.out_in, T.curves - .5], sCurve: [T.curves - 1.0, L.M3.out_in + .35], sLamport: [L.M3.out_in + .35, T.unfort], sX: [26.25, 99] };
+const SH = { sTweet: [L.M1.out_in, T.curves - .5], sCurve: [T.curves - 1.0, L.M3.out_in + .35], sLamport: [L.M3.out_in + .35, T.unfort], sX: [sh(26.25), 99] };
 const slam = (p, rot, from = 3) => { const sc = p < .8 ? lerp(from, .96, Math.pow(p / .8, 2)) : lerp(.96, 1, (p - .8) / .2); return `rotate(${rot}deg) scale(${sc.toFixed(4)})`; };
 const type = (s, t, t1, cps) => s.slice(0, Math.max(0, Math.floor((t - t1) * cps + 1e-6)));
 
 f.onSeek((t0) => {
-  const FREEZE = 40.45, t = Math.min(t0, FREEZE);
+  const FREEZE = sh(40.45), t = Math.min(t0, FREEZE), ta = amb(t);
   // ---- beat 0: lamp click and cream wash over slide 6's last frame; the seminar is underneath from the brightest frame on
   show($('b0'), t0 < .5);
   $('wash').style.opacity = (t0 < .1 ? 0 : t0 < .13 ? .55 : t0 < .16 ? .1 : t0 < .5 ? .95 * eo(P(t0, .16, .5)) : t0 < .7 ? .95 * (1 - P(t0, .5, .7)) : 0).toFixed(3);
@@ -251,17 +256,17 @@ f.onSeek((t0) => {
       e.style.display = vis ? '' : 'none'; if (vis) e.style.transform = `translate(${x}px,${y}px) scale(${s})`; });
     show($('wall'), t >= T.unfort);
     // chains, tree
-    const chOn = t >= T.winternitz + .6; show($('chains'), chOn); show($('chLbl'), chOn && t < 26.0);
+    const chOn = t >= T.winternitz + .6; show($('chains'), chOn); show($('chLbl'), chOn && t < sh(26.0));
     $('chains').querySelectorAll('.lk').forEach((e) => { e.style.opacity = t >= T.winternitz + .6 + +e.dataset.j * .05 ? 1 : 0; });
     $('treeLines').querySelectorAll('.tl').forEach((e) => { const l = +e.dataset.l, a = T.merkle + l * .42; e.style.strokeDashoffset = (1 - P(t, a, a + .35)).toFixed(3); });
     $('treeNodes').querySelectorAll('.tn').forEach((e) => { e.style.opacity = t >= T.merkle + +e.dataset.l * .42 + .3 ? 1 : 0; });
-    $('glow').setAttribute('opacity', (t >= T.merkle + 1.6 ? .45 + .1 * Math.sin(t * 9) : 0).toFixed(3));
-    show($('kLbl'), t >= T.thousands && t < 26.0);
-    const mini = step(P(t, 26.0, 26.2), 3); $('tree').style.transform = `translate(${lerp(0, 700 - 300 * .42, mini)}px,${lerp(0, 208 - 110 * .42, mini)}px) scale(${lerp(1, .42, mini)})`;
+    $('glow').setAttribute('opacity', (t >= T.merkle + 1.6 ? .45 + .1 * Math.sin(ta * 9) : 0).toFixed(3));
+    show($('kLbl'), t >= T.thousands && t < sh(26.0));
+    const mini = step(P(t, sh(26.0), sh(26.2)), 3); $('tree').style.transform = `translate(${lerp(0, 700 - 300 * .42, mini)}px,${lerp(0, 208 - 110 * .42, mini)}px) scale(${lerp(1, .42, mini)})`;
     show($('tree'), t >= T.winternitz + .6);
     // counter: 32 bytes per revealed key; Winternitz rolls it down to 2,144 (67 chains x 32 bytes)
     let bytes = 32 * shown; if (t >= T.smaller) bytes = Math.round(lerp(8192, 2144, ease(P(t, T.smaller, T.smaller + .6))));
-    show($('counter'), t >= T.unfort && t < 26.0); $('cBig').textContent = bytes.toLocaleString('en-US') + ' bytes';
+    show($('counter'), t >= T.unfort && t < sh(26.0)); $('cBig').textContent = bytes.toLocaleString('en-US') + ' bytes';
     $('cSmall').textContent = t < T.winternitz ? 'public key: ' + (64 * shown).toLocaleString('en-US') + ' bytes' : 'one Winternitz signature';
     // XMSS letters, credit, NIST seal, VERSION 3, 2,500 bytes, boxes
     document.querySelectorAll('#sX .xl').forEach((e, i) => { e.style.opacity = t >= T.xmss + i * .12 ? 1 : 0; });
@@ -275,15 +280,16 @@ f.onSeek((t0) => {
     let y = 0; for (const h of [T.nist + .14, T.v3 + .14]) { const d = t - h; if (d >= 0 && d < .45) y += 7 * Math.exp(-d * 9) * Math.sin(d * 52); }
     $('proj').style.translate = `0 ${y.toFixed(2)}px`;
     // narrator: left poke for M1-M5 (shoved off by the wall on "massive"), right poke for M7-M9 (leaves before the boxes land)
-    const nf = FG.narrFrame(t); FG.setHead(narrS, nf);
+    const nf = FG.narrFrame(t), fig = t >= POSE_T ? narrS : narrS0; FG.setHead(fig, nf);
+    narrS.style.display = fig === narrS ? '' : 'none'; narrS0.style.display = fig === narrS0 ? '' : 'none';
     let side = null, pk = 0;
     if (t < T.massive + .25) { side = 'left'; pk = inOut(t, L.M1.out_in - .15, T.massive); }
     else if (t >= L.M7.out_in - .15) { side = 'right'; pk = inOut(t, L.M7.out_in - .15, T.v3 - .3); }
-    show($('narrSL'), side && pk > 0); if (side) poke(narrS, side, pk);
+    show($('narrSL'), side && pk > 0); if (side) poke(fig, side, pk);
     // corner window rain + dust
     wctx.clearRect(0, 0, 250, 141); wctx.lineWidth = .8;
-    for (const d of wdrops) { const yy = ((d.y + d.v * t) % 190) - 25, x = d.x + yy * .18; wctx.strokeStyle = `rgba(230,230,230,${d.a.toFixed(2)})`; wctx.beginPath(); wctx.moveTo(x, yy); wctx.lineTo(x - d.l * .18, yy - d.l); wctx.stroke(); }
-    dctx.clearRect(0, 0, 1280, 720); const S = f.rng(9 + Math.floor(t * 30));
+    for (const d of wdrops) { const yy = ((d.y + d.v * ta) % 190) - 25, x = d.x + yy * .18; wctx.strokeStyle = `rgba(230,230,230,${d.a.toFixed(2)})`; wctx.beginPath(); wctx.moveTo(x, yy); wctx.lineTo(x - d.l * .18, yy - d.l); wctx.stroke(); }
+    dctx.clearRect(0, 0, 1280, 720); const S = f.rng(9 + Math.floor(ta * 30));
     dctx.fillStyle = 'rgba(60,48,30,.35)'; for (let i = 0; i < 24; i++) { dctx.beginPath(); dctx.arc(330 + S() * 640, 150 + S() * 470, .6 + S() * 1.6, 0, 7); dctx.fill(); }
     dctx.strokeStyle = 'rgba(60,48,30,.28)'; dctx.lineWidth = 1; for (let i = 0; i < 2; i++) { const x = 360 + S() * 560, yy = 170 + S() * 420; dctx.beginPath(); dctx.moveTo(x, yy); dctx.quadraticCurveTo(x + 14, yy - 10, x + 26 + S() * 10, yy + 6); dctx.stroke(); }
   } else {
@@ -322,8 +328,8 @@ f.onSeek((t0) => {
     // gutter splash, then drips off the soggy form
     drctx.clearRect(0, 0, 1280, 720); drctx.fillStyle = 'rgba(220,220,220,.7)';
     if (t >= tThrow + .6 && t < tThrow + .9) { const p = P(t, tThrow + .6, tThrow + .9), R2 = f.rng(77); for (let i = 0; i < 9; i++) { const a = Math.PI * (1.1 + R2() * .8), v = 60 + R2() * 70; drctx.beginPath(); drctx.ellipse(990 + Math.cos(a) * v * p * 1.6, 650 + Math.sin(a) * v * p + 200 * p * p, 3, 4, 0, 0, 7); drctx.fill(); } }
-    if (t >= tThrow + 1.16) { const R3 = f.rng(5 + Math.floor(t * 30)); for (let i = 0; i < 4; i++) { const x = 930 + i * 26 + R3() * 6, ph = (t * 1.8 + i * .27) % 1; drctx.beginPath(); drctx.ellipse(x, 650 + ph * 50, 2.5, 4, 0, 0, 7); drctx.fill(); } }
-    AL.rain(rainCtx, t);
+    if (t >= tThrow + 1.16) { const R3 = f.rng(5 + Math.floor(ta * 30)); for (let i = 0; i < 4; i++) { const x = 930 + i * 26 + R3() * 6, ph = (ta * 1.8 + i * .27) % 1; drctx.beginPath(); drctx.ellipse(x, 650 + ph * 50, 2.5, 4, 0, 0, 7); drctx.fill(); } }
+    AL.rain(rainCtx, ta);
   }
 });
 </script></body></html>
