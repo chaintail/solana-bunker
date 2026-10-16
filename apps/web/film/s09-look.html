@@ -1,0 +1,182 @@
+<!doctype html><html data-duration="2" data-fps="30"><head><meta charset="utf-8">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
+<style>
+/* Scene 9 LOOK DRAFT (plan stage, not the scene; film-plan-s09.md section 7). Two full 1280x720 frames from one page:
+   panel A (t < 1): the black-and-white "problem" half, inside scene 8's CRT after the push-in (4:3 picture 960x720, the cabinet bezel as pillarbox bars):
+     kitchen, Joe behind the table under the sticky-note rain, one note on his forehead, DRAMATIZATION lower third; grayscale + contrast, grain, scanlines, vignette, glass.
+   panel B (t >= 1): the colour product shot, full 16:9: starburst set, the thousand key cards fanned out behind, the golden key, the BIP-39 card,
+     the 24-word parchment backup card, the suit pointing at the card, the YEAH, WE DID THAT TOO! stamp, the two proof boxes (flat, no grain, for the QR codes).
+   pipeline/s09/look-still.sh captures t = 0.5 and 1.5, grades them (A: light grain + vignette; B: vignette only) and puts them side by side. */
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#000}
+.P{position:absolute;left:0;top:0;width:1280px;height:720px;overflow:hidden;display:none}
+svg{position:absolute;left:0;top:0}
+.fig{position:absolute;left:0;top:0;width:1024px;height:1536px;transform-origin:0 0}
+.fig>img{position:absolute;left:0;top:0}
+/* ---- panel A: TV */
+#bars{position:absolute;inset:0;background:linear-gradient(180deg,#121019,#09080d 50%,#100e16)}
+#tv{position:absolute;left:160px;top:0;width:960px;height:720px;border-radius:45px/39px;overflow:hidden;background:#000}
+#tvIn{position:absolute;left:0;top:0;width:960px;height:720px;filter:grayscale(1) contrast(1.22) brightness(1.04) blur(.45px)}
+#kitchen{position:absolute;left:0;top:0;width:960px;height:720px;transform-origin:470px 300px;transform:scale(1.06)}
+.note{position:absolute;left:0;top:0;width:76px;height:76px;background:linear-gradient(180deg,#ffe46b,#f7d64c 80%,#e9c43a);box-shadow:1px 3px 4px rgba(0,0,0,.35);
+  font:400 15px/1 'Architects Daughter';color:#1d1d1d;display:flex;align-items:center;justify-content:center;transform-origin:50% 50%;white-space:nowrap}
+.note.p{background:linear-gradient(180deg,#ff9fc8,#f78ab8 80%,#e977a6)}
+.note.b{background:linear-gradient(180deg,#9fe0ff,#86d0f5 80%,#6fc0ea)}
+#grain{position:absolute;left:0;top:0;width:960px;height:720px;mix-blend-mode:overlay;opacity:.6;image-rendering:auto}
+#lines{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.20) 0 2px,transparent 2px 6px)}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse 75% 70% at 50% 48%,transparent 55%,rgba(0,0,0,.55) 100%)}
+#glass{position:absolute;inset:0;border-radius:45px/39px;box-shadow:inset 0 0 57px 15px rgba(0,0,0,.8),inset 0 0 6px 3px rgba(0,0,0,.9);
+  background:radial-gradient(ellipse 60% 45% at 32% 22%,rgba(255,255,255,.06),transparent 70%)}
+#drama{position:absolute;left:46px;bottom:58px;padding:7px 16px 6px;background:rgba(0,0,0,.62);font:800 30px/1 Inter;letter-spacing:.16em;color:#fff}
+/* ---- panel B: product shot */
+#bip{position:absolute;left:500px;top:66px;width:380px;height:134px;border-radius:22px;border:5px solid #15103d;box-sizing:border-box;overflow:hidden;
+  background:linear-gradient(135deg,#fff6b8,#ffd02a 42%,#ff9800);box-shadow:0 12px 26px rgba(0,0,0,.55),inset 0 -8px 0 rgba(160,70,0,.35);transform:perspective(900px) rotateY(-9deg)}
+#bip .shine{position:absolute;left:-60px;top:-40px;width:120px;height:240px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);transform:rotate(24deg) translateX(250px)}
+#bip b{position:absolute;left:0;right:0;top:4px;text-align:center;font:400 108px/1.05 Anton;color:#1c2bb0;letter-spacing:.01em;
+  text-shadow:-2px -2px 0 #fff,2px -2px 0 #fff,-2px 2px 0 #fff,2px 2px 0 #fff,6px 6px 0 #0b0f40}
+#parch{position:absolute;left:505px;top:216px;width:370px;height:392px;filter:drop-shadow(0 12px 18px rgba(0,0,0,.55))}
+#parchBg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 62% at 50% 44%,#fbf1cf 0%,#efdcaa 58%,#cfae6e 100%)}
+#parch .hd{position:absolute;left:0;right:0;top:15px;text-align:center;font:700 17px/1 'Liberation Serif';letter-spacing:.24em;color:#5b3c1c}
+#parch .rule{position:absolute;left:30px;right:30px;top:41px;height:2px;background:#8a6a3a;opacity:.6}
+.w{position:absolute;white-space:nowrap}
+.w i{font:400 16px/1 'Liberation Serif';font-style:normal;color:#7d5c33;display:inline-block;width:30px;text-align:right;margin-right:9px}
+.w span{font:400 23px/1 'Architects Daughter';color:#1b1840}
+#stamp{position:absolute;left:690px;top:648px;transform:translate(-50%,-50%) rotate(-5deg);white-space:nowrap;font:400 64px/1 Anton;color:#ec1028;letter-spacing:.01em;
+  text-shadow:-3px -3px 0 #ffd400,3px -3px 0 #ffd400,-3px 3px 0 #ffd400,3px 3px 0 #ffd400,0 -3px 0 #ffd400,0 3px 0 #ffd400,-3px 0 0 #ffd400,3px 0 0 #ffd400,8px 8px 0 #3a0010}
+/* flat proof cards (scene 8's see-the-code / proof style) */
+.card{position:absolute;left:1030px;width:238px;box-sizing:border-box;border:3px solid #000;background:#fff;padding:6px 6px 8px;text-align:center;font-family:Arial,Helvetica,sans-serif;color:#000;box-shadow:0 8px 18px rgba(0,0,0,.45)}
+.card-h{font:700 24px/1.15 Arial,Helvetica,sans-serif}
+.card-t{font:400 15px/1.25 Arial,Helvetica,sans-serif;white-space:nowrap}
+.card svg.mk{position:relative;width:23px;height:23px;vertical-align:-4px;margin-right:3px}
+.card svg.qr{position:relative;display:block;margin:4px auto}
+</style></head><body>
+
+<!-- ================= panel A: the black-and-white dramatization ================= -->
+<div class="P" id="A">
+ <div id="bars"></div>
+ <svg width="1280" height="720"><g fill="none"><path d="M142 0V720M1138 0V720" stroke="#ff2bd6" stroke-width="4.5" opacity=".75"/><path d="M151 0V720M1129 0V720" stroke="#19e3ff" stroke-width="3" opacity=".55"/></g></svg>
+ <div id="tv">
+  <div id="tvIn"><div id="kitchen">
+   <svg width="960" height="720" viewBox="0 0 960 720"><defs>
+     <pattern id="tile" width="72" height="72" patternUnits="userSpaceOnUse"><rect width="72" height="72" fill="#f1efe6"/><rect width="36" height="36" fill="#d9d3c2"/><rect x="36" y="36" width="36" height="36" fill="#d9d3c2"/><path d="M0 0H72V72" fill="none" stroke="#a9a28f" stroke-width="2"/><path d="M36 0V72M0 36H72" stroke="#a9a28f" stroke-width="2"/></pattern>
+     <pattern id="ging" width="44" height="44" patternUnits="userSpaceOnUse"><rect width="44" height="44" fill="#f4f1ea"/><rect width="22" height="44" fill="#d83c3c" opacity=".55"/><rect width="44" height="22" fill="#d83c3c" opacity=".55"/></pattern>
+     <pattern id="paper" width="26" height="26" patternUnits="userSpaceOnUse"><rect width="26" height="26" fill="#cdbd92"/><rect width="3" height="26" fill="#bca97b"/></pattern>
+     <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a6a3c"/><stop offset="1" stop-color="#7a4e28"/></linearGradient>
+     <linearGradient id="night" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4462"/><stop offset="1" stop-color="#6a7390"/></linearGradient>
+     <linearGradient id="fridge" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f4f2ea"/><stop offset="1" stop-color="#cfcbbe"/></linearGradient>
+   </defs>
+   <rect width="960" height="720" fill="url(#paper)"/>
+   <!-- window with curtains (night), wall clock at 3:07 -->
+   <rect x="560" y="62" width="236" height="226" fill="#efe9d6"/><rect x="574" y="76" width="208" height="198" fill="url(#night)"/><circle cx="742" cy="112" r="17" fill="#e8e4cf"/>
+   <path d="M678 76V274M574 175H782" stroke="#efe9d6" stroke-width="10"/>
+   <path d="M548 52 C566 120 552 220 584 300 L540 300 Z" fill="url(#ging)"/><path d="M808 52 C790 120 804 220 772 300 L816 300 Z" fill="url(#ging)"/><rect x="536" y="44" width="284" height="12" rx="6" fill="#7a4e28"/>
+   <circle cx="398" cy="92" r="40" fill="#f6f4ec" stroke="#3a3a3a" stroke-width="6"/>
+   <g stroke="#222" stroke-linecap="round"><path d="M398 92 L417 101" stroke-width="5"/><path d="M398 92 L416 64" stroke-width="3"/></g><circle cx="398" cy="92" r="3" fill="#222"/>
+   <!-- upper cabinets -->
+   <rect x="0" y="0" width="318" height="232" fill="url(#wood)"/><rect x="14" y="12" width="138" height="206" rx="4" fill="#8a5c33" stroke="#5e3a1a" stroke-width="3"/><rect x="166" y="12" width="138" height="206" rx="4" fill="#8a5c33" stroke="#5e3a1a" stroke-width="3"/>
+   <rect x="136" y="150" width="8" height="34" rx="3" fill="#d8c48a"/><rect x="174" y="150" width="8" height="34" rx="3" fill="#d8c48a"/>
+   <!-- backsplash, counter, lower cabinets -->
+   <rect x="0" y="330" width="960" height="112" fill="url(#tile)"/><rect x="0" y="440" width="960" height="18" fill="#e9e3cf"/><rect x="0" y="456" width="960" height="6" fill="#9a927c"/>
+   <rect x="0" y="462" width="960" height="260" fill="url(#wood)"/><g fill="none" stroke="#5e3a1a" stroke-width="3"><rect x="14" y="476" width="170" height="200" rx="4"/><rect x="198" y="476" width="170" height="200" rx="4"/></g>
+   <!-- fridge -->
+   <rect x="796" y="96" width="176" height="640" rx="10" fill="url(#fridge)" stroke="#8d897c" stroke-width="3"/><path d="M796 300H972" stroke="#8d897c" stroke-width="3"/>
+   <rect x="812" y="200" width="10" height="80" rx="4" fill="#9d998c"/><rect x="812" y="320" width="10" height="110" rx="4" fill="#9d998c"/>
+   </svg>
+   <div id="wallNotes"></div>
+   <!-- Joe behind the table -->
+   <div id="joeL"></div>
+   <!-- table (front), the pile, the rain -->
+   <svg width="960" height="720" viewBox="0 0 960 720"><polygon points="20,520 940,520 980,578 -20,578" fill="url(#ging)"/><polygon points="20,520 940,520 944,526 16,526" fill="#fff" opacity=".35"/>
+     <rect x="-10" y="576" width="980" height="160" fill="url(#ging)"/><rect x="-10" y="576" width="980" height="10" fill="#000" opacity=".25"/>
+     <g transform="translate(760 474)"><path d="M0 0H44V52Q22 62 0 52Z" fill="#f2f0e8" stroke="#555" stroke-width="3"/><path d="M44 12Q62 14 60 30Q58 42 44 40" fill="none" stroke="#555" stroke-width="5"/><path d="M6 20H38" stroke="#bbb" stroke-width="3"/></g></svg>
+   <div id="pile"></div>
+   <div id="rain"></div>
+  </div></div>
+  <canvas id="grain" width="480" height="360"></canvas>
+  <div id="lines"></div><div id="vig"></div>
+  <div id="drama">DRAMATIZATION</div>
+  <div id="glass"></div>
+ </div>
+</div>
+
+<!-- ================= panel B: the colour product shot ================= -->
+<div class="P" id="B">
+ <svg width="1280" height="720" viewBox="0 0 1280 720"><defs>
+   <radialGradient id="edge" cx="690" cy="330" r="820" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#5a8bff" stop-opacity=".35"/><stop offset=".45" stop-color="#0a0f3a" stop-opacity="0"/><stop offset="1" stop-color="#05061c" stop-opacity=".85"/></radialGradient>
+   <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3a6"/><stop offset=".45" stop-color="#ffc928"/><stop offset="1" stop-color="#b8740a"/></linearGradient>
+ </defs><rect width="1280" height="720" fill="#1a2c9e"/><g id="rays"></g><rect width="1280" height="720" fill="url(#edge)"/></svg>
+ <canvas id="keys" width="1280" height="720" style="position:absolute;left:0;top:0"></canvas>
+ <!-- the golden key the phrase shrank into, at the root of the fork -->
+ <svg width="1280" height="720" viewBox="0 0 1280 720" style="filter:drop-shadow(0 0 10px rgba(255,214,74,.9))"><g transform="translate(896 112) rotate(-14)">
+   <circle cx="22" cy="22" r="20" fill="url(#gold)" stroke="#7a4a00" stroke-width="3"/><circle cx="22" cy="22" r="8" fill="#1a2c9e" stroke="#7a4a00" stroke-width="3"/>
+   <path d="M40 17H112V27H40Z" fill="url(#gold)" stroke="#7a4a00" stroke-width="3"/><path d="M92 27V44H102V27M78 27V38H86V27" fill="url(#gold)" stroke="#7a4a00" stroke-width="3"/></g></svg>
+ <div id="bip"><div class="shine"></div><b>BIP-39</b></div>
+ <div id="parch"><div id="parchBg"></div><svg width="370" height="392" style="opacity:.22;mix-blend-mode:multiply"><filter id="fib"><feTurbulence type="fractalNoise" baseFrequency=".9 .25" numOctaves="3" seed="9"/><feColorMatrix values="0 0 0 0 .35  0 0 0 0 .22  0 0 0 0 .08  0 0 0 1.4 -.35"/></filter><rect width="370" height="392" filter="url(#fib)"/></svg>
+   <div class="hd">RECOVERY SEED</div><div class="rule"></div><div id="words"></div></div>
+ <div id="suitL"></div>
+ <div id="stamp">YEAH, WE DID THAT TOO!</div>
+ <div class="card" id="cCode" style="top:62px"><div class="card-h"><svg class="mk" viewBox="0 0 24 24"><path fill="#000" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.070 3.633 17.700 3.633 17.700c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.070 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.930 0-1.310.465-2.380 1.235-3.220-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.230.96-.267 1.98-.399 3-.405 1.020.006 2.040.138 3 .405 2.280-1.552 3.285-1.230 3.285-1.230.645 1.653.24 2.873.12 3.176.765.84 1.230 1.910 1.230 3.220 0 4.610-2.805 5.625-5.475 5.920.42.36.81 1.096.81 2.220 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>see the code</div><div id="qrCode"></div><div class="card-t">client/kdf.py line 10</div></div>
+ <div class="card" id="cPaper" style="top:306px"><div class="card-h"><svg class="mk" viewBox="0 0 24 24"><path d="M5 1.5H15L20 6.5V22.5H5Z" fill="#fff" stroke="#000" stroke-width="2" stroke-linejoin="round"/><path d="M15 1.5V6.5H20" fill="none" stroke="#000" stroke-width="2" stroke-linejoin="round"/><path d="M8 11H17M8 14.5H17M8 18H14" stroke="#000" stroke-width="1.8"/></svg>whitepaper</div><div id="qrPaper"></div><div class="card-t">research/whitepaper.md line 35</div></div>
+</div>
+
+<script src="data/s09-mnemonic.js"></script><script src="data/s09-qr.js"></script><script src="assets/s09/anchors.js"></script>
+<script src="lib/film.js"></script>
+<script>
+const f = window.__film, $ = (id) => document.getElementById(id);
+// ---------- characters: s09 bodies (oval erased), one keyed head still each, head BEHIND the body (key chin (338,905), k = 0.326 key px per body px)
+const HK = 0.326, AN = window.ANCHORS_S09;
+function fig(parent, pose, head, x, y, s, flip = 1) {   // (x, y) = chin point on screen, s = body scale
+  const a = AN[pose], el = document.createElement('div'); el.className = 'fig';
+  el.innerHTML = `<img class="h" src="heads/${head}" style="width:${760 * HK}px;height:${1100 * HK}px;left:${a.cx - 338 * HK}px;top:${a.chin + 3 - 905 * HK}px"><img src="assets/s09/${pose}.png" width="1024" height="1536">`;
+  el.style.transform = `translate(${x}px,${y}px) scale(${s * flip},${s}) translate(${-a.cx}px,${-a.chin}px)`; parent.appendChild(el); return el; }
+// ---------- panel A: Joe behind the table, hands in pockets (frozen pose), head = take 501.85 s ("thousand"); the sticky notes
+const JOE = { x: 470, y: 300, s: .56 };
+fig($('joeL'), 'street-hands-in-pockets', 's09-look-joe.png', JOE.x, JOE.y, JOE.s);
+const R = f.rng(9), N = () => 1 + Math.floor(R() * 999);
+const note = (x, y, rot, size, n, cls = '') => `<div class="note ${cls}" style="width:${size}px;height:${size}px;font-size:${Math.round(size * .2)}px;transform:translate(${x - size / 2}px,${y - size / 2}px) rotate(${rot}deg)">secret_${n}</div>`;
+const col = () => { const r = R(); return r < .14 ? 'p' : r < .26 ? 'b' : ''; };
+{ let h = '';   // on the fridge, cabinets and the backsplash
+  for (const [x0, y0, x1, y1, k] of [[812, 120, 950, 700, 14], [10, 20, 310, 220, 7], [0, 336, 300, 436, 4], [600, 336, 790, 436, 3]]) for (let i = 0; i < k; i++) h += note(x0 + R() * (x1 - x0), y0 + R() * (y1 - y0), (R() - .5) * 26, 58 + R() * 14, N(), col());
+  $('wallNotes').innerHTML = h; }
+{ let h = '';   // the pile on the table: a mound in front of Joe
+  for (let i = 0; i < 120; i++) { const x = 150 + R() * 660, top = 560 - 120 * Math.exp(-(((x - 470) / 190) ** 2)), y = top + R() * (575 - top); h += note(x, y, (R() - .5) * 70, 64 + R() * 18, N(), col()); }
+  h += note(330, 548, -12, 96, 2) + note(612, 556, 9, 96, 1);
+  $('pile').innerHTML = h; }
+{ let h = '';   // the rain, mid-fall (falling notes flutter: a little skew), plus two big ones close to the lens
+  for (let i = 0, k = 0; k < 24 && i < 400; i++) { const x = 20 + R() * 920, y = -20 + R() * 470;
+    if (Math.abs(x - JOE.x) < 170 && y > 90 && y < 480) continue;   // keep Joe's face and chest clear: he lip-syncs
+    if (x > 545 && x < 815 && y > 40 && y < 300 && R() < .7) continue;   // and most of the window
+    k++; h += note(x, y, (R() - .5) * 90, 58 + R() * 20, N(), col()).replace('rotate(', `skewX(${((R() - .5) * 24).toFixed(1)}deg) rotate(`); }
+  h += note(150, 300, -18, 150, 1000) + note(840, 118, 14, 132, 734, 'p');
+  // the one stuck to his forehead (forehead about 110 px above the chin at this scale)
+  h += `<div class="note" style="width:56px;height:56px;font-size:11px;transform:translate(${JOE.x - 7 - 28}px,${JOE.y - 116 - 28}px) rotate(-9deg)">secret_42</div>`;
+  $('rain').innerHTML = h; }
+// grain: seeded per frame (the scene redraws it every frame; the still uses frame 15)
+function grain(fr) { const c = $('grain').getContext('2d'), im = c.createImageData(480, 360), r = f.rng(1000 + fr);
+  for (let i = 0; i < im.data.length; i += 4) { const v = Math.floor(r() * 255); im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 150; } c.putImageData(im, 0, 0); }
+// ---------- panel B: rays, the key grid, the words, the suit, QR cards
+{ let g = ''; const cx = 690, cy = 330, n = 28; for (let i = 0; i < n; i += 2) { const a0 = (i / n) * Math.PI * 2 + .05, a1 = ((i + 1) / n) * Math.PI * 2 + .05, L = 1600;
+    g += `<polygon points="${cx},${cy} ${cx + L * Math.cos(a0)},${cy + L * Math.sin(a0)} ${cx + L * Math.cos(a1)},${cy + L * Math.sin(a1)}" fill="#2c4ce0"/>`; } $('rays').innerHTML = g; }
+{ // a thousand key cards (scene 7's Lamport key card, miniature), fanned out from the golden key at (950, 125): alpha falls off with distance
+  const c = $('keys').getContext('2d'), O = [950, 125], PX = 36, PY = 24, W = 30, H = 19; let n = 0;
+  for (let j = -6; j < 28; j++) for (let i = -28; i < 10; i++) { const x = O[0] + i * PX - W / 2, y = O[1] + j * PY - H / 2; if (x > 1290 || y > 730 || x < -40 || y < -30) continue;
+    const d = Math.hypot(i * PX, j * PY); if (d < 40) continue; n++;
+    c.globalAlpha = .06 + .6 * Math.exp(-d / 430);
+    c.fillStyle = '#f1e7cc'; c.fillRect(x, y, W, H); c.strokeStyle = '#2a2418'; c.lineWidth = 1.5; c.strokeRect(x + .75, y + .75, W - 1.5, H - 1.5);
+    c.beginPath(); c.arc(x + 8, y + H / 2, 3.2, 0, Math.PI * 2); c.moveTo(x + 11.2, y + H / 2); c.lineTo(x + 25, y + H / 2); c.moveTo(x + 22, y + H / 2); c.lineTo(x + 22, y + H / 2 + 4); c.lineWidth = 1.6; c.stroke(); }
+  c.globalAlpha = 1; console.log('key cards', n); }
+{ const W = window.S09_WORDS; let h = '';
+  for (let k = 0; k < 24; k++) { const cl = Math.floor(k / 12), r = k % 12; h += `<div class="w" style="left:${14 + cl * 178}px;top:${58 + r * 27.5}px"><i>${k + 1}.</i><span>${W[k]}</span></div>`; }
+  $('words').innerHTML = h;
+  // ragged parchment edge (seeded)
+  const r = f.rng(39), p = []; const step = 14;
+  for (let x = 0; x <= 370; x += step) p.push(`${x}px ${(r() * 5).toFixed(1)}px`);
+  for (let y = step; y <= 392; y += step) p.push(`${(370 - r() * 5).toFixed(1)}px ${y}px`);
+  for (let x = 370 - step; x >= 0; x -= step) p.push(`${x}px ${(392 - r() * 5).toFixed(1)}px`);
+  for (let y = 392 - step; y > 0; y -= step) p.push(`${(r() * 5).toFixed(1)}px ${y}px`);
+  $('parchBg').style.clipPath = `polygon(${p.join(',')})`; }
+// the suit: point-right pose, pointing at the BIP-39 card; head = take 515.62 s ("we did that too")
+fig($('suitL'), 'suit-point-right', 's09-look-suit.png', 175, 172, .47);
+const qrSvg = (q, size) => `<svg class="qr" viewBox="-4 -4 ${q.n + 8} ${q.n + 8}" width="${size}" height="${size}" shape-rendering="crispEdges"><rect x="-4" y="-4" width="${q.n + 8}" height="${q.n + 8}" fill="#fff"/><path d="${q.d}" fill="#000"/></svg>`;
+$('qrCode').innerHTML = qrSvg(S09_QR.code, 150); $('qrPaper').innerHTML = qrSvg(S09_QR.paper, 150);
+f.onSeek((t) => { $('A').style.display = t < 1 ? 'block' : 'none'; $('B').style.display = t >= 1 ? 'block' : 'none'; grain(Math.round(t * 30)); });
+</script></body></html>
