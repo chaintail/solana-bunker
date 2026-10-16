@@ -335,7 +335,7 @@ const FLOOR_Y = 712;
 {
   const CLN = { pt: [413, 1441], key: [511.5, 1464], thumb: [512, 1465], pd: [412.5, 1442] };   // measured on holed/<pose>.png: zip centre x, boot baseline y (PNG px, unmirrored); all four poses are mirrored
   const ENGOFF = {}; for (const n in CLN) ENGOFF[n] = [-KO * ((1024 - CLN[n][0]) - (1024 - CLN.pt[0])), -KO * (CLN[n][1] - CLN.pt[1])];
-  const tA = W('g2', 'Solana') - .1, tIn = tA - .3, tStop = tIn + 1.5, tRest = W('g3', 'algorithm', false) + .25, tPoint2 = W('h1', 'we') - .1, X = 1105, tPD = W('h2', 'Actually') - .05;   // v4: hard cut to the point-down pose at "Actually, we built it three times"; frozen there, fingertip just above the REV cell of the title block
+  const tA = W('g2', 'Solana') - .1, tIn = tA - .3, tStop = tIn + 1.5, tRest = W('g3', 'algorithm', false) + .25, tPoint2 = W('h1', 'we') - .1, X = 1105, tPD = W('h2', 'times', false);   // v7: hard cut to the point-down pose at the end of "three times" (was "Actually", Liam 16759); frozen there, fingertip just above the REV cell of the title block
   film.onSeek((t) => { eng.setHead(t);
     const walking = t >= tIn && t < tStop, ph = Math.floor((t - tIn) / .2) % 2;
     const pd = t >= tPD;
