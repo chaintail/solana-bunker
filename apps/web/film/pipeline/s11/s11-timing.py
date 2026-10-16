@@ -2,12 +2,12 @@
 """Runs ON dev-mac from ~/video-work/solana-bunker/s11 (system python). Scene 11 timing (film-plan-ending.md part C, composer rulings: roll at 6 px a frame,
 the closing lines on two cards on black, voice only) -> out/s11-edl.json, film/data/s11-edl.js (window.S11: T), out/s11-audio.filter.
 One segment of the denoised take: C1 583.62-586.00 ("Feel free to reach out with any questions.") at scene 3.90; "Feel" 583.84 -> 4.12.
-The roll starts below its window (472 px) at 3.60 and moves 6 px a frame; ROLL_H is the roll's measured height (4360 px in the C2 typography,
+The roll starts below its window (472 px) at 3.60 and moves 6 px a frame; ROLL_H is the roll's measured height (4525 px in the v2 typography,
 s11-cnn.html); it ends when the last line has left the window."""
 import json, math
 FPS = 30
 SEG = (583.62, 586.00, 3.90)
-ROLL_H, WIN, PXF = 4360, 472, 6        # measured in s11-cnn.html (C2 typography): roll offsetHeight 4360, window 471.67 -> 472
+ROLL_H, WIN, PXF = 4525, 472, 6        # measured in s11-cnn.html (v2 spacing, two-line bracket credits): roll offsetHeight 4525, window 471.67 -> 472
 T = {'bars': 0.0, 'ident': .35, 'logo_in': .35, 'net_in': 1.15, 'cnn_in': 1.80, 'streak': 2.20, 'split': 3.00, 'split_end': 3.60, 'roll': 3.60, 'pxf': PXF,
      'voice': SEG[2], 'feel': round(SEG[2] + 583.84 - SEG[0], 3)}
 roll_frames = math.ceil((WIN + ROLL_H) / PXF)
