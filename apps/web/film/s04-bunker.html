@@ -124,10 +124,11 @@ film.onSeek((t) => {
 draw(path('M22 22H1258V698H22Z', { 'stroke-width': 4 }), 2.3, 3.6, { ease: eo });
 draw(path('M34 34H1246V686H34Z', { 'stroke-width': 1.5 }), 2.5, 3.8, { ease: eo });
 for (const d of ['M640 22V46', 'M640 698V674', 'M22 360H46', 'M1258 360H1234']) draw(path(d), 2.6, 3.6);
+const tTB = W('g2', 'Solana');   // v8: title block drawn in at the start of "Solana" in "a Solana bunker" (Liam 16809), not at the start of the sheet
 const TB = { x: 700, y: 556, w: 300, h: 94 };   // v6: title block raised a little so the engineer (now kept at his normal place) points at the REV cell
-draw(path(`M${TB.x} ${TB.y}H${TB.x + TB.w}V${TB.y + TB.h}H${TB.x}Z`, { 'stroke-width': 3.5 }), 2.5, 3.5, { ease: eo });
-draw(path(`M${TB.x} ${TB.y + 44}H${TB.x + TB.w}M${TB.x + 170} ${TB.y + 44}V${TB.y + TB.h}`, { 'stroke-width': 2 }), 3.0, 3.8);
-dtext('SOLANA BUNKER', TB.x + 12, TB.y + 5, 31, 3.1, 3.9, { css: 'letter-spacing:.04em' });
+draw(path(`M${TB.x} ${TB.y}H${TB.x + TB.w}V${TB.y + TB.h}H${TB.x}Z`, { 'stroke-width': 3.5 }), tTB, tTB + 1.0, { ease: eo });
+draw(path(`M${TB.x} ${TB.y + 44}H${TB.x + TB.w}M${TB.x + 170} ${TB.y + 44}V${TB.y + TB.h}`, { 'stroke-width': 2 }), tTB + .5, tTB + 1.3);
+dtext('SOLANA BUNKER', TB.x + 12, TB.y + 5, 31, tTB + .6, tTB + 1.4, { css: 'letter-spacing:.04em' });
 // ---------- 1. the equation ("nerding out on math"), the question, the headline ----------
 const tMath = W('a2', 'math'), tNerd = W('a2', 'nerding'), tFasc = W('c1', 'fascinating'), tResearch = W('b2', 'research');
 const tCan = W('c2', 'Can'), tBunkE = W('c2', 'bunker', false);
