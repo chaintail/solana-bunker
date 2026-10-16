@@ -41,3 +41,13 @@ slide-4 hand-off image is held). Hand-off: the root glow pulse ran on the absolu
 now runs on t - PAUSE_7B. Re-rendered last capture frame (x12 frame 2419) is pixel-identical to the x11 chain's last frame (2629) and to the v5 still at
 96.4 s; the decoded masters differ only by H.264 noise (PSNR 40 dB). Pause: voice silent 16.89-17.17 s in the x12 mix, frame 525 (17.50 s) mouth open on
 "the vault, lets".
+
+## v7, x12 build (notch rollout, "1.2 on all")
+v6 x12 with the notched lab coat bodies: assets/bodies/5-physicist-{shrug,holding-clipboard,professor-point}.png copied from film/floating-head 20ae821 (the
+notched default names; the originals there are -plain.png), assets/s05/ regenerated with s05-bodies.py. The notch is a concave cut in the drawn neck, body rows
+316-327, so the chin shows through instead of a flat skin block; anchors.js and pose-align.js are byte-identical (head anchor 511.5/308, professor-point dx 115.5),
+so placement does not move. The 20ae821 professor-point also has its legs re-drawn under the collar (legs-cx 12.5 -> 2.0 body px; coat hem still 12.5), which removes
+residual (a) for the legs: on pointing switches the legs and shoes no longer shift. Cuts, pause and anchors unchanged. s05-build-x12.sh takes V (default v7) ->
+out/s05-v7-x12.mp4 / -phone.mp4. Results: 2420 frames, 80.667 s, -15.8 LUFS, true peak -1.0 dBFS, LRA 4.0 (same as v6); glitch-scan v2 --chunk-size 300 --ref 0
+clean on master and phone. Diff against v6 x12: only the neck strip and the professor-point legs change (other pixels are H.264 noise; pause frames 500/510 PSNR
+47-50 dB, last frame 2419 51 dB).
