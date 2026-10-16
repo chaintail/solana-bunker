@@ -1,6 +1,8 @@
 // Render a film scene to PNG frames with headless Chrome (CDP, no dependencies).
 //   node film/scripts/capture.mjs <scene> [--layer=front|back] [--still=<t>[,<t>...]] [--from=<s>] [--to=<s>] [--fresh] [--out=<dir>]
 // --fresh reloads the page before every frame (slower). Headless Chrome occasionally drops a paint after an incremental update; a fresh page does not.
+// --speed=<f> (or --speed <f>) time-scales the frame sequence: output frame k samples the page at t = k/fps * f, frame count ceil(N/f) for the N = duration*fps
+//   frames of the scene; the last output frame is pinned to the scene's last frame (N-1)/fps so the hand-off frame is unchanged. --from/--to are output seconds then.
 // Frames: apps/web/render/<scene>[-<layer>]/f%05d.png (fps from data-fps), gitignored.
 // With --layer the page background is transparent, so the PNGs carry alpha.
 // With --still, writes <out>/still-<t>.png for each time instead of the frame sequence.
@@ -12,7 +14,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const args = process.argv.slice(2);
+const args = process.argv.slice(2).reduce((a, x, i, all) => { if (i > 0 && all[i - 1] === '--speed' && !x.startsWith('--')) a[a.length - 1] = '--speed=' + x; else a.push(x); return a; }, []);
 const scene = args.find((a) => !a.startsWith('--'));
 const opt = Object.fromEntries(args.filter((a) => a.startsWith('--')).map((a) => { const [k, v = '1'] = a.slice(2).split('='); return [k, v]; }));
 if (!scene) { console.error('usage: capture.mjs <scene> [--layer=front|back] [--still=t,t] [--from=s] [--to=s] [--out=dir]'); process.exit(2); }
@@ -58,8 +60,13 @@ try {
   for (let i = 0; i < 300; i++) { if (await ev("document.documentElement.dataset.filmReady==='1'")) break; await sleep(100); }
   };
   await load();
+  let warmed = false;
   const shot = async (t, file) => {
-    if (opt.fresh) await load();
+    if (opt.fresh) { await load(); warmed = false; }
+    if (!warmed) {   // warm-up: the first paint after a (re)load can still be the page's ready-time seek(0) state (stale frame-0 paint at chunk starts):
+      warmed = true;  // seek to the target, wait, and discard two screenshots before the real one
+      for (let i = 0; i < 2; i++) { await ev(`(async()=>{window.__film.seek(${t});await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));return 1})()`); await send('Page.captureScreenshot', { format: 'png', fromSurface: true, captureBeyondViewport: false }); }
+    }
     await ev(`(async()=>{window.__film.seek(${t});await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));return 1})()`);
     const { data } = await send('Page.captureScreenshot', { format: 'png', fromSurface: true, captureBeyondViewport: false });
     writeFileSync(file, Buffer.from(data, 'base64'));
@@ -68,9 +75,13 @@ try {
     for (const t of opt.still.split(',')) await shot(Number(t), join(out, `still-${t}.png`));
   } else {
     const fps = await ev('window.__film.fps'), dur = await ev('window.__film.duration');
-    const a = Math.round(Number(opt.from ?? 0) * fps), b = Math.min(Math.round(dur * fps), opt.to ? Math.round(Number(opt.to) * fps) : Infinity);
+    const speed = Number(opt.speed || 1); if (!(speed > 0)) throw new Error('--speed must be > 0');
+    const N = Math.round(dur * fps), M = speed === 1 ? N : Math.ceil(N / speed - 1e-9);   // source frames, output frames
+    const pt = (f) => (speed === 1 ? f : f === M - 1 ? N - 1 : Math.min(f * speed, N - 1)) / fps;   // output frame -> page time
+    if (speed !== 1) console.log(`speed ${speed}: ${N} scene frames -> ${M} output frames`);
+    const a = Math.round(Number(opt.from ?? 0) * fps), b = Math.min(M, opt.to ? Math.round(Number(opt.to) * fps) : Infinity);
     for (let f = a; f < b; f++) {
-      await shot(f / fps, join(out, `f${String(f).padStart(5, '0')}.png`));
+      await shot(pt(f), join(out, `f${String(f).padStart(5, '0')}.png`));
       if (f % 100 === 0) console.log(`${scene}${layer ? ':' + layer : ''} frame ${f}/${b}`);
     }
   }
