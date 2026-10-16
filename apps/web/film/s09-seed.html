@@ -1,0 +1,377 @@
+<!doctype html><html data-duration="29.83" data-fps="30"><head><meta charset="utf-8">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
+<style>
+/* Scene 9, the seed phrase (film-plan-s09.md). A 1990s late-night infomercial playing on scene 8's arcade CRT.
+   Beat 0: scene 8's frozen last frame, TV static in the CRT, the push-in until the 4:3 screen fills the frame height (the bezel = pillarbox bars).
+   Beat 1: the black-and-white problem half (kitchen, Joe under the sticky-note rain, DRAMATIZATION, push-ins, the suit steps in, BETTER WAY).
+   Beat 2: record scratch, colour snap (bars fall away), BIP-39 card, the 24-word parchment, a glowing copy of the phrase shrinks into the golden key,
+   the key forks into 1,024 key cards (scene 7's Lamport card). Beats 3-4: the stamp, BUT WAIT, the two proof boxes. Beat 5: the tag (FREE, CALL NOW,
+   the repo link and QR, the lab coat with the WHITEPAPER clipboard), last 2 s frozen.
+   Characters: s09 bodies (pipeline/s09/bodies.py, head behind the body), lip-synced head sprites (pipeline/s09/heads.py); stop-frame, whole-figure moves only.
+   Timing: data/s09-edl.js (pipeline/s09/s09-timing.py). Post (pipeline/s09/build.sh): grain before the snap only, vignette. */
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#000}
+svg{position:absolute;left:0;top:0}
+.fig{position:absolute;left:0;top:0;width:1024px;height:1536px;transform-origin:0 0}
+.fig>img,.fig>.hd{position:absolute;left:0;top:0}
+.hd{width:152px;height:220px;overflow:hidden;transform-origin:0 0}
+.hd img{position:absolute;left:0;top:0;display:none}
+#world{position:absolute;left:0;top:0;width:1280px;height:720px;transform-origin:0 0}
+/* ---- the TV (960x720 picture; placed into scene 8's screen box during the push-in) */
+#tv{position:absolute;left:0;top:0;width:960px;height:720px;border-radius:45px/39px;overflow:hidden;background:#000;transform-origin:0 0}
+#tvIn{position:absolute;left:0;top:0;width:960px;height:720px;filter:grayscale(1) contrast(1.22) brightness(1.04) blur(.45px)}
+#kitchen{position:absolute;left:0;top:0;width:960px;height:720px;transform-origin:0 0}
+.L{position:absolute;left:0;top:0;width:960px;height:720px}
+.note{position:absolute;left:0;top:0;width:76px;height:76px;background:linear-gradient(180deg,#ffe46b,#f7d64c 80%,#e9c43a);box-shadow:1px 3px 4px rgba(0,0,0,.35);
+  font:400 15px/1 'Architects Daughter';color:#1d1d1d;display:flex;align-items:center;justify-content:center;transform-origin:50% 50%;white-space:nowrap}
+.note.p{background:linear-gradient(180deg,#ff9fc8,#f78ab8 80%,#e977a6)}
+.note.b{background:linear-gradient(180deg,#9fe0ff,#86d0f5 80%,#6fc0ea)}
+#grain{position:absolute;left:0;top:0;width:960px;height:720px;mix-blend-mode:overlay;opacity:.6}
+#lines{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.20) 0 2px,transparent 2px 6px)}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse 75% 70% at 50% 48%,transparent 55%,rgba(0,0,0,.55) 100%)}
+#glass{position:absolute;inset:0;border-radius:45px/39px;box-shadow:inset 0 0 57px 15px rgba(0,0,0,.8),inset 0 0 6px 3px rgba(0,0,0,.9);
+  background:radial-gradient(ellipse 60% 45% at 32% 22%,rgba(255,255,255,.06),transparent 70%)}
+#static{position:absolute;left:0;top:0;width:960px;height:720px;image-rendering:pixelated}
+#drama{position:absolute;left:46px;bottom:58px;padding:7px 16px 6px;background:rgba(0,0,0,.62);font:800 30px/1 Inter;letter-spacing:.16em;color:#fff}
+#better{position:absolute;left:0;right:0;top:26px;text-align:center;font:700 54px/1.1 Oswald;color:#fff;letter-spacing:.02em;
+  text-shadow:-3px -3px 0 #000,3px -3px 0 #000,-3px 3px 0 #000,3px 3px 0 #000,0 -3px 0 #000,0 3px 0 #000,-3px 0 0 #000,3px 0 0 #000,5px 6px 0 rgba(0,0,0,.6)}
+.bar{position:absolute;top:0;width:160px;height:720px;background:linear-gradient(180deg,#121019,#09080d 50%,#100e16)}
+#white{position:absolute;inset:0;background:#fff;display:none}
+/* ---- the studio (colour) */
+#studio{position:absolute;left:0;top:0;width:1280px;height:720px;overflow:hidden;display:none}
+#prod{position:absolute;left:0;top:0;width:1280px;height:720px;transform-origin:690px 66px}
+#bip{position:absolute;left:500px;top:66px;width:380px;height:134px;transform-origin:190px 67px}
+#bipIn{position:absolute;inset:0;border-radius:22px;border:5px solid #15103d;box-sizing:border-box;overflow:hidden;
+  background:linear-gradient(135deg,#fff6b8,#ffd02a 42%,#ff9800);box-shadow:0 12px 26px rgba(0,0,0,.55),inset 0 -8px 0 rgba(160,70,0,.35)}
+#shine{position:absolute;left:-60px;top:-40px;width:120px;height:240px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent)}
+#bip b{position:absolute;left:0;right:0;top:4px;text-align:center;font:400 108px/1.05 Anton;color:#1c2bb0;letter-spacing:.01em;
+  text-shadow:-2px -2px 0 #fff,2px -2px 0 #fff,-2px 2px 0 #fff,2px 2px 0 #fff,6px 6px 0 #0b0f40}
+#parch{position:absolute;left:505px;top:216px;width:370px;height:392px;filter:drop-shadow(0 12px 18px rgba(0,0,0,.55));transform-origin:185px 0}
+#parchBg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 62% at 50% 44%,#fbf1cf 0%,#efdcaa 58%,#cfae6e 100%)}
+#parch .hd2{position:absolute;left:0;right:0;top:15px;text-align:center;font:700 17px/1 'Liberation Serif';letter-spacing:.24em;color:#5b3c1c}
+#parch .rule{position:absolute;left:30px;right:30px;top:41px;height:2px;background:#8a6a3a;opacity:.6}
+.w{position:absolute;white-space:nowrap}
+.w i{font:400 16px/1 'Liberation Serif';font-style:normal;color:#7d5c33;display:inline-block;width:30px;text-align:right;margin-right:9px}
+.w span{font:400 23px/1 'Architects Daughter';color:#1b1840}
+#ghost{position:absolute;left:505px;top:216px;width:370px;height:392px;transform-origin:185px 196px}
+#ghost .w i{color:transparent}
+#ghost .w span{color:#ffe27a;text-shadow:0 0 6px #ffb800,0 0 14px #ff9800}
+#stamp,#butwait{position:absolute;left:690px;top:648px;white-space:nowrap;transform-origin:0 0}
+#stamp b{display:block;transform:translate(-50%,-50%);font:400 64px/1 Anton;color:#ec1028;letter-spacing:.01em;
+  text-shadow:-3px -3px 0 #ffd400,3px -3px 0 #ffd400,-3px 3px 0 #ffd400,3px 3px 0 #ffd400,0 -3px 0 #ffd400,0 3px 0 #ffd400,-3px 0 0 #ffd400,3px 0 0 #ffd400,8px 8px 0 #3a0010}
+#butwait b{display:block;transform:translate(-50%,-50%);padding:10px 34px 12px;background:linear-gradient(180deg,#ff2a3c,#c6001a);border:4px solid #ffd400;border-radius:10px;
+  font:400 56px/1 Anton;color:#ffe600;letter-spacing:.02em;text-shadow:4px 4px 0 #5a0010;box-shadow:0 10px 22px rgba(0,0,0,.55)}
+.card{position:absolute;left:1030px;width:238px;box-sizing:border-box;border:3px solid #000;background:#fff;padding:6px 6px 8px;text-align:center;font-family:Arial,Helvetica,sans-serif;color:#000;box-shadow:0 8px 18px rgba(0,0,0,.45)}
+.card-h{font:700 24px/1.15 Arial,Helvetica,sans-serif}
+.card-t{font:400 15px/1.25 Arial,Helvetica,sans-serif;white-space:nowrap}
+.card svg.mk{position:relative;width:23px;height:23px;vertical-align:-4px;margin-right:3px}
+.card svg.qr,#callQr svg{position:relative;display:block;margin:4px auto}
+/* FREE tag (a prop hanging from the BIP-39 card's corner) */
+#free{position:absolute;left:0;top:0;width:200px;height:290px;transform-origin:100px 0}
+#tagBody{position:absolute;left:5px;top:44px;width:190px;height:240px;background:linear-gradient(180deg,#f3dc9e,#e6c47c);
+  clip-path:polygon(28px 0,162px 0,190px 28px,190px 240px,0 240px,0 28px);filter:drop-shadow(0 8px 10px rgba(0,0,0,.4))}
+#tagBody .hole{position:absolute;left:83px;top:12px;width:24px;height:24px;border-radius:50%;background:#1a2c9e;box-shadow:0 0 0 5px #c9a85e}
+#tagBody .old{position:absolute;left:0;right:0;top:50px;text-align:center;font:400 46px/1 Anton;color:#2a2418}
+#tagBody .strike{position:absolute;left:30px;width:130px;top:72px;height:7px;background:#e3101f;transform:rotate(-12deg);border-radius:3px}
+#tagBody .fr{position:absolute;left:0;right:0;top:112px;text-align:center;font:400 100px/1 Anton;color:#e3101f;text-shadow:3px 3px 0 #6a0008}
+/* CALL NOW bar */
+#call{position:absolute;left:310px;top:562px;width:705px;height:140px;perspective:900px}
+#callA,#callB{position:absolute;inset:0;border-radius:14px;border:4px solid #ffd400;box-sizing:border-box;backface-visibility:hidden;box-shadow:0 10px 24px rgba(0,0,0,.55)}
+#callA{display:flex;align-items:center;justify-content:center;font:400 84px/1 Anton;letter-spacing:.04em}
+#callB{background:linear-gradient(180deg,#1f3fd0,#0f238f)}
+#callB .url{position:absolute;left:20px;top:52px;font:800 28px/1.1 Inter;color:#fff;white-space:nowrap;letter-spacing:-.01em}
+#callQr{position:absolute;right:10px;top:6px;width:124px;height:124px;background:#fff}
+/* the WHITEPAPER clipboard (a prop, body px inside the lab coat's figure, mirrored back so it reads) */
+#board{position:absolute;left:150px;top:340px;width:280px;height:420px;transform:scaleX(-1);box-sizing:border-box;border:10px solid #5b3510;border-radius:18px;background:#8a5a2b}
+#board .pp{position:absolute;left:16px;right:16px;top:44px;bottom:16px;background:#fbfbf6;border:2px solid #c9c4b4}
+#board .clip{position:absolute;left:75px;top:-24px;width:110px;height:52px;border-radius:12px;background:linear-gradient(180deg,#d5d8dd,#8c9099);border:4px solid #4a4d55}
+#board .t{position:absolute;left:0;right:0;top:30px;text-align:center;font:400 43px/1 Anton;color:#1b1840;letter-spacing:.01em}
+#board .ln{position:absolute;left:26px;right:26px;height:6px;border-radius:3px;background:#9aa0ab}
+</style></head><body>
+
+<!-- ================= scene 8's last frame (beat 0) ================= -->
+<div id="world"><img src="assets/s09-s08-last.png" width="1280" height="720" style="position:absolute;left:0;top:0"></div>
+
+<!-- ================= the TV ================= -->
+<div id="tv">
+ <div id="tvIn">
+  <div id="kitchen">
+   <svg width="960" height="720" viewBox="0 0 960 720"><defs>
+     <pattern id="tile" width="72" height="72" patternUnits="userSpaceOnUse"><rect width="72" height="72" fill="#f1efe6"/><rect width="36" height="36" fill="#d9d3c2"/><rect x="36" y="36" width="36" height="36" fill="#d9d3c2"/><path d="M0 0H72V72" fill="none" stroke="#a9a28f" stroke-width="2"/><path d="M36 0V72M0 36H72" stroke="#a9a28f" stroke-width="2"/></pattern>
+     <pattern id="ging" width="44" height="44" patternUnits="userSpaceOnUse"><rect width="44" height="44" fill="#f4f1ea"/><rect width="22" height="44" fill="#d83c3c" opacity=".55"/><rect width="44" height="22" fill="#d83c3c" opacity=".55"/></pattern>
+     <pattern id="paper" width="26" height="26" patternUnits="userSpaceOnUse"><rect width="26" height="26" fill="#cdbd92"/><rect width="3" height="26" fill="#bca97b"/></pattern>
+     <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a6a3c"/><stop offset="1" stop-color="#7a4e28"/></linearGradient>
+     <linearGradient id="night" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4462"/><stop offset="1" stop-color="#6a7390"/></linearGradient>
+     <linearGradient id="fridge" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f4f2ea"/><stop offset="1" stop-color="#cfcbbe"/></linearGradient>
+   </defs>
+   <rect width="960" height="720" fill="url(#paper)"/>
+   <rect x="560" y="62" width="236" height="226" fill="#efe9d6"/><rect x="574" y="76" width="208" height="198" fill="url(#night)"/><circle cx="742" cy="112" r="17" fill="#e8e4cf"/>
+   <path d="M678 76V274M574 175H782" stroke="#efe9d6" stroke-width="10"/>
+   <path d="M548 52 C566 120 552 220 584 300 L540 300 Z" fill="url(#ging)"/><path d="M808 52 C790 120 804 220 772 300 L816 300 Z" fill="url(#ging)"/><rect x="536" y="44" width="284" height="12" rx="6" fill="#7a4e28"/>
+   <circle cx="398" cy="92" r="40" fill="#f6f4ec" stroke="#3a3a3a" stroke-width="6"/>
+   <g stroke="#222" stroke-linecap="round"><path d="M398 92 L417 101" stroke-width="5"/><path d="M398 92 L416 64" stroke-width="3"/></g><circle cx="398" cy="92" r="3" fill="#222"/>
+   <rect x="0" y="0" width="318" height="232" fill="url(#wood)"/><rect x="14" y="12" width="138" height="206" rx="4" fill="#8a5c33" stroke="#5e3a1a" stroke-width="3"/><rect x="166" y="12" width="138" height="206" rx="4" fill="#8a5c33" stroke="#5e3a1a" stroke-width="3"/>
+   <rect x="136" y="150" width="8" height="34" rx="3" fill="#d8c48a"/><rect x="174" y="150" width="8" height="34" rx="3" fill="#d8c48a"/>
+   <rect x="0" y="330" width="960" height="112" fill="url(#tile)"/><rect x="0" y="440" width="960" height="18" fill="#e9e3cf"/><rect x="0" y="456" width="960" height="6" fill="#9a927c"/>
+   <rect x="0" y="462" width="960" height="260" fill="url(#wood)"/><g fill="none" stroke="#5e3a1a" stroke-width="3"><rect x="14" y="476" width="170" height="200" rx="4"/><rect x="198" y="476" width="170" height="200" rx="4"/></g>
+   <rect x="796" y="96" width="176" height="640" rx="10" fill="url(#fridge)" stroke="#8d897c" stroke-width="3"/><path d="M796 300H972" stroke="#8d897c" stroke-width="3"/>
+   <rect x="812" y="200" width="10" height="80" rx="4" fill="#9d998c"/><rect x="812" y="320" width="10" height="110" rx="4" fill="#9d998c"/>
+   </svg>
+   <div class="L" id="wallNotes"></div>
+   <div class="L" id="backRain"></div>
+   <div class="L" id="joeL"></div>
+   <svg width="960" height="720" viewBox="0 0 960 720"><polygon points="20,520 940,520 980,578 -20,578" fill="url(#ging)"/><polygon points="20,520 940,520 944,526 16,526" fill="#fff" opacity=".35"/>
+     <rect x="-10" y="576" width="980" height="160" fill="url(#ging)"/><rect x="-10" y="576" width="980" height="10" fill="#000" opacity=".25"/>
+     <g transform="translate(760 474)"><path d="M0 0H44V52Q22 62 0 52Z" fill="#f2f0e8" stroke="#555" stroke-width="3"/><path d="M44 12Q62 14 60 30Q58 42 44 40" fill="none" stroke="#555" stroke-width="5"/><path d="M6 20H38" stroke="#bbb" stroke-width="3"/></g></svg>
+   <div class="L" id="pile"></div>
+   <div class="L" id="frontRain"></div>
+   <div class="L" id="suitBWL"></div>
+   <div class="note" id="fnote" style="width:50px;height:50px;font-size:10px">secret_42</div>
+   <div class="L" id="lensRain"></div>
+  </div>
+  <div id="drama">DRAMATIZATION</div>
+  <div id="better">THERE HAS TO BE A BETTER WAY!</div>
+ </div>
+ <canvas id="grain" width="480" height="360"></canvas>
+ <div id="lines"></div><div id="vig"></div>
+ <canvas id="static" width="320" height="240"></canvas>
+ <div id="glass"></div>
+</div>
+
+<!-- ================= the studio (colour) ================= -->
+<div id="studio">
+ <svg width="1280" height="720" viewBox="0 0 1280 720"><defs>
+   <radialGradient id="edge" cx="690" cy="330" r="820" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#5a8bff" stop-opacity=".35"/><stop offset=".45" stop-color="#0a0f3a" stop-opacity="0"/><stop offset="1" stop-color="#05061c" stop-opacity=".85"/></radialGradient>
+   <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3a6"/><stop offset=".45" stop-color="#ffc928"/><stop offset="1" stop-color="#b8740a"/></linearGradient>
+ </defs><rect width="1280" height="720" fill="#1a2c9e"/><g id="rays"></g><rect width="1280" height="720" fill="url(#edge)"/></svg>
+ <canvas id="keys" width="1280" height="720" style="position:absolute;left:0;top:0"></canvas>
+ <div id="prod">
+  <svg width="1280" height="720" viewBox="0 0 1280 720" style="filter:drop-shadow(0 0 10px rgba(255,214,74,.9))"><g id="gkey"><g transform="translate(-56 -28)">
+    <circle cx="22" cy="22" r="20" fill="url(#gold)" stroke="#7a4a00" stroke-width="3"/><circle cx="22" cy="22" r="8" fill="#1a2c9e" stroke="#7a4a00" stroke-width="3"/>
+    <path d="M40 17H112V27H40Z" fill="url(#gold)" stroke="#7a4a00" stroke-width="3"/><path d="M92 27V44H102V27M78 27V38H86V27" fill="url(#gold)" stroke="#7a4a00" stroke-width="3"/></g></g>
+    <g id="glint"><path d="M0 -26 L5 -5 L26 0 L5 5 L0 26 L-5 5 L-26 0 L-5 -5 Z" fill="#fffbe0"/></g></svg>
+  <div id="parch"><div id="parchBg"></div><svg width="370" height="392" style="opacity:.22;mix-blend-mode:multiply"><filter id="fib"><feTurbulence type="fractalNoise" baseFrequency=".9 .25" numOctaves="3" seed="9"/><feColorMatrix values="0 0 0 0 .35  0 0 0 0 .22  0 0 0 0 .08  0 0 0 1.4 -.35"/></filter><rect width="370" height="392" filter="url(#fib)"/></svg>
+    <div class="hd2">RECOVERY SEED</div><div class="rule"></div><div id="words"></div></div>
+  <div id="ghost"></div>
+  <div id="bip"><div id="bipIn"><div id="shine"></div><b>BIP-39</b></div></div>
+ </div>
+ <div class="L" id="suitCL" style="width:1280px"></div>
+ <div id="stamp"><b>YEAH, WE DID THAT TOO!</b></div>
+ <div id="butwait"><b>BUT WAIT, THERE'S MORE!</b></div>
+ <div class="card" id="cCode" style="top:62px"><div class="card-h"><svg class="mk" viewBox="0 0 24 24"><path fill="#000" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.040-3.338.724-4.042-1.61-4.042-1.61C4.422 18.070 3.633 17.700 3.633 17.700c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.070 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.930 0-1.310.465-2.380 1.235-3.220-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.230.96-.267 1.98-.399 3-.405 1.020.006 2.040.138 3 .405 2.280-1.552 3.285-1.230 3.285-1.230.645 1.653.24 2.873.12 3.176.765.84 1.230 1.910 1.230 3.220 0 4.610-2.805 5.625-5.475 5.920.42.36.81 1.096.81 2.220 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>see the code</div><div id="qrCode"></div><div class="card-t">client/kdf.py line 10</div></div>
+ <div class="card" id="cPaper" style="top:306px"><div class="card-h"><svg class="mk" viewBox="0 0 24 24"><path d="M5 1.5H15L20 6.5V22.5H5Z" fill="#fff" stroke="#000" stroke-width="2" stroke-linejoin="round"/><path d="M15 1.5V6.5H20" fill="none" stroke="#000" stroke-width="2" stroke-linejoin="round"/><path d="M8 11H17M8 14.5H17M8 18H14" stroke="#000" stroke-width="1.8"/></svg>whitepaper</div><div id="qrPaper"></div><div class="card-t">research/whitepaper.md line 35</div></div>
+ <svg width="1280" height="720" viewBox="0 0 1280 720"><path id="string" d="" stroke="#3a2a10" stroke-width="3" fill="none"/></svg>
+ <div id="free"><div id="tagBody"><div class="hole"></div><div class="old">$1,000</div><div class="strike"></div><div class="fr">FREE</div></div></div>
+ <div id="call"><div id="callA">CALL NOW!</div><div id="callB"><div class="url">github.com/chaintail/solana-bunker</div><div id="callQr"></div></div></div>
+ <div class="L" id="labL" style="width:1280px"></div>
+</div>
+<div class="bar" id="barL" style="left:0"><svg width="160" height="720"><path d="M142 0V720" stroke="#ff2bd6" stroke-width="4.5" opacity=".75"/><path d="M151 0V720" stroke="#19e3ff" stroke-width="3" opacity=".55"/></svg></div>
+<div class="bar" id="barR" style="left:1120px"><svg width="160" height="720"><path d="M18 0V720" stroke="#ff2bd6" stroke-width="4.5" opacity=".75"/><path d="M9 0V720" stroke="#19e3ff" stroke-width="3" opacity=".55"/></svg></div>
+<div id="white"></div>
+
+<script src="data/s09-edl.js"></script><script src="data/s09-headbox.js"></script><script src="data/s09-mnemonic.js"></script><script src="data/s09-qr.js"></script><script src="assets/s09/anchors.js"></script>
+<script src="lib/film.js"></script>
+<script>
+const f = window.__film, $ = (id) => document.getElementById(id), D = window.S09, T = D.T, HB = window.S09_HB;
+const P = (t, a, b) => f.prog(t, a, b), lerp = (a, b, p) => a + (b - a) * p, step = (p, n) => Math.min(1, Math.floor(p * n + 1e-6) / n);
+const easeIO = (p) => (p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2), easeO = (p) => 1 - Math.pow(1 - p, 3);
+const backO = (p) => { const c = 1.9; return 1 + (c + 1) * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2); };
+const show = (el, v) => { el.style.display = v ? 'block' : 'none'; };
+// ---------- characters: s09 bodies (oval erased, head behind the body), head sprite sheets heads/s09-head-NN.png (16 x 12 cells of 152x220)
+const A9 = window.ANCHORS_S09, POSE = { pock: 'street-hands-in-pockets', cele: 'street-celebrate', stand: 'suit-standing', point: 'suit-point-right', clip: 'physicist-holding-clipboard' };
+const HK = 0.326, HS = 760 * HK / 152, NSHEET = 3, KCX = window.KEY_CHIN_X;   // key crop: chin centre (KCX, 905), 0.326 key px per body px
+function makeFig(parent, poses, extra = '') {
+  const el = document.createElement('div'); el.className = 'fig';
+  el.innerHTML = '<div class="hd">' + [...Array(NSHEET).keys()].map((i) => `<img src="heads/s09-head-0${i}.png">`).join('') + '</div>' + poses.map((p) => `<img data-pose="${p}" src="assets/s09/${POSE[p]}.png" width="1024" height="1536">`).join('') + extra;
+  parent.appendChild(el); el._pose = poses[0]; return el; }
+function setPose(el, p) { el._pose = p; el.querySelectorAll('img[data-pose]').forEach((im) => (im.style.display = im.dataset.pose === p ? 'block' : 'none')); }
+// (x, y) = chin point on screen, rotation, scale, mirror (a mirrored body keeps an unmirrored head)
+function place(el, x, y, rot, s, flip = 1) {
+  const a = A9[POSE[el._pose]];
+  el.style.transform = `translate(${x}px,${y}px) rotate(${rot}deg) scale(${s * flip},${s}) translate(${-a.cx}px,${-a.chin}px)`;
+  let tr = `translate(${a.hx - KCX * HK}px,${a.chin + 3 - 905 * HK}px) scale(${HS})`;
+  if (flip < 0) tr = `translate(${a.cx}px,0) scale(-1,1) translate(${-a.cx}px,0) ` + tr;
+  el.querySelector('.hd').style.transform = tr; }
+const cum = []; D.heads.reduce((a, e, i) => ((cum[i] = a), a + e.frames), 0);
+function headFrame(t, sp) {   // that speaker's lip-sync frame; holds the last frame of his previous line through every pause
+  let i = -1; D.edl.forEach((e, k) => { if (e.speaker === sp && t >= e.out_in - 1e-6) i = k; });
+  if (i < 0) return cum[D.edl.findIndex((e) => e.speaker === sp)];
+  const e = D.edl[i]; return cum[i] + Math.min(e.frames - 1, Math.floor((t - e.out_in) * 30 + 1e-6)); }
+function setHead(el, idx) { const sh = Math.floor(idx / 192), c = idx % 192;
+  el.querySelectorAll('.hd img').forEach((im, i) => { im.style.display = i === sh ? 'block' : 'none'; if (i === sh) { im.style.left = -(c % 16) * 152 + 'px'; im.style.top = -Math.floor(c / 16) * 220 + 'px'; } }); }
+const LAB_FRAME = cum[D.heads.length - 1];
+const joe = makeFig($('joeL'), ['pock', 'cele']), suitBW = makeFig($('suitBWL'), ['stand']), suitC = makeFig($('suitCL'), ['point']);
+const lab = makeFig($('labL'), ['clip'], '<div id="board"><div class="clip"></div><div class="pp"><div class="t">WHITEPAPER</div>' +
+  [0, 1, 2, 3, 4].map((i) => `<div class="ln" style="top:${110 + i * 38}px;right:${26 + (i % 2) * 50}px"></div>`).join('') + '</div></div><img src="assets/s09/physicist-hand.png" width="1024" height="1536">');
+setPose(joe, 'pock'); setPose(suitBW, 'stand'); setPose(suitC, 'point'); setPose(lab, 'clip');
+const JOE = { x: 470, y: 300, s: .56 }, SUITBW = { x: 165, y: 292, s: .50 }, SUITC = { x: 175, y: 172, s: .47 }, LAB = { x: 168, y: 318, s: .44, rot: 22 };
+
+// ---------- the sticky notes. Joe's face (eyes and mouth) is never covered: front-layer notes never enter the central column (x 328-612);
+// notes in that column fall BEHIND Joe. The suit stands in front of the rain. The big notes near the lens keep to x >= 700 once anyone is talking there.
+const R = f.rng(9), N = () => 1 + Math.floor(R() * 999);
+const col = () => { const r = R(); return r < .14 ? 'p' : r < .26 ? 'b' : ''; };
+const nhtml = (size, n, cls = '') => `<div class="note ${cls}" style="width:${size}px;height:${size}px;font-size:${Math.round(size * .2)}px">secret_${n}</div>`;
+const pose = (el, x, y, rot, size, skew = 0) => { el.style.transform = `translate(${(x - size / 2).toFixed(1)}px,${(y - size / 2).toFixed(1)}px) skewX(${skew.toFixed(1)}deg) rotate(${rot.toFixed(1)}deg)`; };
+{ let h = '';
+  for (const [x0, y0, x1, y1, k] of [[812, 120, 950, 700, 14], [10, 20, 310, 220, 7], [0, 336, 300, 436, 4], [600, 336, 790, 436, 3]]) for (let i = 0; i < k; i++) {
+    const s = 58 + R() * 14; h += nhtml(s, N(), col()).replace('style="', `style="transform:translate(${x0 + R() * (x1 - x0) - s / 2}px,${y0 + R() * (y1 - y0) - s / 2}px) rotate(${(R() - .5) * 26}deg);`); }
+  $('wallNotes').innerHTML = h; }
+const bump = (x) => Math.exp(-(((x - 470) / 190) ** 2));
+{ let h = '';
+  for (let i = 0; i < 120; i++) { const x = 150 + R() * 660, top = 560 - 120 * bump(x), y = top + R() * (575 - top), s = 64 + R() * 18;
+    h += nhtml(s, N(), col()).replace('style="', `style="transform:translate(${x - s / 2}px,${y - s / 2}px) rotate(${(R() - .5) * 70}deg);`); }
+  h += nhtml(96, 2).replace('style="', 'style="transform:translate(282px,500px) rotate(-12deg);') + nhtml(96, 1).replace('style="', 'style="transform:translate(564px,508px) rotate(9deg);');
+  $('pile').innerHTML = h; }
+// emission schedule (notes per second), scene time
+const RATE = [[.62, 6], [T.thousand, 25], [T.ifonly, 8], [T.thousands, 25], [T.gibberish + .96, 8], [T.cut, 0]];
+const rain = [];
+{ const RR = f.rng(77); let t = .62 - 1.2;
+  while (t < T.cut) { let r = 6; for (const [a, v] of RATE) if (t >= a) r = v; if (!r) break; t += (1 / r) * (.6 + .8 * RR());
+    let x0 = RR() * 960; const back = x0 > 328 && x0 < 612, s = 58 + RR() * 22, v = 260 + RR() * 130;
+    const n = { ts: t, x0, s, v, back, A: 6 + RR() * 8, w: 4 + RR() * 3, ph: RR() * 6.28, r0: (RR() - .5) * 80, rs: (RR() - .5) * 120, k: N(), c: col() };
+    n.land = !back && x0 > 150 && x0 < 810 ? 560 - (120 + 40 * Math.min(1, (t - .62) / 17.8)) * bump(x0) + (RR() - .5) * 14 : null;
+    rain.push(n); } }
+const LENS = [{ ts: 2.05, x0: 118, s: 150, k: 1000, c: '', v: 520, r0: -18 }, { ts: T.onetime - .5, x0: 846, s: 132, k: 734, c: 'p', v: 520, r0: 14 }, { ts: T.thousands, x0: 800, s: 140, k: 512, c: '', v: 500, r0: -10 }];
+{ $('backRain').innerHTML = rain.filter((n) => n.back).map((n) => nhtml(n.s, n.k, n.c)).join(''); $('frontRain').innerHTML = rain.filter((n) => !n.back).map((n) => nhtml(n.s, n.k, n.c)).join('');
+  $('lensRain').innerHTML = LENS.map((n) => nhtml(n.s, n.k, n.c)).join('');
+  const b = [...$('backRain').children], fr = [...$('frontRain').children]; let ib = 0, jf = 0; for (const n of rain) n.el = n.back ? b[ib++] : fr[jf++];
+  [...$('lensRain').children].forEach((e, i) => (LENS[i].el = e)); }
+function drawRain(t) {
+  for (const n of rain) { const dt = t - n.ts; if (dt < 0) { n.el.style.display = 'none'; continue; }
+    let y = -60 + n.v * dt, x = n.x0 + n.A * Math.sin(n.w * dt + n.ph), rot = n.r0 + n.rs * dt, sk = 12 * Math.sin(n.w * 1.3 * dt + n.ph);
+    if (n.land !== null && y >= n.land) { const dl = (n.land + 60) / n.v; y = n.land; x = n.x0 + n.A * Math.sin(n.w * dl + n.ph); rot = n.r0 + n.rs * dl; sk = 0; }
+    if (y > (n.back ? 640 : 800)) { n.el.style.display = 'none'; continue; }
+    n.el.style.display = 'flex'; pose(n.el, x, y, rot, n.s, sk); }
+  for (const n of LENS) { const dt = t - n.ts, y = -120 + n.v * dt; if (dt < 0 || y > 900) { n.el.style.display = 'none'; continue; }
+    n.el.style.display = 'flex'; pose(n.el, n.x0 + 10 * Math.sin(3 * dt), y, n.r0 + 20 * Math.sin(2 * dt), n.s, 8 * Math.sin(4 * dt)); } }
+// the push-ins (zoom layer): [time, k, focus x, focus y], eased segments; hard cut to wide on "If only"
+const JF = [470, 240], SF = [190, 250];
+function zoom(t) {
+  if (t < T.annoying) return [1, ...JF];
+  if (t < T.ifonly) { const k = t < T.secrets ? lerp(1, 1.10, easeO(P(t, T.annoying, T.annoying + .35))) : lerp(1.10, 1.22, easeO(P(t, T.secrets, T.secrets + .35))); return [k, ...JF]; }
+  if (t < T.thousands) return [lerp(1, 1.08, easeIO(P(t, T.derive, T.derive + 1.2))), ...SF];
+  const p = easeO(P(t, T.thousands, T.thousands + .35)); return [lerp(1.08, 1.15, p), lerp(SF[0], JF[0], p), lerp(SF[1], JF[1], p)]; }
+function grain(fr, op) { const c = $('grain').getContext('2d'), im = c.createImageData(480, 360), r = f.rng(1000 + fr);
+  for (let i = 0; i < im.data.length; i += 4) { const v = Math.floor(r() * 255); im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 150; } c.putImageData(im, 0, 0); $('grain').style.opacity = op; }
+function staticNoise(fr, t) { const c = $('static').getContext('2d'), im = c.createImageData(320, 240), r = f.rng(5000 + fr), band = ((t - T.static) * 380) % 300 - 30;
+  for (let y = 0; y < 240; y++) { const dk = Math.abs(y - band) < 22 ? .45 : 1; for (let x = 0; x < 320; x++) { const k = (y * 320 + x) * 4, v = Math.floor(r() * 255 * dk); im.data[k] = im.data[k + 1] = im.data[k + 2] = v; im.data[k + 3] = 255; } }
+  c.putImageData(im, 0, 0); }
+
+// ---------- studio: rays, key cards (fork), words, ghost, QR codes
+{ let g = ''; const cx = 690, cy = 330, n = 28; for (let i = 0; i < n; i += 2) { const a0 = (i / n) * Math.PI * 2 + .05, a1 = ((i + 1) / n) * Math.PI * 2 + .05, L = 1600;
+    g += `<polygon points="${cx},${cy} ${cx + L * Math.cos(a0)},${cy + L * Math.sin(a0)} ${cx + L * Math.cos(a1)},${cy + L * Math.sin(a1)}" fill="#2c4ce0"/>`; } $('rays').innerHTML = g; }
+{ const W = window.S09_WORDS; let h = '';
+  for (let k = 0; k < 24; k++) { const cl = Math.floor(k / 12), r = k % 12; h += `<div class="w" style="left:${14 + cl * 178}px;top:${58 + r * 27.5}px"><i>${k + 1}.</i><span>${W[k]}</span></div>`; }
+  $('words').innerHTML = h; $('ghost').innerHTML = h;
+  const r = f.rng(39), p = [], st = 14;
+  for (let x = 0; x <= 370; x += st) p.push(`${x}px ${(r() * 5).toFixed(1)}px`);
+  for (let y = st; y <= 392; y += st) p.push(`${(370 - r() * 5).toFixed(1)}px ${y}px`);
+  for (let x = 370 - st; x >= 0; x -= st) p.push(`${x}px ${(392 - r() * 5).toFixed(1)}px`);
+  for (let y = 392 - st; y > 0; y -= st) p.push(`${(r() * 5).toFixed(1)}px ${y}px`);
+  $('parchBg').style.clipPath = `polygon(${p.join(',')})`; }
+const WORDS = [...$('words').children];
+const qrSvg = (q, size) => `<svg class="qr" viewBox="-4 -4 ${q.n + 8} ${q.n + 8}" width="${size}" height="${size}" shape-rendering="crispEdges"><rect x="-4" y="-4" width="${q.n + 8}" height="${q.n + 8}" fill="#fff"/><path d="${q.d}" fill="#000"/></svg>`;
+$('qrCode').innerHTML = qrSvg(S09_QR.code, 150); $('qrPaper').innerHTML = qrSvg(S09_QR.paper, 150);
+$('callQr').innerHTML = qrSvg(S09_QR.repo, 116).replace('margin:4px auto', '');
+// the fork: 1,024 key cards (32 x 32), each one's position = its block's centre at generation g, around a centre that moves from the key to the grid's centre
+const KEY = [956, 118], GN = 32, KPX = 42, KPY = 24, KW = 34, KH = 20, GX0 = -25 + KW / 2, GY0 = -14 + KH / 2;
+const blockC = (i, n) => { const b = GN >> n; return (Math.floor(i / b) * b + (b - 1) / 2); };
+const GC = [(GN - 1) / 2, (GN - 1) / 2];
+function cardPos(i, j, g) {   // g in 0..10 (fractional between generations)
+  const g0 = Math.floor(g), fr = g - g0, at = (gg) => { gg = Math.min(10, gg); const xs = Math.ceil(gg / 2), ys = Math.floor(gg / 2), u = gg / 10;
+    const ci = blockC(i, xs), cj = blockC(j, ys), sp = .22 + .78 * u * u;   // the spread grows with the generation, so early forks stay near the key
+    return [lerp(KEY[0], GX0 + GC[0] * KPX, u) + (ci - GC[0]) * KPX * sp, lerp(KEY[1], GY0 + GC[1] * KPY, u) + (cj - GC[1]) * KPY * sp]; };
+  const a = at(g0), b = at(g0 + 1), e = easeO(fr); return [lerp(a[0], b[0], e), lerp(a[1], b[1], e)]; }
+function drawKeys(t) {
+  const c = $('keys').getContext('2d'); c.clearRect(0, 0, 1280, 720); if (t < T.fork) return;
+  const g = Math.min(10, (t - T.fork) / .13), dim = P(t, T.fork + 1.3, T.fork + 1.7), grow = 1 + .012 * Math.max(0, Math.min(t, T.hold) - (T.fork + 1.7));
+  const seen = new Set();
+  for (let j = 0; j < GN; j++) for (let i = 0; i < GN; i++) {
+    let [x, y] = cardPos(i, j, g); x = KEY[0] + (x - KEY[0]) * grow; y = KEY[1] + (y - KEY[1]) * grow;
+    const key = Math.round(x) + ',' + Math.round(y); if (g < 10 && seen.has(key)) continue; seen.add(key);   // stacked cards are drawn once
+    const d = Math.hypot(x - KEY[0], y - KEY[1]); c.globalAlpha = lerp(1, .06 + .6 * Math.exp(-d / 430), dim);
+    x -= KW / 2; y -= KH / 2; c.fillStyle = '#f1e7cc'; c.fillRect(x, y, KW, KH); c.strokeStyle = '#2a2418'; c.lineWidth = 1.5; c.strokeRect(x + .75, y + .75, KW - 1.5, KH - 1.5);
+    c.beginPath(); c.arc(x + 9, y + KH / 2, 3.4, 0, Math.PI * 2); c.moveTo(x + 12.4, y + KH / 2); c.lineTo(x + 28, y + KH / 2); c.moveTo(x + 24.5, y + KH / 2); c.lineTo(x + 24.5, y + KH / 2 + 4.5); c.lineWidth = 1.7; c.stroke(); }
+  c.globalAlpha = 1; }
+
+// ---------- seek
+f.onSeek((t0) => {
+  const t = Math.min(t0, T.hold), fr = Math.round(t * 30);   // the last 2 s are a frozen hold
+  const tv = Math.min(t, T.cut);                             // the TV picture freezes on the record scratch
+  const snapped = t >= T.snap;
+  // beat 0: scene 8's last frame, static, the push-in. world: 1 -> 1.5, screen box (350,96,640x480) -> (160,0,960x720)
+  const pp = easeIO(P(t, T.static_end, T.push_end)), k = lerp(1, 1.5, pp), dx = lerp(0, -365, pp), dy = lerp(0, -144, pp);
+  show($('world'), !snapped && t < T.push_end + .1); $('world').style.transform = `translate(${dx}px,${dy}px) scale(${k})`;
+  show($('tv'), !snapped && t >= T.static); show($('static'), t >= T.static && t < T.static_end + .07);
+  if (t >= T.static && t < T.static_end + .07) staticNoise(fr, t);
+  let roll = 0; if (t >= T.static_end && t < T.static_end + .07) roll = -720 * (1 - P(t, T.static_end, T.static_end + .07));   // two frames of vertical roll
+  $('tvIn').style.transform = `translateY(${roll}px)`;
+  let jx = 0; if (t >= T.scratch && t < T.scratch + .1) jx = [8, -8, 5][Math.min(2, Math.floor((t - T.scratch) * 30))];
+  $('tv').style.transform = `translate(${dx + 350 * k + jx}px,${dy + 96 * k}px) scale(${k / 1.5})`;
+  show($('tvIn'), t >= T.static_end);
+  for (const b of ['barL', 'barR']) { const el = $(b); el.style.opacity = String(P(t, T.push_end - .3, T.push_end)); show(el, t >= T.push_end - .3);
+    const tau = Math.max(0, t - T.snap); el.style.transform = `translateY(${.5 * 16900 * tau * tau}px)`; if (tau > .32) show(el, false); }
+  show($('white'), t >= T.snap && t < T.snap + 1 / 30);
+  // ---- the TV picture
+  if (!snapped) {
+    const [zk, zx, zy] = zoom(tv); $('kitchen').style.transform = `translate(${zx * (1 - zk)}px,${zy * (1 - zk)}px) scale(${zk})`;
+    drawRain(tv); grain(Math.round(tv * 30) + (t >= T.scratch ? fr : 0), t >= T.scratch ? .9 : .6);
+    $('drama').style.clipPath = `inset(0 ${100 - 100 * P(tv, 1.70, 1.95)}% 0 0)`;
+    $('better').style.clipPath = `inset(0 ${100 - 100 * P(tv, T.ifonly + .08, T.ifonly + .43)}% 0 0)`;
+    // Joe: hands in pockets, then (hard cut on "If only") hands in the air; speaks J1-J2, then frozen on J2's last frame
+    const hj = headFrame(tv, 'joe'); setHead(joe, hj); setPose(joe, tv >= T.ifonly ? 'cele' : 'pock'); place(joe, JOE.x, JOE.y, 0, JOE.s);
+    // the forehead note: falls from above onto his forehead on "How" and follows his head (S09_HB: forehead point in the sprite cell)
+    { const a = A9[POSE[joe._pose]], u = HB.fx[hj], v = HB.top[hj] - 40;
+      const hx = JOE.x + JOE.s * (a.hx - KCX * HK + u * HS - a.cx), hy = JOE.y + JOE.s * (a.chin + 3 - 905 * HK + v * HS - a.chin);
+      const p = P(tv, T.how - .3, T.how), bob = tv >= T.how && tv < T.how + .2 ? -4 * Math.sin(P(tv, T.how, T.how + .2) * Math.PI) : 0;
+      show($('fnote'), tv >= T.how - .3); $('fnote').style.display = tv >= T.how - .3 ? 'flex' : 'none';
+      pose($('fnote'), hx, lerp(hy - 260, hy, p * p) + bob, -9, 50); }
+    // the suit (announcer): steps in from the left edge in 3 stop-frame steps, speaks S1-S2
+    const sp = step(P(tv, T.ifonly - .32, T.ifonly - .02), 3); show($('suitBWL'), tv >= T.ifonly - .32);
+    setHead(suitBW, headFrame(tv, 'suit')); place(suitBW, SUITBW.x - (1 - sp) * 330, SUITBW.y, 0, SUITBW.s);
+  }
+  // ---- the studio
+  show($('studio'), snapped);
+  if (snapped) {
+    $('rays').setAttribute('transform', `rotate(${2 * (t - T.snap)} 690 330)`);
+    drawKeys(t);
+    // BIP-39 card spins in, then the shine sweeps once
+    { const p = P(t, T.bip, T.bip + .5), e = easeO(p); show($('bip'), t >= T.bip);
+      $('bip').style.transform = `perspective(900px) rotateY(${lerp(1080, -9, e)}deg) scale(${lerp(.2, 1, e)})`;
+      $('shine').style.transform = `rotate(24deg) translateX(${lerp(-150, 560, P(t, T.bip + .55, T.bip + .95))}px)`; }
+    { show($('parch'), t >= T.parch); $('parch').style.transform = `scaleY(${easeO(P(t, T.parch, T.parch + .15))})`;
+      WORDS.forEach((w, i) => (w.style.visibility = t >= T.words + i * .04 ? 'visible' : 'hidden')); }
+    // a glowing copy of the phrase lifts off and shrinks into the golden key; the key pops and glints
+    { const p = P(t, T.ghost, T.ghost + .35), e = p * p; show($('ghost'), t >= T.ghost && p < 1);
+      $('ghost').style.transform = `translate(${(KEY[0] - 690) * e}px,${(KEY[1] - 412) * e - 14 * Math.sin(p * Math.PI)}px) scale(${lerp(1, .04, e)})`; $('ghost').style.opacity = String(1 - .6 * e);
+      const q = t < T.key ? 0 : t < T.key + .1 ? lerp(0, 1.25, P(t, T.key, T.key + .1)) : lerp(1.25, 1, P(t, T.key + .1, T.key + .18));
+      $('gkey').setAttribute('transform', `translate(${KEY[0]} ${KEY[1]}) rotate(-14) scale(${q})`);
+      const gl = P(t, T.key + .15, T.key + .35), gs = Math.sin(gl * Math.PI); $('glint').setAttribute('transform', `translate(${KEY[0] + 30} ${KEY[1] - 16}) rotate(${gl * 90}) scale(${gs})`); }
+    // the suit: pitchman pose (frozen on S2's last frame through the reveal), speaks S3-S4, steps out left at the tag
+    { const so = step(P(t, T.suit_out, T.suit_out + .3), 3); show($('suitCL'), so < 1);
+      setHead(suitC, headFrame(t, 'suit')); place(suitC, SUITC.x - so * 520, SUITC.y, 0, SUITC.s); }
+    // stamp, BUT WAIT, the proof boxes
+    { const p = P(t, T.stamp, T.stamp + 4 / 30), out = P(t, T.butwait, T.butwait + .12); show($('stamp'), t >= T.stamp && out < 1);
+      $('stamp').style.transform = `rotate(-5deg) scale(${lerp(2.6, 1, p) * (1 - out)})`;
+      let sx = 0, sy = 0; if (t >= T.stamp + 4 / 30 && t < T.stamp + 6 / 30) { const k2 = Math.floor((t - T.stamp) * 30) % 2 ? -1 : 1; sx = 6 * k2; sy = -4 * k2; }
+      $('studio').style.transform = `translate(${sx}px,${sy}px)`;
+      const bu = easeO(P(t, T.butwait, T.butwait + .3)), bd = P(t, T.suit_out, T.suit_out + .25); show($('butwait'), t >= T.butwait && bd < 1);
+      $('butwait').style.transform = `translateY(${lerp(220, 0, bu) + 260 * bd * bd}px)`;
+      const drop = (el, at) => { const p2 = P(t, at, at + .3); show(el, t >= at); el.style.transform = `translateY(${lerp(-420, 0, backO(p2))}px)`; };
+      drop($('cCode'), T.check); drop($('cPaper'), T.itout); }
+    // tag: the product shrinks up; FREE swings in from the card's corner; CALL NOW flashes and flips into the repo link and QR; the lab coat pokes in
+    { const sh = easeIO(P(t, T.shrink, T.shrink + .3)); $('prod').style.transform = `scale(${lerp(1, .78, sh)})`;
+      const pv = [690 + (868 - 690) * .78, 66 + (190 - 66) * .78], tau = t - T.free; show($('free'), tau >= 0);
+      const th = tau < 0 ? 0 : tau > 2.4 ? 0 : 75 * Math.exp(-2.6 * tau) * Math.cos(2 * Math.PI * .95 * tau);
+      $('free').style.transform = `translate(${pv[0] - 100}px,${pv[1]}px) rotate(${th}deg)`;
+      const r = th * Math.PI / 180; $('string').setAttribute('d', tau >= 0 ? `M${pv[0]} ${pv[1]} L${pv[0] - 56 * Math.sin(r)} ${pv[1] + 56 * Math.cos(r)}` : '');
+      show($('call'), t >= T.callnow);
+      const fl = P(t, T.flip, T.flip + .4), on = Math.floor((t - T.callnow) * 8) % 2 === 0;
+      $('callA').style.background = on ? '#e3101f' : '#ffd400'; $('callA').style.color = on ? '#ffe600' : '#c6001a';
+      $('callA').style.transform = `rotateX(${fl < .5 ? fl * 180 : 90}deg)`; show($('callA'), fl < .5);
+      $('callB').style.transform = `rotateX(${fl < .5 ? -90 : (1 - fl) * 180 - 0}deg)`; show($('callB'), fl >= .5);
+      $('callA').style.display = fl < .5 ? 'flex' : 'none';
+      const lp = step(P(t, T.lab, T.lab + .3), 3); show($('labL'), t >= T.lab);
+      setHead(lab, LAB_FRAME); place(lab, LAB.x - (1 - lp) * 300, LAB.y, LAB.rot, LAB.s, -1); }
+  }
+});
+</script></body></html>
