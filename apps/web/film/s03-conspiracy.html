@@ -272,9 +272,9 @@ const card = $('card');
 A(card, [{ opacity: 0, transform: 'translateY(420px) rotate(3deg)' }, { opacity: 1, transform: 'translateY(0) rotate(-.4deg)' }], tSev - .6, .5, EO);
 D.type($('l2'), '719 papers, 2026', tSev, t26 + .05, true);
 D.hide($('plateS'), L(51.6), .25);
-// ---- beat 10: the silence is real: the lamp flickers once
+// ---- beat 10: the silence is real
 const tReal = W('p13', 'real');
-A($('dim'), [{ opacity: 0 }, { opacity: .62, offset: .12 }, { opacity: .08, offset: .3 }, { opacity: .5, offset: .5 }, { opacity: 0 }], tReal - .05, .4, 'linear');
+// (the lamp flicker was removed: Liam 16805)
 // ---- camera thumps (JS driven, one hook): stamps and the folder shutting
 const hits = [[W('p8b', 'kept'), 7], [tCens, 6], [tChk, 9], [tShut, 8], [tQ, 11]];
 film.onSeek((t) => { let y = 0, r = 0; for (const [h, a] of hits) { const d = t - h; if (d >= 0 && d < .45) { const e = Math.exp(-d * 9) * Math.sin(d * 52); y += a * e; r += a * e * .05; } } $('shake').style.transform = `translate(0,${y.toFixed(2)}px) rotate(${r.toFixed(3)}deg)`; });
