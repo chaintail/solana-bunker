@@ -246,3 +246,13 @@ Rulings applied: Q5 the wipe's "WE NOW RETURN TO THE STUDIO", Q6 UPDATE, Q7 the 
   - The tag width is measured from the text (as v5: UPDATE 180 px).
 - Strip across the first switch (15.3, 15.4, 15.5, 15.6, 15.7 s): `s10-v6-transition.png`.
 - Output: dev-mac `s10/out/s10-v6.mp4` and `s10-v6-phone.mp4`, 33.40 s, 1002 frames, −16.4 LUFS / −1.9 dBTP. The cut flash is unchanged (frame 401 white, 402 half). The whitepaper QR decodes on master and phone at 720p and 540p.
+
+### Scene 10 v7 (Liam's note: the flash read as a glitch)
+- **No white flash at the jump cut.** The wipe's own flash (1.10–1.40) is unchanged.
+- **The cut is hidden by motion instead.**
+  - The UPDATE → COMING UP NEXT / A STATELESS BUNKER transition (text out 150 ms, eased 250 ms resize, text in 150 ms) is centred on the cut frame 401 (13.367 s), not on "stateless" (15.48).
+  - The whitepaper box leaves through the cut (exit 13.22–13.57 s, moving on frame 401). It is now on screen for about 2 s (11.55–13.57), and its QR still decodes at 12.5 s.
+  - The anchor layer alone crossfades over 4 frames, 399–402 (B2 weight .2/.4/.6/.8): B1 runs to frame 402 and B2 starts at 399 (take 563.50). The graphics do not crossfade. Head size is unchanged (glasses within 1 %).
+- Frames 397–404 have mean luma 71–78: no white frame. Strip of frames 400/401/402: `s10-v7-cut.png`.
+- `stills.sh` still composites one anchor per frame (no crossfade); only `build.sh` blends.
+- Output: dev-mac `s10/out/s10-v7.mp4` and `s10-v7-phone.mp4`, 33.40 s, 1002 frames, −16.4 LUFS / −1.9 dBTP. The whitepaper QR decodes on master and phone at 720p and 540p.
