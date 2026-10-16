@@ -23,7 +23,8 @@ On screen: chyron with the Crypto Twitter jokes continuing; on "crypto nerd" the
 ## C. Scene 11: Chaintail News Network credits over the parchment outro (branch film/s11)
 1. A full-screen Chaintail News Network ident: swirling abstract colours (the news desk's palette), the Chaintail lemur logo (`apps/web/film/assets/chaintail-logo.svg`, `-white.svg`, `-800.png`) spinning in with "CHAINTAIL NEWS NETWORK" and the letters CNN, flashy broadcast-style transition, about 3 s.
 2. The ident splits the screen like a 1990s show's end credits: the LEFT third is the CNN panel (logo on top, credits scrolling up beneath it); the RIGHT two thirds is the parchment vault outro card: "Chaintail Labs R&D / Solana Vault", the GitHub QR (https://github.com/chaintail/solana-bunker) and the Telegram QR with their logos and links printed beneath, "Feel free to reach out with any questions!". Liam's last recorded line plays over it: take 583.52–586.08 "Feel free to reach out with any questions." (no face on screen; voice only, or the anchor in a small box if it reads better).
-3. Credits text (scrolling, in this order; initials only for surnames; Mikail is spelled without an H):
+3. Credits text (scrolling, in this order; initials only for surnames; Mikail is spelled without an H; the composer is credited as "Claude-Do", never "Claude D."; Liam may still edit this list):
+   EXECUTIVE PRODUCERS  Liam C., Claude-Do
    NEWS ANCHOR  Liam C.
    SCIENTIST  Liam C.
    AVERAGE JOE  Liam C.
@@ -31,9 +32,9 @@ On screen: chyron with the Crypto Twitter jokes continuing; on "crypto nerd" the
    BUNKER ENGINEER  Liam C.
    THE SUIT  Liam C.
    SCRIPT  Liam C.
-   RESEARCH  Liam C., Mikail R., Claude D., GPT Astra
-   STORYBOARD  Claude D., Liam C.
-   ART DIRECTION  Claude D.
+   RESEARCH  Liam C., Mikail R., Claude-Do, GPT Astra
+   STORYBOARD  Claude-Do, Liam C.
+   ART DIRECTION  Claude-Do
    SET DESIGN  Claude Fable
    ANIMATION  Claude Opus
    COSTUME DESIGN  Codex
