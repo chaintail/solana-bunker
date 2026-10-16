@@ -5,10 +5,10 @@
 #  audio: v5 cut list -> mix -> atempo=1.1 (pitch kept) -> two-pass loudnorm -16 LUFS -> out/x11/voice-ln.wav; score.py --edl data/s08-edl-x11.js (tempo map and
 #         stings from the scaled markers, dialogue guard on the sped voice) -> out/x11/score.wav; mixed as build.sh (score after the loudnorm, brown bed at the new
 #         length, limiter) -> out/x11/audio-final.wav; score-check.py on the x11 files -> out/x11/score-check.log
-#  video: build.sh's grade (grain c0s=7, vignette PI/4.6) -> out/s08-x11.mp4 (crf 14), out/s08-x11-phone.mp4 (960x540 lanczos crf 26)
+#  video: build.sh's grade (grain c0s=7, vignette PI/4.6) -> out/<name>.mp4 (crf 14), out/<name>-phone.mp4 (960x540 lanczos crf 26); usage: build-x11.sh [name] (default s08-x11)
 set -euo pipefail
 export PATH=/opt/homebrew/opt/ffmpeg-full/bin:/opt/homebrew/bin:$PATH
-cd ~/video-work/solana-bunker/s08; O=out/x11; FFV="ffmpeg -nostdin -v error -y"; SPEED=1.1; M=1428; EDLX=film/data/s08-edl-x11.js
+cd ~/video-work/solana-bunker/s08; O=out/x11; FFV="ffmpeg -nostdin -v error -y"; SPEED=1.1; M=1428; EDLX=film/data/s08-edl-x11.js; V=${1:-s08-x11}
 XT=$(python3 -c "print(round($M/30,4))")
 [ "$(python3 -c "import json;print(json.load(open('out/s08-edl.json'))['total'])")" = 52.32 ] || { echo "out/s08-edl.json is not the v5 timing"; exit 1; }
 [ "$(python3 -c "import json;s=open('$EDLX').read();print(json.loads(s[s.index('{'):s.rindex('}')+1])['total'])")" = "$XT" ] || { echo "$EDLX total is not $XT"; exit 1; }
@@ -25,6 +25,6 @@ ffmpeg -nostdin -hide_banner -i $O/audio-final.wav -af ebur128=peak=true -f null
 /usr/bin/python3 film/pipeline/s08/score-check.py --edl $EDLX --score $O/score.wav --voice $O/voice-ln.wav --events $O/score-events.json --final $O/audio-final.wav | tee $O/score-check.log || true
 $FFV -f concat -safe 0 -i $O/seg/list.txt -i $O/audio-final.wav -filter_complex \
   "[0:v]format=yuv444p,noise=c0s=7:c0f=t+u,vignette=angle=PI/4.6,format=yuv420p,setsar=1[v]" \
-  -map '[v]' -map 1:a -r 30 -c:v libx264 -preset medium -crf 14 -pix_fmt yuv420p -c:a aac -b:a 192k -movflags +faststart -t $XT out/s08-x11.mp4
-$FFV -i out/s08-x11.mp4 -vf scale=960:540:flags=lanczos -c:v libx264 -preset medium -crf 26 -pix_fmt yuv420p -c:a aac -b:a 128k -movflags +faststart out/s08-x11-phone.mp4
-for v in s08-x11 s08-x11-phone; do ffprobe -v error -show_entries format=duration,size:stream=codec_name,nb_frames,width,height -of compact out/$v.mp4; done
+  -map '[v]' -map 1:a -r 30 -c:v libx264 -preset medium -crf 14 -pix_fmt yuv420p -c:a aac -b:a 192k -movflags +faststart -t $XT out/$V.mp4
+$FFV -i out/$V.mp4 -vf scale=960:540:flags=lanczos -c:v libx264 -preset medium -crf 26 -pix_fmt yuv420p -c:a aac -b:a 128k -movflags +faststart out/$V-phone.mp4
+for v in $V $V-phone; do ffprobe -v error -show_entries format=duration,size:stream=codec_name,nb_frames,width,height -of compact out/$v.mp4; done

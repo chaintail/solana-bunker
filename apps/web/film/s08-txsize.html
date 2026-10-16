@@ -159,18 +159,25 @@ $('qrCode').innerHTML = qrSvg(S07_QR.code, 146); $('qrProof').innerHTML = qrSvg(
 // ---------- characters: s08 bodies (oval erased, head behind the body), head sprite sheets heads/s08-head-NN.png (all lines, 16 x 12 cells of 152x220)
 const AN = { clip: [411.5, 303, 'engineer-point-clipboard', 305], thumbs: [511.5, 306, 'engineer-thumbs-up', 305], shrug: [511.5, 308, 'physicist-shrug', 297.5], prof: [394.5, 308, 'physicist-professor-point', 297.5], joe: [511.0, 344, 'street-celebrate', 307.5] };
 const HK = 0.326, HS = 760 * HK / 152;
+// the engineer's hard hat is its own layer (bodies.py: <pose>-hat.png over <pose>-nohat.png), drawn over the body and turned with the head (Liam 16698)
+const HAT = (p) => AN[p][2].startsWith('engineer');
 function makeFig(parent, poses) {
   const el = document.createElement('div'); el.className = 'fig';
-  el.innerHTML = '<div class="hd">' + [0, 1, 2, 3, 4, 5].map((i) => `<img src="heads/s08-head-0${i}.png">`).join('') + '</div>' + poses.map((p) => `<img data-pose="${p}" src="assets/s08/${AN[p][2]}.png" width="1024" height="1536">`).join('');
+  el.innerHTML = '<div class="hd">' + [0, 1, 2, 3, 4, 5].map((i) => `<img src="heads/s08-head-0${i}.png">`).join('') + '</div>' + poses.map((p) => `<img data-pose="${p}" src="assets/s08/${AN[p][2]}${HAT(p) ? '-nohat' : ''}.png" width="1024" height="1536">`).join('')
+    + poses.filter(HAT).map((p) => `<img data-hat="${p}" src="assets/s08/${AN[p][2]}-hat.png" width="1024" height="1536" style="transform-origin:0 0">`).join('');
   parent.appendChild(el); el._pose = poses[0]; return el; }
-function setPose(el, p) { el._pose = p; el.querySelectorAll('img[data-pose]').forEach((im) => (im.style.display = im.dataset.pose === p ? 'block' : 'none')); }
+function setPose(el, p) { el._pose = p; el.querySelectorAll('img[data-pose]').forEach((im) => (im.style.display = im.dataset.pose === p ? 'block' : 'none'));
+  el.querySelectorAll('img[data-hat]').forEach((im) => (im.style.display = im.dataset.hat === p ? 'block' : 'none')); }
 // neck point (x,y), rotation, scale, mirror (a mirrored body keeps an unmirrored head), head tilt in degrees about the chin
 function place(el, x, y, rot, s, flip = 1, tilt = 0) {
   const [cx, chin, , kx] = AN[el._pose];   // kx: the chin centre line in the key crop (jaw midpoint, median over that speaker's s08 head frames), which goes on the collar centre cx
   el.style.transform = `translate(${x}px,${y}px) rotate(${rot}deg) scale(${s * flip},${s}) translate(${-cx}px,${-chin}px)`;
   let tr = `translate(${cx - kx * HK}px,${chin + 3 - 905 * HK}px) scale(${HS})` + (tilt ? ` translate(${kx / 5}px,181px) rotate(${tilt}deg) translate(${-kx / 5}px,-181px)` : '');
   if (flip < 0) tr = `translate(${cx}px,0) scale(-1,1) translate(${-cx}px,0) ` + tr;
-  el.querySelector('.hd').style.transform = tr; }
+  el.querySelector('.hd').style.transform = tr;
+  // the head's tilt pivot (kx/5, 181) in sprite px is (cx, chin + 3) in body px; the hat turns by the same angle about it (mirrored body: -tilt in body space)
+  const hat = el.querySelector(`img[data-hat="${el._pose}"]`);
+  if (hat) hat.style.transform = tilt ? `translate(${cx}px,${chin + 3}px) rotate(${flip * tilt}deg) translate(${-cx}px,${-chin - 3}px)` : 'none'; }
 const cum = []; D.edl.reduce((a, e, i) => ((cum[i] = a), a + e.frames), 0);
 function headFrame(t, sp) {   // that speaker's lip-sync frame; holds the last frame of his previous line through every pause
   let i = -1; D.edl.forEach((e, k) => { if (e.speaker === sp && t >= e.out_in - 1e-6) i = k; });

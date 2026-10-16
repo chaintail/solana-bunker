@@ -3,6 +3,7 @@
 The grey head oval and its outline are erased from each body PNG; the head sprite is drawn BEHIND the body, so the collar covers the neck and the
 engineer's own hard hat (kept: only the exact oval is erased in the top 50 rows of the oval) sits on top of the head.
 Writes assets/s08/<pose>.png (same 1024x1536 canvas) and assets/s08/anchors.js: oval centre x, chin y (oval bottom).
+Engineer poses also get <pose>-hat.png (the hard hat alone) and <pose>-nohat.png (the body without it), so the scene can turn the hat with the head.
 usage: /usr/bin/python3 pipeline/s08/bodies.py"""
 import json, os
 import numpy as np
@@ -22,5 +23,10 @@ for n in POSES:
     if 'engineer' in n: m2[:int(ys.min()) + 50] = m[:int(ys.min()) + 50]   # keep the hard hat brim
     out = im.copy(); out[m2, 3] = 0
     Image.fromarray(out.astype('uint8'), 'RGBA').save(DST + n.split('-', 1)[1] + '.png', optimize=True)
+    if 'engineer' in n:   # hard hat as its own layer (Liam 16698): everything above the oval's top 50 rows -> <pose>-hat.png, the rest -> <pose>-nohat.png
+        hat = np.zeros(m.shape, bool); hat[:int(ys.min()) + 50] = True; hat &= out[..., 3] > 0
+        h = out.copy(); h[~hat, 3] = 0; nh = out.copy(); nh[hat, 3] = 0
+        Image.fromarray(h.astype('uint8'), 'RGBA').save(DST + n.split('-', 1)[1] + '-hat.png', optimize=True)
+        Image.fromarray(nh.astype('uint8'), 'RGBA').save(DST + n.split('-', 1)[1] + '-nohat.png', optimize=True)
     anch[n.split('-', 1)[1]] = {'cx': cx, 'chin': chin}
 open(DST + 'anchors.js', 'w').write('window.ANCHORS_S08 = ' + json.dumps(anch) + ';\n'); print(anch)
