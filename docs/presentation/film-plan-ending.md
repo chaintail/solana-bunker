@@ -198,3 +198,19 @@ Output: dev-mac `~/video-work/solana-bunker/ending/out/ending-look-{A,B,C}.png` 
 - Q10: the closing cards on black (drafted), or on the parchment?
 - Q12: the brief's closing lines split over two cards: card 1 the four "Based on a true story …" lines (4 s), card 2 PRODUCT OF + logo + Chaintail Labs + © (3 s). Or all on one card?
 - Q11: Liam's last line voice only (drafted), or the anchor in a small box on the CNN panel?
+
+## 10. As built: scene 11 v1 (look C2)
+
+Rulings applied: Q9 the roll at 6 px a frame, Q10 the cards on black, Q11 Liam's last line voice only, Q12 two cards.
+- **Length:** 39.37 s, 1181 frames. `data/s11-edl.js` owns the numbers (written by `pipeline/s11/s11-timing.py`).
+- **Timeline:**
+  - 0.00–0.35 the four bars sweep across scene 10's last frame.
+  - 0.35–3.00 the ident: the header group (lemur, CNN, CHAINTAIL NEWS / NETWORK in the C2 layout) is drawn at 2.0x around the frame centre. The lemur spins in (0.35), the network lines drop in (1.15), CNN slams in (1.80), and the streak runs at 2.20.
+  - 3.00–3.60 the split: the group eases from the centre to the panel header while the parchment slides in.
+  - 3.60–30.47 the roll at 6 px a frame.
+  - 30.47 card 1, 34.97 card 2 (PRODUCT OF, the lemur, Chaintail Labs, ©), 38.37 fade to black.
+- **Roll (deviation):** the C2 typography is taller than draft C (roll 4360 px, window 472 px), so at 6 px a frame the roll lasts 26.87 s (806 frames), not 22.4 s.
+- **Audio:** take 583.62–586.00 at 3.90 s, voice only. "Feel free to reach out with any questions!" fades in on the parchment at 4.12. The brown-noise bed fades out with the picture. −16.9 LUFS / −1.9 dBTP (deviation: 2.4 s of voice in a 39 s scene, and the peak is already at the limiter).
+- **Scene 10's last frame** under the bars is from `s10-v2.mp4`; scene 10 v3 only changes its opening, so the frame is the same.
+- **Checks:** stills opened at 0.08, 0.15, 0.2, 0.32, 1.2, 2.0, 2.6, 3.3, 4.5, 12, 20, 25.5, 28.5, 32.5, 34.6, 36.5 and 38.9. The role names read at 426x240 (12, 20 and 25.5). Master and phone frames were checked at 0.2, 1.5, 2.6, 3.3, 4.5, 12, 20, 25.5, 28.5, 32.5, 36.5 and 38.9. All three codes decode (zxing-cpp) on master and phone frames at 4.5, 20 and 28.5, at 720p and at 540p: `https://github.com/chaintail/solana-bunker`, `https://t.me/chaintail`, `https://x.com/ChaintailLabs`.
+- **Files:** `s11-cnn.html`, `data/s11-edl.js`, `pipeline/s11/{s11-timing.py,build.sh,capture.sh,stills.sh}`; `s11-credits-look.html` now balances wrapped credit lines (`text-wrap: balance`). Outputs: dev-mac `~/video-work/solana-bunker/s11/out/s11-v1.mp4` and `s11-v1-phone.mp4`.

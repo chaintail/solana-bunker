@@ -1,0 +1,1 @@
+window.S11 = {"total": 39.3667, "frames": 1181, "fps": 30, "seg": [583.62, 586.0, 3.9], "T": {"bars": 0.0, "ident": 0.35, "logo_in": 0.35, "net_in": 1.15, "cnn_in": 1.8, "streak": 2.2, "split": 3.0, "split_end": 3.6, "roll": 3.6, "pxf": 6, "voice": 3.9, "feel": 4.12, "roll_end": 30.4667, "card1": 30.4667, "card2": 34.9667, "fade": 38.3667, "total": 39.3667}};

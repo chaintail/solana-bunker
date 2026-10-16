@@ -1,0 +1,185 @@
+<!doctype html><html data-duration="39.3667" data-fps="30"><head><meta charset="utf-8">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
+<style>
+/* Scene 11, Chaintail News Network credits over the parchment outro (film-plan-ending.md part C, in the approved C2 design: s11-credits-look.html).
+   C0 broadcast bars over scene 10's last frame; C1 the ident: the swirl in the desk palette, the C2 header block (lemur, CNN, CHAINTAIL NEWS / NETWORK,
+   red rule) scaled up to the frame centre, the lemur spinning in, CNN slamming in, the lines dropping in; C2 the split: the block eases into the panel's
+   header while the panel squeezes to the left third and the parchment slides in; C3 the roll at 6 px a frame, Liam's last line (voice only) over the
+   parchment; C4 card 1 on black; C5 card 2 (PRODUCT OF, the logo, Chaintail Labs, ©); C6 to black.
+   Faces as C2: Oswald (CNN), Inter (network lines, credits, card 2's small lines), Liberation Serif (Solana Vault and the sign-off in italic; Chaintail Labs /
+   R&D project upright; the cards), Special Elite (handles). Layout measured at load, as in C2. Text: data/s11-credits.js. Codes: data/s11-qr.js.
+   Timing: data/s11-edl.js (pipeline/s11/s11-timing.py). No post grade. */
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#000}
+#s10{position:absolute;left:0;top:0;width:1280px;height:720px}
+#panel{position:absolute;left:0;top:0;width:1280px;height:720px;overflow:hidden;background:radial-gradient(ellipse 90% 60% at 50% 0%,#244a80 0%,#0d1830 55%,#05070d 100%)}
+#panelIn{position:absolute;left:0;top:0;width:1280px;height:720px}
+.sw{position:absolute;left:-400px;top:-500px;width:2080px;height:1720px;filter:blur(36px);transform-origin:1040px 860px}
+#sw1{background:conic-gradient(from 0deg at 50% 50%,rgba(227,6,19,0),rgba(227,6,19,.55),rgba(36,74,128,.2),rgba(127,166,255,.5),rgba(13,24,48,0),rgba(227,6,19,.4),rgba(227,6,19,0))}
+#sw2{background:conic-gradient(from 90deg at 50% 50%,rgba(127,166,255,0),rgba(127,166,255,.35),rgba(255,255,255,.12),rgba(36,74,128,.45),rgba(127,166,255,0))}
+.blob{position:absolute;width:520px;height:520px;border-radius:50%;filter:blur(60px);margin:-260px 0 0 -260px}
+#rays{position:absolute;inset:-300px;background:repeating-conic-gradient(from 200deg at 50% 50%,rgba(160,200,255,.10) 0 4deg,transparent 4deg 11deg);transform-origin:50% 50%}
+#streak{position:absolute;top:-200px;width:160px;height:1200px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);transform:rotate(18deg);mix-blend-mode:screen}
+#head{position:absolute;left:0;top:0;width:427px;height:226px;background:linear-gradient(180deg,#0d1830 0%,#0d1830 82%,rgba(13,24,48,0) 100%)}
+#hdr{position:absolute;left:0;top:0;width:427px;height:300px;transform-origin:0 0}
+#hLogo{position:absolute}
+#hCnn{position:absolute;font:700 96px/1 Oswald;letter-spacing:.03em;color:#fff;white-space:nowrap}
+.hl{position:absolute;font:800 20px/1 Inter;color:#fff;white-space:nowrap}
+#hRule{position:absolute;height:4px;background:#e30613;box-shadow:0 0 10px rgba(227,6,19,.7);transform-origin:50% 50%}
+#win{position:absolute;left:0;top:214px;width:427px;height:506px;overflow:hidden;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 36px,#000 calc(100% - 30px),transparent 100%)}
+#roll{position:absolute;left:0;top:0;width:427px}
+.cr{text-align:center;padding:0 24px;margin-top:52px;font:700 28px/1.32 Inter;color:#fff;text-wrap:balance}
+.cr:first-child{margin-top:0}
+.cr .t{letter-spacing:.06em}
+.cr .pair{margin-top:14px}
+#div{position:absolute;left:424px;top:0;width:6px;height:720px;background:#e30613;box-shadow:0 0 18px rgba(227,6,19,.9)}
+#bars{position:absolute;inset:0;overflow:hidden}
+#bars i{position:absolute;top:-60px;height:840px;transform:skewX(-20deg)}
+/* the parchment card (C2) */
+#parch{position:absolute;left:430px;top:0;width:850px;height:720px;overflow:hidden;color:#1c1a17;background:radial-gradient(ellipse 75% 70% at 50% 44%,#f7f1e3 0%,#efe7d4 55%,#d9c79d 100%)}
+#title{position:absolute;left:62px;top:34px;font:italic 400 104px/1 'Liberation Serif';white-space:nowrap}
+#sub{position:absolute;left:62px;top:166px}
+#sub .ln{font:400 32px/38px 'Liberation Serif';white-space:nowrap}
+#flask{position:absolute}
+.q{position:absolute;top:290px;width:225px;text-align:center}
+.q svg{display:block;box-shadow:0 16px 26px -16px rgba(55,38,10,.6);outline:1.5px solid rgba(28,26,23,.5)}
+.q .h{margin-top:16px;font:400 18px/1 'Special Elite';white-space:nowrap}
+#ask{position:absolute;left:0;right:0;top:604px;text-align:center;font:italic 400 40px/1 'Liberation Serif'}
+/* the closing cards, on black */
+#cards{position:absolute;inset:0;background:#000}
+.card{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff}
+#card1 .l1{font:italic 400 54px/1.25 'Liberation Serif'}
+#card1 .l3{margin-top:28px;max-width:1000px;font:italic 400 30px/1.4 'Liberation Serif';color:#d8d8d8}
+#card2 .p{font:800 20px/1 Inter;letter-spacing:.4em;margin-right:-.4em;color:#c9d6f2}
+#card2 img{height:150px;margin:28px 0 22px}
+#card2 .n{font:400 64px/1 'Liberation Serif'}
+#card2 .c{margin-top:22px;font:500 20px/1 Inter;color:#9aa6c0;letter-spacing:.06em}
+#black{position:absolute;inset:0;background:#000}
+</style></head><body>
+<img id="s10" src="assets/s11-s10-last.png" width="1280" height="720">
+<div id="parch">
+  <svg width="850" height="720" style="position:absolute;left:0;top:0;opacity:.2;mix-blend-mode:multiply"><filter id="fib"><feTurbulence type="fractalNoise" baseFrequency=".9 .22" numOctaves="3" seed="11"/><feColorMatrix values="0 0 0 0 .35  0 0 0 0 .22  0 0 0 0 .08  0 0 0 1.4 -.35"/></filter><rect width="850" height="720" filter="url(#fib)"/></svg>
+  <div id="title">Solana Vault</div>
+  <svg id="flask" viewBox="0 0 40 54" preserveAspectRatio="none"><path d="M13.5 1.6H26.5M15.5 1.6V19L3.2 47.5Q1.4 52.4 6.6 52.4H33.4Q38.6 52.4 36.8 47.5L24.5 19V1.6" fill="#f7f1e3" stroke="#1c1a17" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="M8.6 35.5H31.4L36.4 47.4Q37.9 51 33.6 51H6.4Q2.1 51 3.6 47.4Z" fill="#1f3a93"/></svg>
+  <div id="sub"><div class="ln" id="sl1">Chaintail Labs</div><div class="ln" id="sl2">R&amp;D project</div></div>
+  <div class="q" id="qGh"></div><div class="q" id="qTg"></div><div class="q" id="qX"></div>
+  <div id="ask">Feel free to reach out with any questions!</div>
+</div>
+<div id="panel"><div id="panelIn">
+  <div class="sw" id="sw1"></div><div class="sw" id="sw2"></div>
+  <div class="blob" id="b1" style="background:rgba(227,6,19,.55)"></div><div class="blob" id="b2" style="background:rgba(127,166,255,.5)"></div><div class="blob" id="b3" style="background:rgba(255,255,255,.22)"></div>
+  <div id="rays"></div>
+  <div id="head"></div>
+  <div id="win"><div id="roll"></div></div>
+  <div id="hdr"><img id="hLogo" src="assets/chaintail-logo-white.svg"><div id="hCnn">CNN</div><div class="hl" id="hl1">CHAINTAIL NEWS</div><div class="hl" id="hl2">NETWORK</div><div id="hRule"></div></div>
+  <div id="streak"></div>
+</div></div>
+<div id="div"></div>
+<div id="bars"><i style="width:260px;background:#e30613"></i><i style="width:200px;background:#0d1830"></i><i style="width:150px;background:#7fa6ff"></i><i style="width:90px;background:#fff"></i></div>
+<div id="cards"><div class="card" id="card1"></div><div class="card" id="card2"></div></div>
+<div id="black"></div>
+<script src="data/s11-edl.js"></script><script src="data/s11-credits.js"></script><script src="data/s11-qr.js"></script>
+<script src="lib/film.js"></script>
+<script>
+const f = window.__film, $ = (id) => document.getElementById(id), T = window.S11.T, C = window.S11_CREDITS, Q = window.S11_QR;
+const P = (t, a, b) => f.prog(t, a, b), lerp = (a, b, p) => a + (b - a) * p;
+const easeO = (p) => 1 - Math.pow(1 - p, 3), easeIO = (p) => (p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2);
+const backO = (p) => { const c = 1.9; return 1 + (c + 1) * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2); };
+// ---- the roll (C2): one font and weight, all white; titles are the caps lines; extra space above every title block
+$('roll').innerHTML = C.roll.map((b) => b.joke ? `<div class="cr">${b.joke}</div>` :
+  `<div class="cr"><div class="t">${b[0]}</div>${b[1].map((x) => Array.isArray(x) ? `<div class="pair"><div class="t">${x[0]}</div><div>${x[1]}</div></div>` : `<div>${x}</div>`).join('')}</div>`).join('');
+// ---- codes (C2): ECC H, 5 px a module, 4-module quiet zone, a 13 x 13-module logo in the centre
+const MARK = {
+  gh: '<path fill="#1c1a17" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>',
+  tg: '<circle cx="12" cy="12" r="12" fill="#229ed9"/><path d="M5.3,11.7 L17.4,7.0 C18.0,6.8 18.5,7.1 18.3,7.9 L16.3,17.2 C16.2,17.8 15.7,18.0 15.2,17.7 L12.1,15.4 L10.6,16.8 C10.4,17.0 10.3,17.1 10.0,17.1 L10.2,13.9 L15.9,8.8 C16.2,8.6 15.8,8.5 15.5,8.7 L8.5,13.1 L5.4,12.2 C4.8,12.0 4.8,11.8 5.3,11.7 Z" fill="#fff"/>',
+  x: '<path fill="#1c1a17" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>',
+};
+const code = (q, mark) => { const n = q.n, s = (n + 8) * 5, L = 13, c0 = (n - L) / 2;
+  return `<svg viewBox="-4 -4 ${n + 8} ${n + 8}" width="${s}" height="${s}" shape-rendering="crispEdges"><rect x="-4" y="-4" width="${n + 8}" height="${n + 8}" fill="#f7f1e3"/><path d="${q.d}" fill="#1c1a17"/>` +
+    `<rect x="${c0}" y="${c0}" width="${L}" height="${L}" fill="#f7f1e3"/><g transform="translate(${c0 + 1.5},${c0 + 1.5}) scale(${(L - 3) / 24})" shape-rendering="auto">${MARK[mark]}</g></svg>`; };
+$('qGh').innerHTML = code(Q.repo, 'gh') + '<div class="h">chaintail/solana-bunker</div>';
+$('qTg').innerHTML = code(Q.tg, 'tg') + '<div class="h">@chaintail</div>';
+$('qX').innerHTML = code(Q.x, 'x') + '<div class="h">@ChaintailLabs</div>';
+// ---- the cards
+{ const c = C.cards[0].lines; $('card1').innerHTML = `<div class="l1">${c[0]}<br>${c[1]}</div><div class="l3">${c.slice(2).join('<br>')}</div>`;
+  const d = C.cards[1]; $('card2').innerHTML = `<div class="p">${d.product}</div><img src="${d.logo}"><div class="n">${d.name}</div><div class="c">${d.copy}</div>`; }
+// ---- measured layout (C2): cap heights and baselines from the elements' own fonts
+const cv = document.createElement('canvas').getContext('2d');
+const fnt = (el) => { const cs = getComputedStyle(el); cv.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`; };
+const capH = (el) => { fnt(el); return cv.measureText('H').actualBoundingBoxAscent; };
+const inkW = (el) => { fnt(el); const m = cv.measureText(el.textContent); return [m.actualBoundingBoxLeft, m.actualBoundingBoxRight]; };
+const base = (el) => { const sp = document.createElement('i'); sp.style.cssText = 'display:inline-block;width:0;height:0'; el.appendChild(sp); const y = sp.getBoundingClientRect().top; sp.remove(); return y; };
+let HDR = null;
+function layout() {
+  // left header (C2): CNN's cap band; the lemur centred on it at 1.12 x the cap height, 22 px gap; the group centred in the 427 px panel
+  const cnn = $('hCnn'), lg = $('hLogo'), TOP = 30, ch = capH(cnn);
+  cnn.style.left = '0px'; cnn.style.top = TOP + 'px';
+  const capTop = base(cnn) - ch, capMid = capTop + ch / 2;
+  const lh = ch * 1.12, lw = lh * 622 / 502; lg.style.height = lh + 'px';
+  const [cl, cr] = inkW(cnn), W = lw + 22 + cl + cr, X0 = (427 - W) / 2;
+  lg.style.left = X0 + 'px'; lg.style.top = (capMid - lh / 2) + 'px'; cnn.style.left = (X0 + lw + 22 + cl) + 'px';
+  // CHAINTAIL NEWS / NETWORK justified to W: tracking 0.20 em and 0.30 em, sizes solved from the ink widths
+  const l1 = $('hl1'), l2 = $('hl2'), A1 = .20, A2 = .30;
+  const at100 = (el) => { el.style.fontSize = '100px'; el.style.letterSpacing = '0px'; const [a, b] = inkW(el); return (a + b) / 100; };
+  const s1 = W / (at100(l1) + (l1.textContent.length - 1) * A1), s2 = W / (at100(l2) + (l2.textContent.length - 1) * A2);
+  l1.style.fontSize = s1 + 'px'; l1.style.letterSpacing = (A1 * s1) + 'px'; l2.style.fontSize = s2 + 'px'; l2.style.letterSpacing = (A2 * s2) + 'px';
+  l1.style.left = (X0 + inkW(l1)[0]) + 'px'; l2.style.left = (X0 + inkW(l2)[0]) + 'px';
+  const c1 = capH(l1), c2 = capH(l2);
+  l1.style.top = '0px'; l1.style.top = (capTop + ch + 24 - (base(l1) - c1)) + 'px';
+  l2.style.top = '0px'; l2.style.top = (base(l1) + 12 - (base(l2) - c2)) + 'px';
+  const b2 = base(l2); $('hRule').style.left = X0 + 'px'; $('hRule').style.width = W + 'px'; $('hRule').style.top = (b2 + 18) + 'px';
+  $('head').style.height = (b2 + 40) + 'px'; $('win').style.top = (b2 + 44) + 'px'; $('win').style.height = (720 - b2 - 44) + 'px';
+  HDR = { cx: X0 + W / 2, cy: (capTop + b2 + 22) / 2, W, win: 720 - b2 - 44 };
+  // right panel (C2 grid): 56 px margins; title cap top 56; sub block 42 under the title's baseline; flask = line 1 cap top .. line 2 baseline; codes 62 under;
+  // the sign-off's cap top 66 under the handles
+  const M = 56, pr = $('parch').getBoundingClientRect(), ttl = $('title'), sl1 = $('sl1'), sl2 = $('sl2');
+  ttl.style.left = (M + inkW(ttl)[0]) + 'px'; ttl.style.top = '0px'; ttl.style.top = (M - (base(ttl) - capH(ttl) - pr.top)) + 'px';
+  const tBase = base(ttl) - pr.top, top1 = () => base(sl1) - capH(sl1) - pr.top;
+  $('sub').style.top = '0px'; $('sub').style.top = (tBase + 42 - top1()) + 'px';
+  const t1 = top1(), bot2 = base(sl2) - pr.top, fh = bot2 - t1, fw = fh * 40 / 54;
+  $('flask').style.left = M + 'px'; $('flask').style.top = t1 + 'px'; $('flask').setAttribute('width', fw); $('flask').setAttribute('height', fh);
+  $('sub').style.left = (M + fw + 16) + 'px';
+  const QT = bot2 + 62, GAPQ = (850 - 2 * M - 3 * 225) / 2;
+  ['qGh', 'qTg', 'qX'].forEach((id, i) => { $(id).style.left = (M + i * (225 + GAPQ)) + 'px'; $(id).style.top = QT + 'px'; });
+  const hb = base(document.querySelector('#qGh .h')) - pr.top, ask = $('ask');
+  ask.style.top = '0px'; ask.style.top = (hb + 66 - (base(ask) - capH(ask) - pr.top)) + 'px';
+  window.__layout = { HDR, rollH: $('roll').offsetHeight };
+}
+f.onSeek((t) => {
+  if (!HDR) { $('hdr').style.transform = 'none'; $('panelIn').style.transform = 'none'; layout(); }
+  // C0: scene 10's last frame, four broadcast bars sweep across; the ident is revealed behind the last bar
+  const pb = (k) => easeIO(P(t, T.bars + k * .04, T.bars + .3 + k * .04));
+  [...$('bars').children].forEach((b, k) => { const p = pb(k); b.style.left = lerp(-400, 1500, p) + 'px'; b.style.display = p > 0 && p < 1 ? 'block' : 'none'; });
+  $('s10').style.display = t < T.ident + .05 ? 'block' : 'none';
+  const edge = lerp(-400, 1500, pb(3)) + 45; $('panel').style.clipPath = t < T.ident ? `polygon(0 0,${edge + 130}px 0,${edge - 130}px 720px,0 720px)` : 'none';
+  // C1: the swirl
+  $('sw1').style.transform = `rotate(${9 * t}deg)`; $('sw2').style.transform = `rotate(${-14 * t}deg)`;
+  [[640, 360, 420, 240, .31, .47, 0], [640, 360, 380, 260, .43, .29, 2], [640, 360, 300, 200, .53, .37, 4]].forEach(([cx, cy, ax, ay, wx, wy, ph], i) => {
+    const b = $('b' + (i + 1)); b.style.left = (cx + ax * Math.sin(wx * t * 2 + ph)) + 'px'; b.style.top = (cy + ay * Math.sin(wy * t * 2 + ph * 1.3)) + 'px'; });
+  $('rays').style.transform = `rotate(${4 * t}deg)`;
+  // C2: the split. s = 0 the ident (the header block scaled 2.0 about the frame centre), 1 the panel header
+  const s = easeIO(P(t, T.split, T.split_end)), K = 2.0, k = lerp(K, 1, s);
+  const tx = lerp(640 - K * HDR.cx, 0, s), ty = lerp(330 - K * HDR.cy, 0, s);
+  $('hdr').style.transform = `translate(${tx}px,${ty}px) scale(${k})`;
+  $('panel').style.width = lerp(1280, 427, s) + 'px';
+  ['sw1', 'sw2', 'rays', 'b1', 'b2', 'b3'].forEach((id) => ($(id).style.opacity = String(lerp(1, .3, s))));
+  // intro moves inside the block (props: the logo's spin is not a character move)
+  { const p = P(t, T.logo_in, T.logo_in + .8), e = p <= 0 ? 0 : Math.min(1.08, backO(p));
+    $('hLogo').style.opacity = p > 0 ? '1' : '0'; $('hLogo').style.transform = `perspective(600px) rotateY(${lerp(720, 0, easeO(p))}deg) scale(${lerp(.2, 1, e)})`; }
+  { const p = P(t, T.cnn_in, T.cnn_in + .25); $('hCnn').style.opacity = p > 0 ? '1' : '0'; $('hCnn').style.transform = `scale(${lerp(2.4, 1, easeO(p))})`; $('hCnn').style.transformOrigin = '50% 50%'; }
+  [['hl1', T.net_in], ['hl2', T.net_in + .18]].forEach(([id, a]) => { const p = P(t, a, a + .3); $(id).style.opacity = String(p); $(id).style.transform = `translateY(${lerp(-24, 0, easeO(p))}px)`; });
+  $('hRule').style.transform = `scaleX(${easeO(P(t, T.cnn_in + .1, T.cnn_in + .4))})`;
+  const sh = t >= T.cnn_in + .25 && t < T.cnn_in + .25 + 2 / 30 ? (Math.floor((t - T.cnn_in) * 30) % 2 ? -5 : 5) : 0; $('panelIn').style.transform = `translate(${sh}px,${-sh * .6}px)`;
+  $('streak').style.left = lerp(-300, 1500, P(t, T.streak, T.streak + .4)) + 'px'; $('streak').style.display = t >= T.streak && t < T.streak + .4 ? 'block' : 'none';
+  $('head').style.opacity = String(s); $('win').style.display = t >= T.roll ? 'block' : 'none';
+  $('parch').style.left = lerp(1280, 430, s) + 'px'; $('div').style.display = s > .6 ? 'block' : 'none'; $('div').style.transform = `translateY(${lerp(-720, 0, easeO(P(s, .6, 1)))}px)`;
+  $('ask').style.opacity = String(P(t, T.feel, T.feel + .3));
+  // C3: the roll, starting below its window, whole pixels per frame
+  const fr = Math.max(0, Math.round((t - T.roll) * 30)); $('roll').style.transform = `translateY(${Math.round(HDR.win) - T.pxf * fr}px)`;
+  // C4-C6: the cards on black, then to black
+  $('cards').style.opacity = String(P(t, T.card1, T.card1 + .5)); $('cards').style.display = t >= T.card1 ? 'block' : 'none';
+  const c2 = P(t, T.card2, T.card2 + .4); $('card1').style.opacity = String(1 - c2); $('card2').style.opacity = String(c2);
+  $('black').style.opacity = String(P(t, T.fade, T.fade + 1)); $('black').style.display = t >= T.fade ? 'block' : 'none';
+});
+</script></body></html>
