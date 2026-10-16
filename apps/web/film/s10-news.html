@@ -150,14 +150,15 @@ const vaultParts = (v) => [...v.rings, ...v.spokes, ...v.hinges, ...v.extra];
 // ---- lower third text states (hard cuts on the frame)
 function l3(t) {
   let tag = 'UPDATE', sub = 'Liam C. \u00a0·\u00a0 Bunker Correspondent, Chaintail Labs', bar = '';   // v4 (Liam): no name bar anywhere; the bar is CRYPTO(GRAPHY) NERD, the sub line under it
-  if (t < T.stateless || t >= T.favorite) {   // before COMING UP NEXT, and again after it (B7) as CRYPTOGRAPHY NERD
+  if (t < T.stateless) {   // before COMING UP NEXT
     // Liam: it first reads CRYPTO NERD; then NERD slides to the right and GRAPHY fades in between (yellow)
     const slide = easeIO(P(t, T.graphy, T.graphy + .25)), fade = P(t, T.graphy + .12, T.graphy_end);
     bar = `<span class="w">CRYPTO</span><span class="ins" id="ins"><i id="insi">GRAPHY</i></span><span class="w"> NERD</span>`;
     $('l3bar').innerHTML = bar; const i = $('insi'), w = i.getBoundingClientRect().width;
     $('ins').style.width = (w * slide) + 'px'; i.style.opacity = String(fade);
     $('l3tag').textContent = tag; $('l3sub').textContent = sub; return; }
-  if (t >= T.stateless && t < T.favorite) { tag = 'COMING UP NEXT';
+  if (t >= T.and_fav) { tag = 'COMING UP NEXT'; bar = '<span class="w">BUNKER IN A BUNKER</span>'; sub = 'Next on Chaintail News'; }   // v5 (Liam): a third COMING UP NEXT from "And my personal favorite idea" to the end
+  else if (t >= T.stateless) { tag = 'COMING UP NEXT';
     bar = `<span class="w">${t >= T.slh ? 'SLH-DSA (FIPS 205)' : 'A STATELESS BUNKER'}</span>`;
     const s1 = '7,856-byte signatures', s2 = ', no state to track', n1 = Math.round(s1.length * P(t, T.bigger, T.bigger + .45)), n2 = Math.round(s2.length * P(t, T.never, T.never + .45));
     sub = s1.slice(0, n1) + s2.slice(0, n2) || 'Next on Chaintail News'; }

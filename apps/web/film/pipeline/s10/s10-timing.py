@@ -20,7 +20,7 @@ assert abs(edl[0]['out_out'] - edl[1]['out_in']) < 1e-6
 T = {'wipe_in': 0.0, 'cover': .55, 'out_start': 1.10, 'out_end': 2.00, 'l3_in': 1.60,
      'thanks': S(533.98), 'crypto': S(538.32), 'nerd': S(538.64), 'us_end': S(539.44), 'told': S(540.52), 'white': S(543.30), 'go': S(543.92), 'go_end': S(544.72),
      'cut': SEG[1][2], 'the': S(563.77), 'stateless': S(565.68), 'slh': S(568.64), 'dsa': S(569.32), 'sigs': S(570.40), 'bigger': S(571.12), 'never': S(571.94),
-     'track': S(572.24), 'spent_end': S(573.47), 'favorite': S(574.04), 'bunker': S(580.22), 'protecting': S(580.54), 'bunker2': S(581.02), 'bunker_end': S(581.37),
+     'track': S(572.24), 'spent_end': S(573.47), 'favorite': S(574.04), 'and_fav': S(573.53), 'bunker': S(580.22), 'protecting': S(580.54), 'bunker2': S(581.02), 'bunker_end': S(581.37),
      'lots': S(581.99), 'cook': S(582.44), 'lab': S(582.88), 'end': S(583.22), 'total': TOTAL}
 T.update({'graphy': round(T['nerd'] + .30, 3), 'ots_out': round(T['cook'] - .25, 3)})
 T['graphy_end'] = round(T['graphy'] + .35, 3)

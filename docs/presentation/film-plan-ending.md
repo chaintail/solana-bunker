@@ -231,3 +231,9 @@ Rulings applied: Q5 the wipe's "WE NOW RETURN TO THE STUDIO", Q6 UPDATE, Q7 the 
 - **Head match across the cut:** master frames 400 and 403, glasses outer temples at row 285 are 510–775 (265 px) and 508–771 (263 px). The rims are rows 240–319 on both. B2's head is turned very slightly (the bridge sits about 11 px left).
 - **Composite fix:** the front layer's FFV1 Matroska chunks carry millisecond timestamps, so the overlay took the previous front frame on about a third of frames (in v1–v3 too). It is now retimed (`settb=1/30,setpts=N`), so master frame n carries front frame n (checked on frames 398–404).
 - Output: dev-mac `s10/out/s10-v4.mp4` and `s10-v4-phone.mp4`, 33.40 s, 1002 frames, −16.4 LUFS / −1.9 dBTP. Cut strip (frames 400/401/402): `s10-v4-cut.png`. The whitepaper QR decodes on master and phone at 720p and 540p.
+
+### Scene 10 v5 (Liam's note)
+- After A STATELESS BUNKER and SLH-DSA (FIPS 205), the lower third does not return to CRYPTOGRAPHY NERD. It becomes a third COMING UP NEXT reading BUNKER IN A BUNKER, with the sub line "Next on Chaintail News", from the onset of "And my personal favorite idea" to the end of the scene.
+- The onset (`T.and_fav`) is take 573.53 s, scene 23.33 s, frame 700, taken from the 20 ms RMS of the denoised take, which leaves silence at 573.38–573.50 after "spent". Frame 699 reads SLH-DSA and frame 700 reads BUNKER IN A BUNKER.
+- The bunker-in-a-bunker shoulder box is unchanged. Only front chunk B (17 s to the end) was recaptured.
+- Output: dev-mac `s10/out/s10-v5.mp4` and `s10-v5-phone.mp4`, 33.40 s, 1002 frames, −16.4 LUFS / −1.9 dBTP. The whitepaper QR decodes on master and phone at 720p and 540p.
