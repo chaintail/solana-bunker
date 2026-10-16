@@ -50,3 +50,15 @@ Suno style prompt: `1980s arcade puzzle game music, 124 BPM, chiptune, square wa
 
 Behaviour: Under the cabinet play only; our own level-complete jingle and tag loop already exist, keep the same key.
 
+
+## Suno takes received 2026-10-16
+
+Analysis: librosa 1.0.0 + ffmpeg ebur128 on dev-mac; full data in `analysis.json` next to each wav under `~/audio-work/solana-bunker/music/suno/<cue>/`.
+
+| Cue | File | Duration | BPM | Key | Intro | Natural end | Loudness (LUFS / TP) |
+|---|---|---|---|---|---|---|---|
+| 1-sponsor | suno-1-reassuring-groove-a.wav | 89.84 s | 103.4 | C major | 0.74 s (full from start) | 79.18 s | -16.3 / -5.4 dBTP |
+| 2-news | suno-2-breaking-news-a.wav | 44.00 s | 117.5 | F minor | 4.23 s | 38.80 s | -15.7 / -3.1 dBTP |
+| 3-conspiracy | suno-3-the-clock-ticks-twice-a.wav | 108.00 s | 152.0 | C minor | 6.43 s (builds to ~38 s) | 104.47 s | -16.8 / -3.6 dBTP |
+| 4-workshop | suno-4-mechanical-curiosity-a.wav | 65.96 s | 95.7 (fit 97.0) | C major | 14.98 s | 64.46 s | -15.5 / -4.2 dBTP |
+| 5-noir | suno-5-noir-a.wav | 126.40 s | 64.6 (drifts 66.3 to 63.0; fit 64.3) | C major / C minor ambiguous (0.765 vs 0.758) | 2.86 s | 114.64 s | -16.4 / -3.4 dBTP |
