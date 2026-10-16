@@ -60,8 +60,13 @@ try {
   for (let i = 0; i < 300; i++) { if (await ev("document.documentElement.dataset.filmReady==='1'")) break; await sleep(100); }
   };
   await load();
+  let warmed = false;
   const shot = async (t, file) => {
-    if (opt.fresh) await load();
+    if (opt.fresh) { await load(); warmed = false; }
+    if (!warmed) {   // warm-up: the first paint after a (re)load can still be the page's ready-time seek(0) state (stale frame-0 paint at chunk starts):
+      warmed = true;  // seek to the target, wait, and discard two screenshots before the real one
+      for (let i = 0; i < 2; i++) { await ev(`(async()=>{window.__film.seek(${t});await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));return 1})()`); await send('Page.captureScreenshot', { format: 'png', fromSurface: true, captureBeyondViewport: false }); }
+    }
     await ev(`(async()=>{window.__film.seek(${t});await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));return 1})()`);
     const { data } = await send('Page.captureScreenshot', { format: 'png', fromSurface: true, captureBeyondViewport: false });
     writeFileSync(file, Buffer.from(data, 'base64'));
