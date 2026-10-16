@@ -18,6 +18,7 @@ def words(a, b):
     return [w for w in ws if w[0]]
 LEAD = 0.5          # slide-4 end frame held before the first word
 TAIL = 2.6          # after the last word: board holds, then hard cut to slide 6
+PAUSE_7B = 0.36     # v6: inserted pause after 'if it matches' (0.36 scene s = 300 ms heard in the 1.2x cut); every key after it re-anchors later by this much (the bed covers the gap)
 # id, (tok_a, tok_b), e0, e1, cut_in, cut_out, gap_after
 P = [
  ('c1',  (217.7, 219.6), 218.12, 219.26, 218.00, 219.38, 0.35),   # So back to Justin's tweet.
@@ -28,7 +29,8 @@ P = [
  ('c6a', (228.7, 230.5), 229.01, 230.44, 228.91, 230.52, 0.55),   # Create a bunch of one-time secrets,
  ('c6b', (230.5, 232.9), 230.65, 232.83, 230.58, 232.92, 1.60),   # hash each of them, and store the hashes in a vault.   (cascade runs through the gap)
  ('c7a', (233.0, 234.9), 233.24, 234.93, 233.10, 235.00, 0.30),   # To spend, reveal one of the secrets.
- ('c7b', (234.9, 236.8), 235.11, 236.57, 235.03, 236.66, 0.25),   # If it matches the vault, lets you in.
+ ('c7b', (234.9, 235.52), 235.11, 235.60, 235.03, 235.625, PAUSE_7B),  # If it matches   (v6, Liam 16763: PAUSE_7B of room tone before 'the vault', 20 ms cut fades)
+ ('c7b2',(235.52, 236.8), 235.645, 236.57, 235.625, 236.66, 0.25),  # the vault lets you in.   (cut at the -45 dB dip 235.60-235.645 between 'matches' and 'the')
  ('c8',  (236.8, 238.2), 237.05, 238.22, 236.95, 238.30, 1.00),   # Cross that one off the list.   (X, coin bounces back in the gap)
  ('c9',  (238.3, 239.5), 238.49, 239.31, 238.40, 239.40, 0.60),   # Pretty simple, right?
  ('c10', (239.9, 243.8), 240.22, 243.61, 240.10, 243.68, 0.30),   # Yeah, keeping track of a thousand one-time passwords is pretty annoying.
