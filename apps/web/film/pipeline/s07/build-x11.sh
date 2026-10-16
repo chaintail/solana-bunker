@@ -1,17 +1,17 @@
 #!/bin/bash
 # Runs ON dev-mac from ~/video-work/solana-bunker/s07. x11 build mode (Liam 16583): build.sh audio + video with Liam's voice at 1.1x.
-# Needs out/take-dn.wav and out/s07-audio.filter (s07-timing.py, v6 timing, 41.4667 s) and out/x11/seg/c*.mkv + list.txt (capture-x11.sh, 1131 frames = 37.70 s).
+# Needs out/take-dn.wav and out/s07-audio.filter (s07-timing.py, v7 timing, 39.9634 s) and out/x11/seg/c*.mkv + list.txt (capture-x11.sh, 1090 frames = 36.33 s).
 #  audio: v4 cut list -> mix -> atempo=1.1 (pitch kept; a line at t lands at t/1.1, in step with the --speed=1.1 picture) -> two-pass loudnorm -16 LUFS
 #         -> brown-noise bed re-generated at the new length -> out/x11/audio-final.wav
-#  video: build.sh's two grades, joined at the hard cut scaled by 1/1.1: the v6 cut at page time 32.45 s is output frame 885 (29.5 s) -> out/$N.mp4 (crf 14),
+#  video: build.sh's two grades, joined at the hard cut scaled by 1/1.1: the v7 cut at page time 30.9467 s is output frame 844 (28.133 s; CUT is a hair under it) -> out/$N.mp4 (crf 14),
 #         out/$N-phone.mp4 (960x540 crf 26)
 # V=<tag> (e.g. V=v5) reads out/x11/seg-<tag>/list.txt and writes out/s07-<tag>-x11.mp4 / -phone.mp4.
 set -euo pipefail
 export PATH=/opt/homebrew/opt/ffmpeg-full/bin:/opt/homebrew/bin:$PATH
-cd ~/video-work/solana-bunker/s07; O=out/x11; FFV="ffmpeg -nostdin -v error -y"; SPEED=1.1; M=1131; CUT=29.5
+cd ~/video-work/solana-bunker/s07; O=out/x11; FFV="ffmpeg -nostdin -v error -y"; SPEED=1.1; M=1090; CUT=28.1323
 V=${V:-}; SEG=$O/seg${V:+-$V}; N=s07${V:+-$V}-x11
 XT=$(python3 -c "print(round($M/30,4))")
-[ "$(python3 -c "import json;print(json.load(open('out/s07-edl.json'))['total'])")" = 41.4667 ] || { echo "out/s07-edl.json is not the v6 timing"; exit 1; }
+[ "$(python3 -c "import json;print(json.load(open('out/s07-edl.json'))['total'])")" = 39.9634 ] || { echo "out/s07-edl.json is not the v7 timing"; exit 1; }
 cp out/s07-audio.filter $O/s07-audio.filter
 $FFV -i out/take-dn.wav -/filter_complex $O/s07-audio.filter -map '[mix]' -ac 1 -ar 48000 $O/mix-1x.wav
 $FFV -i $O/mix-1x.wav -af "atempo=$SPEED,apad=whole_dur=$XT,atrim=0:$XT,asetpts=PTS-STARTPTS" -ac 1 -ar 48000 $O/mix.wav
