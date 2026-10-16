@@ -65,9 +65,6 @@ html,body{font-family:'Architects Daughter','Inter',sans-serif;color:#1d2230;bac
 .tweet .tinner img{display:block;width:1290px}
 .tweet .hl{position:absolute;background:rgba(255,214,0,.5);border:5px solid #ffd600;border-radius:12px;transform-origin:0 50%;opacity:0;box-shadow:0 0 40px 12px rgba(255,214,0,.7)}
 .bigtxt{position:absolute;left:0;right:0;text-align:center;white-space:nowrap;line-height:1}
-#polaroid{position:absolute;left:760px;top:60px;width:330px;height:400px;background:#fafaf6;box-shadow:0 18px 40px rgba(0,0,0,.5);padding:20px 20px 0;opacity:0}
-#polaroid .ph{position:relative;width:290px;height:290px;background:linear-gradient(160deg,#8e98a8,#5f6a7c);overflow:hidden}
-#polaroid p{margin:0;text-align:center;font:400 38px/80px 'Architects Daughter';color:#2a2f3a}
 .cardw{position:absolute;background:#fbfbf7;border:6px solid #1d2230;border-radius:12px;box-shadow:8px 10px 0 rgba(0,0,0,.28);opacity:0}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><defs>
@@ -168,7 +165,7 @@ const slashed = $('tnew');
 const card4 = H('<div id="card4"><b>SPENT BITMAP</b><br>one LED per leaf.<br>green = unspent<br>red = spent, never reusable</div>'); X1.append(card4);
 // stamps on the program title
 const strike001 = SV('path', { d: 'M704 136 L774 124', class: 'inkr' }, B1);
-const stamp002 = H('<div class="stamp" id="s002" style="left:430px;top:156px;font-size:46px;padding:2px 10px 0;border-width:6px">002</div>'); X1.append(stamp002);
+const num002 = txt(X1, '002', 'left:699px;top:152px;font-size:42px;');
 const rootTxt = txt(X1, 'ROOT', 'left:556px;top:286px;font-size:30px;', 'red');
 const leavesTxt = txt(X1, '1000 leaves', 'left:418px;top:598px;width:200px;font-size:24px;text-align:left;');
 // spend marks
@@ -337,7 +334,6 @@ function drawConf(t) { cf.clearRect(0, 0, 1280, 720); const a = T.joe, b = T.joe
 // ======================= overlays (cards, stamps, stopwatch) =======================
 const OV = $('ov');
 const ovT = (cls, html, css) => { const e = H(`<div class="${cls}" style="${css}">${html}</div>`); OV.append(e); return e; };
-const polaroid = H('<div id="polaroid"><div class="ph"><div class="hd" id="phd" style="position:absolute;width:136px;height:197px;transform-origin:0 0;background-repeat:no-repeat;background-size:2176px 2364px"></div></div><p>yep, that’s us</p></div>'); OV.append(polaroid);
 const theo = ovT('bigtxt', 'THEORETICAL', "top:250px;font:400 196px/1 'Anton';color:#d02323;letter-spacing:.02em;text-shadow:0 6px 0 rgba(0,0,0,.35);opacity:0");
 const theoUl = H('<svg class="abs" style="left:150px;top:440px;opacity:0" width="980" height="40"><path d="M6 24 C200 6 420 36 620 14 S 900 28 974 12" fill="none" stroke="#d02323" stroke-width="12" stroke-linecap="round"/></svg>'); OV.append(theoUl);
 const swC = H(`<div class="abs" style="left:520px;top:170px;width:240px;height:300px;opacity:0"><svg width="240" height="300" viewBox="0 0 240 300"><rect x="96" y="6" width="48" height="26" rx="5" fill="#2a2f3a"/><circle cx="120" cy="170" r="108" fill="#fbfbf7" stroke="#1d2230" stroke-width="12"/><circle cx="120" cy="170" r="92" fill="none" stroke="#d02323" stroke-width="5" stroke-dasharray="3 14"/><path id="swHand" d="M120 170 L120 96" stroke="#d02323" stroke-width="10" stroke-linecap="round"/><circle cx="120" cy="170" r="10" fill="#1d2230"/></svg><div class="mk" id="swTxt" style="left:0;right:0;top:206px;text-align:center;font:700 46px/1 'Anton';color:#1d2230">0 ms</div></div>`); OV.append(swC);
@@ -398,7 +394,7 @@ cue(E.c11.out_out + 0.5, E.c11.out_out + 1.0, (u) => { const w = $('tsol'); w.st
 cue(E.c11.out_out + 1.45, E.c11.out_out + 1.6, (u) => { const r = $('rent'); r.style.opacity = u > 0 ? .9 : 0; r.style.transform = `rotate(-10deg) scale(${lerp(2.6, 1, eo(u))})`; });
 // ---- beat 3: version two
 cue(T.strike, T.strike + 0.25, (u) => stroke(strike001, u));
-cue(T.two, T.two + 0.15, (u) => { const s = $('s002'); s.style.opacity = u > 0 ? .92 : 0; s.style.transform = `rotate(-8deg) scale(${lerp(2.4, 1, eo(u))})`; });
+cue(T.two, T.two + 0.5, (u) => wipe(num002, u));
 cue(T.two + 0.1, T.two + 0.3, (u) => { if (u <= 0) return; $('qc').innerHTML = qrSvg(u > 0.5 ? window.QR.code2 : window.QR.code1, 112); $('qcap1').textContent = u > 0.5 ? 'lib.rs · line 114' : 'lib.rs · line 113'; $('qp').innerHTML = qrSvg(u > 0.5 ? window.QR.proof2 : window.QR.proof1, 112); $('qcap2').textContent = u > 0.5 ? 'devnet tx 5XPHXjBK…' : 'devnet tx 5mHxtbGL…'; QB1.style.transform = QB2.style.transform = `scaleX(${Math.abs(Math.cos(u * 3.1416))})`; });
 cue(T.tree - 0.1, T.tree + 0.5, (u) => { wipe(leavesTxt, clamp(u * 2 - .6)); });
 cue(T.root - 0.1, T.root + 0.6, (u) => { wipe(rootTxt, u); });
@@ -435,8 +431,6 @@ cue(R0 + 4.8, R0 + 5.3, (u) => { card4.style.opacity = u; });
 // ---- freeze: "oh crap"
 const F0 = T.freeze;
 cue(F0, F0 + 0.3, (u) => { FX.gray = u; });
-cue(F0 + 0.25, F0 + 0.8, (u) => { const e = polaroid; e.style.opacity = u > 0 ? 1 : 0; e.style.transform = `translateY(${(1 - back(u)) * -620}px) rotate(${lerp(-12, 4, eo(u))}deg)`; });
-cue(E.c18.speech[0] - 0.35, E.c18.speech[0] - 0.05, (u) => { if (u <= 0) return; polaroid.style.transform = `translateY(${eo(u) * -700}px) rotate(4deg)`; if (u >= 1) polaroid.style.opacity = 0; });
 const th0 = WS('c18', 3) - 0.05;
 cue(th0, th0 + 0.3, (u) => { theo.style.opacity = u > 0 ? 1 : 0; theo.style.transform = `scale(${lerp(1.5, 1, eo(u))})`; theoUl.style.opacity = u >= 0.6 ? 1 : 0; });
 cue(E.c19.speech[0] - 0.3, E.c19.speech[0] + 0.05, (u) => { if (u <= 0) return; theo.style.opacity = 1 - u; theoUl.style.opacity = 1 - u; });
@@ -489,9 +483,7 @@ f.onSeek((t) => {
   { const w = eio(FE.walk), ex = eio(FE.exit), hop = FE.walk > 0 && FE.walk < 1 ? Math.abs(Math.sin(FE.walk * 3.1416 * 5)) * 26 : 0, lean = FE.walk > 0 && FE.walk < 1 ? Math.sin(FE.walk * 3.1416 * 5) * 5 : 0;
     place(FE, { x: lerp(1480, ENG.x, w) + ex * 460, y: ENG.y - hop, r: lean, s: ENG.s, flip: 1, vis: FE.walk > 0 && FE.exit < 1 }); }
   // bandit head
-  { const b = $('bandit'); const p = eo(FB.pop); b.style.opacity = FB.pop > 0 ? 1 : 0; b.style.transformOrigin = '0 0'; b.style.transform = `translate(${823}px,${lerp(790, 566, p)}px) rotate(${-4 + Math.sin(t * 5) * 1.5}deg) scale(.82)`; }
-  // polaroid photo
-  { const h = $('phd'); setHead(h, polaFrame()); h.style.transform = 'scale(1.78)'; h.style.left = '8px'; h.style.top = '-8px'; }
+  { const b = $('bandit'); const p = eo(FB.pop); b.style.opacity = FB.pop > 0 ? 1 : 0; b.style.transformOrigin = '0 0'; b.style.transform = `translate(${823}px,${lerp(790, 566, p) + eo(clamp((t - (E.c22.speech[0] - 0.35)) / 0.4)) * 240}px) rotate(${-4 + Math.sin(t * 5) * 1.5}deg) scale(.82)`; }
   // desaturate the world at the freeze (+ a white flash when the red envelope dives in)
   $('scene').style.filter = FX.gray > 0 ? `grayscale(${FX.gray}) contrast(${1 + .1 * FX.gray})` : 'none';
 });
