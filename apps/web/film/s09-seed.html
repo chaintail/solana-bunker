@@ -1,4 +1,4 @@
-<!doctype html><html data-duration="45.58" data-fps="30"><head><meta charset="utf-8">
+<!doctype html><html data-duration="43.54" data-fps="30"><head><meta charset="utf-8">
 <link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
 <style>
 /* Scene 9, the seed phrase (film-plan-s09.md). A 1990s late-night infomercial playing on scene 8's arcade CRT.
@@ -13,7 +13,11 @@
    signature: their cards carry a QR to the GitHub evidence, labelled "local test" / "devnet simulation" (ruling R-A1 b), and on "Every number" they
    go to a tray apart from the grid of the seven devnet codes. Last 2 s frozen.
    Characters: s09 bodies (pipeline/s09/bodies.py, head behind the body), lip-synced head sprites (pipeline/s09/heads.py); stop-frame, whole-figure moves only.
-   Timing: data/s09-edl.js (pipeline/s09/s09-timing.py). Post (pipeline/s09/build.sh): grain before the snap only, vignette. */
+   Timing: data/s09-edl.js (pipeline/s09/s09-timing.py). Post (pipeline/s09/build.sh): grain before the snap only, vignette.
+   v9 (s09-v9-plan.md + composer rulings): a 0.60 s breath (x11) before "yeah"; the record scratch on the end of "gibberish", the colour snap on "what";
+   the suit pokes in on the diagonal (27 deg) in beat 1, stands arms at sides from the snap and points on "yeah"; the lab coat pokes in UNMIRRORED in the
+   tag (clipboard on image-left, as in the testimonial), and from the hard cut turns upright and grows (one easeInOut move, pivot on the chin) onto the
+   testimonial placement while the WHITEPAPER board drops away; he points on "live". Every pose switch pins head and collar (assets/s09/anchors.js). */
 html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#000}
 svg{position:absolute;left:0;top:0}
 .fig{position:absolute;left:0;top:0;width:1024px;height:1536px;transform-origin:0 0}
@@ -85,12 +89,12 @@ svg{position:absolute;left:0;top:0}
 #callB{background:linear-gradient(180deg,#1f3fd0,#0f238f)}
 #callB .url{position:absolute;left:20px;top:52px;font:800 28px/1.1 Inter;color:#fff;white-space:nowrap;letter-spacing:-.01em}
 #callQr{position:absolute;right:10px;top:6px;width:124px;height:124px;background:#fff}
-/* the WHITEPAPER clipboard (a prop, body px inside the lab coat's figure, mirrored back so it reads) */
-#board{position:absolute;left:150px;top:340px;width:280px;height:420px;transform:scaleX(-1);box-sizing:border-box;border:10px solid #5b3510;border-radius:18px;background:#8a5a2b}
-#board .pp{position:absolute;left:16px;right:16px;top:44px;bottom:16px;background:#fbfbf6;border:2px solid #c9c4b4}
-#board .clip{position:absolute;left:75px;top:-24px;width:110px;height:52px;border-radius:12px;background:linear-gradient(180deg,#d5d8dd,#8c9099);border:4px solid #4a4d55}
-#board .t{position:absolute;left:0;right:0;top:30px;text-align:center;font:400 43px/1 Anton;color:#1b1840;letter-spacing:.01em}
-#board .ln{position:absolute;left:26px;right:26px;height:6px;border-radius:3px;background:#9aa0ab}
+/* the WHITEPAPER clipboard (a prop, body px inside the lab coat's figure; v9: the figure is unmirrored, so the board is too) */
+.board{position:absolute;left:150px;top:340px;width:280px;height:420px;box-sizing:border-box;border:10px solid #5b3510;border-radius:18px;background:#8a5a2b}
+.board .pp{position:absolute;left:16px;right:16px;top:44px;bottom:16px;background:#fbfbf6;border:2px solid #c9c4b4}
+.board .clip{position:absolute;left:75px;top:-24px;width:110px;height:52px;border-radius:12px;background:linear-gradient(180deg,#d5d8dd,#8c9099);border:4px solid #4a4d55}
+.board .t{position:absolute;left:0;right:0;top:30px;text-align:center;font:400 43px/1 Anton;color:#1b1840;letter-spacing:.01em}
+.board .ln{position:absolute;left:26px;right:26px;height:6px;border-radius:3px;background:#9aa0ab}
 
 /* ---- the testimonial (v3). Own layer above everything; ids/classes prefixed so they do not meet the studio's */
 #testi{position:absolute;left:0;top:0;width:1280px;height:720px;overflow:hidden;display:none;z-index:10;background:#1a2c9e}
@@ -137,7 +141,7 @@ svg{position:absolute;left:0;top:0}
 #tBurst b{position:absolute;left:0;right:0;top:51px;text-align:center;font:400 31px/1.05 Anton;color:#fff;letter-spacing:.02em;text-shadow:3px 3px 0 #6a0008}
 #tName{position:absolute;left:26px;top:500px}
 #tName .tab{display:inline-block;background:#ffd400;color:#c6001a;font:400 26px/1 Anton;letter-spacing:.06em;padding:6px 14px 5px;border:3px solid #0b0f40;border-bottom:0}
-#tName .nb{display:block;width:fit-content;white-space:nowrap;box-sizing:border-box;padding:8px 18px 9px;background:linear-gradient(180deg,#1f3fd0,#0f238f);border:3px solid #0b0f40;box-shadow:0 10px 22px rgba(0,0,0,.5)}
+#tName .nb{display:block;width:334px;white-space:nowrap;box-sizing:border-box;padding:8px 18px 9px;background:linear-gradient(180deg,#1f3fd0,#0f238f);border:3px solid #0b0f40;box-shadow:0 10px 22px rgba(0,0,0,.5)}
 #tName .n{font:800 38px/1 Inter;color:#fff;letter-spacing:-.01em}
 #tName .r{font:italic 700 24px/1.2 Inter;color:#ffe600}
 #tCall{position:absolute;left:0;top:648px;width:1280px;height:72px;display:flex;border-top:4px solid #ffd400;box-shadow:0 -6px 18px rgba(0,0,0,.45)}
@@ -293,11 +297,16 @@ function headFrame(t, sp) {   // that speaker's lip-sync frame; holds the last f
 function setHead(el, idx) { const sh = Math.floor(idx / 192), c = idx % 192;
   el.querySelectorAll('.hd img').forEach((im, i) => { im.style.display = i === sh ? 'block' : 'none'; if (i === sh) { im.style.left = -(c % 16) * 152 + 'px'; im.style.top = -Math.floor(c / 16) * CH + 'px'; } }); }
 const LAB_FRAME = cum[D.heads.length - 1];
-const joe = makeFig($('joeL'), ['pock', 'cele', 'think', 'think2', 'think3']), suitBW = makeFig($('suitFL'), ['stand']), suitC = makeFig($('suitCL'), ['point']);
-const lab = makeFig($('labL'), ['clip'], '<div id="board"><div class="clip"></div><div class="pp"><div class="t">WHITEPAPER</div>' +
-  [0, 1, 2, 3, 4].map((i) => `<div class="ln" style="top:${110 + i * 38}px;right:${26 + (i % 2) * 50}px"></div>`).join('') + '</div></div><img src="assets/s09/physicist-hand.png" width="1024" height="1536">');
-setPose(joe, 'pock'); setPose(suitBW, 'stand'); setPose(suitC, 'point'); setPose(lab, 'clip');
-const JOE = { x: 470, y: 300, s: .56 }, SUITBW = { x: 165 + 160 - 70, y: 292, s: .50 }, SUITC = { x: 175, y: 172, s: .47 }, LAB = { x: 168, y: 318, s: .44, rot: 22 };
+const joe = makeFig($('joeL'), ['pock', 'cele', 'think', 'think2', 'think3']), suitBW = makeFig($('suitFL'), ['stand']), suitC = makeFig($('suitCL'), ['stand', 'point']);
+// the lab coat with the WHITEPAPER board and his hand on its own layer over it (the tag's figure, and the testimonial's until the board drops away)
+const BOARD = '<div class="board"><div class="clip"></div><div class="pp"><div class="t">WHITEPAPER</div>' +
+  [0, 1, 2, 3, 4].map((i) => `<div class="ln" style="top:${110 + i * 38}px;right:${26 + (i % 2) * 50}px"></div>`).join('') + '</div></div><img class="hand" src="assets/s09/physicist-hand.png" width="1024" height="1536">';
+const lab = makeFig($('labL'), ['clip'], BOARD);
+setPose(joe, 'pock'); setPose(suitBW, 'stand'); setPose(suitC, 'stand'); setPose(lab, 'clip');
+// v9: the B&W suit pokes in on the diagonal (chin point, 27 deg, slides 380 px in from the left edge); the colour suit and the tag's lab coat as v7,
+// the lab coat now unmirrored. suit-point-right and holding-clipboard carry collar-pinned anchors (bodies.py), so a pose switch at the same chin point
+// keeps head and collar on the same pixel
+const JOE = { x: 470, y: 300, s: .56 }, SUITBW = { x: 118, y: 282, s: .42, rot: 27, slide: 380 }, SUITC = { x: 175, y: 172, s: .47 }, LAB = { x: 168, y: 318, s: .44, rot: 22 };
 
 // ---------- the sticky notes. Joe's face (eyes and mouth) is never covered: front-layer notes never enter the central column (x 328-612);
 // notes in that column fall BEHIND Joe. The suit stands in front of the rain. The big notes near the lens keep to x >= 700 once anyone is talking there.
@@ -432,11 +441,22 @@ const GEL = [...$('tGrid').children];
 $('tTray').innerHTML = [['ROBBED!', RS.robbery], ['REJECTED!', RS.rejection]].map(([h, r]) =>
   `<div class="tc">${qrPx(r.qr, 3)}<div class="tx"><div class="th">${h}</div><div class="lbl">${r.label}</div><div class="tn">${GHM}not on devnet:<br>${r.ref.replace(' line ', '<br>line ')}</div></div></div>`).join('');
 const TEL = [...$('tTray').children], TPOS = [[645, 503], [960, 503]];
-const labT = makeFig($('tLabL'), ['prof']); setPose(labT, 'prof');
-const LABT = { x: 330, y: 318, s: .52 };
+const labT = makeFig($('tLabL'), ['clip', 'prof'], BOARD); setPose(labT, 'clip');
+const LABT = { x: 330, y: 318, s: .52 }, MOVE = .40, DROP = .22;   // scene s (x11: 0.364 s and 0.2 s); the move starts .04 s after the cut, so the
+// first testimonial frame (x11 and 1x) shows him exactly as the tag's last frame
 function testi(t) {
   $('tRays').setAttribute('transform', `rotate(${2 * (t - T.testi)} 420 300)`);
-  setHead(labT, headFrame(t, 'lab')); place(labT, LABT.x, LABT.y, 0, LABT.s);   // he never moves: fixed pose, upright
+  // v9: from the hard cut he is the tag's figure (same pose, placement, closed-mouth head and board), then one easeInOut move, pivoting on the chin,
+  // turns him upright and grows him onto the testimonial placement; the landing is the same place() call as the rest of the testimonial. He holds the
+  // clipboard until "live", then points (professor-point; holding-clipboard is pinned to it, head and collar on the same pixel)
+  setPose(labT, t >= T.live ? 'prof' : 'clip'); labT.querySelector('.hand').style.display = labT._pose === 'clip' ? 'block' : 'none';
+  setHead(labT, t >= T.ta_in ? headFrame(t, 'lab') : LAB_FRAME);
+  const m0 = T.testi + .04, mv = easeIO(P(t, m0, m0 + MOVE)), rot = lerp(LAB.rot, 0, mv);
+  if (mv < 1) place(labT, lerp(LAB.x, LABT.x, mv), lerp(LAB.y, LABT.y, mv), rot, lerp(LAB.s, LABT.s, mv), 1);
+  else place(labT, LABT.x, LABT.y, 0, LABT.s);   // he never moves after the landing: fixed placement, upright
+  // the WHITEPAPER board drops away as the move starts: fades out and falls off the bottom edge (screen-down, eased in) over DROP
+  { const bp = P(t, m0, m0 + DROP), bd = 520 * bp * bp, a = rot * Math.PI / 180, bs = lerp(LAB.s, LABT.s, mv), bo = labT.querySelector('.board');
+    show(bo, bp < 1); bo.style.opacity = String(1 - bp); bo.style.transform = `translate(${bd * Math.sin(a) / bs}px,${bd * Math.cos(a) / bs}px)`; }
   // name card wipes in left to right
   $('tName').style.clipPath = `inset(-10px ${100 - 100 * easeO(P(t, T.testi + .07, T.testi + .42))}% -30px -10px)`;
   // CALL NOW strip: the block flashes (1 Hz), the URL stays; frozen in the hold with everything else
@@ -472,7 +492,7 @@ f.onSeek((t0) => {
   show($('testi'), t0 >= T.testi);
   if (t0 >= T.testi) { testi(Math.min(t0, T.hold)); return; }   // the testimonial; its last 2 s are a frozen hold
   const t = Math.min(t0, T.hold0), fr = Math.round(t * 30);   // the tag's last 0.8 s are frozen
-  const tv = Math.min(t, T.cut);                             // the TV picture freezes on the record scratch
+  const tv = Math.min(t, T.scratch);                         // the TV picture freezes on the record scratch (v9: the end of "gibberish", before the cut)
   const snapped = t >= T.snap;
   // beat 0: scene 8's last frame, static, the push-in. world: 1 -> 1.5, screen box (350,96,640x480) -> (160,0,960x720)
   const pp = easeIO(P(t, T.static_end, T.push_end)), k = lerp(1, 1.5, pp), dx = lerp(0, -365, pp), dy = lerp(0, -144, pp);
@@ -501,9 +521,9 @@ f.onSeek((t0) => {
       const p = P(tv, T.how - .3, T.how), bob = tv >= T.how && tv < T.how + .2 ? -4 * Math.sin(P(tv, T.how, T.how + .2) * Math.PI) : 0;
       show($('fnote'), tv >= T.how - .3); $('fnote').style.display = tv >= T.how - .3 ? 'flex' : 'none';
       pose($('fnote'), hx, lerp(hy - 260, hy, p * p) + bob, -9, 50); }
-    // the suit (announcer): steps in from the left edge in 3 stop-frame steps, speaks S1-S2
+    // the suit (announcer): pokes in on the diagonal from the left edge in 3 stop-frame steps, speaks S1-S2
     const sp = step(P(tv, T.ifonly - .32, T.ifonly - .02), 3); show($('suitFL'), !snapped && tv >= T.ifonly - .32);
-    setHead(suitBW, headFrame(tv, 'suit')); place(suitBW, SUITBW.x - (1 - sp) * 330, SUITBW.y, 0, SUITBW.s);
+    setHead(suitBW, headFrame(tv, 'suit')); place(suitBW, SUITBW.x - (1 - sp) * SUITBW.slide, SUITBW.y, SUITBW.rot, SUITBW.s);
   }
   // ---- the studio
   show($('studio'), snapped);
@@ -523,8 +543,9 @@ f.onSeek((t0) => {
       const q = t < T.key ? 0 : t < T.key + .1 ? lerp(0, 1.25, P(t, T.key, T.key + .1)) : lerp(1.25, 1, P(t, T.key + .1, T.key + .18));
       $('gkey').setAttribute('transform', `translate(${KEY[0]} ${KEY[1]}) rotate(-14) scale(${q})`);
       const gl = P(t, T.key + .15, T.key + .35), gs = Math.sin(gl * Math.PI); $('glint').setAttribute('transform', `translate(${KEY[0] + 30} ${KEY[1] - 16}) rotate(${gl * 90}) scale(${gs})`); }
-    // the suit: pitchman pose (frozen on S2's last frame through the reveal), speaks S3-S4, steps out left at the tag
-    { const so = step(P(t, T.suit_out, T.suit_out + .3), 3); show($('suitCL'), so < 1);
+    // the suit: arms at sides from the snap (says "what if", then frozen on S2's last frame through the breath), points on "yeah" (pose cut, head and
+    // collar pinned), speaks S3-S4, steps out left at the tag
+    { const so = step(P(t, T.suit_out, T.suit_out + .3), 3); show($('suitCL'), so < 1); setPose(suitC, t >= T.yeah ? 'point' : 'stand');
       setHead(suitC, headFrame(t, 'suit')); place(suitC, SUITC.x - so * 520, SUITC.y, 0, SUITC.s); }
     // stamp, BUT WAIT, the proof boxes
     { const p = P(t, T.stamp, T.stamp + 4 / 30), out = P(t, T.butwait, T.butwait + .12); show($('stamp'), t >= T.stamp && out < 1);
@@ -548,7 +569,7 @@ f.onSeek((t0) => {
       $('callB').style.transform = `rotateX(${fl < .5 ? -90 : (1 - fl) * 180 - 0}deg)`; show($('callB'), fl >= .5);
       $('callA').style.display = fl < .5 ? 'flex' : 'none';
       const lp = step(P(t, T.lab, T.lab + .3), 3); show($('labL'), t >= T.lab);
-      setHead(lab, LAB_FRAME); place(lab, LAB.x - (1 - lp) * 300, LAB.y, LAB.rot, LAB.s, -1); }
+      setHead(lab, LAB_FRAME); place(lab, LAB.x - (1 - lp) * 300, LAB.y, LAB.rot, LAB.s, 1); }   // v9: unmirrored
   }
 });
 </script></body></html>

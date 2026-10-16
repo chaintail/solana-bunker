@@ -13,7 +13,7 @@ here): vaults 523.31 (not 523.51), SOL 524.11 (its S; 524.23 is the vowel), robb
 import json
 FPS = 30
 IN0 = 1.55            # scene time of segment A's first sample (after the TV static and the push-in)
-REVEAL = 2.60         # bed-only gap between the segments
+REVEAL = 0.56         # bed-only gap between the segments (v9, composer: a 0.60 s breath at x11 between the end of "what if" (514.15) and "yeah" (515.23): (0.05 + REVEAL + 0.05) / 1.1 = 0.600; v1-v8: 2.60)
 TAG = 5.40            # tag after the last word (v2: 6.60, its last 2.00 s a frozen hold; v3 trims that hold to 0.80 s, ruling Q2)
 TA_LEAD = 0.27        # the testimonial's hard cut leads its first sample (518.62) by 0.27 s
 HOLD = 2.00           # the frozen handoff hold at the end
@@ -52,10 +52,12 @@ T = {'static': .12, 'static_end': .62, 'push_end': IN0, 'okay': S(497.37), 'anno
      'every': S(529.62), 'number': S(530.00), 'screen': S(530.60), 'transaction': S(531.16), 'open': S(531.90), 'explorer': S(532.42),
      'ta_end': S(532.80), 'hold': edl[6]['out_out'], 'total': TOTAL}
 T['hold0'] = round(T['hold0'], 3)
-c = T['cut']
-T.update({'scratch': c, 'snap': round(c + .15, 3), 'bip': round(c + .30, 3), 'parch': round(c + .80, 3), 'words': round(c + .95, 3),
-          'ghost': round(c + 1.95, 3), 'key': round(c + 2.25, 3), 'fork': round(c + 2.35, 3)})
-T.update({'stamp': T['yeah'], 'butwait': round(T['go'] - .05, 3), 'tag': round(END + .07, 3)})
+# v9 (s09-v9-plan.md): the record scratch on the end of "gibberish" (513.52), the colour snap on "what" (513.67, 0.15 s later as before), the BIP-39 card
+# lands on "yeah" (its 0.5 s spin ends there) and the rest of the reveal keeps v7's spacing from the card; the stamp on "did" (515.76)
+b = round(T['yeah'] - .50, 3)
+T.update({'scratch': S(513.52), 'snap': T['whatif'], 'bip': b, 'parch': round(b + .50, 3), 'words': round(b + .65, 3),
+          'ghost': round(b + 1.65, 3), 'key': round(b + 1.95, 3), 'fork': round(b + 2.05, 3)})
+T.update({'stamp': T['didthat'], 'butwait': round(T['go'] - .05, 3), 'tag': round(END + .07, 3)})
 g = T['tag']
 T.update({'suit_out': g, 'shrink': round(g + .17, 3), 'free': round(g + .47, 3), 'callnow': round(g + 1.67, 3), 'flip': round(g + 2.87, 3), 'lab': round(g + 3.37, 3)})
 markers = [{'id': k, 't': round(v, 3)} for k, v in [('SFX_TV_STATIC', T['static']), ('SFX_RECORD_SCRATCH', T['scratch']), ('SFX_STAMP', T['stamp'] + .03),

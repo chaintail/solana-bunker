@@ -1,13 +1,14 @@
 #!/bin/bash
-# Runs ON dev-mac from ~/video-work/solana-bunker/s09. Captures scene 9 (s09-seed, 45.58 s, v6, --settle=4 as capture.sh) for the x11 cut into lossless chunks; build-x11.sh grades and muxes.
+# Runs ON dev-mac from ~/video-work/solana-bunker/s09. Captures scene 9 (s09-seed, 43.54 s, v9, --settle=4 as capture.sh) for the x11 cut into lossless chunks; build-x11.sh grades and muxes.
 # x11 build mode (Liam 16583): capture.mjs --speed=1.1, output frame k shows the page at t = k/30 * 1.1, so every animation, anchor and lip-synced head runs 1.1x in
-# step with the atempo=1.1 voice. 1367 scene frames -> ceil(1367/1.1) = 1243 output frames; the last output frame is the scene's last frame (hand-off unchanged).
+# step with the atempo=1.1 voice. 1306 scene frames -> ceil(1306/1.1) = 1188 output frames (v1-v8: 1367 -> 1243); the last output frame is the scene's last frame (hand-off unchanged).
 # ONE capture at a time, 300-frame chunks: each chunk renders into render/x11, is encoded to out/x11/seg/cNN.mkv (lossless FFV1) and its PNGs deleted. A chunk whose Chrome stalls
-# (no new PNG for 120 s) is killed and retried (3 tries). Chunks already encoded with the right frame count are kept on a re-run. Leaves out/x11/seg/list.txt.
+# (no new PNG for 120 s) is killed and retried (3 tries). Chunks already encoded with the right frame count are kept on a re-run:
+# after any page change delete out/x11/seg/c*.mkv first, or stale chunks of the old page are reused. Leaves out/x11/seg/list.txt.
 set -uo pipefail
 export PATH=/opt/homebrew/opt/ffmpeg-full/bin:/opt/homebrew/bin:$PATH CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 cd ~/video-work/solana-bunker/s09; mkdir -p out/x11/seg render/x11
-SPEED=1.1; M=1243; CH=300
+SPEED=1.1; M=1188; CH=300
 find render/x11 -name 'f*.png' -delete
 chunk() { # n first_frame count
   local n=$1 a=$2 c=$3 try pid last cnt idle
