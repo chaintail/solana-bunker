@@ -72,6 +72,22 @@ Scene 9 is re-rendered with the testimonial anyway, so two head fixes go into th
    - The head is already drawn BEHIND the body (`makeFig` puts `.hd` before the pose images), so the longer neck runs down under Joe's t-shirt collar. Checked on 2x crops at 2.6 s and 9.0 s with the collar line drawn: no skin or white may show above or outside the neckline. If the street pose's neckline sits lower than the extended neck reaches, the crop goes to 760x1250 (cell 152x250).
    - The suit and the lab coat get the same taller cells (one sheet format for the scene). Their collars already cover the neck.
 
+### As built, v3 (part A: scene 9 with the testimonial)
+
+Rulings applied: R-A1 (b), Q2 (hold 0.8 s), Q3 (no repo QR in the strip), Q4 (name card, with Liam's later wording change, below).
+- **Length:** scene 9 is **45.58 s**, 1367 frames. Frames 0–858 are v2's timing (only the heads changed). The tag's frozen hold is 27.83–28.63 (0.8 s). The hard cut to the testimonial is at 28.63, TA (518.62–533.30, no internal cuts) runs 28.90–43.58 (scene = take − 489.72), and 43.58–45.58 is the frozen 2 s hold.
+- **Audio:** `take-dn.wav` reused (afftdn nr=18, once, before any cut); three segments, each with 20 ms fades; bed, two-pass loudnorm and `alimiter=limit=0.80:level=0` as v2. Result: −16.3 LUFS, −1.9 dBTP.
+- **Anchors** were rechecked with the 50 ms energy scan and a 30 ms low/high band split. The transcript tokens run late here. Five pops moved earlier than the plan's table: vaults 523.31 (not 523.51), SOL 524.11 (its S; 524.23 is the vowel), robbery 526.29 (not 526.53), rejection 526.86 (not 527.25), rotation 528.17 (not 528.37). Scene times: live 31.60, vaults 33.59, SOL 34.39, USDC 34.90, robbery 36.57, rejection 37.14, rotation 38.45, Every 39.90, transaction 41.44, open 42.18.
+- **Heads:** the chin patch is applied (`heads.py`), the crop is 760x1200 (cells 152x240, `CH = 240` in the scene), and all sheets are regenerated: 1001 frames, 6 sheets (J1–S4, LAB2 with 440 frames, LAB). The per-row JX recheck did not land within ±6 px of one value: the measured medians are J1 542, J2 542, S1 539, S2 542, S3 536, S4 534, LAB2 546, LAB 540. So each row is keyed with its own measured value, not with the plan's two values (539 / 545). `jx` is in `data/s09-headbox.js`.
+  - Checked on 2x crops. Joe at 2.6 s and 9.0 s: full jaw, the neck runs down behind the t-shirt collar, no white under the chin. The 760x1250 fallback was not needed. The suit at 12.0 s and 21.5 s, the lab coat poking in (28.6 s) and the testimonial head (36.8 s): no notch, chin on the collar centre.
+- **Testimonial layer** (`#testi` in `s09-seed.html`): the look draft's layout. The name card reads "Scientist L. C." / "crypto[graphy] nerd" (brackets literal, Liam via the coordinator, replacing "Dr. L. C." / "cryptography nerd"). The CALL NOW block flashes at 1 Hz (gentler than the tag's 4 Hz).
+  - The pile: LIVE ON DEVNET! drops, the three vault cards deal in as a fan, then each featured card drops on top. ROBBED! has the devil mugshot (`heads/s06-devil-v2.png` from 90924b2, tagged DRAMATIZED), the code, "version two, front-run" and the label "local test". REJECTED! has the log line "Program failed: custom program error: 0xc" under a REJECTED stamp, the code and the label "devnet simulation".
+  - On "Every", the list and the pile slide off right. The seven devnet codes deal into the 4 + 3 grid (x 645–1265, 3 px per module) under "every code: devnet, on Solscan". The two GitHub codes rise into a tray under the grid, each labelled and marked "not on devnet". The highlight frame steps across the seven codes on "transaction", rests on ROOT ROTATED and pulses on "open".
+- **Evidence codes** (`qr-results.mjs` finds the lines in main's copies of the files): `https://github.com/chaintail/solana-bunker/blob/main/artifacts/acceptance-matrix.json#L176` (the `"id": "M03"` line) and `.../artifacts/public-deployment.json#L2756` (the simulation's `"operation"` line).
+- **Deviations:**
+  - The checklist line for the rejection says "simulated", because "devnet simulation" ran under the card pile. The card and the tray say "devnet simulation".
+  - The REAL RESULTS sticker is 112 px at the top-right corner, so it clears the grid.
+
 ## 4. Part B: back at the news desk (scene 10, film/s10)
 
 The desk is the opening's desk. Layers as in `build-opening-v7.sh`:

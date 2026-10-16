@@ -1,4 +1,4 @@
-<!doctype html><html data-duration="29.83" data-fps="30"><head><meta charset="utf-8">
+<!doctype html><html data-duration="45.58" data-fps="30"><head><meta charset="utf-8">
 <link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
 <style>
 /* Scene 9, the seed phrase (film-plan-s09.md). A 1990s late-night infomercial playing on scene 8's arcade CRT.
@@ -6,14 +6,19 @@
    Beat 1: the black-and-white problem half (kitchen, Joe under the sticky-note rain, DRAMATIZATION, push-ins, the suit steps in, BETTER WAY).
    Beat 2: record scratch, colour snap (bars fall away), BIP-39 card, the 24-word parchment, a glowing copy of the phrase shrinks into the golden key,
    the key forks into 1,024 key cards (scene 7's Lamport card). Beats 3-4: the stamp, BUT WAIT, the two proof boxes. Beat 5: the tag (FREE, CALL NOW,
-   the repo link and QR, the lab coat with the WHITEPAPER clipboard), last 2 s frozen.
+   the repo link and QR, the lab coat with the WHITEPAPER clipboard), then 0.8 s frozen (v3: trimmed from 2 s, ruling Q2).
+   Beat 6 (v3, film-plan-ending.md part A): the testimonial. Hard cut to #testi: the lab coat (professor-point, lip-synced, standing still) as the
+   satisfied customer, name card, packshot with the FREE tag, CALL NOW strip (URL, no QR: ruling Q3). As he names each claim a checklist line pops and a
+   results card drops onto the pile, every code read from data/s09-results.js (pipeline/s09/qr-results.mjs). The robbery and the rejection have no devnet
+   signature: their cards carry a QR to the GitHub evidence, labelled "local test" / "devnet simulation" (ruling R-A1 b), and on "Every number" they
+   go to a tray apart from the grid of the seven devnet codes. Last 2 s frozen.
    Characters: s09 bodies (pipeline/s09/bodies.py, head behind the body), lip-synced head sprites (pipeline/s09/heads.py); stop-frame, whole-figure moves only.
    Timing: data/s09-edl.js (pipeline/s09/s09-timing.py). Post (pipeline/s09/build.sh): grain before the snap only, vignette. */
 html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#000}
 svg{position:absolute;left:0;top:0}
 .fig{position:absolute;left:0;top:0;width:1024px;height:1536px;transform-origin:0 0}
 .fig>img,.fig>.hd{position:absolute;left:0;top:0}
-.hd{width:152px;height:220px;overflow:hidden;transform-origin:0 0}
+.hd{width:152px;height:240px;overflow:hidden;transform-origin:0 0}
 .hd img{position:absolute;left:0;top:0;display:none}
 #world{position:absolute;left:0;top:0;width:1280px;height:720px;transform-origin:0 0}
 /* ---- the TV (960x720 picture; placed into scene 8's screen box during the push-in) */
@@ -86,6 +91,73 @@ svg{position:absolute;left:0;top:0}
 #board .clip{position:absolute;left:75px;top:-24px;width:110px;height:52px;border-radius:12px;background:linear-gradient(180deg,#d5d8dd,#8c9099);border:4px solid #4a4d55}
 #board .t{position:absolute;left:0;right:0;top:30px;text-align:center;font:400 43px/1 Anton;color:#1b1840;letter-spacing:.01em}
 #board .ln{position:absolute;left:26px;right:26px;height:6px;border-radius:3px;background:#9aa0ab}
+
+/* ---- the testimonial (v3). Own layer above everything; ids/classes prefixed so they do not meet the studio's */
+#testi{position:absolute;left:0;top:0;width:1280px;height:720px;overflow:hidden;display:none;z-index:10;background:#1a2c9e}
+#tBip{position:absolute;left:22px;top:18px;width:380px;height:134px;transform-origin:0 0;transform:scale(.42) rotate(-6deg)}
+#tBip .in{position:absolute;inset:0;border-radius:22px;border:5px solid #15103d;box-sizing:border-box;overflow:hidden;
+  background:linear-gradient(135deg,#fff6b8,#ffd02a 42%,#ff9800);box-shadow:0 12px 26px rgba(0,0,0,.55),inset 0 -8px 0 rgba(160,70,0,.35)}
+#tBip b{position:absolute;left:0;right:0;top:4px;text-align:center;font:400 108px/1.05 Anton;color:#1c2bb0;letter-spacing:.01em;
+  text-shadow:-2px -2px 0 #fff,2px -2px 0 #fff,-2px 2px 0 #fff,2px 2px 0 #fff,6px 6px 0 #0b0f40}
+#tFree{position:absolute;left:0;top:0;width:200px;height:290px;transform-origin:0 0}
+#tFree .tb{position:absolute;left:5px;top:44px;width:190px;height:240px;background:linear-gradient(180deg,#f3dc9e,#e6c47c);
+  clip-path:polygon(28px 0,162px 0,190px 28px,190px 240px,0 240px,0 28px);filter:drop-shadow(0 8px 10px rgba(0,0,0,.4))}
+#tFree .hole{position:absolute;left:83px;top:12px;width:24px;height:24px;border-radius:50%;background:#1a2c9e;box-shadow:0 0 0 5px #c9a85e}
+#tFree .old{position:absolute;left:0;right:0;top:50px;text-align:center;font:400 46px/1 Anton;color:#2a2418}
+#tFree .strike{position:absolute;left:30px;width:130px;top:72px;height:7px;background:#e3101f;transform:rotate(-12deg);border-radius:3px}
+#tFree .fr{position:absolute;left:0;right:0;top:112px;text-align:center;font:400 100px/1 Anton;color:#e3101f;text-shadow:3px 3px 0 #6a0008}
+#tList{position:absolute;left:648px;top:118px;width:420px}
+.ck{display:flex;align-items:center;gap:12px;height:52px;font:400 34px/1 Anton;color:#fff;letter-spacing:.02em;white-space:nowrap;transform-origin:0 50%;
+  text-shadow:-2px -2px 0 #0b0f40,2px -2px 0 #0b0f40,-2px 2px 0 #0b0f40,2px 2px 0 #0b0f40,4px 4px 0 rgba(0,0,0,.5)}
+.ck i{flex:0 0 36px;height:36px;border-radius:7px;background:#19b34a;border:3px solid #0b0f40;box-sizing:border-box;position:relative}
+.ck i:after{content:"";position:absolute;left:9px;top:2px;width:10px;height:19px;border:solid #fff;border-width:0 5px 5px 0;transform:rotate(40deg)}
+.ck small{font:800 20px/1 Inter;letter-spacing:0;color:#ffe600;text-shadow:1px 1px 0 #0b0f40,-1px -1px 0 #0b0f40;margin-left:-4px;align-self:flex-end;padding-bottom:8px}
+.ck.now{color:#ffe600}
+.ck.now i{background:#ffd400}
+.ck.now i:after{border-color:#0b0f40}
+.rc{position:absolute;left:0;top:0;width:300px;box-sizing:border-box;border:4px solid #0b0f40;background:#fff;text-align:center;color:#000;box-shadow:0 14px 26px rgba(0,0,0,.55)}
+.rc .rh{background:linear-gradient(180deg,#ffe24a,#ffc400);border-bottom:4px solid #0b0f40;font:400 36px/1 Anton;color:#c6001a;padding:9px 0 7px;letter-spacing:.02em;white-space:nowrap}
+.rc svg.qr{position:relative;display:block;margin:8px auto 4px}
+.rc .t1{font:800 17px/1.25 Inter;color:#0b0f40;padding:0 6px}
+.rc .t2{font:700 15px/1.3 Inter;color:#333;padding:2px 0 9px;white-space:nowrap}
+.rc .t2 svg,.gc .t2 svg{position:relative;width:20px;height:20px;vertical-align:-4px;margin-right:4px}
+.rc .lbl,.tc .lbl{display:inline-block;background:#0b0f40;color:#ffe600;font:800 20px/1 Inter;padding:4px 10px 5px;border-radius:5px;margin:2px 0 3px}
+.rc.sm{width:166px}
+.rc.sm .rh{font-size:24px;padding:6px 0 4px}
+.rc.sm .t2{font-size:13px}
+.rc .row{display:flex;align-items:center;justify-content:center;gap:4px;padding-top:6px}
+.rc .row svg.qr{margin:0}
+.mug{position:relative;width:96px;height:126px;background:repeating-linear-gradient(180deg,#d9dde3 0 13px,#9aa3ad 13px 15px);border:3px solid #0b0f40;overflow:hidden;flex:0 0 auto}
+.mug img{position:absolute;left:-13px;top:-14px;width:122px}
+.mug b{position:absolute;left:0;right:0;bottom:0;background:#000;color:#fff;font:800 11px/1 Inter;letter-spacing:.08em;padding:3px 0 2px}
+.log{margin:8px 10px 0;padding:7px 6px;background:#0b0f40;color:#d6e2ff;font:700 13px/1.3 'Liberation Mono',monospace;text-align:left;position:relative}
+.log .stamp{position:absolute;right:4px;bottom:-14px;transform:rotate(-8deg);border:4px solid #e3101f;color:#e3101f;font:400 26px/1 Anton;padding:2px 8px 1px;letter-spacing:.06em;background:rgba(255,255,255,.9)}
+#tBurst{position:absolute;left:1162px;top:0;width:112px;height:112px;transform-origin:56px 56px}
+#tBurst svg{position:absolute;left:0;top:0}
+#tBurst b{position:absolute;left:0;right:0;top:32px;text-align:center;font:400 25px/1.05 Anton;color:#fff;letter-spacing:.02em;text-shadow:2px 2px 0 #6a0008}
+#tName{position:absolute;left:26px;top:500px}
+#tName .tab{display:inline-block;background:#ffd400;color:#c6001a;font:400 26px/1 Anton;letter-spacing:.06em;padding:6px 14px 5px;border:3px solid #0b0f40;border-bottom:0}
+#tName .nb{width:560px;box-sizing:border-box;padding:8px 18px 9px;background:linear-gradient(180deg,#1f3fd0,#0f238f);border:3px solid #0b0f40;box-shadow:0 10px 22px rgba(0,0,0,.5)}
+#tName .n{font:800 38px/1 Inter;color:#fff;letter-spacing:-.01em}
+#tName .r{font:italic 700 24px/1.2 Inter;color:#ffe600}
+#tCall{position:absolute;left:0;top:648px;width:1280px;height:72px;display:flex;border-top:4px solid #ffd400;box-shadow:0 -6px 18px rgba(0,0,0,.45)}
+#tCall .cn{width:300px;font:400 52px/68px Anton;letter-spacing:.04em;text-align:center}
+#tCall .u{flex:1;background:linear-gradient(180deg,#1f3fd0,#0f238f);font:800 34px/68px Inter;color:#fff;padding-left:26px;white-space:nowrap;letter-spacing:-.01em}
+#tHead{position:absolute;left:645px;top:72px;font:800 24px/1 Inter;color:#fff;white-space:nowrap;text-shadow:2px 2px 0 #0b0f40,-1px -1px 0 #0b0f40}
+#tHead svg{position:relative;width:26px;height:26px;vertical-align:-5px;margin-right:6px}
+.gc{position:absolute;left:0;top:0;width:151px;height:190px;box-sizing:border-box;border:2px solid #0b0f40;background:#fff;text-align:center;box-shadow:0 8px 16px rgba(0,0,0,.45)}
+.gc .gh{font:400 17px/20px Anton;color:#c6001a;letter-spacing:.03em;white-space:nowrap;margin-top:1px}
+.gc svg.qr{position:relative;display:block;margin:0 auto}
+.gc .t2{font:700 11px/14px Inter;color:#333;white-space:nowrap}
+.gc .t2 svg{width:13px;height:13px;vertical-align:-2px;margin-right:2px}
+.tc{position:absolute;left:0;top:0;visibility:hidden;width:305px;height:141px;box-sizing:border-box;border:2px solid #0b0f40;background:#fff;display:flex;align-items:center;box-shadow:0 8px 16px rgba(0,0,0,.45)}
+.tc svg.qr{position:relative;flex:0 0 auto}
+.tc .tx{flex:1;text-align:left;padding-left:2px}
+.tc .th{font:400 26px/1 Anton;color:#c6001a;letter-spacing:.02em}
+.tc .lbl{font-size:15px;padding:3px 6px 4px;margin:5px 0 4px;white-space:nowrap}
+.tc .tn{font:700 12px/1.25 Inter;color:#333;white-space:nowrap}
+.tc .tn svg{position:relative;width:13px;height:13px;vertical-align:-2px;margin-right:2px}
+#tHi{position:absolute;left:0;top:0;width:159px;height:198px;box-sizing:border-box;border:5px solid #fff;border-radius:4px;box-shadow:0 0 0 2px #0b0f40,0 0 18px 7px rgba(255,230,0,.95);display:none}
 </style></head><body>
 
 <!-- ================= scene 8's last frame (beat 0) ================= -->
@@ -168,7 +240,27 @@ svg{position:absolute;left:0;top:0}
 <div class="bar" id="barR" style="left:1120px"><svg width="160" height="720"><path d="M18 0V720" stroke="#ff2bd6" stroke-width="4.5" opacity=".75"/><path d="M9 0V720" stroke="#19e3ff" stroke-width="3" opacity=".55"/></svg></div>
 <div id="white"></div>
 
-<script src="data/s09-edl.js"></script><script src="data/s09-headbox.js"></script><script src="data/s09-mnemonic.js"></script><script src="data/s09-qr.js"></script><script src="assets/s09/anchors.js"></script>
+<!-- ================= the testimonial (v3) ================= -->
+<div id="testi">
+ <svg width="1280" height="720" viewBox="0 0 1280 720"><defs>
+   <radialGradient id="tEdge" cx="420" cy="330" r="900" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#5a8bff" stop-opacity=".35"/><stop offset=".45" stop-color="#0a0f3a" stop-opacity="0"/><stop offset="1" stop-color="#05061c" stop-opacity=".85"/></radialGradient>
+ </defs><rect width="1280" height="720" fill="#1a2c9e"/><g id="tRays"></g><rect width="1280" height="720" fill="url(#tEdge)"/></svg>
+ <div id="tBip"><div class="in"><b>BIP-39</b></div></div>
+ <svg width="1280" height="720" viewBox="0 0 1280 720"><path id="tString" d="" stroke="#3a2a10" stroke-width="3" fill="none"/></svg>
+ <div id="tFree"><div class="tb"><div class="hole"></div><div class="old">$1,000</div><div class="strike"></div><div class="fr">FREE</div></div></div>
+ <div class="L" id="tLabL" style="width:1280px"></div>
+ <div id="tList"></div>
+ <div id="tPile"></div>
+ <div id="tHead"></div>
+ <div id="tGrid"></div>
+ <div id="tTray"></div>
+ <div id="tHi"></div>
+ <div id="tBurst"><svg width="112" height="112" viewBox="-60 -60 120 120"><polygon id="tBurstP" fill="#e3101f" stroke="#ffd400" stroke-width="4"/></svg><b>REAL<br>RESULTS</b></div>
+ <div id="tName"><div class="tab">SATISFIED CUSTOMER</div><div class="nb"><div class="n">Scientist L. C.</div><div class="r">crypto[graphy] nerd</div></div></div>
+ <div id="tCall"><div class="cn">CALL NOW!</div><div class="u">github.com/chaintail/solana-bunker</div></div>
+</div>
+
+<script src="data/s09-edl.js"></script><script src="data/s09-headbox.js"></script><script src="data/s09-mnemonic.js"></script><script src="data/s09-qr.js"></script><script src="data/s09-results.js"></script><script src="assets/s09/anchors.js"></script>
 <script src="lib/film.js"></script>
 <script>
 const f = window.__film, $ = (id) => document.getElementById(id), D = window.S09, T = D.T, HB = window.S09_HB;
@@ -176,9 +268,10 @@ const P = (t, a, b) => f.prog(t, a, b), lerp = (a, b, p) => a + (b - a) * p, ste
 const easeIO = (p) => (p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2), easeO = (p) => 1 - Math.pow(1 - p, 3);
 const backO = (p) => { const c = 1.9; return 1 + (c + 1) * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2); };
 const show = (el, v) => { el.style.display = v ? 'block' : 'none'; };
-// ---------- characters: s09 bodies (oval erased, head behind the body), head sprite sheets heads/s09-head-NN.png (16 x 12 cells of 152x220)
-const A9 = window.ANCHORS_S09, POSE = { pock: 'street-hands-in-pockets', cele: 'street-celebrate', stand: 'suit-standing', point: 'suit-point-right', clip: 'physicist-holding-clipboard' };
-const HK = 0.326, HS = 760 * HK / 152, NSHEET = 3, KCX = window.KEY_CHIN_X;   // key crop: chin centre (KCX, 905), 0.326 key px per body px
+// ---------- characters: s09 bodies (oval erased, head behind the body), head sprite sheets heads/s09-head-NN.png (16 x 12 cells of 152 x CH)
+const A9 = window.ANCHORS_S09, POSE = { pock: 'street-hands-in-pockets', cele: 'street-celebrate', stand: 'suit-standing', point: 'suit-point-right', clip: 'physicist-holding-clipboard', prof: 'physicist-professor-point' };
+const HK = 0.326, HS = 760 * HK / 152, KCX = window.KEY_CHIN_X;   // key crop: chin centre (KCX, 905), 0.326 key px per body px
+const CH = 240, NSHEET = HB.sheets;   // v3: cells 152x240 (key crop 760x1200, same top, so the chin anchor is unchanged); sheet count from heads.py
 function makeFig(parent, poses, extra = '') {
   const el = document.createElement('div'); el.className = 'fig';
   el.innerHTML = '<div class="hd">' + [...Array(NSHEET).keys()].map((i) => `<img src="heads/s09-head-0${i}.png">`).join('') + '</div>' + poses.map((p) => `<img data-pose="${p}" src="assets/s09/${POSE[p]}.png" width="1024" height="1536">`).join('') + extra;
@@ -197,7 +290,7 @@ function headFrame(t, sp) {   // that speaker's lip-sync frame; holds the last f
   if (i < 0) return cum[D.edl.findIndex((e) => e.speaker === sp)];
   const e = D.edl[i]; return cum[i] + Math.min(e.frames - 1, Math.floor((t - e.out_in) * 30 + 1e-6)); }
 function setHead(el, idx) { const sh = Math.floor(idx / 192), c = idx % 192;
-  el.querySelectorAll('.hd img').forEach((im, i) => { im.style.display = i === sh ? 'block' : 'none'; if (i === sh) { im.style.left = -(c % 16) * 152 + 'px'; im.style.top = -Math.floor(c / 16) * 220 + 'px'; } }); }
+  el.querySelectorAll('.hd img').forEach((im, i) => { im.style.display = i === sh ? 'block' : 'none'; if (i === sh) { im.style.left = -(c % 16) * 152 + 'px'; im.style.top = -Math.floor(c / 16) * CH + 'px'; } }); }
 const LAB_FRAME = cum[D.heads.length - 1];
 const joe = makeFig($('joeL'), ['pock', 'cele']), suitBW = makeFig($('suitBWL'), ['stand']), suitC = makeFig($('suitCL'), ['point']);
 const lab = makeFig($('labL'), ['clip'], '<div id="board"><div class="clip"></div><div class="pp"><div class="t">WHITEPAPER</div>' +
@@ -283,7 +376,7 @@ function cardPos(i, j, g) {   // g in 0..10 (fractional between generations)
   const a = at(g0), b = at(g0 + 1), e = easeO(fr); return [lerp(a[0], b[0], e), lerp(a[1], b[1], e)]; }
 function drawKeys(t) {
   const c = $('keys').getContext('2d'); c.clearRect(0, 0, 1280, 720); if (t < T.fork) return;
-  const g = Math.min(10, (t - T.fork) / .13), dim = P(t, T.fork + 1.3, T.fork + 1.7), grow = 1 + .012 * Math.max(0, Math.min(t, T.hold) - (T.fork + 1.7));
+  const g = Math.min(10, (t - T.fork) / .13), dim = P(t, T.fork + 1.3, T.fork + 1.7), grow = 1 + .012 * Math.max(0, Math.min(t, T.hold0) - (T.fork + 1.7));
   const seen = new Set();
   for (let j = 0; j < GN; j++) for (let i = 0; i < GN; i++) {
     let [x, y] = cardPos(i, j, g); x = KEY[0] + (x - KEY[0]) * grow; y = KEY[1] + (y - KEY[1]) * grow;
@@ -293,9 +386,89 @@ function drawKeys(t) {
     c.beginPath(); c.arc(x + 9, y + KH / 2, 3.4, 0, Math.PI * 2); c.moveTo(x + 12.4, y + KH / 2); c.lineTo(x + 28, y + KH / 2); c.moveTo(x + 24.5, y + KH / 2); c.lineTo(x + 24.5, y + KH / 2 + 4.5); c.lineWidth = 1.7; c.stroke(); }
   c.globalAlpha = 1; }
 
+// ---------- the testimonial (v3, film-plan-ending.md part A). Every account, signature and evidence link comes from S09_RESULTS.
+const RS = window.S09_RESULTS;
+const SOLM = '<svg viewBox="0 0 24 24"><path d="M19.9,18.4 A9.6,9.6 0 1 1 21.4,14.2" fill="none" stroke="#00e8b5" stroke-width="4.8"/><circle cx="12" cy="10.6" r="4.9" fill="#c74ae3"/></svg>';
+const GHM = '<svg viewBox="0 0 24 24"><path fill="#000" d="' + document.querySelector('#cCode .mk path').getAttribute('d') + '"/></svg>';
+const qrPx = (q, px) => { const s = (q.n + 8) * px; return `<svg class="qr" viewBox="-4 -4 ${q.n + 8} ${q.n + 8}" width="${s}" height="${s}" shape-rendering="crispEdges"><rect x="-4" y="-4" width="${q.n + 8}" height="${q.n + 8}" fill="#fff"/><path d="${q.d}" fill="#000"/></svg>`; };
+const VNAME = { array: 'ARRAY VAULT', merkle: 'MERKLE VAULT', xmss: 'XMSS VAULT' };
+const [mockA, mockB] = RS.usdc.label.split(/\s+[—-]\s+/);
+{ let g = ''; const cx = 420, cy = 300, n = 28; for (let i = 0; i < n; i += 2) { const a0 = (i / n) * Math.PI * 2 + .05, a1 = ((i + 1) / n) * Math.PI * 2 + .05, L = 1800;
+    g += `<polygon points="${cx},${cy} ${cx + L * Math.cos(a0)},${cy + L * Math.sin(a0)} ${cx + L * Math.cos(a1)},${cy + L * Math.sin(a1)}" fill="#2c4ce0"/>`; } $('tRays').innerHTML = g; }
+{ const p = []; for (let i = 0; i < 28; i++) { const r = i % 2 ? 44 : 58, a = i / 28 * Math.PI * 2; p.push(`${(r * Math.cos(a)).toFixed(1)},${(r * Math.sin(a)).toFixed(1)}`); } $('tBurstP').setAttribute('points', p.join(' ')); }
+// the FREE tag hangs from the packshot's right corner (at rest)
+{ const pv = [22 + 368 * .42, 18 + 98 * .42]; $('tFree').style.transform = `translate(${pv[0] - 100 * .5}px,${pv[1]}px) scale(.5)`;
+  $('tString').setAttribute('d', `M${pv[0]} ${pv[1] - 4} L${pv[0]} ${pv[1] + 28}`); }
+// checklist: [time, text, small label]. The two lines without a devnet signature say what they are (ruling R-A1 b); the rejection's line says
+// "simulated" (its card and tray entry carry the full "devnet simulation": the long label ran under the card pile)
+const CK = [[T.live, 'LIVE ON DEVNET'], [T.vaults, '3 VAULTS'], [T.sol, 'SOL'], [T.usdc, 'USDC', 'mock'], [T.robbery, 'ROBBERY', RS.robbery.label],
+  [T.rejection, 'REJECTED', 'simulated'], [T.rotation, 'ROTATION']];
+$('tList').innerHTML = CK.map(([, t, s]) => `<div class="ck"><i></i>${t}${s ? `<small>${s}</small>` : ''}</div>`).join('');
+const CKEL = [...$('tList').children];
+// the pile of results cards: [time, html, centre x, centre y, rotation, entry]
+const card = (cls, inner) => `<div class="rc ${cls}">${inner}</div>`;
+const PILE = [
+  [T.live, card('', `<div class="rh">LIVE ON DEVNET!</div>${qrPx(RS.live.qr, 4)}<div class="t1">the Solana Bunker program</div><div class="t2">${SOLM}program ${RS.live.short}</div>`), 1112, 318, 2, 'drop'],
+  ...RS.vaults.map((v, i) => [T.vaults + i * .08, card('sm', `<div class="rh">${VNAME[v.mode]}</div>${qrPx(v.qr, 3)}<div class="t2">${SOLM}${v.short}</div>`), 1020 + i * 72, 322 - (i === 1) * 18, [-9, 0, 9][i], 'deal']),
+  [T.sol, card('', `<div class="rh">SOL WITHDRAWN!</div>${qrPx(RS.sol.qr, 4)}<div class="t1">XMSS vault: SOL out</div><div class="t2">${SOLM}devnet tx ${RS.sol.short}</div>`), 1110, 316, -2, 'drop'],
+  [T.usdc, card('', `<div class="rh">USDC WITHDRAWN!</div>${qrPx(RS.usdc.qr, 4)}<div class="t1">${mockA}<br>${mockB}</div><div class="t2">${SOLM}devnet tx ${RS.usdc.short}</div>`), 1114, 312, 2, 'drop'],
+  [T.robbery, card('', `<div class="rh">ROBBED!</div><div class="row"><div class="mug"><img src="heads/s06-devil-v2.png"><b>DRAMATIZED</b></div>${qrPx(RS.robbery.qr, 4)}</div>` +
+    `<div class="t1">version two, front-run</div><div class="lbl">${RS.robbery.label}</div><div class="t2">${GHM}${RS.robbery.ref}</div>`), 1108, 316, -3, 'drop'],
+  [T.rejection, card('', `<div class="rh">REJECTED!</div><div class="log">${RS.rejection.log}<div class="stamp">REJECTED</div></div>${qrPx(RS.rejection.qr, 4)}` +
+    `<div class="lbl">${RS.rejection.label}</div><div class="t2">${GHM}${RS.rejection.ref}</div>`), 1114, 318, 2, 'drop'],
+  [T.rotation, card('', `<div class="rh">ROOT ROTATED!</div>${qrPx(RS.rotation.qr, 4)}<div class="t1">XMSS vault: new root, epoch ${RS.rotation.epoch}</div><div class="t2">${SOLM}devnet tx ${RS.rotation.short}</div>`), 1112, 316, 2, 'drop'],
+];
+$('tPile').innerHTML = PILE.map((p) => p[1]).join('');
+const PEL = [...$('tPile').children];
+// "Every number on the screen": the seven devnet codes deal into a grid (4 + 3 cells of 151x190, 155 px pitch, x 645-1265), 3 px per module
+$('tHead').innerHTML = `${SOLM}every code: devnet, on Solscan`;
+const GRID = [['PROGRAM', RS.live.qr, RS.live.short], ...RS.vaults.map((v) => [VNAME[v.mode], v.qr, v.short]),
+  ['SOL OUT', RS.sol.qr, `tx ${RS.sol.short}`], ['USDC OUT', RS.usdc.qr, `tx ${RS.usdc.short}`], ['ROOT ROTATED', RS.rotation.qr, `tx ${RS.rotation.short}`]];
+const GPOS = GRID.map((g, i) => (i < 4 ? [645 + i * 155, 112] : [645 + 77.5 + (i - 4) * 155, 307]));
+$('tGrid').innerHTML = GRID.map(([h, q, c]) => `<div class="gc"><div class="gh">${h}</div><div style="height:${147 - (q.n + 8) * 3 > 0 ? (147 - (q.n + 8) * 3) / 2 : 0}px"></div>${qrPx(q, 3)}<div style="height:${147 - (q.n + 8) * 3 > 0 ? (147 - (q.n + 8) * 3) / 2 : 0}px"></div><div class="t2">${SOLM}${c}</div></div>`).join('');
+const GEL = [...$('tGrid').children];
+// the tray: the two claims with no devnet signature, apart from the grid, each with its GitHub evidence code (3 px per module) and its label
+$('tTray').innerHTML = [['ROBBED!', RS.robbery], ['REJECTED!', RS.rejection]].map(([h, r]) =>
+  `<div class="tc">${qrPx(r.qr, 3)}<div class="tx"><div class="th">${h}</div><div class="lbl">${r.label}</div><div class="tn">${GHM}not on devnet:<br>${r.ref.replace(' line ', '<br>line ')}</div></div></div>`).join('');
+const TEL = [...$('tTray').children], TPOS = [[645, 503], [960, 503]];
+const labT = makeFig($('tLabL'), ['prof']); setPose(labT, 'prof');
+const LABT = { x: 330, y: 318, s: .52 };
+function testi(t) {
+  $('tRays').setAttribute('transform', `rotate(${2 * (t - T.testi)} 420 300)`);
+  setHead(labT, headFrame(t, 'lab')); place(labT, LABT.x, LABT.y, 0, LABT.s);   // he never moves: fixed pose, upright
+  // name card wipes in left to right
+  $('tName').style.clipPath = `inset(-10px ${100 - 100 * easeO(P(t, T.testi + .07, T.testi + .42))}% -30px -10px)`;
+  // CALL NOW strip: the block flashes (1 Hz), the URL stays; frozen in the hold with everything else
+  { const on = Math.floor((t - T.testi) * 2) % 2 === 0, cn = $('tCall').firstElementChild; cn.style.background = on ? '#e3101f' : '#ffd400'; cn.style.color = on ? '#ffe600' : '#c6001a'; }
+  // checklist: each line pops (scale 1.3 -> 1 over 4 frames); the newest is yellow; the list slides off right on "Every"
+  let last = -1; CK.forEach(([at], i) => { if (t >= at) last = i; });
+  CKEL.forEach((el, i) => { const at = CK[i][0]; el.style.visibility = t >= at ? 'visible' : 'hidden'; el.classList.toggle('now', i === last);
+    el.style.transform = `scale(${lerp(1.3, 1, P(t, at, at + 4 / 30))})`; });
+  const off = P(t, T.every, T.every + .3); $('tList').style.transform = `translateX(${760 * off * off}px)`;
+  // REAL RESULTS sticker pops with the first card and stays
+  { const p = P(t, T.live, T.live + .25); show($('tBurst'), t >= T.live); $('tBurst').style.transform = `rotate(12deg) scale(${p < .6 ? lerp(0, 1.15, p / .6) : lerp(1.15, 1, (p - .6) / .4)})`; }
+  // the pile: each card drops from above (or, the vault accounts, deals in from the right like a hand); the pile slides off right on "Every"
+  PEL.forEach((el, i) => { const [at, , cx, cy, rot, how] = PILE[i]; show(el, t >= at && off < 1);
+    const p = P(t, at, at + .3); let dx = 0, dy = 0, r = rot;
+    if (how === 'drop') dy = lerp(-560, 0, backO(p)); else { dx = lerp(420, 0, easeO(p)); r = lerp(rot + 25, rot, easeO(p)); }
+    el.style.transform = `translate(${cx + dx + 760 * off * off}px,${cy + dy}px) translate(-50%,-50%) rotate(${r}deg)`; });
+  // the grid: header, then the seven codes deal in from the right one by one; the tray rises from under the strip
+  { const hp = P(t, T.every + .1, T.every + .35); show($('tHead'), t >= T.every + .1); $('tHead').style.clipPath = `inset(0 ${100 - 100 * hp}% 0 0)`; }
+  GEL.forEach((el, i) => { const at = T.every + .12 + i * .07, p = easeO(P(t, at, at + .3)); show(el, t >= at);
+    el.style.transform = `translate(${GPOS[i][0] + lerp(700, 0, p)}px,${GPOS[i][1]}px) rotate(${lerp(14, 0, p)}deg)`; });
+  TEL.forEach((el, i) => { const at = T.every + .6 + i * .08, p = easeO(P(t, at, at + .3)); el.style.visibility = t >= at ? 'visible' : 'hidden';   // a flex box: not show()
+    el.style.transform = `translate(${TPOS[i][0]}px,${TPOS[i][1] + lerp(240, 0, p)}px)`; });
+  // the highlight frame steps across the seven codes on "transaction" (one per 0.12 s) and rests on the rotation code; it pulses on "open"
+  { const k = Math.floor((t - T.transaction) / .12 + 1e-6), i = Math.max(0, Math.min(6, k)); show($('tHi'), t >= T.transaction);
+    const pu = t >= T.open && t < T.open + .3 ? Math.sin(P(t, T.open, T.open + .3) * Math.PI) : 0, s = 1 + .05 * pu;
+    $('tHi').style.transform = `translate(${GPOS[i][0] - 4}px,${GPOS[i][1] - 4}px) scale(${s})`; }
+}
+
 // ---------- seek
 f.onSeek((t0) => {
-  const t = Math.min(t0, T.hold), fr = Math.round(t * 30);   // the last 2 s are a frozen hold
+  show($('testi'), t0 >= T.testi);
+  if (t0 >= T.testi) { testi(Math.min(t0, T.hold)); return; }   // the testimonial; its last 2 s are a frozen hold
+  const t = Math.min(t0, T.hold0), fr = Math.round(t * 30);   // the tag's last 0.8 s are frozen
   const tv = Math.min(t, T.cut);                             // the TV picture freezes on the record scratch
   const snapped = t >= T.snap;
   // beat 0: scene 8's last frame, static, the push-in. world: 1 -> 1.5, screen box (350,96,640x480) -> (160,0,960x720)

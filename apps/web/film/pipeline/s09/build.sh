@@ -1,9 +1,10 @@
 #!/bin/bash
 # Runs ON dev-mac from ~/video-work/solana-bunker/s09.  usage: build.sh assets | build.sh audio | build.sh video [v1]
 #  assets: scene 8 v1's graded last frame -> film/assets/s09-s08-last.png (beat 0); bodies.py -> film/assets/s09/ (oval erased; the lab coat's hand layer)
-#  audio:  denoise the take once (afftdn nr=18, noise profile from the take's silent 0.10-0.70 s) -> out/take-dn.wav; s09-timing.py (edit list, beat times,
+#  audio:  denoise the take once (afftdn nr=18, noise profile from the take's silent 0.10-0.70 s) -> out/take-dn.wav (kept and reused if it exists:
+#          the denoise runs once on the whole take, before any cut); s09-timing.py (edit list, beat times,
 #          SFX markers, cut filter); cut (20 ms fades) -> mix.wav -> two-pass loudnorm -16 LUFS + brown-noise bed under the whole scene, limiter at 0.80 without auto-level (alimiter level=0) so the true peak stays under -1.5 dBTP -> out/audio-final.wav
-#  video:  the captured chunks (out/chunk-a/b.mkv, lossless, capture.sh) -> light luma grain (c0s=7) before the colour snap only + vignette PI/4.6
+#  video:  the captured chunks (out/chunk-a/b/c.mkv, lossless, capture.sh) -> light luma grain (c0s=7) before the colour snap only + vignette PI/4.6
 #          + audio -> out/s09-<v>.mp4 (crf 14) and out/s09-<v>-phone.mp4 (960x540 crf 26)
 set -euo pipefail
 export PATH=/opt/homebrew/opt/ffmpeg-full/bin:/opt/homebrew/bin:$PATH
@@ -16,7 +17,7 @@ if [ "$1" = assets ]; then
 fi
 if [ "$1" = audio ]; then
   printf '0.10 afftdn sn start;\n0.70 afftdn sn stop;\n' > out/sn.txt
-  $FFV -i ../audio/bunker-take.wav -af "asendcmd=f=out/sn.txt,afftdn=nr=18:nf=-48:nt=w:om=o" -c:a pcm_s16le out/take-dn.wav
+  [ -s out/take-dn.wav ] || $FFV -i ../audio/bunker-take.wav -af "asendcmd=f=out/sn.txt,afftdn=nr=18:nf=-48:nt=w:om=o" -c:a pcm_s16le out/take-dn.wav
   /usr/bin/python3 film/pipeline/s09/s09-timing.py
   T=$(python3 -c "import json;print(json.load(open('out/s09-edl.json'))['total'])")
   $FFV -i out/take-dn.wav -/filter_complex out/s09-audio.filter -map '[mix]' -ac 1 -ar 48000 out/mix.wav
@@ -28,7 +29,7 @@ fi
 if [ "$1" = video ]; then
   T=$(python3 -c "import json;print(json.load(open('out/s09-edl.json'))['total'])")
   SNAP=$(python3 -c "import json;print(json.load(open('out/s09-edl.json'))['T']['snap'])")
-  printf "file '%s/out/chunk-a.mkv'\nfile '%s/out/chunk-b.mkv'\n" "$PWD" "$PWD" > out/chunks.txt
+  printf "file '%s/out/chunk-a.mkv'\nfile '%s/out/chunk-b.mkv'\nfile '%s/out/chunk-c.mkv'\n" "$PWD" "$PWD" "$PWD" > out/chunks.txt
   $FFV -f concat -safe 0 -i out/chunks.txt -i out/audio-final.wav -filter_complex \
     "[0:v]format=yuv444p,noise=c0s=7:c0f=t+u:enable='lt(t,$SNAP)',vignette=angle=PI/4.6,format=yuv420p,setsar=1[v]" \
     -map '[v]' -map 1:a -r 30 -c:v libx264 -preset medium -crf 14 -pix_fmt yuv420p -c:a aac -b:a 192k -movflags +faststart -t $T out/s09-$V.mp4
