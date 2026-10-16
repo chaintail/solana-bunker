@@ -144,7 +144,6 @@ svg{position:absolute;left:0;top:0;overflow:visible}
 <div class="L" id="beam" style="mix-blend-mode:screen"></div>
 <svg width="0" height="0" style="position:absolute"><defs><filter id="rough" x="-8%" y="-8%" width="116%" height="116%"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="2" result="w"/><feDisplacementMap in="SourceGraphic" in2="w" scale="5" result="d"/><feTurbulence type="fractalNoise" baseFrequency=".75" numOctaves="2" seed="5" result="s"/><feColorMatrix in="s" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -3.2 3.05" result="m"/><feComposite in="d" in2="m" operator="in"/></filter></defs></svg>
 <div class="L" id="stampL" style="display:none"><div id="stamp" style="position:absolute;left:640px;top:350px;width:0;height:0"><div id="stampIn" style="position:absolute;left:0;top:0;transform-origin:0 0"><div style="position:absolute;left:0;top:0;transform:translate(-50%,-50%);font-family:Anton;font-size:190px;line-height:1.08;letter-spacing:.06em;text-transform:uppercase;color:#ff2b31;border:14px solid #ff2b31;border-radius:12px;padding:6px 40px 0;white-space:nowrap;filter:url(#rough)">Rejected</div></div></div></div>
-<div class="L" id="mathFlash" style="display:none"><div style="position:absolute;left:640px;top:360px;transform:translate(-50%,-50%) rotate(-4deg);font:150px Anton;color:#ffe600;-webkit-text-stroke:6px #000;paint-order:stroke fill;white-space:nowrap;text-shadow:6px 8px 0 #000">*the math*</div></div>
 <img src="heads/s06-bouncer.png" style="display:none"><img src="assets/bodies/1-suit-arms-crossed.png" style="display:none"><img src="assets/bodies/1-suit-point-right.png" style="display:none"><img src="assets/bodies/5-physicist-professor-point.png" style="display:none">
 
 <script src="data/s06-edl.js"></script>
@@ -156,7 +155,7 @@ const step = (p, n) => Math.floor(p * n + 1e-6) / n;   // stop-frame motion: n d
 const show = (el, on) => { el.style.display = on ? '' : 'none'; };
 
 // ---------- slide 5 handoff: where the lab coat stands on the whiteboard in slide 5's last frame (neck point, scale). Change here when slide 5 exists.
-const S5_HANDOFF = { x: 215, y: 214, s: 0.42 };
+const S5_HANDOFF = null;   // v7: no handoff move or zoom; he keeps the scene 5 end size and spot until the whiteboard is swept away
 // slide 5 v5's last frame: the lab coat's shrug (s05-hash.html LAB_HOME pivot 175,533 scale .34; chin point = pivot + (0, (308-1000)*.34)). He stands there (baked in assets/s06/s05-end-full.png)
 // (offset -7,+2 px: the s06 head sprite sits that far off the s05 one for the same chin point, measured) until the first word at 0.3 s, then the live figure takes over at the same chin point and size and walks to the S5_HANDOFF spot.
 const S5_END = { x: 175 - 7, y: 533 + (308 - 1000) * 0.34 + 2, s: 0.34, t0: 0.3, t1: 0.9 };
@@ -167,7 +166,7 @@ const ADDR_SHORT = ADDR.slice(0, 6) + '…' + ADDR.slice(-8);
 const L = Object.fromEntries(D.edl.map((e) => [e.id, e]));
 const at = (id, src) => L[id].out_in + (src - L[id].src_in);     // a word's take time -> scene time
 const T = {
-  things: L.L1a.out_out, cool: L.L1b.out_in, sweep0: L.L1b.out_in, sweep1: L.L1b.out_in + 0.70,
+  sweep0: L.L1b.out_in, sweep1: L.L1b.out_in + 0.70,
   narrIn: L.L2.out_in - 0.15, problem: at('L2', 340.40), secret: at('L2', 342.48), pw: at('L2', 343.28), l2end: L.L2.out_out,
   whoever: L.L3.out_in, pw3: at('L3', 344.56), getsIn: at('L3', 345.44), l4: L.L4.out_in, nothing: at('L4', 347.28), where: at('L4', 348.32),
   getInFirst: at('L5', 351.76), first: at('L5', 352.72), l5end: L.L5.out_out, l6: L.L6.out_in, sig: at('L6', 354.64),
@@ -175,8 +174,8 @@ const T = {
 };
 // v3 tag timing: sign right after "address", form through the slot, door opens for the stick man and shuts, a speech pause on the shut door,
 // then the devil's attempt under "and nothing else", the slot slams on "else" (SFX_SLOT_SLAM in data/s06-edl.js), REJECTED, long hold
-Object.assign(T, { sign0: T.address + .80, sign1: T.address + 1.80, slot0: 24.00, shrink0: 24.10, squash0: 24.50, slotShut: 24.72,
-  door0: 24.95, hopIn: 25.15, doorClose: 25.45, narrOut: 25.30, devilUp: 26.40, hand0: T.l7b + .10, hand1: T.l7b + .45, dslot0: T.l7b + .20 });
+Object.assign(T, { sign0: T.address + .80, sign1: T.address + 1.80, slot0: 23.50, shrink0: 23.60, squash0: 24.00, slotShut: 24.22,
+  door0: 24.45, hopIn: 24.65, doorClose: 24.95, narrOut: 24.80, devilUp: 25.90, hand0: T.l7b + .10, hand1: T.l7b + .45, dslot0: T.l7b + .20 });
 Object.assign(T, { stamp: T.slam + .35 }); T.freeze = T.stamp + .20;
 const FREEZE_AT = T.freeze;          // everything stops here (grain keeps running)
 window.__T = T;
@@ -298,18 +297,16 @@ function stickPos(t) {
 
 f.onSeek((t0) => {
   const t = Math.min(t0, FREEZE_AT);
-  const tr = t < T.things ? t : t < T.cool ? T.things : t;        // the math flash freezes the frame
-  const nf = narrFrame(tr);
+  const nf = narrFrame(t);
 
   // whiteboard plate, sweep, flash
   const sw = P(t, T.sweep0, T.sweep1), bx = -350 + 1980 * sw;
   show($('wb'), sw < 1); setHead(wbNarr, nf);
-  { const q = ease(P(t, S5_END.t0, S5_END.t1)); place(wbNarr, lerp(S5_END.x, S5_HANDOFF.x, q), lerp(S5_END.y, S5_HANDOFF.y, q), 0, lerp(S5_END.s, S5_HANDOFF.s, q));
+  { place(wbNarr, S5_END.x, S5_END.y, 0, S5_END.s);
     show($('wbBake'), t < S5_END.t0); show($('wbNarr'), t >= S5_END.t0); }
   const m = sw > 0 ? `linear-gradient(to right,transparent ${bx - 60}px,#000 ${bx + 90}px)` : 'none';
   $('wb').style.webkitMaskImage = m; $('wb').style.maskImage = m;
   show($('beam'), sw > 0 && sw < 1); $('beamIn').style.transform = `translate(${bx - 450}px,0)`; $('wash').style.opacity = (Math.sin(sw * Math.PI) * .22).toFixed(3);
-  show($('mathFlash'), t0 >= T.things && t0 < T.cool);
 
   // world push-in on L4 (cut back on the hook)
   const pi = t >= T.l4 && t < T.l6 ? ease(P(t, T.l4, L.L4.out_out)) * .04 : 0; $('world').style.transform = `scale(${1 + pi})`;
@@ -402,6 +399,6 @@ f.onSeek((t0) => {
   { const d = t0 - T.stamp - .14; const y = d >= 0 && d < .45 ? 9 * Math.exp(-d * 9) * Math.sin(d * 52) : 0;
     $('world').style.transform += ` translateY(${y.toFixed(2)}px)`; }
   // rain (stops in the freezes)
-  rain(tr);
+  rain(t);
 });
 </script></body></html>
