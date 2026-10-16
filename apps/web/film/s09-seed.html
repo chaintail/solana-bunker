@@ -507,6 +507,7 @@ f.onSeek((t0) => {
   }
   // ---- the studio
   show($('studio'), snapped);
+  if (snapped) show($('suitFL'), false);   // the front-of-TV suit leaves in the same frame the colour pitchman (suitCL) appears: one suit at every frame
   if (snapped) {
     $('rays').setAttribute('transform', `rotate(${2 * (t - T.snap)} 690 330)`);
     drawKeys(t);
