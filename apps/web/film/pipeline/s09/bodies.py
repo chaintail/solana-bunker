@@ -10,16 +10,25 @@ from PIL import Image
 from scipy import ndimage as ndi
 SRC = 'assets/bodies/'; DST = 'assets/s09/'; os.makedirs(DST, exist_ok=True)
 POSES = ['2-street-hands-in-pockets', '2-street-celebrate', '1-suit-standing', '1-suit-point-right', '5-physicist-holding-clipboard',
-         '5-physicist-professor-point']   # the testimonial (film-plan-ending.md part A): the lab coat points at the results cards
+         '5-physicist-professor-point', '2-street-thinking']   # the testimonial (film-plan-ending.md part A): the lab coat points at the results cards
 anch = {}
 for n in POSES:
     im = np.array(Image.open(SRC + n + '.png').convert('RGBA')).astype(int)
     a, r, g, b = im[..., 3], im[..., 0], im[..., 1], im[..., 2]
     gray = (abs(r - g) < 10) & (abs(g - b) < 10) & (r > 130) & (r < 230) & (a > 200); gray[345:] = False
+    if n == '2-street-thinking':   # the hand covers the oval's chin: anchors and oval from the hands-in-pockets body (same oval, checked 1 px); keep the hand and its outline
+        b0 = np.array(Image.open(SRC + '2-street-hands-in-pockets.png').convert('RGBA')).astype(int)
+        r0, g0, b0_, a0 = b0[..., 0], b0[..., 1], b0[..., 2], b0[..., 3]
+        gray = (abs(r0 - g0) < 10) & (abs(g0 - b0_) < 10) & (r0 > 130) & (r0 < 230) & (a0 > 200); gray[345:] = False
     lab, k = ndi.label(gray); i = np.argmax(ndi.sum(gray, lab, range(1, k + 1))) + 1
     m = ndi.binary_fill_holes(lab == i); ys, xs = np.where(m)
     chin = int(ys.max()); cx = float((xs.min() + xs.max()) / 2)
     m2 = ndi.binary_dilation(m, iterations=15); m2[chin + 8:] = False
+    if n == '2-street-thinking':
+        skin = (r > 200) & (g > 130) & (g < 235) & (b > 90) & (b < 210) & (r - b > 40) & (a > 200) & (np.arange(r.shape[0])[:, None] > 250)
+        seed = ndi.binary_fill_holes(ndi.binary_closing(ndi.binary_opening(skin, iterations=2), iterations=9))   # the hand (the neck lies under the oval and is erased/kept like the other poses)
+        keep = (ndi.binary_dilation(seed, iterations=6) & (r + g + b < 250)) | seed
+        m2 &= ~keep
     out = im.copy(); out[m2, 3] = 0
     Image.fromarray(out.astype('uint8')).save(DST + n.split('-', 1)[1] + '.png', optimize=True)
     anch[n.split('-', 1)[1]] = {'cx': cx, 'chin': chin, 'top': int(ys.min()), 'hx': cx}   # hx: where the head's chin centre goes = the collar centre (on the oval centre for all five poses, checked on 2x crops)
