@@ -6,10 +6,10 @@
 #  video: build.sh's v7 background composite, unchanged (backdrop, the matted anchor B1/B2 with comp and alpha matte merged, the 4-frame anchor crossfade at 399-402,
 #         scene 9's last frame under the wipe), then time-scaled as one picture: output frame k = v7 frame round(1.1 k) (select; the same as setpts=PTS/1.1 on the
 #         footage and on its alpha matte, nearest-frame, and the two can never drift apart). Last output frame 910 = v7 frame 1001 (hand-off unchanged).
-#         The front layer (captured at 1.1x) goes on top -> out/s10-x11.mp4 (crf 14), out/s10-x11-phone.mp4 (960x540 crf 26)
+#         The front layer (captured at 1.1x) goes on top -> out/s10-$TAG.mp4 (crf 14), out/s10-$TAG-phone.mp4 (960x540 crf 26)
 set -euo pipefail
 export PATH=/opt/homebrew/opt/ffmpeg-full/bin:/opt/homebrew/bin:$PATH
-cd ~/video-work/solana-bunker/s10; O=out/x11; FFV="ffmpeg -nostdin -v error -y"; SPEED=1.1; M=911; B=~/video-work/bunker
+TAG=${TAG:-x11}; cd ~/video-work/solana-bunker/s10; O=out/$TAG; FFV="ffmpeg -nostdin -v error -y"; SPEED=1.1; M=911; B=~/video-work/bunker
 XT=$(python3 -c "print(round($M/30,4))")
 T=$(python3 -c "import json;print(json.load(open('out/s10-edl.json'))['total'])"); [ "$T" = 33.4 ] || { echo "out/s10-edl.json is not the v7 timing"; exit 1; }
 cp out/s10-audio.filter $O/s10-audio.filter
@@ -31,6 +31,6 @@ $FFV -loop 1 -framerate 30 -t $T -i out/back.png -ss 531.75 -t 13.6 -i $B/matte-
    [5:v]format=rgb24,setpts=PTS-STARTPTS[s9];[b2][s9]overlay=0:0:enable='lt(t,0.55)'[b3];
    [b3]select='eq(n\,round(round(n/$SPEED)*$SPEED))',setpts=N/30/TB[b4];
    [6:v]settb=1/30,setpts=N,format=rgba[fr];[b4][fr]overlay=format=auto,format=yuv420p,setsar=1[v]" \
-  -map '[v]' -map 7:a -r 30 -frames:v $M -c:v libx264 -preset medium -crf 14 -pix_fmt yuv420p -c:a aac -b:a 192k -movflags +faststart out/s10-x11.mp4
-$FFV -i out/s10-x11.mp4 -vf scale=960:540:flags=lanczos -c:v libx264 -preset medium -crf 26 -pix_fmt yuv420p -c:a aac -b:a 128k -movflags +faststart out/s10-x11-phone.mp4
+  -map '[v]' -map 7:a -r 30 -frames:v $M -c:v libx264 -preset medium -crf 14 -pix_fmt yuv420p -c:a aac -b:a 192k -movflags +faststart out/s10-$TAG.mp4
+$FFV -i out/s10-$TAG.mp4 -vf scale=960:540:flags=lanczos -c:v libx264 -preset medium -crf 26 -pix_fmt yuv420p -c:a aac -b:a 128k -movflags +faststart out/s10-$TAG-phone.mp4
 for v in s10-x11 s10-x11-phone; do ffprobe -v error -show_entries format=duration,size:stream=codec_name,nb_frames,width,height -of compact out/$v.mp4; done

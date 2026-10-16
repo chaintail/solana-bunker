@@ -256,3 +256,11 @@ Rulings applied: Q5 the wipe's "WE NOW RETURN TO THE STUDIO", Q6 UPDATE, Q7 the 
 - Frames 397–404 have mean luma 71–78: no white frame. Strip of frames 400/401/402: `s10-v7-cut.png`.
 - `stills.sh` still composites one anchor per frame (no crossfade); only `build.sh` blends.
 - Output: dev-mac `s10/out/s10-v7.mp4` and `s10-v7-phone.mp4`, 33.40 s, 1002 frames, −16.4 LUFS / −1.9 dBTP. The whitepaper QR decodes on master and phone at 720p and 540p.
+
+### Scene 10 v8 (Liam 16777: the over-the-shoulder box stays up) as built, x11 build mode
+- **The box appears once and never leaves.** It slides in at "white paper" (scene 11.55 s; 10.50 s in the x11 cut) with the WHITEPAPER tag and stays through the jump cut and to the last frame. The v7 exit through the cut and the v5 exit after "cook" are removed.
+- **Content switches in place.** At the bunker-in-a-bunker beat (scene 30.02 s; 27.29 s in the x11 cut) the nested-vault panel crossfades over the whitepaper panel in 0.2 s inside the same box (position, size, border and shadow unchanged), and the tag text changes WHITEPAPER to BUNKER IN A BUNKER at the midpoint. The vault animation (inner door at "protecting", push-in at the second "bunker") is unchanged.
+- **Nothing else changed:** lower third, chyron, bug, beaker, anchor, audio (`audio-final.wav` byte-identical to s10-x11, -16.4 LUFS / -1.9 dBTP), 911 frames, 30.37 s.
+- **Pipeline:** `capture-x11.sh` and `build-x11.sh` take `TAG` (default `x11`); v8 is `TAG=v8-x11`, so its chunks and outputs (`out/s10-v8-x11.mp4`, `-phone.mp4`) do not touch the x11 ones.
+- **Checks:** stills at 10.3, 10.7, 15.0, 27.09, 27.40, 27.59, 29.0 s and the last frame; glitch-scan clean on master and phone; chunk-start frames 300/600/900 differ from frame 0 (mean abs diff 73-82) and sit within 2.3 of their neighbours.
+- **Scene 11 hand-off:** `pipeline/s11/build.sh assets` cuts the last frame (duration minus 0.05 s) from `../s10/out/s10-$S10V.mp4` into `film/assets/s11-s10-last.png`, shown under the bars at 0-0.35 s. Run it with `S10V=v8-x11`. The frame now has the box (bunker-in-a-bunker, tag, border) and the LAB beaker, and s11 must not redraw or remove them. No code change in s11.

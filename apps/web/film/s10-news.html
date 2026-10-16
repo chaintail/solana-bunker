@@ -153,7 +153,7 @@ const vaultParts = (v) => [...v.rings, ...v.spokes, ...v.hinges, ...v.extra];
 // Every switch: the changed texts fade out (150 ms), the white tag box and the red box resize to the next state's widths (250 ms, eased), the new texts fade in (150 ms),
 // centred on the switch time. Where the tag text stays (COMING UP NEXT titles: the red box keeps its width) the texts only cross out and in (150 ms each).
 const CUN = Math.ceil(T.cut * 30 - 1e-6) / 30;   // v7 (Liam): COMING UP NEXT switches on the jump cut's frame (401), its resize centred there, to hide the cut with graphics motion
-const WP_OUT = CUN - .15;                        // v7: the whitepaper box leaves through the cut (0.35 s, moving on the cut frame)
+
 const SUB_LIAM = 'Liam C.  ·  Bunker Correspondent, Chaintail Labs', SUB_NEXT = 'Next on Chaintail News', POP = T.crypto - .25;
 const CRYPTO = '<span class="w">CRYPTO</span><span class="ins" id="ins"><i id="insi">GRAPHY</i></span><span class="w"> NERD</span>';
 function typed(t) { const s1 = '7,856-byte signatures', s2 = ', no state to track', n1 = Math.round(s1.length * P(t, T.bigger, T.bigger + .45)), n2 = Math.round(s2.length * P(t, T.never, T.never + .45));
@@ -200,13 +200,12 @@ f.onSeek((t) => {
   $('l3').style.visibility = $('l3sub').style.visibility = t >= T.cover ? 'visible' : 'hidden';
   $('chbug').style.opacity = String(P(t, T.l3_in, T.l3_in + .4));
   l3(t);
-  // OTS box: the whitepaper (white paper .. through the jump cut, v7), then the nested vault (bunker .. cook)
-  const inA = P(t, T.white, T.white + .35), outA = P(t, WP_OUT, WP_OUT + .35), inB = P(t, T.bunker, T.bunker + .35), outB = P(t, T.ots_out, T.ots_out + .35);
-  const vis = (t >= T.white && outA < 1) || (t >= T.bunker && outB < 1);
-  const k = t < T.bunker ? (t < WP_OUT ? easeO(inA) : 1 - outA * outA) : (t < T.ots_out ? easeO(inB) : 1 - outB * outB);
-  $('otsw').style.display = vis ? 'block' : 'none'; $('otsw').style.opacity = String(k); $('otsw').style.transform = `translateY(${lerp(-30, 0, k)}px)`;
-  const isVault = t >= T.bunker; $('wp').style.display = isVault ? 'none' : 'block'; $('bp').style.display = isVault ? 'block' : 'none';
-  $('otstag').textContent = isVault ? 'BUNKER IN A BUNKER' : 'WHITEPAPER';
+  // OTS box (v8, Liam): appears once at the whitepaper beat and never leaves (through the jump cut and the last frame). At the bunker-in-a-bunker beat its CONTENT
+  // crossfades in place (0.2 s, box position and size unchanged) from the whitepaper to the nested vault.
+  const inA = P(t, T.white, T.white + .35), k = easeO(inA), sw = P(t, T.bunker, T.bunker + .2);
+  $('otsw').style.display = t >= T.white ? 'block' : 'none'; $('otsw').style.opacity = String(k); $('otsw').style.transform = `translateY(${lerp(-30, 0, k)}px)`;
+  $('wp').style.display = 'block'; $('bp').style.display = sw > 0 ? 'block' : 'none'; $('bp').style.opacity = String(sw);
+  $('otstag').textContent = sw >= .5 ? 'BUNKER IN A BUNKER' : 'WHITEPAPER';
   // vault: outer fully drawn; on "protecting" the hub and spokes fade and the inner door draws itself (rings 0.5 s, bolts pop); on the second "bunker" a push into it
   const op = P(t, T.protecting, T.protecting + .25);
   OUT.spokes.forEach((e) => (e.style.opacity = String(1 - op))); [3, 4, 5].forEach((i) => (OUT.rings[i].style.opacity = String(1 - op)));   // the hub, spokes and the two inner rings open
