@@ -157,8 +157,10 @@ const show = (el, on) => { el.style.display = on ? '' : 'none'; };
 // ---------- slide 5 handoff: where the lab coat stands on the whiteboard in slide 5's last frame (neck point, scale). Change here when slide 5 exists.
 const S5_HANDOFF = null;   // v7: no handoff move or zoom; he keeps the scene 5 end size and spot until the whiteboard is swept away
 // slide 5 v5's last frame: the lab coat's shrug (s05-hash.html LAB_HOME pivot 175,533 scale .34; chin point = pivot + (0, (308-1000)*.34)). He stands there (baked in assets/s06/s05-end-full.png)
-// (offset -7,+2 px: the s06 head sprite sits that far off the s05 one for the same chin point, measured) until the first word at 0.3 s, then the live figure takes over at the same chin point and size and walks to the S5_HANDOFF spot.
-const S5_END = { x: 175 - 7, y: 533 + (308 - 1000) * 0.34 + 2, s: 0.34, t0: 0.3, t1: 0.9 };
+// until the first word at 0.3 s, then the live figure takes over. v9: its body is placed with slide 5's geometry (s05 professor-point = body x + 115.5 on the
+// shrug frame, body px X -> 175 + (X - 396) * .34, Y -> 533 + (Y - 1000) * .34), so collar, tie and shoes do not move at the takeover (only the arms change);
+// the s06 head sprite sits 6.49 px right / 2.68 px up of the s05 one for the same chin point (measured), so this figure's head is offset by that in body px.
+const S5_END = { x: 175 + (394.5 - 396) * 0.34, y: 533 + (306 - 1000) * 0.34, s: 0.34, t0: 0.3, t1: 0.9, hdx: -6.49 / 0.34, hdy: 2.68 / 0.34 };
 const ADDR = 'ADLw7WkPsqngneGqoCKmGR17w16kmgA9q1WnxURt9Wod';   // vaults[].recipient_sol, artifacts/public-deployment.json
 const ADDR_SHORT = ADDR.slice(0, 6) + '…' + ADDR.slice(-8);
 
@@ -217,6 +219,10 @@ function setHead(fig, idx) {
 }
 const bX = makeFig($('bouncer'), 'suitX', 'bouncer'), bP = makeFig($('bouncer'), 'suitP', 'bouncer');
 const narr = makeFig($('narr'), 'prof', 'narr'), wbNarr = makeFig($('wbNarr'), 'prof', 'narr');
+// v9: the whiteboard lab coat is layered the slide 5 way (s05-hash.html: oval-erased body PNG from s05-bodies.py, head BEHIND the body), so the collar and the
+// notched skin strip under the chin look the same as in slide 5's last frame at the takeover; same 20ae821 professor-point art as BODY.prof.
+{ const [b0, hd, b1] = wbNarr.children; b0.src = 'assets/s06/s05-physicist-professor-point.png'; b0.style.webkitMaskImage = b0.style.maskImage = 'none'; b1.remove();
+  wbNarr.insertBefore(hd, b0); hd.dataset.base = `translate(${S5_END.hdx}px,${S5_END.hdy}px) ` + hd.dataset.base; }
 place(wbNarr, S5_END.x, S5_END.y, 0, S5_END.s);
 const BNECK = [583.3, 294.8], BS = 0.3;
 
