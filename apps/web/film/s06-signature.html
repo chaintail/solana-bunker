@@ -140,7 +140,7 @@ svg{position:absolute;left:0;top:0;overflow:visible}
 
 <canvas id="rain" width="1280" height="720" style="position:absolute;left:0;top:0"></canvas>
 
-<div class="L" id="wb"><svg width="1280" height="720" viewBox="0 0 1280 720"><g id="wbG"></g></svg><div id="wbNarr"></div></div>
+<div class="L" id="wb"><img src="assets/s06/s05-end-plate.png" class="L"><div id="wbNarr"></div><img id="wbBake" src="assets/s06/s05-end-full.png" class="L"></div>
 <div class="L" id="beam" style="mix-blend-mode:screen"></div>
 <svg width="0" height="0" style="position:absolute"><defs><filter id="rough" x="-8%" y="-8%" width="116%" height="116%"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="2" result="w"/><feDisplacementMap in="SourceGraphic" in2="w" scale="5" result="d"/><feTurbulence type="fractalNoise" baseFrequency=".75" numOctaves="2" seed="5" result="s"/><feColorMatrix in="s" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -3.2 3.05" result="m"/><feComposite in="d" in2="m" operator="in"/></filter></defs></svg>
 <div class="L" id="stampL" style="display:none"><div id="stamp" style="position:absolute;left:640px;top:350px;width:0;height:0"><div id="stampIn" style="position:absolute;left:0;top:0;transform-origin:0 0"><div style="position:absolute;left:0;top:0;transform:translate(-50%,-50%);font-family:Anton;font-size:190px;line-height:1.08;letter-spacing:.06em;text-transform:uppercase;color:#ff2b31;border:14px solid #ff2b31;border-radius:12px;padding:6px 40px 0;white-space:nowrap;filter:url(#rough)">Rejected</div></div></div></div>
@@ -157,6 +157,9 @@ const show = (el, on) => { el.style.display = on ? '' : 'none'; };
 
 // ---------- slide 5 handoff: where the lab coat stands on the whiteboard in slide 5's last frame (neck point, scale). Change here when slide 5 exists.
 const S5_HANDOFF = { x: 215, y: 214, s: 0.42 };
+// slide 5 v5's last frame: the lab coat's shrug (s05-hash.html LAB_HOME pivot 175,533 scale .34; chin point = pivot + (0, (308-1000)*.34)). He stands there (baked in assets/s06/s05-end-full.png)
+// (offset -7,+2 px: the s06 head sprite sits that far off the s05 one for the same chin point, measured) until the first word at 0.3 s, then the live figure takes over at the same chin point and size and walks to the S5_HANDOFF spot.
+const S5_END = { x: 175 - 7, y: 533 + (308 - 1000) * 0.34 + 2, s: 0.34, t0: 0.3, t1: 0.9 };
 const ADDR = 'ADLw7WkPsqngneGqoCKmGR17w16kmgA9q1WnxURt9Wod';   // vaults[].recipient_sol, artifacts/public-deployment.json
 const ADDR_SHORT = ADDR.slice(0, 6) + '…' + ADDR.slice(-8);
 
@@ -215,7 +218,7 @@ function setHead(fig, idx) {
 }
 const bX = makeFig($('bouncer'), 'suitX', 'bouncer'), bP = makeFig($('bouncer'), 'suitP', 'bouncer');
 const narr = makeFig($('narr'), 'prof', 'narr'), wbNarr = makeFig($('wbNarr'), 'prof', 'narr');
-place(wbNarr, S5_HANDOFF.x, S5_HANDOFF.y, 0, S5_HANDOFF.s);
+place(wbNarr, S5_END.x, S5_END.y, 0, S5_END.s);
 const BNECK = [583.3, 294.8], BS = 0.3;
 
 // ---------- alley details (seeded)
@@ -246,24 +249,7 @@ $('stickG').innerHTML = `<g class="marker" stroke="#fff" stroke-width="7">
   <path d="${wob([[0, -214], [-46, -160]], 13)}"/><path d="${wob([[0, -214], [46, -164]], 14)}"/>
   <path d="${wob([[0, -118], [-36, 0]], 15)}"/><path d="${wob([[0, -118], [36, 0]], 16)}"/></g>`;
 
-// whiteboard plate (my stand-in for slide 5's last frame; plan R9)
-{ const B = '#1d3fbf', K = '#151515', R = '#c8102e', G = '#178a3a';
-  let g = `<rect width="1280" height="720" fill="#d9d8d2"/><rect x="0" y="650" width="1280" height="70" fill="#bdbab2"/>
-  <rect x="320" y="34" width="930" height="600" fill="#fbfbf8" stroke="#a9aeb4" stroke-width="12"/><rect x="420" y="634" width="420" height="12" fill="#9ea3a8"/>
-  <rect x="470" y="624" width="60" height="12" rx="4" fill="${B}"/><rect x="545" y="624" width="60" height="12" rx="4" fill="${R}"/>
-  <text x="372" y="112" font-family="Arial Black,Arial" font-weight="900" font-size="54" fill="${B}">HASHES</text>
-  <g class="marker" stroke="${K}" stroke-width="5"><path d="${wob([[690, 80], [1214, 84], [1210, 560], [688, 556], [690, 80]], 31, 4)}"/></g>
-  <text x="712" y="128" font-family="Arial" font-weight="700" font-size="30" fill="${K}">Bunker Program</text>
-  <text x="962" y="128" font-family="Arial" font-weight="700" font-size="30" fill="${K}" text-decoration="line-through">001</text>
-  <text x="1030" y="132" font-family="Arial" font-weight="900" font-size="40" fill="${R}" transform="rotate(-8 1060 120)">002</text>`;
-  const lv = [[955, 190], [835, 280], [1075, 280], [775, 370], [895, 370], [1015, 370], [1135, 370]]; let tr = '';
-  [[0, 1], [0, 2], [1, 3], [1, 4], [2, 5], [2, 6]].forEach(([a, b], i) => { tr += `<path d="${wob([lv[a], lv[b]], 40 + i)}"/>`; });
-  for (let i = 3; i < 7; i++) for (const dx of [-30, 30]) tr += `<path d="${wob([lv[i], [lv[i][0] + dx, 460]], 60 + i * 2 + (dx > 0))}"/>`;
-  g += `<g class="marker" stroke="${K}" stroke-width="4">${tr}</g><circle cx="955" cy="190" r="24" fill="#ffe14d" stroke="${K}" stroke-width="4"/>`;
-  for (let i = 0; i < 8; i++) g += `<rect x="${738 + i * 60}" y="462" width="28" height="28" fill="none" stroke="${G}" stroke-width="4"/>`;
-  g += `<text x="500" y="330" font-family="Arial" font-size="24" fill="#777">secret_1</text><text x="500" y="366" font-family="Arial" font-size="24" fill="#777">secret_2</text><text x="500" y="402" font-family="Arial" font-size="24" fill="#777">secret_3</text><text x="500" y="438" font-family="Arial" font-size="24" fill="#777">…</text><text x="500" y="474" font-family="Arial" font-size="24" fill="#777">secret_1000</text>
-  <text x="712" y="604" font-family="Arial" font-weight="700" font-size="34" fill="${R}" text-decoration="line-through">33,126 bytes</text><text x="960" y="604" font-family="Arial" font-weight="900" font-size="38" fill="${G}">390 bytes</text>`;
-  $('wbG').innerHTML = g; }
+// whiteboard plate: slide 5 v5's real last frame (film/s05 2e04d96, still at t 96.4 from s05-hash.html), rendered once without the lab coat (plate) and with him (full)
 
 // headlight beam: two soft lamps + a horizontal flare
 $('beam').innerHTML = `<div id="beamIn" style="position:absolute;left:0;top:0;width:900px;height:720px;transform-origin:450px 400px">
@@ -318,6 +304,8 @@ f.onSeek((t0) => {
   // whiteboard plate, sweep, flash
   const sw = P(t, T.sweep0, T.sweep1), bx = -350 + 1980 * sw;
   show($('wb'), sw < 1); setHead(wbNarr, nf);
+  { const q = ease(P(t, S5_END.t0, S5_END.t1)); place(wbNarr, lerp(S5_END.x, S5_HANDOFF.x, q), lerp(S5_END.y, S5_HANDOFF.y, q), 0, lerp(S5_END.s, S5_HANDOFF.s, q));
+    show($('wbBake'), t < S5_END.t0); show($('wbNarr'), t >= S5_END.t0); }
   const m = sw > 0 ? `linear-gradient(to right,transparent ${bx - 60}px,#000 ${bx + 90}px)` : 'none';
   $('wb').style.webkitMaskImage = m; $('wb').style.maskImage = m;
   show($('beam'), sw > 0 && sw < 1); $('beamIn').style.transform = `translate(${bx - 450}px,0)`; $('wash').style.opacity = (Math.sin(sw * Math.PI) * .22).toFixed(3);
