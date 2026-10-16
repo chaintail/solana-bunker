@@ -198,3 +198,19 @@ Output: dev-mac `~/video-work/solana-bunker/ending/out/ending-look-{A,B,C}.png` 
 - Q10: the closing cards on black (drafted), or on the parchment?
 - Q12: the brief's closing lines split over two cards: card 1 the four "Based on a true story …" lines (4 s), card 2 PRODUCT OF + logo + Chaintail Labs + © (3 s). Or all on one card?
 - Q11: Liam's last line voice only (drafted), or the anchor in a small box on the CNN panel?
+
+## 10. As built: scene 10 v1
+
+Rulings applied: Q5 the wipe's "WE NOW RETURN TO THE STUDIO", Q6 UPDATE, Q7 the drafted jokes, Q8 the punch-in.
+- **Cut list and lengths:** as section 2, B1 533.75–545.10 at 2.00 and B2 563.55–583.50 at 13.35. Scene 33.40 s, 1002 frames. The picture switches at frame 401 (13.367 s). Each footage stream is seeked so its source time = scene time + 531.75 (B1) or + 550.20 (B2), so lips match the audio frame by frame.
+- **Audio:** −16.4 LUFS, −1.9 dBTP on the master. `take-dn.wav` is regenerated in `s10/out` with the same chain.
+- **Word anchors:** moved from the beat table after a 20 ms energy recheck. "white" 11.55 (was 11.95), "nerd" 6.89, "stateless" 15.48 (15.89), "bigger" 20.92, "never" 21.74, "bunker" 30.02 / 30.82, "cook" 32.24. GRAPHY squeezes in 7.19–7.54, ending before "us" ends (7.69). `data/s10-edl.js` owns the numbers.
+- **Nested vault:** the inner door is drawn in scene 4's accent yellow (#ffd23f), and the outer door's hub, spokes and two inner rings fade as it opens. The first stills showed the inner door blending into the outer one. Port: `lib/vault.js` (scene 4's `vault()`, strokes scaled with R).
+- **Fixes after looking:** the chyron's CT LIVE label showed through the SPECIAL REPORT wipe (`.wipe` z-index 10).
+- **Scene 9's last frame (deviation):** under the wipe this is still from `s09-v2.mp4`. Scene 9 v3 (with the testimonial) is being built by another builder. When it exists: `S09V=v3 build.sh assets` and `build.sh video v2`; no recapture.
+- **Checks:**
+  - Stills opened at 0.3, 0.8, 1.5, 2.1, 6.7, 7.3, 7.6, 11.9, 13.33, 13.4, 16.0, 18.6, 22.4, 24.0, 30.2, 30.7, 31.6, 32.5 and 33.35, plus the same times on master frames.
+  - The whitepaper QR decodes (zxing-cpp) on a master frame and on a phone frame, at 720p and at 540p.
+- **Files:**
+  - `s10-news.html`, `lib/vault.js`, `data/s10-{edl,qr,chyron}.js`, `pipeline/s10/{s10-timing.py,qr.mjs,build.sh,capture.sh,stills.sh}`.
+  - Outputs: dev-mac `~/video-work/solana-bunker/s10/out/s10-v1.mp4` and `s10-v1-phone.mp4`.

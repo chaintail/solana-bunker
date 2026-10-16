@@ -1,0 +1,197 @@
+<!doctype html><html data-duration="33.4" data-fps="30"><head><meta charset="utf-8">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
+<style>
+/* Scene 10, back at the news desk: the sign-off (film-plan-ending.md part B). Same two layers as the opening (s02-news.html):
+     ?layer=back  the studio backdrop (identical to the opening's; one still)
+     ?layer=front desk, bug, lower third, OTS box, chyron, SPECIAL REPORT wipe, beaker bug (transparent PNGs)
+   composited around the matted anchor on dev-mac by pipeline/s10/build.sh (desk-s10.filter). Timing: data/s10-edl.js (pipeline/s10/s10-timing.py).
+   The CSS below is s02-news.html's, copied; the additions for scene 10 are at the end. */
+
+/* Two layers are rendered separately and composited around the matted footage on dev-mac:
+     ?layer=back  studio backdrop (static; one still is enough)
+     ?layer=front desk, bugs, lower third, over-the-shoulder box, tweet card, chyron, flash, wipe (transparent PNGs)
+   no ?layer  both together (previews only) */
+html,body{font-family:'Inter',sans-serif;color:#fff}
+body.layer-front .back,body.layer-back .front{display:none}
+html:not([data-layer]) body,html[data-layer="back"] body{background:#05070d}
+/* ---------- back: studio ---------- */
+.studio{position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 50% 40%,#244a80 0%,#0d1830 50%,#05070d 100%)}
+.rays{position:absolute;inset:0;background:repeating-conic-gradient(from 200deg at 50% 30%,rgba(120,170,255,.07) 0 4deg,transparent 4deg 11deg);mask-image:radial-gradient(ellipse 60% 60% at 50% 30%,#000,transparent)}
+.sky{position:absolute;left:0;right:0;top:120px;height:420px}
+.sky i{position:absolute;bottom:0;background:#0a1226;border-top:2px solid rgba(120,170,255,.25)}
+.sky b{position:absolute;width:5px;height:7px;background:#ffd98a;opacity:.7}
+.moon{position:absolute;left:1010px;top:130px;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,#bcd2ff 60%,#6f8fd0);box-shadow:0 0 60px rgba(160,200,255,.55)}
+.glass{position:absolute;left:0;right:0;top:0;height:560px;background:linear-gradient(90deg,rgba(20,40,80,.0),rgba(60,110,200,.10) 50%,rgba(20,40,80,0))}
+.mullion{position:absolute;top:0;height:560px;width:10px;background:linear-gradient(90deg,#060a14,#16233f,#060a14)}
+.sign{position:absolute;left:50%;top:40px;transform:translateX(-50%);font:700 28px/1 'Oswald';letter-spacing:.5em;color:rgba(190,215,255,.55)}
+/* ---------- front ---------- */
+.desk{position:absolute;left:0;right:0;top:545px;height:175px;background:linear-gradient(180deg,#2a3a5c 0,#16213a 8%,#0b1224 40%,#070b17 100%);border-top:5px solid #7fa6ff;box-shadow:0 -10px 40px rgba(0,0,0,.5)}
+.desk:after{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:rgba(255,255,255,.55)}
+.deskfront{position:absolute;left:290px;width:700px;top:604px;height:5px;background:#2a3a5c;opacity:0}
+.live{position:relative;display:flex;align-items:center;gap:10px;font:800 26px/1 'Inter';letter-spacing:.14em;padding-right:16px;margin-right:2px;border-right:3px solid rgba(255,255,255,.55)}
+.live .dot{width:18px;height:18px;border-radius:50%;background:#e30613;box-shadow:0 0 14px #e30613}
+.live.tl{position:absolute;left:36px;top:30px;border:0;padding:0}
+.l3{position:absolute;left:36px;bottom:104px;width:880px;height:84px;display:flex;align-items:stretch;box-shadow:0 12px 30px rgba(0,0,0,.55);overflow:hidden}
+.l3 .tag{background:#fff;color:#e30613;font:800 30px/84px 'Inter';padding:0 22px;letter-spacing:.06em;min-width:180px;text-align:center}
+.l3 .bar{flex:1;background:linear-gradient(180deg,#f2141f,#b8000a);font:700 48px/84px 'Oswald';padding:0 24px;letter-spacing:.02em;white-space:nowrap}
+.l3sub{position:absolute;left:36px;bottom:70px;width:880px;height:36px;background:rgba(10,14,24,.94);font:700 22px/36px 'Inter';padding:0 20px;letter-spacing:.03em;color:#e8eefa;white-space:nowrap}
+.ticker{position:absolute;left:0;right:0;bottom:0;height:56px;background:#f4f5f7;display:flex;align-items:center;box-shadow:0 -4px 14px rgba(0,0,0,.4);overflow:hidden}
+.ticker .lbl{position:relative;z-index:2;height:100%;background:#0d1830;color:#fff;font:800 22px/56px 'Inter';padding:0 20px;letter-spacing:.12em;white-space:nowrap}
+.ticker .win{position:relative;flex:1;height:100%;overflow:hidden}
+.ticker .run{position:absolute;left:0;top:0;height:100%;white-space:nowrap;font:700 28px/56px 'Inter';color:#141821}
+.ticker .run span{display:inline-block;padding-right:0}
+.ticker .run b{color:#e30613;margin:0 22px}
+/* over-the-shoulder box */
+.ots{position:absolute;right:36px;top:36px;width:410px;height:230px;background:#000;box-shadow:0 10px 30px rgba(0,0,0,.6);overflow:hidden;transform-origin:100% 0}
+/* rev 7: the white outline is its own layer above the image (.obrd), the image sits in a clip box under it, so the image can never cover or flicker over the border during the zoom */
+.ots .clip{position:absolute;inset:0;overflow:hidden}
+.ots .obrd{position:absolute;inset:0;border:5px solid #fff;z-index:5;pointer-events:none}
+.ots .pan{position:absolute;left:5px;top:5px;width:410px;height:230px;transform-origin:0 0}
+.ots img{position:absolute;left:0;top:0;width:410px;height:230px;display:block}
+.ots svg.pen{position:absolute;left:0;top:0;width:410px;height:230px;overflow:visible}
+.ots svg.pen path{fill:none;stroke:#ff1f2d;stroke-width:3.6;stroke-linecap:round;stroke-linejoin:round}
+.otstag{position:absolute;right:36px;top:36px;transform:translateY(-100%);background:#e30613;font:800 18px/1 'Inter';letter-spacing:.14em;padding:6px 12px;opacity:0}
+/* tweet component (rev 4): real header (assets/tweet-header-v4.jpg) and real footer (assets/tweet-footer.jpg) are fixed, the real body (assets/tweet-body.jpg) scrolls between them */
+.tweet{position:absolute;left:24px;top:26px;width:430px;background:#000;border:1px solid #3a3f45;border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden}
+.tweet .thead,.tweet .tfoot{display:block;width:428px;height:auto;position:relative;z-index:2;background:#000}
+.tweet .tfoot{border-top:1px solid #2a2f35}
+.tweet .twin{position:relative;width:428px;height:358px;overflow:hidden;border-top:1px solid #1d2126}
+.tweet .tscroll{position:absolute;left:0;top:0;width:428px}
+.tweet .tinner{position:relative;width:1290px;transform-origin:0 0;transform:scale(.33178)}
+.tweet .tinner img{display:block;width:1290px}
+.tweet .hlg{position:absolute;left:0;top:0;width:1290px;height:1px}
+.tweet .hl{position:absolute;background:rgba(255,214,0,.42);border-radius:6px;transform-origin:0 50%;mix-blend-mode:screen}
+.tweet .twin:before,.tweet .twin:after{content:"";position:absolute;left:0;right:0;height:14px;z-index:3;pointer-events:none}
+.tweet .twin:before{top:0;background:linear-gradient(0deg,transparent,rgba(0,0,0,.85))}
+.tweet .twin:after{bottom:0;background:linear-gradient(180deg,transparent,rgba(0,0,0,.85))}
+/* channel bug */
+.chbug{position:absolute;right:26px;bottom:121px;display:flex;align-items:center;gap:12px;color:#fff;opacity:0;filter:drop-shadow(0 3px 8px rgba(0,0,0,.65))}
+.chbug img{height:50px;display:block}
+.chbug span{font:700 52px/1 'Oswald';letter-spacing:.06em}
+.qday{position:absolute;right:36px;top:36px;width:410px;height:230px;border:5px solid #fff;background:radial-gradient(ellipse at 50% 40%,#244a80,#0d1830 75%);box-shadow:0 10px 30px rgba(0,0,0,.6);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0}
+.qday b{font:700 104px/1 'Oswald';letter-spacing:.04em;color:#fff}
+.qday i{font:800 italic 44px/1 'Inter';color:#ff3b47;margin-top:8px;letter-spacing:.04em;transform:rotate(-4deg)}
+/* flash + wipe */
+.flash{position:absolute;inset:0;background:#fff;opacity:0}
+.wipe{position:absolute;top:0;bottom:0;left:0;width:1500px;background:linear-gradient(90deg,#8a0008,#e30613 18%,#e30613 100%);transform:translateX(-1500px);display:flex;align-items:center;justify-content:center}
+.wipe span{position:absolute;left:640px;transform:translateX(-50%);font:700 150px/1 'Oswald';letter-spacing:.06em;white-space:nowrap;text-shadow:0 8px 0 rgba(0,0,0,.35)}
+.wipe i{position:absolute;left:0;right:0;height:10px;background:#fff}
+
+/* ---------- scene 10 ---------- */
+.l3 .bar{display:flex;align-items:center}
+.l3 .bar .w{display:inline-block;white-space:pre}
+.l3 .bar .ins{display:inline-block;overflow:hidden;white-space:pre;color:#ffe600;vertical-align:top}
+.l3 .bar .ins i{display:inline-block;font-style:normal;transform-origin:0 50%}
+.wipe .ret{position:absolute;left:0;right:0;top:520px;text-align:center;font:800 40px/1 Inter;letter-spacing:.12em;color:#fff;white-space:pre}
+.ots .wp{position:absolute;inset:0;background:#fff;color:#0d1830}
+.ots .wp .qr{position:absolute;right:12px;top:12px}
+.ots .wp b{position:absolute;left:16px;top:18px;width:170px;font:800 21px/1.12 Inter}
+.ots .wp span{position:absolute;left:16px;top:96px;width:166px;font:500 15px/1.3 Inter;color:#2a3550}
+.ots .wp code{position:absolute;left:16px;bottom:14px;font:700 12px/1 'Special Elite';color:#e30613}
+.ots .bp{position:absolute;inset:0;background:radial-gradient(ellipse 85% 90% at 50% 45%,#0e5873 0,#0a4a63 55%,#073a4f 100%);overflow:hidden}
+.ots .bp .gr{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(234,247,251,.14) 0 1px,transparent 1px 40px),repeating-linear-gradient(90deg,rgba(234,247,251,.14) 0 1px,transparent 1px 40px)}
+.ots .bp svg{position:absolute;left:0;top:0;transform-origin:205px 115px}
+.wipe{z-index:10}   /* above the chyron label (z-index 2) */
+.beaker{position:absolute;left:36px;top:30px;display:flex;align-items:center;gap:10px;font:700 40px/1 Oswald;letter-spacing:.08em;color:#fff;filter:drop-shadow(0 3px 8px rgba(0,0,0,.65));transform-origin:30px 34px}
+.beaker svg{width:58px;height:66px;overflow:visible}
+</style></head>
+<body>
+<div class="back" id="back">
+  <div class="studio"></div><div class="rays"></div>
+  <div class="moon"></div>
+  <div class="sky" id="sky"></div>
+  <div class="glass"></div>
+  <div class="mullion" style="left:190px"></div><div class="mullion" style="left:520px"></div><div class="mullion" style="left:850px"></div><div class="mullion" style="left:1090px"></div>
+  <div class="sign">CHAINTAIL NEWS</div>
+</div>
+<div class="front" id="front">
+  <div id="desk1" style="position:absolute;inset:0">
+  <div class="desk"></div>
+  <div id="otsw" style="position:absolute;inset:0"><div class="otstag" id="otstag" style="opacity:1">WHITEPAPER</div>
+   <div class="ots" id="ots"><div class="clip">
+    <div class="wp" id="wp"><b>Solana Bunker</b><span>stable custody addresses with replaceable hash authorization</span><code>research/whitepaper.md</code><div class="qr" id="wpq"></div></div>
+    <div class="bp" id="bp" style="display:none"><div class="gr"></div><svg id="vsv" width="410" height="230" viewBox="0 0 410 230" fill="none" stroke="#eaf7fb" stroke-linecap="round"></svg></div>
+   </div><div class="obrd"></div></div></div>
+  <div class="l3" id="l3"><div class="tag" id="l3tag">UPDATE</div><div class="bar" id="l3bar"></div></div>
+  <div class="l3sub" id="l3sub"></div>
+  <div class="chbug" id="chbug" style="opacity:1"><div class="live"><i class="dot" id="livedot"></i>LIVE</div><img src="assets/chaintail-logo-white.svg"><span>CNN</span></div>
+  <div class="beaker" id="beaker"><svg viewBox="0 0 58 66"><path d="M20 4H38M23 4V24L6 56Q3 62 10 62H48Q55 62 52 56L35 24V4" stroke="#fff" stroke-width="4" fill="rgba(127,166,255,.18)" stroke-linejoin="round"/>
+    <path d="M12 46H46L51 56Q53 60 48 60H10Q5 60 7 56Z" fill="#3dd68c"/><g id="bub" fill="#eafff4"></g></svg>LAB</div>
+  <div class="ticker"><div class="lbl">CT LIVE</div><div class="win"><div class="run" id="run"></div></div></div>
+  <div class="flash" id="flash"></div>
+  </div>
+  <div class="wipe" id="wipe"><i style="top:215px"></i><i style="top:495px"></i><span>SPECIAL REPORT</span><div class="ret" id="ret"></div></div>
+</div>
+<script src="data/s10-edl.js"></script><script src="data/s10-chyron.js"></script><script src="data/s10-qr.js"></script><script src="lib/vault.js"></script>
+<script src="lib/film.js"></script>
+<script>
+const f = window.__film, L = new URLSearchParams(location.search).get('layer'), T = window.S10.T;
+if (L) { document.documentElement.dataset.layer = L; document.body.classList.add('layer-' + L); }
+const $ = (id) => document.getElementById(id), P = (t, a, b) => f.prog(t, a, b), lerp = (a, b, p) => a + (b - a) * p;
+const easeO = (p) => 1 - Math.pow(1 - p, 3), easeIO = (p) => (p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2);
+const backO = (p) => { const c = 1.9; return 1 + (c + 1) * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2); };
+// ---- back: skyline (seeded) ----
+{ const r = f.rng(42), sky = $('sky'); let x = -10;
+  while (x < 1290) { const w = 40 + r() * 70, h = 60 + r() * 300 * (0.4 + 0.6 * Math.abs(Math.sin(x / 260)));
+    const b = document.createElement('i'); b.style.cssText = `left:${x}px;width:${w}px;height:${h}px;opacity:${0.55 + r() * 0.45}`;
+    for (let k = 0; k < (w * h) / 900; k++) { const s = document.createElement('b'); s.style.cssText = `left:${6 + r() * (w - 14)}px;top:${6 + r() * (h - 14)}px;opacity:${r() < .45 ? .8 : .12}`; b.append(s); }
+    sky.append(b); x += w + 3 + r() * 14; } }
+
+
+// ---- chyron: the opening's ticker, scene 10's jokes (data/s10-chyron.js), 150 px/s
+const run = $('run'), unit = document.createElement('span');
+unit.innerHTML = window.S10_CHYRON.map((j) => j.replace(/&/g, '&amp;')).join('<b>•</b>') + '<b>•</b>'; run.append(unit, unit.cloneNode(true));
+let unitW = 0;
+// ---- the whitepaper code (5 px a module, 4-module quiet zone)
+{ const q = window.S10_QR.paper, s = (q.n + 8) * 5; $('wpq').innerHTML = `<svg viewBox="-4 -4 ${q.n + 8} ${q.n + 8}" width="${s}" height="${s}" shape-rendering="crispEdges"><rect x="-4" y="-4" width="${q.n + 8}" height="${q.n + 8}" fill="#fff"/><path d="${q.d}" fill="#000"/></svg>`; }
+// ---- the nested vault (scene 4's drafting function, lib/vault.js): outer level 2, inner level 2 at 0.42 R inside the hub
+const OUT = window.vaultDraw($('vsv'), 205, 115, 92, 2), INN = window.vaultDraw($('vsv'), 205, 115, 92 * .42, 2, '#ffd23f');   // the inner door in scene 4's accent yellow
+const vaultParts = (v) => [...v.rings, ...v.spokes, ...v.hinges, ...v.extra];
+// ---- lower third text states (hard cuts on the frame)
+function l3(t) {
+  let tag = 'UPDATE', sub = 'Chaintail Labs, Senior Bunker Correspondent', bar = '<span class="w">LIAM</span>';
+  if (t >= T.crypto && t < T.stateless) { sub = 'Liam C., Chaintail Labs, Senior Bunker Correspondent';
+    const p = P(t, T.graphy, T.graphy_end), k = p <= 0 ? 0 : Math.min(1.06, backO(p));
+    bar = `<span class="w">CRYPTO</span><span class="ins" id="ins"><i id="insi">GRAPHY</i></span><span class="w"> NERD</span>`;
+    $('l3bar').innerHTML = bar; const i = $('insi'), w = i.getBoundingClientRect().width / 1;
+    $('ins').style.width = (w * Math.min(1, k)) + 'px'; i.style.transform = `scaleX(${Math.max(.001, k)})`;
+    $('l3tag').textContent = tag; $('l3sub').textContent = sub; return; }
+  if (t >= T.stateless && t < T.favorite) { tag = 'COMING UP NEXT';
+    bar = `<span class="w">${t >= T.slh ? 'SLH-DSA (FIPS 205)' : 'A STATELESS BUNKER'}</span>`;
+    const s1 = '7,856-byte signatures', s2 = ', no state to track', n1 = Math.round(s1.length * P(t, T.bigger, T.bigger + .45)), n2 = Math.round(s2.length * P(t, T.never, T.never + .45));
+    sub = s1.slice(0, n1) + s2.slice(0, n2) || 'Next on Chaintail News'; }
+  $('l3tag').textContent = tag; $('l3bar').innerHTML = bar; $('l3sub').textContent = sub; }
+f.onSeek((t) => {
+  // the wipe: in over scene 9's last frame (0-0.55), full cover with WE NOW RETURN TO THE STUDIO typing (0.55-1.10), back out to the left (1.10-2.00)
+  const wi = easeIO(P(t, T.wipe_in, T.cover)), wo = easeIO(P(t, T.out_start, T.out_end));
+  $('wipe').style.transform = `translateX(${t < T.out_start ? lerp(-1500, 0, wi) : lerp(0, -1500, wo)}px)`;
+  const msg = 'WE NOW RETURN TO THE STUDIO'; $('ret').textContent = msg.slice(0, Math.round(msg.length * P(t, T.cover + .05, T.cover + .45)));
+  $('desk1').style.visibility = t >= T.cover ? 'visible' : 'hidden';           // under the full cover the desk replaces scene 9
+  $('flash').style.opacity = String(t >= T.out_start ? .55 * (1 - P(t, T.out_start, T.out_start + .3)) : 0);
+  $('livedot').style.opacity = String(.25 + .75 * Math.abs(Math.cos(t * Math.PI / 1.2)));
+  if (!unitW) unitW = unit.getBoundingClientRect().width || 0; if (unitW) run.style.transform = `translateX(${-((t * 150) % unitW)}px)`;
+  // lower third: slides in as in the opening, then the text states
+  const li = easeO(P(t, T.l3_in, T.l3_in + .45)), ls = easeO(P(t, T.l3_in + .1, T.l3_in + .55));
+  $('l3').style.transform = `translateX(${lerp(-120, 0, li)}%)`; $('l3sub').style.transform = `translateX(${lerp(-120, 0, ls)}%)`;
+  $('chbug').style.opacity = String(P(t, T.l3_in, T.l3_in + .4));
+  l3(t);
+  // OTS box: the whitepaper (white paper .. stateless), then the nested vault (bunker .. cook)
+  const inA = P(t, T.white, T.white + .35), outA = P(t, T.stateless, T.stateless + .35), inB = P(t, T.bunker, T.bunker + .35), outB = P(t, T.ots_out, T.ots_out + .35);
+  const vis = (t >= T.white && outA < 1) || (t >= T.bunker && outB < 1);
+  const k = t < T.bunker ? (t < T.stateless ? easeO(inA) : 1 - outA * outA) : (t < T.ots_out ? easeO(inB) : 1 - outB * outB);
+  $('otsw').style.display = vis ? 'block' : 'none'; $('otsw').style.opacity = String(k); $('otsw').style.transform = `translateY(${lerp(-30, 0, k)}px)`;
+  const isVault = t >= T.bunker; $('wp').style.display = isVault ? 'none' : 'block'; $('bp').style.display = isVault ? 'block' : 'none';
+  $('otstag').textContent = isVault ? 'BUNKER IN A BUNKER' : 'WHITEPAPER';
+  // vault: outer fully drawn; on "protecting" the hub and spokes fade and the inner door draws itself (rings 0.5 s, bolts pop); on the second "bunker" a push into it
+  const op = P(t, T.protecting, T.protecting + .25);
+  OUT.spokes.forEach((e) => (e.style.opacity = String(1 - op))); [3, 4, 5].forEach((i) => (OUT.rings[i].style.opacity = String(1 - op)));   // the hub, spokes and the two inner rings open
+  OUT.bolts.forEach((e, i) => (e.style.opacity = i >= 16 ? String(1 - op) : '1'));                                                    // bolts 16+ are the spoke knobs
+  vaultParts(INN).forEach((e, i) => { const p = P(t, T.protecting + .1 + i * .03, T.protecting + .55 + i * .03); e.style.opacity = p > 0 ? '1' : '0'; e.style.strokeDashoffset = String(1 - easeO(p)); });
+  INN.bolts.forEach((b, i) => (b.style.opacity = t >= T.protecting + .5 + i * .02 ? '1' : '0'));
+  $('vsv').style.transform = `scale(${lerp(1, 1.35, easeIO(P(t, T.bunker2, T.bunker2 + 1.2)))})`;
+  // beaker bug on "cook": pops in, bubbles rise on a loop
+  const bp = P(t, T.cook, T.cook + .25); $('beaker').style.display = t >= T.cook ? 'flex' : 'none';
+  $('beaker').style.transform = `scale(${bp < .6 ? lerp(0, 1.15, bp / .6) : lerp(1.15, 1, (bp - .6) / .4)})`;
+  { let g = ''; for (let i = 0; i < 4; i++) { const u = ((t - T.cook) * .9 + i / 4) % 1; g += `<circle cx="${22 + 14 * Math.sin(i * 2.1 + u * 3)}" cy="${56 - 40 * u}" r="${2 + 2.5 * (1 - u)}" opacity="${1 - u}"/>`; } $('bub').innerHTML = g; }
+});
+</script></body></html>
