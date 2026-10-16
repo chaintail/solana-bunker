@@ -126,7 +126,7 @@ document.documentElement.dataset.duration = String(window.S08.total);
 <script>
 const f = window.__film, $ = (id) => document.getElementById(id), D = window.S08, T = D.T;
 const P = (t, a, b) => f.prog(t, a, b), step = (p, n) => Math.min(1, Math.floor(p * n + 1e-9) / n), lerp = (a, b, p) => a + (b - a) * p;
-const fmt = (n) => Math.round(n).toLocaleString('en-US'), WIN = D.edl[10].out_in - .05;
+const fmt = (n) => Math.round(n).toLocaleString('en-US'), WIN = D.edl[11].out_in - .05;
 const G = {
  '0':'.###.#...##..###.#.###..##...#.###.','1':'..#...##....#....#....#....#...###.','2':'.###.#...#....#...#...#...#...#####','3':'#####...#...#.....#.....##...#.###.',
  '4':'...#...##..#.#.#..#.#####...#....#.','5':'######....####.....#....##...#.###.','6':'..##..#...#....####.#...##...#.###.','7':'#####....#...#...#...#....#....#...',
@@ -402,12 +402,13 @@ f.onSeek((t) => {
   place(eng, 146.1, up ? 282.5 : 290.1, 0, .36, 1, t >= D.edl[2].out_out && t < D.edl[4].out_in ? 11 : 0);
   // lab coat: right-edge side pokes, 27 deg, mirrored body / unmirrored head, 3 stop-frame steps in and out
   const pk = (a, b) => (t < a || t >= b + .15 ? -1 : t < a + .15 ? step(P(t, a, a + .15), 3) : t < b ? 1 : 1 - step(P(t, b, b + .15), 3));
-  const s1 = pk(D.edl[3].out_in - .3, D.edl[3].out_out + .06), c1 = pk(D.edl[6].out_in - .3, D.edl[6].out_out + .1), lp = Math.max(s1, c1);
+  const s1 = pk(D.edl[3].out_in - .3, D.edl[3].out_out + .06), c1 = pk(D.edl[6].out_in - .3, D.edl[6].out_out + .1), e8 = pk(D.edl[10].out_in - .3, D.edl[10].out_out + .1), lp = Math.max(s1, c1, e8);   // e8: the lab coat says "and it worked"
   show($('labL'), lp > 0);
-  if (lp > 0) { setPose(lab, s1 > 0 ? 'shrug' : 'prof'); setHead(lab, headFrame(t, 'lab')); place(lab, POKE[0] + (1 - lp) * 380, POKE[1] + (c1 > 0 ? 25 : 0), POKE[2], .42, -1); }
+  if (lp > 0) { setPose(lab, s1 > 0 ? 'shrug' : 'prof'); setHead(lab, headFrame(t, 'lab')); place(lab, POKE[0] + (1 - lp) * 380, POKE[1] + (c1 > 0 || e8 > 0 ? 25 : 0), POKE[2], .42, -1); }
   // Joe: pops up from the bottom on "single shot" and freezes (closed-mouth frame)
   const jp = t < T.single ? -1 : step(P(t, T.single, T.single + .3), 3); show($('joeL'), jp > 0);
-  if (jp > 0) { setHead(joe, JOE_FRAME); place(joe, 1150, lerp(1010, 607, jp), 0, .26, 1); }
+  if (jp > 0) { setHead(joe, JOE_FRAME); const u = Math.max(0, t - T.single - .3), bob = jp >= 1 ? -12 * Math.pow(Math.sin(Math.PI * 3 * u), 2) : 0, rock = jp >= 1 ? 4 * Math.sin(2 * Math.PI * u) : 0;   // cheering: whole-figure bounce (12 px, 3 Hz, eased) + rock (+-4 deg, 1 Hz), head rides with the body
+    place(joe, 1150, lerp(1010, 607, jp) + bob, rock, .26, 1); }
 });
 setPose(eng, 'clip'); setPose(lab, 'shrug'); setPose(joe, 'joe');
 </script></body></html>

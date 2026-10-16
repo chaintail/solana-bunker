@@ -2,7 +2,8 @@
 # Runs ON dev-mac from ~/video-work/solana-bunker/s08.  usage: build.sh assets | build.sh audio | build.sh video [v1]
 #  assets: scene 7 v1's graded last frame -> film/assets/s08-s07-last.png (beat 0); bodies.py -> film/assets/s08/ (oval erased, hard hat kept)
 #  audio:  denoise the take once (afftdn nr=18, noise profile from the take's silent 0.10-0.70 s) -> out/take-dn.wav; s08-timing.py (edit list, beat times,
-#          SFX markers, cut filter); cut (20 ms fades) -> mix.wav -> two-pass loudnorm -16 LUFS + brown-noise room-tone bed under the whole scene -> out/audio-final.wav
+#          SFX markers, cut filter); cut (20 ms fades) -> mix.wav -> two-pass loudnorm -16 LUFS + brown-noise room-tone bed under the whole scene + the chiptune cues of the tag (film/audio/s08, absolute levels, after the loudnorm) -> out/audio-final.wav
+#          + out/s08-<v>-tag-audio.wav (the tag's 12 s)
 #  video:  the captured chunks (out/chunk-a/b/c.mkv, lossless, capture.sh) -> light luma grain (c0s=7) + vignette PI/4.6 (the CRT look is in-scene)
 #          + audio -> out/s08-<v>.mp4 (crf 14) and out/s08-<v>-phone.mp4 (960x540 crf 26)
 set -euo pipefail
@@ -22,7 +23,8 @@ if [ "$1" = audio ]; then
   $FFV -i out/take-dn.wav -/filter_complex out/s08-audio.filter -map '[mix]' -ac 1 -ar 48000 out/mix.wav
   M=$(ffmpeg -nostdin -hide_banner -i out/mix.wav -af loudnorm=I=-16:TP=-1.5:LRA=9:print_format=json -f null - 2>&1 | sed -n '/^{/,/^}/p')
   g() { echo "$M" | sed -n "s/.*\"$1\" *: *\"\\(.*\\)\".*/\\1/p"; }
-  $FFV -i out/mix.wav -f lavfi -i "anoisesrc=d=$T:c=brown:a=0.3:r=48000:s=1" -filter_complex "[0:a]loudnorm=I=-16:TP=-1.5:LRA=9:measured_I=$(g input_i):measured_TP=$(g input_tp):measured_LRA=$(g input_lra):measured_thresh=$(g input_thresh):offset=$(g target_offset):linear=true,aresample=48000[v];[1:a]lowpass=f=220,volume=0.05,afade=t=in:d=0.3,afade=t=out:st=$(python3 -c "print($T-0.6)"):d=0.6[bed];[v][bed]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.95[o]" -map '[o]' -ac 1 -ar 48000 out/audio-final.wav
+  $FFV -i out/mix.wav -f lavfi -i "anoisesrc=d=$T:c=brown:a=0.3:r=48000:s=1" $(cat out/s08-sfx.args) -filter_complex "$(cat out/s08-sfx.filter);[0:a]loudnorm=I=-16:TP=-1.5:LRA=9:measured_I=$(g input_i):measured_TP=$(g input_tp):measured_LRA=$(g input_lra):measured_thresh=$(g input_thresh):offset=$(g target_offset):linear=true,aresample=48000[v];[1:a]lowpass=f=220,volume=0.05,afade=t=in:d=0.3,afade=t=out:st=$(python3 -c "print($T-0.6)"):d=0.6[bed];[v][bed][sfx]amix=inputs=3:normalize=0:duration=first,alimiter=limit=0.95[o]" -map '[o]' -ac 1 -ar 48000 out/audio-final.wav
+  $FFV -ss "$(python3 -c "import json;print(json.load(open('out/s08-edl.json'))['T']['tag'])")" -t 12 -i out/audio-final.wav -c:a pcm_s16le out/s08-$V-tag-audio.wav
   ffmpeg -nostdin -hide_banner -i out/audio-final.wav -af ebur128=peak=true -f null - 2>&1 | grep -A12 Summary | grep -E "I:|Peak"
 fi
 if [ "$1" = video ]; then
