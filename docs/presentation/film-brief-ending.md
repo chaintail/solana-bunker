@@ -23,23 +23,35 @@ On screen: chyron with the Crypto Twitter jokes continuing; on "crypto nerd" the
 ## C. Scene 11: Chaintail News Network credits over the parchment outro (branch film/s11)
 1. A full-screen Chaintail News Network ident: swirling abstract colours (the news desk's palette), the Chaintail lemur logo (`apps/web/film/assets/chaintail-logo.svg`, `-white.svg`, `-800.png`) spinning in with "CHAINTAIL NEWS NETWORK" and the letters CNN, flashy broadcast-style transition, about 3 s.
 2. The ident splits the screen like a 1990s show's end credits: the LEFT third is the CNN panel (logo on top, credits scrolling up beneath it); the RIGHT two thirds is the parchment vault outro card: "Chaintail Labs R&D / Solana Vault", the GitHub QR (https://github.com/chaintail/solana-bunker) and the Telegram QR with their logos and links printed beneath, "Feel free to reach out with any questions!". Liam's last recorded line plays over it: take 583.52–586.08 "Feel free to reach out with any questions." (no face on screen; voice only, or the anchor in a small box if it reads better).
-3. Credits text (scrolling, in this order; initials only for surnames; Mikail is spelled without an H; the composer is credited as "Claude-Do", never "Claude D."; Liam may still edit this list):
-   EXECUTIVE PRODUCERS  Liam C., Claude-Do
-   NEWS ANCHOR  Liam C.
-   SCIENTIST  Liam C.
-   AVERAGE JOE  Liam C.
-   THE DEVIL  Liam C.
-   BUNKER ENGINEER  Liam C.
-   THE SUIT  Liam C.
-   SCRIPT  Liam C.
-   RESEARCH  Liam C., Mikail R., Claude-Do, GPT Astra
-   STORYBOARD  Claude-Do, Liam C.
-   ART DIRECTION  Claude-Do
-   SET DESIGN  Claude Fable
-   ANIMATION  Claude Opus
-   COSTUME DESIGN  Codex
-   INSPIRATION  Justin Drake
-   Then, full screen, the last card: "Based on a true story. Events were dramatized." Hold 3 s, fade to black.
+3. Credits text (Liam's final list, 16352/16357; scrolling, in this order; initials only for surnames; Mikail without an H; "Claude-Do", never "Claude D."; blocks are a heading line then names one per line):
+   EXECUTIVE PRODUCERS: Liam C. / Claude-Do
+   STORY INSPIRATION: Justin Drake
+   CAST: NEWS ANCHOR Liam C. / SCIENTIST Liam C. / AVERAGE JOE Liam C. / BUNKER ENGINEER Liam C. / THE SUIT Liam C. / BANDIT DEVIL Liam C.
+   VOICE ACTORS: THE ANNOUNCER Enceladus (Google Chirp 3 HD) / SPONSOR READ Studio C (Google, en-GB)
+   WRITTEN BY: Liam C.
+   DIRECTED BY: Claude-Do
+   RESEARCH & DEVELOPMENT: Liam C. / Mikail R. / ChatGPT / Codex
+   STORYBOARD: Claude Fable / Liam C.
+   ART DIRECTION: Claude Fable / Liam C.
+   SET DESIGN: Claude Fable / Claude Opus
+   ANIMATION: Claude Opus
+   COSTUME DESIGN: Codex GPT-6.1
+   MATTE & COMPOSITING: ffmpeg / Chrome headless
+   TRANSCRIPTION: NVIDIA Parakeet
+   SOUND EFFECTS: freesound.org contributors (CC0) / Kenney
+   LOCATION: WorldOS v2 / do-box / Solana devnet
+   ANIMATION STUDIO: dev-mac
+   HOSTING & CATERING: GitHub
+   ARCHIVAL SOURCES: Physical Review, 1920 to 1947 / 9,923 records checked
+   STUNTS: Bunker Program HssAePJf…NK6V, Solana devnet / Every transaction in this film is real and open in the explorer.
+   SPECIAL THANKS: Leslie Lamport / Robert Winternitz / Ralph Merkle / NIST
+   No curves were harmed in the making of this film.
+   No meme coins were harmed either. Yet.
+   Based on a true story. / Events were dramatized. / Characters and names may have been changed to protect the identity of victims.
+   Any resemblance to actual elliptic curves, living or broken, is purely coincidental.
+   PRODUCT OF: Chaintail Labs (lemur logo)
+   © 2026 Chaintail Labs
+   The last full-screen card is "Based on a true story. Events were dramatized." style per section C.3 above, then PRODUCT OF Chaintail Labs with the logo, hold 3 s, fade to black.
 4. The credits scroll must be readable at 426x240 for the role names; the names may be smaller.
 
 Rules: render on dev-mac only, never ffmpeg on do-box; delete frame folders with literal paths; open your own stills at every beat; phone re-encode 960x540 crf 26. Worktrees `~/code/solana-bunker-s10` (branch film/s10) and `~/code/solana-bunker-s11` (film/s11), each from main with `film/floating-head` and `film/s09` merged in; the testimonial lands on film/s09 in `~/code/solana-bunker-s09`. Commit as the repo's configured identity, NO trailers. No push.
