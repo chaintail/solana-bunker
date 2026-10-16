@@ -218,3 +218,8 @@ Rulings applied: Q9 the roll at 6 px a frame, Q10 the cards on black, Q11 Liam's
 ## 11. As built: scene 11 v2 (Liam's fix round, 16433)
 - CAST and VOICE ACTORS role titles: the pair spacing rule goes from 14 to 30 px (one rule for all sub-role titles). The STUNTS closing line is Inter 500 italic (500 is the lightest Inter in `fonts.css`; the line is no longer 700). Bracketed voice credits break onto their own line ("Enceladus" / "(Google Chirp 3 HD)", "Studio C" / "(Google, en-GB)") via `\n` in `data/s11-credits.js`.
 - Roll 4525 px (was 4360) at 6 px a frame: 833 roll frames, scene 40.27 s (1208 frames); roll ends 31.37, card 1 31.37, card 2 35.87, fade 39.27. `data-duration` in `s11-cnn.html` follows. Hold and cards unchanged. Outputs `s11-v2.mp4`, `s11-v2-phone.mp4`.
+
+## 12. As built: scene 11 v3 (Liam's fix round, 16476 / 16484 / 16491)
+- Parchment title "Solana Bunker" (same font, size, placement). Last line is now a generated read (Google `en-GB-Studio-C`, SSML breaks 300/250 ms, `pipeline/voices/outro/outro.wav`, 3 takes kept) starting 4.60 s (1.0 s after the split); Liam's take dropped; printed ask line unchanged at 4.12. -16.2 LUFS, limiter 0.80, bed kept.
+- CNN block: canvas ink measure now includes letter-spacing, so CHAINTAIL NEWS, NETWORK and the rule end on CNN's right ink edge (x 926 in the ident, x 356 in the panel, checked on stills).
+- Credits: AUDIO ENGINEERS (Codex, Claude Fable, Grok) before SOUND EFFECTS; ASSOCIATE PRODUCER (Grok) between ANIMATION STUDIO and HOSTING & CATERING. Roll 4851 px, 42.10 s (1263 frames). Outputs `s11-v3.mp4`, `s11-v3-phone.mp4`.

@@ -1,4 +1,4 @@
-<!doctype html><html data-duration="40.2667" data-fps="30"><head><meta charset="utf-8">
+<!doctype html><html data-duration="42.1" data-fps="30"><head><meta charset="utf-8">
 <link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
 <style>
 /* Scene 11, Chaintail News Network credits over the parchment outro (film-plan-ending.md part C, in the approved C2 design: s11-credits-look.html).
@@ -6,7 +6,7 @@
    red rule) scaled up to the frame centre, the lemur spinning in, CNN slamming in, the lines dropping in; C2 the split: the block eases into the panel's
    header while the panel squeezes to the left third and the parchment slides in; C3 the roll at 6 px a frame, Liam's last line (voice only) over the
    parchment; C4 card 1 on black; C5 card 2 (PRODUCT OF, the logo, Chaintail Labs, ©); C6 to black.
-   Faces as C2: Oswald (CNN), Inter (network lines, credits, card 2's small lines), Liberation Serif (Solana Vault and the sign-off in italic; Chaintail Labs /
+   Faces as C2: Oswald (CNN), Inter (network lines, credits, card 2's small lines), Liberation Serif (Solana Bunker and the sign-off in italic; Chaintail Labs /
    R&D project upright; the cards), Special Elite (handles). Layout measured at load, as in C2. Text: data/s11-credits.js. Codes: data/s11-qr.js.
    Timing: data/s11-edl.js (pipeline/s11/s11-timing.py). No post grade. */
 html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#000}
@@ -60,7 +60,7 @@ html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#000}
 <img id="s10" src="assets/s11-s10-last.png" width="1280" height="720">
 <div id="parch">
   <svg width="850" height="720" style="position:absolute;left:0;top:0;opacity:.2;mix-blend-mode:multiply"><filter id="fib"><feTurbulence type="fractalNoise" baseFrequency=".9 .22" numOctaves="3" seed="11"/><feColorMatrix values="0 0 0 0 .35  0 0 0 0 .22  0 0 0 0 .08  0 0 0 1.4 -.35"/></filter><rect width="850" height="720" filter="url(#fib)"/></svg>
-  <div id="title">Solana Vault</div>
+  <div id="title">Solana Bunker</div>
   <svg id="flask" viewBox="0 0 40 54" preserveAspectRatio="none"><path d="M13.5 1.6H26.5M15.5 1.6V19L3.2 47.5Q1.4 52.4 6.6 52.4H33.4Q38.6 52.4 36.8 47.5L24.5 19V1.6" fill="#f7f1e3" stroke="#1c1a17" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/>
     <path d="M8.6 35.5H31.4L36.4 47.4Q37.9 51 33.6 51H6.4Q2.1 51 3.6 47.4Z" fill="#1f3a93"/></svg>
   <div id="sub"><div class="ln" id="sl1">Chaintail Labs</div><div class="ln" id="sl2">R&amp;D project</div></div>
@@ -107,7 +107,7 @@ $('qX').innerHTML = code(Q.x, 'x') + '<div class="h">@ChaintailLabs</div>';
   const d = C.cards[1]; $('card2').innerHTML = `<div class="p">${d.product}</div><img src="${d.logo}"><div class="n">${d.name}</div><div class="c">${d.copy}</div>`; }
 // ---- measured layout (C2): cap heights and baselines from the elements' own fonts
 const cv = document.createElement('canvas').getContext('2d');
-const fnt = (el) => { const cs = getComputedStyle(el); cv.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`; };
+const fnt = (el) => { const cs = getComputedStyle(el); cv.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`; cv.letterSpacing = cs.letterSpacing === "normal" ? "0px" : cs.letterSpacing; };
 const capH = (el) => { fnt(el); return cv.measureText('H').actualBoundingBoxAscent; };
 const inkW = (el) => { fnt(el); const m = cv.measureText(el.textContent); return [m.actualBoundingBoxLeft, m.actualBoundingBoxRight]; };
 const base = (el) => { const sp = document.createElement('i'); sp.style.cssText = 'display:inline-block;width:0;height:0'; el.appendChild(sp); const y = sp.getBoundingClientRect().top; sp.remove(); return y; };
