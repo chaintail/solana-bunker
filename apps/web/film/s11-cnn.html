@@ -8,6 +8,8 @@
    parchment; C4 card 1 on black; C5 card 2 (PRODUCT OF, the logo, Chaintail Labs, ©); C6 to black.
    Faces as C2: Oswald (CNN), Inter (network lines, credits, card 2's small lines), Liberation Serif (Solana Bunker and the sign-off in italic; Chaintail Labs /
    R&D project upright; the cards), Special Elite (handles). Layout measured at load, as in C2. Text: data/s11-credits.js. Codes: data/s11-qr.js.
+   v4: the locked outro read; the codes pop in on its words (GitHub on "GitHub", Telegram on "collaborate", X half a second later) and the ask line writes
+   in left to right from "reach" (a moving soft-edged mask over its measured ink, 0.9 s). The title and Chaintail Labs block are there from the split.
    Timing: data/s11-edl.js (pipeline/s11/s11-timing.py). No post grade. */
 html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#000}
 #s10{position:absolute;left:0;top:0;width:1280px;height:720px}
@@ -45,7 +47,7 @@ html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#000}
 .q{position:absolute;top:290px;width:225px;text-align:center}
 .q svg{display:block;box-shadow:0 16px 26px -16px rgba(55,38,10,.6);outline:1.5px solid rgba(28,26,23,.5)}
 .q .h{margin-top:16px;font:400 18px/1 'Special Elite';white-space:nowrap}
-#ask{position:absolute;left:0;right:0;top:604px;text-align:center;font:italic 400 40px/1 'Liberation Serif'}
+#ask{position:absolute;left:0;right:0;top:604px;padding:24px 0;text-align:center;font:italic 400 40px/1 'Liberation Serif'}   /* v4: the padding keeps the descenders and the italic overhang inside the write-in mask; layout() places the cap top as before */
 /* the closing cards, on black */
 #cards{position:absolute;inset:0;background:#000}
 .card{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff}
@@ -111,7 +113,7 @@ const fnt = (el) => { const cs = getComputedStyle(el); cv.font = `${cs.fontStyle
 const capH = (el) => { fnt(el); return cv.measureText('H').actualBoundingBoxAscent; };
 const inkW = (el) => { fnt(el); const m = cv.measureText(el.textContent); return [m.actualBoundingBoxLeft, m.actualBoundingBoxRight]; };
 const base = (el) => { const sp = document.createElement('i'); sp.style.cssText = 'display:inline-block;width:0;height:0'; el.appendChild(sp); const y = sp.getBoundingClientRect().top; sp.remove(); return y; };
-let HDR = null;
+let HDR = null, ASK = null;
 function layout() {
   // left header (C2): CNN's cap band; the lemur centred on it at 1.12 x the cap height, 22 px gap; the group centred in the 427 px panel
   const cnn = $('hCnn'), lg = $('hLogo'), TOP = 30, ch = capH(cnn);
@@ -145,6 +147,7 @@ function layout() {
   ['qGh', 'qTg', 'qX'].forEach((id, i) => { $(id).style.left = (M + i * (225 + GAPQ)) + 'px'; $(id).style.top = QT + 'px'; });
   const hb = base(document.querySelector('#qGh .h')) - pr.top, ask = $('ask');
   ask.style.top = '0px'; ask.style.top = (hb + 66 - (base(ask) - capH(ask) - pr.top)) + 'px';
+  { const r = document.createRange(); r.selectNodeContents(ask); const b = r.getBoundingClientRect(), a = ask.getBoundingClientRect(); ASK = { x0: b.left - a.left - 8, x1: b.right - a.left + 12 }; }
   window.__layout = { HDR, rollH: $('roll').offsetHeight };
 }
 f.onSeek((t) => {
@@ -175,7 +178,10 @@ f.onSeek((t) => {
   $('streak').style.left = lerp(-300, 1500, P(t, T.streak, T.streak + .4)) + 'px'; $('streak').style.display = t >= T.streak && t < T.streak + .4 ? 'block' : 'none';
   $('head').style.opacity = String(s); $('win').style.display = t >= T.roll ? 'block' : 'none';
   $('parch').style.left = lerp(1280, 430, s) + 'px'; $('div').style.display = s > .6 ? 'block' : 'none'; $('div').style.transform = `translateY(${lerp(-720, 0, easeO(P(s, .6, 1)))}px)`;
-  $('ask').style.opacity = String(P(t, T.feel, T.feel + .3));
+  // v4 reveals: the codes pop in (opacity only, no zoom) on their cues; the ask line writes in left to right behind a 32 px soft edge
+  [['qGh', T.q_gh], ['qTg', T.q_tg], ['qX', T.q_x]].forEach(([id, a]) => ($(id).style.opacity = String(easeO(P(t, a, a + T.pop)))));
+  { const p = P(t, T.ask, T.ask + T.ask_d), x = lerp(ASK.x0 - 32, ASK.x1, p), m = p >= 1 ? 'none' : `linear-gradient(90deg,#000 0,#000 ${x}px,transparent ${x + 32}px)`;
+    $('ask').style.webkitMaskImage = m; $('ask').style.maskImage = m; }
   // C3: the roll, starting below its window, whole pixels per frame
   const fr = Math.max(0, Math.round((t - T.roll) * 30)); $('roll').style.transform = `translateY(${Math.round(HDR.win) - T.pxf * fr}px)`;
   // C4-C6: the cards on black, then to black

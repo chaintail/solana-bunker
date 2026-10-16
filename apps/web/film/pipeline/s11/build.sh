@@ -1,7 +1,7 @@
 #!/bin/bash
 # Runs ON dev-mac from ~/video-work/solana-bunker/s11 (film/ = rsync of film/s11's apps/web/film). usage: build.sh assets | audio | video [v1]
 #  assets: scene 10's last frame (S10V, default v2; v3 once scene 10 is re-encoded with scene 9 v3: the last frame does not change) -> film/assets/s11-s10-last.png (under the bars, 0-0.35 s)
-#  audio:  v3: the generated outro read -> out/take-dn.wav (v1/v2: the denoised take); s11-timing.py; cut (20 ms fades) -> mix.wav;
+#  audio:  v3/v4: the generated outro read (v4: outro-v4.wav) -> out/take-dn.wav (v1/v2: the denoised take); s11-timing.py; cut (20 ms fades) -> mix.wav;
 #          two-pass loudnorm -16 LUFS + brown-noise bed, limiter 0.80 without auto-level -> out/audio-final.wav. The bed fades out with the picture.
 #  video:  the captured chunks (out/chunk-a/b.mkv, capture.sh) + audio -> out/s11-<v>.mp4 (crf 14) and out/s11-<v>-phone.mp4 (960x540 crf 26). No grade.
 set -euo pipefail
@@ -13,8 +13,9 @@ if [ "$1" = assets ]; then
   $FFV -ss "$(python3 -c "print($D-0.05)")" -i ../s10/out/s10-$S10V.mp4 -frames:v 1 -update 1 film/assets/s11-s10-last.png
 fi
 if [ "$1" = audio ]; then
-  # v3: the voice is the generated outro read (film/pipeline/voices/outro/outro.wav, 24 kHz, no denoise needed); v1/v2 used Liam's take 583.62-586.00
-  cp film/pipeline/voices/outro/outro.wav out/take-dn.wav
+  # v4: the locked read, film/pipeline/voices/outro/outro-v4.wav (outro-voice-01-stitch-B.mp3, en-US-Studio-O, decoded to 48 kHz mono on dev-mac);
+  # v3 used outro.wav (en-GB-Studio-C, 24 kHz); v1/v2 used Liam's take 583.62-586.00
+  cp film/pipeline/voices/outro/outro-v4.wav out/take-dn.wav
   /usr/bin/python3 film/pipeline/s11/s11-timing.py
   T=$(python3 -c "import json;print(json.load(open('out/s11-edl.json'))['total'])")
   $FFV -i out/take-dn.wav -/filter_complex out/s11-audio.filter -map '[mix]' -ac 1 -ar 48000 out/mix.wav

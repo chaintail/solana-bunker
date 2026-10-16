@@ -223,3 +223,20 @@ Rulings applied: Q9 the roll at 6 px a frame, Q10 the cards on black, Q11 Liam's
 - Parchment title "Solana Bunker" (same font, size, placement). Last line is now a generated read (Google `en-GB-Studio-C`, SSML breaks 300/250 ms, `pipeline/voices/outro/outro.wav`, 3 takes kept) starting 4.60 s (1.0 s after the split); Liam's take dropped; printed ask line unchanged at 4.12. -16.2 LUFS, limiter 0.80, bed kept.
 - CNN block: canvas ink measure now includes letter-spacing, so CHAINTAIL NEWS, NETWORK and the rule end on CNN's right ink edge (x 926 in the ident, x 356 in the panel, checked on stills).
 - Credits: AUDIO ENGINEERS (Codex, Claude Fable, Grok) before SOUND EFFECTS; ASSOCIATE PRODUCER (Grok) between ANIMATION STUDIO and HOSTING & CATERING. Roll 4851 px, 42.10 s (1263 frames). Outputs `s11-v3.mp4`, `s11-v3-phone.mp4`.
+
+## 13. As built: scene 11 v4 (Liam's locked outro read and the reveals)
+- **Voice:** the locked read, `outro-voice-01-stitch-B.mp3` (Google en-US-Studio-O, 14.52 s; Liam changed his pick from stitch-A to stitch-B), decoded on dev-mac to `pipeline/voices/outro/outro-v4.wav` (48 kHz mono). It starts at 4.60 s, 1.0 s after the split lands, as v3's VOICE_AT. The bed stays. The chain's silenceremove trims 30 ms off the start, so scene time = 4.57 + file time (checked: the silence before "reach" ends at 11.872 in the file and 16.442 in the mix).
+- **Cue words:** measured with faster_whisper (small, int8, word timestamps) and refined on a 10 ms RMS envelope (the stop burst after the closure).
+
+  | cue | whisper start (file, s) | onset used (file, s) | reveal (scene, s) |
+  |---|---|---|---|
+  | GitHub | 8.28 | 8.37 | 12.94 |
+  | collaborate | 10.90 | 10.84 | 15.41 |
+  | X code (0.5 s after collaborate) | | | 15.91 |
+  | reach | 11.90 | 11.87 (silence ends 11.872) | 16.44 |
+- **Reveals on the parchment:** the title and the Chaintail Labs / R&D project block with the flask are there from the split, as in v3. The GitHub code (mark and chaintail/solana-bunker line) fades in at 12.94. The Telegram code fades in at 15.41 and the X code at 15.91. Each code fade is 150 ms of opacity only, with no zoom. The ask line writes in left to right from 16.44 for 0.9 s: a mask with a 32 px soft edge moves across the line's measured ink. `#ask` gains 24 px vertical padding so the descenders stay inside the mask, and `layout()` re-solves its top so the line sits where it did. `T.feel` is gone. Everything else is v3.
+- **Length:** unchanged at 42.10 s (1263 frames). Audio −16.4 LUFS, peak −1.9 dBFS (limiter 0.80). Outputs: `s11-v4.mp4` and `s11-v4-phone.mp4` (960x540, crf 26).
+- **Checks:**
+  - Page stills and encoded master frames at 0.2 s before and 0.3 s after each reveal (12.74/13.24, 15.21/15.71, 15.71/16.21, 16.24/16.74) show each element absent, then present, in order. The ask line is complete at 17.5.
+  - Page stills at 20, 25 and 30 s are pixel-identical to v3's lossless capture frames. At 10 s the only differences are inside the codes and ask band.
+  - Contact strip: `s11-v4-reveals.png`.
