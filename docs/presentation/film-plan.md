@@ -17,3 +17,5 @@ Liam: mix all four design worlds and more (he will bring further styles), one sl
 | 10, 11 close | news sign-off, dossier | folder closes, lemur, contact QRs |
 
 Pipeline: apps/web/film/<scene>.html, animations seekable (Web Animations API or window.__seek), apps/web/film/scripts/capture.mjs renders 30 fps PNG frames on do-box; encoding and compositing on dev-mac only.
+
+Conspiracy x12 (Liam 16583, "1.2 on all"; 2026-10-16): the approved x11 cut (v4 choreography, lamp flicker removed) at 1.2x, no edit changes. apps/web/film/pipeline/capture-consp-x12.sh (capture.mjs --speed=1.2, title 210 -> 175 frames, scene 2044 -> 1704, hat 38 frames, 60-frame chunks) then build-conspiracy-x12.sh (Liam's take with v4's afftdn cleanup, atempo=1.2 pitch kept, two-pass loudnorm -16 LUFS, brown-noise bed at the new length; PiP frame k = v4 PiP frame round(1.2k); every overlay time / 1.2). Output conspiracy-x12.mp4: 1879 frames, 62.633 s, -16.0 LUFS. The black bar holds for 0.50 s (15 frames, 20.47-20.93 s) before CENSORED? slams. The scene has no generated voices or sound effects, so the whole mix is time-scaled.
