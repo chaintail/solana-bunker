@@ -240,3 +240,7 @@ Rulings applied: Q9 the roll at 6 px a frame, Q10 the cards on black, Q11 Liam's
   - Page stills and encoded master frames at 0.2 s before and 0.3 s after each reveal (12.74/13.24, 15.21/15.71, 15.71/16.21, 16.24/16.74) show each element absent, then present, in order. The ask line is complete at 17.5.
   - Page stills at 20, 25 and 30 s are pixel-identical to v3's lossless capture frames. At 10 s the only differences are inside the codes and ask band.
   - Contact strip: `s11-v4-reveals.png`.
+
+## 14. As built: scene 11 v5 (scene 10 v8 last frame)
+- **Only change from v4:** the opening still. `S10V=v8-x11 build.sh assets` cut the last frame of `s10-v8-x11.mp4` (30.37 s, the over-the-shoulder box is on it) into `assets/s11-s10-last.png`; it is shown until 0.35 s past the ident as before. Voice (outro-v4.wav), reveals, credits, audio chain and length (42.10 s, 1263 frames) are unchanged. Outputs: `s11-v5.mp4` and `s11-v5-phone.mp4` (960x540, crf 26).
+- **Checks:** glitch-scan v2 with `--chunk-starts 585` clean. The box is visible at 0.1 s and in the wipe at 0.3 s (`s11-v5-t0.1.png`, `s11-v5-t0.3.png`). Frames at 20, 25 and 30 s are identical to v4 (PSNR inf). Audio -16.4 LUFS, same as v4. Frame 0 matches scene 10's last frame at PSNR 42 dB (H.264 re-encode, not bit-exact).
