@@ -220,3 +220,7 @@ Rulings applied: Q5 the wipe's "WE NOW RETURN TO THE STUDIO", Q6 UPDATE, Q7 the 
 - The sub line under the name reads "Liam C. · Bunker Correspondent, Chaintail Labs".
 - Positions: the bar, sub line, ticker and LIVE / lemur / CNN bug are on the same pixels as opening v7 (side-by-side checked against `opening-v7.mp4` at 30 s). Nothing moved.
 - Fully recaptured. Output: dev-mac `s10/out/s10-v2.mp4` and `s10-v2-phone.mp4`, 33.40 s, −16.4 LUFS / −1.9 dBTP. The whitepaper QR decodes on master and phone frames.
+
+### Scene 10 v3 (scene 9 v3 underneath the wipe)
+- The frame under the SPECIAL REPORT wipe (0–0.55 s) is now the last frame of `s09-v3.mp4` (bd2c428, the testimonial's results grid). It was built with `S09V=v3 build.sh assets` and `build.sh video v3`, with no recapture. Nothing else changed.
+- Output: dev-mac `s10/out/s10-v3.mp4` and `s10-v3-phone.mp4`, 33.40 s, 1002 frames, −16.4 LUFS / −1.9 dBTP. The whitepaper QR decodes on master and phone frames (12.5 and 14.5 s) at 720p and 540p.
