@@ -64,13 +64,15 @@ try {
     if (opt.fresh) await load();
     await ev(`(async()=>{window.__film.seek(${t});for(let i=0;i<${settle};i++)await new Promise(r=>requestAnimationFrame(r));return 1})()`);
     const { data } = await send('Page.captureScreenshot', { format: 'png', fromSurface: true, captureBeyondViewport: false });
-    writeFileSync(file, Buffer.from(data, 'base64'));
+    if (file) writeFileSync(file, Buffer.from(data, 'base64'));   // file=null: discarded warm-up shot
   };
   if (opt.still) {
     for (const t of opt.still.split(',')) await shot(Number(t), join(out, `still-${t}.png`));
   } else {
     const fps = await ev('window.__film.fps'), dur = await ev('window.__film.duration');
     const a = Math.round(Number(opt.from ?? 0) * fps), b = Math.min(Math.round(dur * fps), opt.to ? Math.round(Number(opt.to) * fps) : Infinity);
+    // Warm-up: a fresh page can screenshot the stale ready-time paint on the first seek (chunk b's first frame showed the previous scene). Seek to the first target, wait, shoot and discard.
+    if (a < b) { await shot(a / fps, null); await sleep(100); await shot(a / fps, null); }
     for (let f = a; f < b; f++) {
       await shot(f / fps, join(out, `f${String(f).padStart(5, '0')}.png`));
       if (f % 100 === 0) console.log(`${scene}${layer ? ':' + layer : ''} frame ${f}/${b}`);
