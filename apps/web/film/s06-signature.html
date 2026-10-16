@@ -190,7 +190,7 @@ function makeFig(parent, bodyKey, headKind) {
   const mask = `radial-gradient(ellipse 103px 119px at ${b.ox}px ${b.chin - 107}px,transparent 97%,#000 100%)`;
   const o = b.ox, c = b.chin;
   const clip = `polygon(0 ${c - 6}px,${o - 59}px ${c - 6}px,${o - 49}px ${c + 16}px,${o - 8}px ${c + 41}px,${o + 10}px ${c + 41}px,${o + 51}px ${c + 16}px,${o + 60}px ${c - 6}px,1024px ${c - 6}px,1024px 1536px,0 1536px)`;
-  const hl = o - 338 * HK, ht = c - 905 * HK, hs = (760 * HK) / 152;
+  const hl = o - 316 * HK, ht = c - 905 * HK, hs = (760 * HK) / 152;
   let head;
   if (headKind === 'narr') head = `<div class="hd" data-base="translate(${hl}px,${ht}px) scale(${hs})" style="transform:translate(${hl}px,${ht}px) scale(${hs})">` + [0, 1, 2, 3].map((i) => `<img src="heads/s06-narr-0${i}.png">`).join('') + '</div>';
   else head = `<img src="heads/s06-${headKind}.png" style="width:${760 * HK}px;height:${1100 * HK}px;left:${hl}px;top:${ht}px">`;
