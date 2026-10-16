@@ -1,69 +1,131 @@
-<!doctype html><html data-duration="40" data-fps="30"><head><meta charset="utf-8">
+<!doctype html><html data-duration="1" data-fps="30"><head><meta charset="utf-8">
 <link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
 <style>
-/* Look draft for scene 11 (film-plan-ending.md part C), not the scene: the split screen after the Chaintail News Network ident.
-   LEFT third (0-427 px): the CNN panel in the news desk's palette, logo block on top, the credits rolling up beneath it at 5 px a frame
-   (150 px/s) from t = 3.60 s. RIGHT two thirds: the parchment vault outro card (the deck's closing slide, C9Close.tsx): Chaintail Labs R&D /
-   Solana Vault, the GitHub and Telegram codes with their logos and links beneath, "Feel free to reach out with any questions!".
-   Credits text: data/s11-credits.js (one block). Codes: data/s11-qr.js (pipeline/s11/qr.mjs). */
+/* Look draft C2 for scene 11 (film-plan-ending.md part C, after Liam's notes on look C), not the scene: the split screen during the roll.
+   Faces as look C (Liam: keep them), except "Chaintail Labs R&D"'s Playfair Display, replaced: Liberation Serif italic for "Solana Vault" and the ask line,
+   Liberation Serif upright for "Chaintail Labs" / "R&D project", Special Elite for the handles, Inter for the credits and the network name, Oswald for CNN.
+   Measured layout, not hand-placed:
+   - left header: the lemur and "CNN" sit on one optical centre line (the centre of CNN's cap band) with a set gap; "CHAINTAIL NEWS" / "NETWORK" are
+     justified to the exact width of that group (NETWORK larger, with wider tracking, computed so both lines end on the same edges);
+   - credits: all white, one font and weight (caps mark the titles), 30 px, extra space above every title block;
+   - right: "Solana Vault" large, "Chaintail Labs" / "R&D project" beneath with an Erlenmeyer flask exactly the height from line 1's cap top to line 2's
+     baseline; three codes at ECC H with the GitHub, Telegram and X marks in their centres, the handles beneath.
+   ?ruler draws the alignment guides. Text: data/s11-credits.js. Codes: data/s11-qr.js (pipeline/s11/qr.mjs). */
 html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#05070d}
 #panel{position:absolute;left:0;top:0;width:427px;height:720px;overflow:hidden;background:radial-gradient(ellipse 90% 60% at 50% 0%,#244a80 0%,#0d1830 55%,#05070d 100%)}
 #swirl{position:absolute;inset:-200px;background:conic-gradient(from 30deg at 50% 50%,rgba(227,6,19,.0),rgba(227,6,19,.16),rgba(127,166,255,.12),rgba(36,74,128,.0),rgba(227,6,19,.10),rgba(227,6,19,0));filter:blur(30px)}
-#head{position:absolute;left:0;top:0;width:427px;height:206px;z-index:3;background:linear-gradient(180deg,#0d1830 0%,#0d1830 78%,rgba(13,24,48,0) 100%)}
-#head img{position:absolute;left:44px;top:26px;height:96px}
-#head .cnn{position:absolute;left:158px;top:22px;font:700 104px/1 Oswald;letter-spacing:.04em;color:#fff;text-shadow:0 4px 0 #b8000a}
-#head .net{position:absolute;left:0;right:0;top:142px;text-align:center;font:800 19px/1 Inter;letter-spacing:.28em;color:#c9d6f2}
-#head .rule{position:absolute;left:30px;right:30px;top:176px;height:5px;background:#e30613;box-shadow:0 0 12px rgba(227,6,19,.8)}
-#win{position:absolute;left:0;top:190px;width:427px;height:530px;overflow:hidden;
-  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 40px,#000 calc(100% - 30px),transparent 100%)}
+#head{position:absolute;left:0;top:0;width:427px;height:226px;z-index:3;background:linear-gradient(180deg,#0d1830 0%,#0d1830 82%,rgba(13,24,48,0) 100%)}
+#hLogo{position:absolute}
+#hCnn{position:absolute;font:700 96px/1 Oswald;letter-spacing:.03em;color:#fff;white-space:nowrap}
+.hl{position:absolute;font:800 20px/1 Inter;color:#fff;white-space:nowrap}
+#hRule{position:absolute;height:4px;background:#e30613;box-shadow:0 0 10px rgba(227,6,19,.7)}
+#win{position:absolute;left:0;top:214px;width:427px;height:506px;overflow:hidden;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 36px,#000 calc(100% - 30px),transparent 100%)}
 #roll{position:absolute;left:0;top:0;width:427px}
-.cr{text-align:center;margin:0 0 30px}
-.cr .r{font:700 34px/1.1 Oswald;letter-spacing:.06em;color:#fff;text-shadow:0 3px 8px rgba(0,0,0,.7)}
-.cr .n{font:700 25px/1.3 Inter;color:#c9d6f2;letter-spacing:.01em;padding:0 22px}
-.cr .s{margin-top:8px;font:700 30px/1.1 Oswald;letter-spacing:.06em;color:#ffd400;text-shadow:0 3px 8px rgba(0,0,0,.7)}
-.cr .j{font:italic 700 24px/1.3 Inter;color:#ffd400;padding:0 26px}
+.cr{text-align:center;padding:0 24px;margin-top:52px;font:700 28px/1.32 Inter;color:#fff}
+.cr:first-child{margin-top:0}
+.cr .t{letter-spacing:.06em}
+.cr .pair{margin-top:14px}
 #div{position:absolute;left:424px;top:0;width:6px;height:720px;background:#e30613;box-shadow:0 0 18px rgba(227,6,19,.9);z-index:4}
 /* the parchment card */
-#parch{position:absolute;left:430px;top:0;width:850px;height:720px;overflow:hidden;background:radial-gradient(ellipse 75% 70% at 50% 44%,#f7f1e3 0%,#efe7d4 55%,#d9c79d 100%)}
-#parch .brand{position:absolute;left:58px;top:40px;color:#1c1a17}
-#parch .b1{font:700 62px/1 'Playfair Display';letter-spacing:-.005em}
-#parch .b2{margin-top:8px;font:italic 400 44px/1 'Liberation Serif';color:#4c463d}
-#parch .lemur{position:absolute;right:52px;top:30px;height:128px}
-#parch .q{position:absolute;top:212px;width:390px;text-align:center;color:#1c1a17}
-#parch .q svg.code{display:block;margin:0 auto;box-shadow:0 16px 26px -16px rgba(55,38,10,.6);outline:1.5px solid rgba(28,26,23,.5)}
-#parch .q .lk{margin-top:16px;font:400 19px/1 'Special Elite';white-space:nowrap}
-#parch .q .lk svg{width:30px;height:30px;vertical-align:-8px;margin-right:8px}
-#parch .ask{position:absolute;left:0;right:0;top:560px;text-align:center;font:italic 400 40px/1.15 'Liberation Serif';color:#1c1a17}
-#parch .sig{position:absolute;left:0;right:0;top:640px;text-align:center;font:400 17px/1 'Special Elite';letter-spacing:.16em;color:#8a8170}
+#parch{position:absolute;left:430px;top:0;width:850px;height:720px;overflow:hidden;color:#1c1a17;background:radial-gradient(ellipse 75% 70% at 50% 44%,#f7f1e3 0%,#efe7d4 55%,#d9c79d 100%)}
+#title{position:absolute;left:62px;top:34px;font:italic 400 104px/1 'Liberation Serif';white-space:nowrap}
+#sub{position:absolute;left:62px;top:166px}
+#sub .ln{font:400 32px/38px 'Liberation Serif';white-space:nowrap}
+#flask{position:absolute}
+.q{position:absolute;top:290px;width:225px;text-align:center}
+.q svg{display:block;box-shadow:0 16px 26px -16px rgba(55,38,10,.6);outline:1.5px solid rgba(28,26,23,.5)}
+.q .h{margin-top:16px;font:400 18px/1 'Special Elite';white-space:nowrap}
+#ask{position:absolute;left:0;right:0;top:604px;text-align:center;font:italic 400 40px/1 'Liberation Serif'}
+.rl{position:absolute;z-index:9;pointer-events:none}
 </style></head><body>
 <div id="panel"><div id="swirl"></div>
-  <div id="head"><img src="assets/chaintail-logo-white.svg"><div class="cnn">CNN</div><div class="net">CHAINTAIL NEWS NETWORK</div><div class="rule"></div></div>
+  <div id="head"><img id="hLogo" src="assets/chaintail-logo-white.svg"><div id="hCnn">CNN</div>
+    <div class="hl" id="hl1">CHAINTAIL NEWS</div><div class="hl" id="hl2">NETWORK</div><div id="hRule"></div></div>
   <div id="win"><div id="roll"></div></div>
 </div>
 <div id="parch">
   <svg width="850" height="720" style="position:absolute;left:0;top:0;opacity:.2;mix-blend-mode:multiply"><filter id="fib"><feTurbulence type="fractalNoise" baseFrequency=".9 .22" numOctaves="3" seed="11"/><feColorMatrix values="0 0 0 0 .35  0 0 0 0 .22  0 0 0 0 .08  0 0 0 1.4 -.35"/></filter><rect width="850" height="720" filter="url(#fib)"/></svg>
-  <div class="brand"><div class="b1">Chaintail Labs R&amp;D</div><div class="b2">Solana Vault</div></div>
-  <img class="lemur" src="assets/chaintail-logo.svg">
-  <div class="q" id="qGh" style="left:24px"></div>
-  <div class="q" id="qTg" style="left:436px"></div>
-  <div class="ask">Feel free to reach out with any questions!</div>
+  <div id="title">Solana Vault</div>
+  <svg id="flask" viewBox="0 0 40 54" preserveAspectRatio="none"><path d="M13.5 1.6H26.5M15.5 1.6V19L3.2 47.5Q1.4 52.4 6.6 52.4H33.4Q38.6 52.4 36.8 47.5L24.5 19V1.6" fill="#f7f1e3" stroke="#1c1a17" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="M8.6 35.5H31.4L36.4 47.4Q37.9 51 33.6 51H6.4Q2.1 51 3.6 47.4Z" fill="#1f3a93"/></svg>
+  <div id="sub"><div class="ln" id="sl1">Chaintail Labs<i class="bl"></i></div><div class="ln" id="sl2">R&amp;D project<i class="bl"></i></div></div>
+  <div class="q" id="qGh" style="left:38px"></div>
+  <div class="q" id="qTg" style="left:313px"></div>
+  <div class="q" id="qX" style="left:588px"></div>
+  <div id="ask">Feel free to reach out with any questions!</div>
 </div>
 <div id="div"></div>
 <script src="data/s11-credits.js"></script><script src="data/s11-qr.js"></script>
 <script src="lib/film.js"></script>
 <script>
-const f = window.__film, $ = (id) => document.getElementById(id), C = window.S11_CREDITS, Q = window.S11_QR;
-// heading, then one name per line; CAST / VOICE ACTORS lines are [sub-role, name]; {joke} lines are free italics
-$('roll').innerHTML = C.roll.map((b) => b.joke ? `<div class="cr"><div class="j">${b.joke}</div></div>` :
-  `<div class="cr"><div class="r">${b[0]}</div>${b[1].map((x) => Array.isArray(x) ? `<div class="s">${x[0]}</div><div class="n">${x[1]}</div>` : `<div class="n">${x}</div>`).join('')}</div>`).join('');
-// codes at whole pixels per module with the 4-module quiet zone, on the parchment's paper colour
-const code = (q, px) => { const s = (q.n + 8) * px; return `<svg class="code" viewBox="-4 -4 ${q.n + 8} ${q.n + 8}" width="${s}" height="${s}" shape-rendering="crispEdges"><rect x="-4" y="-4" width="${q.n + 8}" height="${q.n + 8}" fill="#f7f1e3"/><path d="${q.d}" fill="#1c1a17"/></svg>`; };
-const GH = '<svg viewBox="0 0 24 24"><path fill="#1c1a17" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>';
-const TG = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#229ed9"/><path d="M5.3,11.7 L17.4,7.0 C18.0,6.8 18.5,7.1 18.3,7.9 L16.3,17.2 C16.2,17.8 15.7,18.0 15.2,17.7 L12.1,15.4 L10.6,16.8 C10.4,17.0 10.3,17.1 10.0,17.1 L10.2,13.9 L15.9,8.8 C16.2,8.6 15.8,8.5 15.5,8.7 L8.5,13.1 L5.4,12.2 C4.8,12.0 4.8,11.8 5.3,11.7 Z" fill="#fff"/></svg>';
-$('qGh').innerHTML = code(Q.repo, 7) + `<div class="lk">${GH}github.com/chaintail/solana-bunker</div>`;
-$('qTg').innerHTML = code(Q.tg, 8) + `<div class="lk">${TG}t.me/chaintail</div>`;
-// the roll: starts below the window at 3.60 s, 5 px a frame (150 px/s, whole pixels, no shimmer)
-const T0 = 3.6, PXF = 5;
-f.onSeek((t) => { const fr = Math.max(0, Math.round((t - T0) * 30)); $('roll').style.transform = `translateY(${530 - PXF * fr}px)`;
-  $('swirl').style.transform = `rotate(${(t * 9).toFixed(2)}deg)`; });
+const f = window.__film, $ = (id) => document.getElementById(id), C = window.S11_CREDITS, Q = window.S11_QR, RULER = new URLSearchParams(location.search).has('ruler');
+// ---- credits: one font, one weight, all white; titles are the caps lines; extra space above every title block
+$('roll').innerHTML = C.roll.map((b) => b.joke ? `<div class="cr">${b.joke}</div>` :
+  `<div class="cr"><div class="t">${b[0]}</div>${b[1].map((x) => Array.isArray(x) ? `<div class="pair"><div class="t">${x[0]}</div><div>${x[1]}</div></div>` : `<div>${x}</div>`).join('')}</div>`).join('');
+// ---- codes: ECC H, whole pixels per module (5), 4-module quiet zone, a logo knocked out of the centre (13 x 13 of 37 modules = 12 % of the symbol)
+const MARK = {
+  gh: '<path fill="#1c1a17" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>',
+  tg: '<circle cx="12" cy="12" r="12" fill="#229ed9"/><path d="M5.3,11.7 L17.4,7.0 C18.0,6.8 18.5,7.1 18.3,7.9 L16.3,17.2 C16.2,17.8 15.7,18.0 15.2,17.7 L12.1,15.4 L10.6,16.8 C10.4,17.0 10.3,17.1 10.0,17.1 L10.2,13.9 L15.9,8.8 C16.2,8.6 15.8,8.5 15.5,8.7 L8.5,13.1 L5.4,12.2 C4.8,12.0 4.8,11.8 5.3,11.7 Z" fill="#fff"/>',
+  x: '<path fill="#1c1a17" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>',
+};
+const code = (q, mark) => { const n = q.n, s = (n + 8) * 5, L = 13, c0 = (n - L) / 2;
+  return `<svg viewBox="-4 -4 ${n + 8} ${n + 8}" width="${s}" height="${s}" shape-rendering="crispEdges"><rect x="-4" y="-4" width="${n + 8}" height="${n + 8}" fill="#f7f1e3"/><path d="${q.d}" fill="#1c1a17"/>` +
+    `<rect x="${c0}" y="${c0}" width="${L}" height="${L}" fill="#f7f1e3"/><g transform="translate(${c0 + 1.5},${c0 + 1.5}) scale(${(L - 3) / 24})" shape-rendering="auto">${MARK[mark]}</g></svg>`; };
+$('qGh').innerHTML = code(Q.repo, 'gh') + '<div class="h">chaintail/solana-bunker</div>';
+$('qTg').innerHTML = code(Q.tg, 'tg') + '<div class="h">@chaintail</div>';
+$('qX').innerHTML = code(Q.x, 'x') + '<div class="h">@ChaintailLabs</div>';
+// ---- measuring helpers: cap height and baseline of a text element (canvas metrics of the element's own font)
+const cv = document.createElement('canvas').getContext('2d');
+const capH = (el) => { const cs = getComputedStyle(el); cv.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`; return cv.measureText('H').actualBoundingBoxAscent; };
+const inkW = (el) => { const cs = getComputedStyle(el); cv.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`; const m = cv.measureText(el.textContent); return [m.actualBoundingBoxLeft, m.actualBoundingBoxRight]; };
+function layout() {
+  // left header: CNN's cap band, the lemur centred on it (height 1.12 x cap height, its own box), gap 22 px, the group centred in the panel
+  const cnn = $('hCnn'), lg = $('hLogo'), TOP = 30, ch = capH(cnn);
+  cnn.style.left = '0px'; cnn.style.top = TOP + 'px';
+  const fsz = parseFloat(getComputedStyle(cnn).fontSize), asc = (() => { const sp = document.createElement('i'); sp.style.cssText = 'display:inline-block;width:0;height:0'; cnn.appendChild(sp); const y = sp.getBoundingClientRect().top - cnn.getBoundingClientRect().top; sp.remove(); return y; })();
+  const capTop = TOP + asc - ch, capMid = capTop + ch / 2;            // CNN's cap band in panel px
+  const lh = ch * 1.12, lw = lh * 622 / 502; lg.style.height = lh + 'px';
+  const [cl, cr] = inkW(cnn), cnnInk = cl + cr, GAP = 22, W = lw + GAP + cnnInk, X0 = (427 - W) / 2;
+  lg.style.left = X0 + 'px'; lg.style.top = (capMid - lh / 2) + 'px';
+  cnn.style.left = (X0 + lw + GAP + cl) + 'px';                      // CNN's ink (not its advance box) starts GAP after the lemur
+  // CHAINTAIL NEWS / NETWORK justified to the group's width W. Line 1 tracked 0.20 em; NETWORK tracked 0.30 em; both sizes solved from their ink widths
+  // so the two lines start and end on the group's edges (7 letters against 14: NETWORK comes out about 1.7 x line 1's size)
+  const l1 = $('hl1'), l2 = $('hl2'), A1 = .20, A2 = .30;
+  const at100 = (el) => { el.style.fontSize = '100px'; el.style.letterSpacing = '0px'; const [a, b] = inkW(el); return (a + b) / 100; };
+  const s1 = W / (at100(l1) + (l1.textContent.length - 1) * A1), s2 = W / (at100(l2) + (l2.textContent.length - 1) * A2);
+  l1.style.fontSize = s1 + 'px'; l1.style.letterSpacing = (A1 * s1) + 'px'; l2.style.fontSize = s2 + 'px'; l2.style.letterSpacing = (A2 * s2) + 'px';
+  const m1 = inkW(l1)[0], m2 = inkW(l2)[0];
+  l1.style.left = (X0 + m1) + 'px'; l2.style.left = (X0 + m2) + 'px';
+  const base = (el) => { const sp = document.createElement('i'); sp.style.cssText = 'display:inline-block;width:0;height:0'; el.appendChild(sp); const y = sp.getBoundingClientRect().top; sp.remove(); return y; };
+  const c1 = capH(l1), c2 = capH(l2);
+  l1.style.top = '0px'; l1.style.top = (capTop + ch + 24 - (base(l1) - c1)) + 'px';          // line 1's cap top 24 px under CNN's baseline
+  l2.style.top = '0px'; l2.style.top = (base(l1) + 12 - (base(l2) - c2)) + 'px';             // line 2's cap top 12 px under line 1's baseline
+  const b2 = base(l2); $('hRule').style.left = X0 + 'px'; $('hRule').style.width = W + 'px'; $('hRule').style.top = (b2 + 18) + 'px';
+  $('head').style.height = (b2 + 40) + 'px'; $('win').style.top = (b2 + 44) + 'px'; $('win').style.height = (720 - b2 - 44) + 'px';
+  window.__hdr = { W, X0, capTop, capMid, ch, lh, s1, s2 };
+  // right panel on a grid: 56 px side margins; the title's cap top 56 px from the top; vertical rhythm from measured cap tops and baselines
+  const M = 56, pr = $('parch').getBoundingClientRect(), ttl = $('title'), sl1 = $('sl1'), sl2 = $('sl2');
+  const [tl] = inkW(ttl); ttl.style.left = (M + tl) + 'px';                                   // the title's ink starts on the margin
+  ttl.style.top = '0px'; ttl.style.top = (M - (base(ttl) - capH(ttl) - pr.top)) + 'px';
+  const tBase = base(ttl) - pr.top;
+  $('sub').style.top = '0px'; const top1 = () => base(sl1) - capH(sl1) - pr.top;
+  $('sub').style.top = (tBase + 42 - top1()) + 'px';                                          // line 1's cap top 42 px under the title's baseline
+  const t1 = top1(), bot2 = base(sl2) - pr.top, fh = bot2 - t1, fw = fh * 40 / 54;
+  $('flask').style.left = M + 'px'; $('flask').style.top = t1 + 'px'; $('flask').setAttribute('width', fw); $('flask').setAttribute('height', fh);
+  $('sub').style.left = (M + fw + 16) + 'px';
+  const QT = bot2 + 62, GAPQ = (850 - 2 * M - 3 * 225) / 2;                                   // codes 62 px under the block, spread margin to margin
+  ['qGh', 'qTg', 'qX'].forEach((id, i) => { $(id).style.left = (M + i * (225 + GAPQ)) + 'px'; $(id).style.top = QT + 'px'; });
+  const hb = base(document.querySelector('#qGh .h')) - pr.top, ask = $('ask');
+  ask.style.top = '0px'; ask.style.top = (hb + 66 - (base(ask) - capH(ask) - pr.top)) + 'px';   // the sign-off's cap top 66 px under the handles
+  const askBase = base(ask) - pr.top;
+  window.__ttl = { top1: t1, bot2, fh, fw, QT, GAPQ, askBase, bottomMargin: 720 - askBase };
+    if (RULER) {
+    const r = (x, y, w, h, c) => document.body.insertAdjacentHTML('beforeend', `<div class="rl" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;background:${c}"></div>`);
+    r(0, capMid, 427, 1, '#0f0'); r(0, capTop, 427, 1, '#0ff'); r(0, capTop + ch, 427, 1, '#0ff'); r(X0, 0, 1, 230, '#f0f'); r(X0 + W, 0, 1, 230, '#f0f');
+    r(430, window.__ttl.top1, 850, 1, '#f0f'); r(430, window.__ttl.bot2, 850, 1, '#f0f'); r(430 + 56, 0, 1, 720, '#0a0'); r(430 + 794, 0, 1, 720, '#0a0'); r(430, 56, 850, 1, '#0a0');
+  }
+}
+// the still shows the roll with STORY INSPIRATION near the top of the window (the CAST block below it)
+f.onSeek(() => { layout(); const sI = $('roll').children[1]; $('roll').style.transform = `translateY(${18 - sI.offsetTop}px)`; });
 </script></body></html>
