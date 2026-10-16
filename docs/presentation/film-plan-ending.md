@@ -237,3 +237,12 @@ Rulings applied: Q5 the wipe's "WE NOW RETURN TO THE STUDIO", Q6 UPDATE, Q7 the 
 - The onset (`T.and_fav`) is take 573.53 s, scene 23.33 s, frame 700, taken from the 20 ms RMS of the denoised take, which leaves silence at 573.38–573.50 after "spent". Frame 699 reads SLH-DSA and frame 700 reads BUNKER IN A BUNKER.
 - The bunker-in-a-bunker shoulder box is unchanged. Only front chunk B (17 s to the end) was recaptured.
 - Output: dev-mac `s10/out/s10-v5.mp4` and `s10-v5-phone.mp4`, 33.40 s, 1002 frames, −16.4 LUFS / −1.9 dBTP. The whitepaper QR decodes on master and phone at 720p and 540p.
+
+### Scene 10 v6 (Liam's notes)
+- **The bar is on screen for the whole scene.** It sits under the wipe from 0.55 s and is revealed as the wipe moves out: the white tag reads UPDATE and the red box is empty. At 6.32 s (0.25 s before "crypto") CRYPTO NERD pops in (0.2 s, scale 0.70 → 1.06 → 1). The NERD slide and GRAPHY fade are unchanged. The sub line "Liam C. · Bunker Correspondent, Chaintail Labs" stays under it.
+- **Switches are no longer hard cuts.** Each switch is centred on its old time: the changed texts fade out (150 ms), the white tag and red box resize to the next state's widths (250 ms, eased in and out), and the new texts fade in (150 ms).
+  - UPDATE → COMING UP NEXT at 15.48 s resizes, so it runs 15.205–15.755.
+  - SLH-DSA (18.44) and BUNKER IN A BUNKER (23.33) keep the COMING UP NEXT width, so only the changed texts cross: 150 ms out, 150 ms in. The sub line fades only when it changes.
+  - The tag width is measured from the text (as v5: UPDATE 180 px).
+- Strip across the first switch (15.3, 15.4, 15.5, 15.6, 15.7 s): `s10-v6-transition.png`.
+- Output: dev-mac `s10/out/s10-v6.mp4` and `s10-v6-phone.mp4`, 33.40 s, 1002 frames, −16.4 LUFS / −1.9 dBTP. The cut flash is unchanged (frame 401 white, 402 half). The whitepaper QR decodes on master and phone at 720p and 540p.

@@ -80,6 +80,8 @@ html:not([data-layer]) body,html[data-layer="back"] body{background:#05070d}
 /* ---------- scene 10 ---------- */
 .l3 .bar{display:flex;align-items:center}
 .l3 .bar .w{display:inline-block;white-space:pre}
+.l3 .tag{flex:0 0 auto;box-sizing:border-box;white-space:nowrap;overflow:hidden}   /* v6: explicit width, eased between states */
+.l3 .bar .bt{display:inline-block;white-space:pre;transform-origin:0 50%}
 .l3 .bar .ins{display:inline-block;overflow:hidden;white-space:pre;color:#ffe600;vertical-align:top}
 .l3 .bar .ins i{display:inline-block;font-style:normal;transform-origin:0 50%}
 .wipe .ret{position:absolute;left:0;right:0;top:520px;text-align:center;font:800 40px/1 Inter;letter-spacing:.12em;color:#fff;white-space:pre}
@@ -147,22 +149,42 @@ let unitW = 0;
 // ---- the nested vault (scene 4's drafting function, lib/vault.js): outer level 2, inner level 2 at 0.42 R inside the hub
 const OUT = window.vaultDraw($('vsv'), 205, 115, 92, 2), INN = window.vaultDraw($('vsv'), 205, 115, 92 * .42, 2, '#ffd23f');   // the inner door in scene 4's accent yellow
 const vaultParts = (v) => [...v.rings, ...v.spokes, ...v.hinges, ...v.extra];
-// ---- lower third text states (hard cuts on the frame)
+// ---- lower third states (v6, Liam): the bar is on screen from the studio's first frame, UPDATE over an empty red box until CRYPTO NERD pops in.
+// Every switch: the changed texts fade out (150 ms), the white tag box and the red box resize to the next state's widths (250 ms, eased), the new texts fade in (150 ms),
+// centred on the switch time. Where the tag text stays (COMING UP NEXT titles: the red box keeps its width) the texts only cross out and in (150 ms each).
+const SUB_LIAM = 'Liam C.  ·  Bunker Correspondent, Chaintail Labs', SUB_NEXT = 'Next on Chaintail News', POP = T.crypto - .25;
+const CRYPTO = '<span class="w">CRYPTO</span><span class="ins" id="ins"><i id="insi">GRAPHY</i></span><span class="w"> NERD</span>';
+function typed(t) { const s1 = '7,856-byte signatures', s2 = ', no state to track', n1 = Math.round(s1.length * P(t, T.bigger, T.bigger + .45)), n2 = Math.round(s2.length * P(t, T.never, T.never + .45));
+  return s1.slice(0, n1) + s2.slice(0, n2) || SUB_NEXT; }
+function l3state(t) {
+  if (t < T.stateless) return { tag: 'UPDATE', bar: t >= POP ? CRYPTO : '', sub: SUB_LIAM };
+  if (t < T.slh) return { tag: 'COMING UP NEXT', bar: '<span class="w">A STATELESS BUNKER</span>', sub: typed(t) };
+  if (t < T.and_fav) return { tag: 'COMING UP NEXT', bar: '<span class="w">SLH-DSA (FIPS 205)</span>', sub: typed(t) };
+  return { tag: 'COMING UP NEXT', bar: '<span class="w">BUNKER IN A BUNKER</span>', sub: SUB_NEXT };      // v5: from "And my personal favorite idea" to the end
+}
+function tagW(s) { const m = $('l3tag'), w0 = m.style.width, h0 = m.innerHTML; m.style.width = 'auto'; m.innerHTML = `<span>${s}</span>`;
+  const w = m.getBoundingClientRect().width; m.style.width = w0; m.innerHTML = h0; return w; }
 function l3(t) {
-  let tag = 'UPDATE', sub = 'Liam C. \u00a0·\u00a0 Bunker Correspondent, Chaintail Labs', bar = '';   // v4 (Liam): no name bar anywhere; the bar is CRYPTO(GRAPHY) NERD, the sub line under it
-  if (t < T.stateless) {   // before COMING UP NEXT
-    // Liam: it first reads CRYPTO NERD; then NERD slides to the right and GRAPHY fades in between (yellow)
-    const slide = easeIO(P(t, T.graphy, T.graphy + .25)), fade = P(t, T.graphy + .12, T.graphy_end);
-    bar = `<span class="w">CRYPTO</span><span class="ins" id="ins"><i id="insi">GRAPHY</i></span><span class="w"> NERD</span>`;
-    $('l3bar').innerHTML = bar; const i = $('insi'), w = i.getBoundingClientRect().width;
-    $('ins').style.width = (w * slide) + 'px'; i.style.opacity = String(fade);
-    $('l3tag').textContent = tag; $('l3sub').textContent = sub; return; }
-  if (t >= T.and_fav) { tag = 'COMING UP NEXT'; bar = '<span class="w">BUNKER IN A BUNKER</span>'; sub = 'Next on Chaintail News'; }   // v5 (Liam): a third COMING UP NEXT from "And my personal favorite idea" to the end
-  else if (t >= T.stateless) { tag = 'COMING UP NEXT';
-    bar = `<span class="w">${t >= T.slh ? 'SLH-DSA (FIPS 205)' : 'A STATELESS BUNKER'}</span>`;
-    const s1 = '7,856-byte signatures', s2 = ', no state to track', n1 = Math.round(s1.length * P(t, T.bigger, T.bigger + .45)), n2 = Math.round(s2.length * P(t, T.never, T.never + .45));
-    sub = s1.slice(0, n1) + s2.slice(0, n2) || 'Next on Chaintail News'; }
-  $('l3tag').textContent = tag; $('l3bar').innerHTML = bar; $('l3sub').textContent = sub; }
+  const st = l3state(t); let w = tagW(st.tag), op = { tag: 1, bar: 1, sub: 1 };
+  for (const ts of [T.stateless, T.slh, T.and_fav]) {
+    if (Math.abs(t - ts) > .3) continue;
+    const a = l3state(ts - .3), b = l3state(ts + .3), rs = a.tag !== b.tag;
+    const [t0, t1, t2, t3] = rs ? [ts - .275, ts - .125, ts + .125, ts + .275] : [ts - .15, ts, ts, ts + .15];
+    const o = t < ts ? 1 - P(t, t0, t1) : P(t, t2, t3);
+    for (const k of ['tag', 'bar', 'sub']) if (a[k] !== b[k]) op[k] = o;
+    if (rs) w = lerp(tagW(a.tag), tagW(b.tag), easeIO(P(t, t1, t2)));
+  }
+  $('l3tag').style.width = w + 'px'; $('l3tag').innerHTML = `<span style="opacity:${op.tag}">${st.tag}</span>`;
+  $('l3bar').innerHTML = `<span class="bt" id="bt" style="opacity:${op.bar}">${st.bar}</span>`;
+  $('l3sub').innerHTML = `<span style="opacity:${op.sub}">${st.sub}</span>`;
+  if (st.bar === CRYPTO) {
+    // CRYPTO NERD pops in (0.2 s, as he says "crypto"); then NERD slides to the right and GRAPHY fades in between (yellow)
+    const pp = P(t, POP, POP + .2), sc = pp < .6 ? lerp(.7, 1.06, easeO(pp / .6)) : lerp(1.06, 1, (pp - .6) / .4);
+    $('bt').style.transform = `scale(${sc})`; $('bt').style.opacity = String(op.bar * Math.min(1, pp * 2.5));
+    const slide = easeIO(P(t, T.graphy, T.graphy + .25)), fade = P(t, T.graphy + .12, T.graphy_end), i = $('insi');
+    $('ins').style.width = (i.getBoundingClientRect().width * slide) + 'px'; i.style.opacity = String(fade);
+  }
+}
 f.onSeek((t) => {
   // the wipe: in over scene 9's last frame (0-0.55), full cover with WE NOW RETURN TO THE STUDIO typing (0.55-1.10), back out to the left (1.10-2.00)
   const wi = easeIO(P(t, T.wipe_in, T.cover)), wo = easeIO(P(t, T.out_start, T.out_end));
@@ -174,10 +196,8 @@ f.onSeek((t) => {
   $('flash').style.opacity = String(fcut === 0 ? 1 : fcut === 1 ? .5 : t >= T.out_start ? .55 * (1 - P(t, T.out_start, T.out_start + .3)) : 0);
   $('livedot').style.opacity = String(.25 + .75 * Math.abs(Math.cos(t * Math.PI / 1.2)));
   if (!unitW) unitW = unit.getBoundingClientRect().width || 0; if (unitW) run.style.transform = `translateX(${-((t * 150) % unitW)}px)`;
-  // lower third: slides in as in the opening, then the text states
-  const L3IN = T.crypto - .40;   // v4: first appears as CRYPTO NERD, in place as he says "crypto"
-  const li = easeO(P(t, L3IN, L3IN + .45)), ls = easeO(P(t, L3IN + .1, L3IN + .55));
-  $('l3').style.transform = `translateX(${lerp(-120, 0, li)}%)`; $('l3sub').style.transform = `translateX(${lerp(-120, 0, ls)}%)`;
+  // lower third: on screen from the studio's first frame (v6), under the wipe until it moves out
+  $('l3').style.visibility = $('l3sub').style.visibility = t >= T.cover ? 'visible' : 'hidden';
   $('chbug').style.opacity = String(P(t, T.l3_in, T.l3_in + .4));
   l3(t);
   // OTS box: the whitepaper (white paper .. stateless), then the nested vault (bunker .. cook)
