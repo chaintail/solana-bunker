@@ -53,7 +53,6 @@ html,body{font-family:'Architects Daughter','Inter',sans-serif;color:#1d2230;bac
 .fig img.pz{position:absolute;left:0;top:0;width:1024px;height:1536px;display:none}
 .fig .hd{position:absolute;width:136px;height:197px;transform-origin:0 0;background-repeat:no-repeat;background-size:2176px 2364px}
 #bandit{position:absolute;width:200px;height:290px;opacity:0}
-#bandit .hd{position:absolute;left:0;top:0;width:136px;height:197px;transform-origin:0 0;background-repeat:no-repeat;background-size:2176px 2364px;filter:sepia(1) saturate(5) hue-rotate(-28deg) brightness(.82) contrast(1.15)}
 /* overlays above the scene */
 #ov{position:absolute;inset:0;overflow:hidden;pointer-events:none}
 #tweetw{position:absolute;left:660px;top:36px;width:428px;transform-origin:0 0;transform:scale(1.28);opacity:0}
@@ -252,9 +251,8 @@ const JOE = { x: 560, y: 621, r: 0, s: 0.3, flip: 1 }, ENG = { x: 1128, y: 592, 
 
 // bandit: Liam's head, red tint, horns and mask (a fourth version of him), pops up from the bottom edge
 const banditHd = $('bandit');
-banditHd.innerHTML = `<div class="hd" id="bhd"></div><svg class="abs" style="left:0;top:0;overflow:visible" width="200" height="290" viewBox="0 0 200 290"><path d="M40 52 Q18 20 44 -8 Q46 26 66 44 Z M164 52 Q186 20 160 -8 Q156 26 134 44 Z" fill="#8c0f14" stroke="#2a0306" stroke-width="5" stroke-linejoin="round"/><path transform="translate(-8 -5)" fill-rule="evenodd" d="M44 112 Q70 94 98 100 Q124 106 148 100 Q178 94 200 112 Q202 134 184 140 Q160 144 148 132 Q124 126 98 132 Q86 144 62 140 Q42 134 44 112 Z M82 118 Q98 104 114 118 Q98 132 82 118 Z M128 118 Q144 104 160 118 Q144 132 128 118 Z" fill="#14161c" stroke="#000" stroke-width="3"/></svg>`;
+banditHd.innerHTML = `<img src="heads/s06-devil-v2.png" style="position:absolute;left:-15.8px;top:-52.6px;width:263.2px;height:342.1px">`;
 const BAND_FRAME = 0;   // set after the sprite indices are known
-{ const hd = $('bhd'); hd.style.transform = 'scale(1.46)'; hd.style.left = '1px'; }
 
 // ======================= tweet card =======================
 const HASHW = [[642, 395, 132, 43], [881, 3763, 177, 43], [972, 6315, 142, 43], [31, 6700, 297, 43], [380, 6931, 117, 43], [296, 7250, 297, 43]];
@@ -491,7 +489,7 @@ f.onSeek((t) => {
   { const w = eio(FE.walk), ex = eio(FE.exit), hop = FE.walk > 0 && FE.walk < 1 ? Math.abs(Math.sin(FE.walk * 3.1416 * 5)) * 26 : 0, lean = FE.walk > 0 && FE.walk < 1 ? Math.sin(FE.walk * 3.1416 * 5) * 5 : 0;
     place(FE, { x: lerp(1480, ENG.x, w) + ex * 460, y: ENG.y - hop, r: lean, s: ENG.s, flip: 1, vis: FE.walk > 0 && FE.exit < 1 }); }
   // bandit head
-  { const b = $('bandit'); const p = eo(FB.pop); setHead($('bhd'), bandFrame()); b.style.opacity = FB.pop > 0 ? 1 : 0; b.style.transformOrigin = '0 0'; b.style.transform = `translate(${823}px,${lerp(790, 566, p)}px) rotate(${-4 + Math.sin(t * 5) * 1.5}deg) scale(.82)`; }
+  { const b = $('bandit'); const p = eo(FB.pop); b.style.opacity = FB.pop > 0 ? 1 : 0; b.style.transformOrigin = '0 0'; b.style.transform = `translate(${823}px,${lerp(790, 566, p)}px) rotate(${-4 + Math.sin(t * 5) * 1.5}deg) scale(.82)`; }
   // polaroid photo
   { const h = $('phd'); setHead(h, polaFrame()); h.style.transform = 'scale(1.78)'; h.style.left = '8px'; h.style.top = '-8px'; }
   // desaturate the world at the freeze (+ a white flash when the red envelope dives in)
