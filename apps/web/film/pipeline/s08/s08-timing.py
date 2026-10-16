@@ -8,7 +8,11 @@ is cut at 479.60 s), E8 is split at the comma into E8a (engineer) and E8b (lab c
 One real time shift: +0.60 s after E8 (the block drops through the slot). The tag gets 8-bit chiptune (pipeline/s08/chiptune.py -> audio/s08/*.wav), mixed in build.sh. Beat times are take times of the key
 words (transcript tokens rechecked with a 50 ms energy scan), mapped through the edit list, so the scene never hard-codes a time twice.
 v5: the whole scene is scored (pipeline/s08/score.py reads markers, T and sfx from data/s08-edl.js and renders audio/s08/score.wav, tag cues included);
-the mix takes that one file at 0 s (out/s08-sfx.args/.filter)."""
+the mix takes that one file at 0 s (out/s08-sfx.args/.filter).
+v7 (Liam 16702): the tag is cut to the proof table. LEVEL COMPLETE, the rotation text box, the spent-leaf bitmap, the NEXT LEVEL tree and the ROTATE stamp are gone
+(with their cues: the tag bed and the ROTATE coin; the row ticks are dropped). From the tag start the table scrolls in over 0.6545 s (0.595 s at 1.1x, the jingle's 7-note arpeggio) and holds
+to the end; TAG = 2.01 s gives 1270 scene frames (x11: 1155 frames, 38.50 s, 2.09 s from the end of the last word), and the scene's last frame is v6's last frame
+moved 10.0 s earlier (same table, same Joe pose: his cheer has 1 s and 1/3 s periods), so scene 9's hand-off frame is unchanged."""
 import json, subprocess, numpy as np
 SR = 48000
 def pcm(a, b):
@@ -21,7 +25,8 @@ zc = np.nonzero(np.diff(np.signbit(x)))[0]
 m = int(zc[np.argmin(abs(zc - m))]) if len(zc) else m
 CUT = round(a0 + m / SR, 4); print('E5/C1 head split at %.4f s (audio is not cut here)' % CUT)
 E6IN, E8SPLIT = 479.60, 485.58   # E6 head cut in the silence before "Solana" (onset 479.65); E8 comma pause is 485.30-485.60
-TAG = 12.0
+TAG = 2.01   # v7: was 12.0
+PROOF_IN = .6545   # v7: the proof table scrolls 244 -> 8 px over this (v6: 3.9 s from tag + 7.0 s)
 lines = [  # id, speaker, text, src_in, src_out, extra gap before this line (s)
     ('E1', 'eng', 'XMSS signatures seem awesome.', 456.40, 458.66, 0),
     ('E2', 'eng', "They're way smaller.", 458.76, 459.76, 0),
@@ -54,7 +59,7 @@ T = {  # beat cues, scene seconds
  'not': S(477.16), 'cool': S(478.00), 'c1end': edl[6]['out_out'], 'oh': 0, 'solana': S(479.68), 'v1': S(480.96), 'rescue': S(481.60),
  'n4096': S(482.38), 'bytes2': S(483.60), 'so': S(484.46), 'that': S(485.20), 'worked': S(485.62), 'e8end': edl[10]['out_out'],
  'one': S(486.74), 'n3100': S(488.33), 'halfmil': S(489.92), 'compute': S(490.56), 'signature': S(492.32), 'verifies': S(492.88), 'onchain': S(493.52),
- 'single': S(494.40), 'shot': S(494.88), 'end': END_SPEECH, 'tag': TAG0, 'total': TOTAL,
+ 'single': S(494.40), 'shot': S(494.88), 'end': END_SPEECH, 'tag': TAG0, 'proof': round(TAG0 + PROOF_IN, 4), 'total': TOTAL,
 }
 T['oh'] = round(T['solana'] - .48, 3)   # coin drop (oh + .45) lands just before the banner
 trucks = [round(T['research'] + .6 + i * .9, 3) for i in range(3)] + [round(T['not'] + .04, 3), round(T['not'] + .64, 3)]   # arrival times at TEMP ACCT; 4 and 5 arrive under C1
@@ -66,14 +71,14 @@ markers = [{'id': k, 't': v} for k, v in [
     ('SFX_STAMP', T['cool']), ('SFX_INSERT_COIN', T['c1end'] + .05), ('SFX_COIN_DROP', T['oh'] + .45), ('SFX_BANNER', T['solana']), ('SFX_NEW', T['v1']),
     ('SFX_SLOT_WIDEN', T['n4096']), ('SFX_SPIN', T['n4096'] + .6), ('SFX_SWAP_A', T['so']), ('SFX_SWAP_B', T['so'] + .35), ('SFX_BLOCK_DROP', T['worked'] + .2),
     ('SFX_WIN_1', T['one']), ('SFX_WIN_2', T['n3100']), ('SFX_WIN_3', T['compute']), ('SFX_WIN_4', T['verifies']), ('SFX_CHECK', T['single']),
-    ('SFX_JOE', T['single']), ('SFX_LEVEL_COMPLETE', T['tag'] + .25)]]
+    ('SFX_JOE', T['single']), ('SFX_LEVEL_COMPLETE', T['tag'])]]   # v7: the jingle's first note, as the table starts
 for mk in markers: mk['t'] = round(mk['t'], 3)
-# chiptune cues of the tag (audio/s08/*.wav from chiptune.py, mixed in build.sh): jingle on the LEVEL COMPLETE flash, bed from the text box, coin on the ROTATE stamp,
-# one soft tick per credits row as it scrolls in (the table scrolls 244 -> 8 px over 3.9 s from tag + 7.0 s; row offsets 0, 12, then 24 + 10 i)
-C0 = TAG0 + 7.0; V = 236 / 3.9
-SFX = [{'file': 'jingle', 't': TAG0}, {'file': 'bed', 't': round(TAG0 + 1.0, 3)}, {'file': 'coin', 't': round(TAG0 + 4.6, 3)}] + \
-      [{'file': 'tick', 't': round(C0 + (244 + o - 232) / V, 3)} for o in [0, 12] + [24 + 10 * i for i in range(16)]]
-doc = {'total': TOTAL, 'fps': 30, 'edl': edl, 'T': T, 'markers': markers, 'note': 'v5: score.py renders the whole chiptune score (audio/s08/score.wav) from markers, T and the tag cue times (sfx); the mix plays that one file', 'sfx': SFX}
+# chiptune cues of the tag (chiptune.py patterns, rendered by score.py). v7: only the jingle, from the tag start: its 7-note arpeggio (0.595 s) runs while the table
+# scrolls in, the held C major chord lands as it stops and is held `hold` s, release included, so it ends 0.1 s before the x11 end. Cut with their pictures: v6's
+# tag bed (from the text box) and ROTATE coin. The 18 row ticks are dropped too: at this scroll speed they would come every 25-30 ms on top of the arpeggio
+# (and the sum peaks over the score's -11 dBFS ceiling); the arpeggio is the scroll's sound.
+SFX = [{'file': 'jingle', 't': TAG0, 'hold': 1.10}]
+doc = {'total': TOTAL, 'fps': 30, 'edl': edl, 'T': T, 'markers': markers, 'note': 'v7: tag cut to the proof table (Liam 16702). v5: score.py renders the whole chiptune score (audio/s08/score.wav) from markers, T and the tag cue times (sfx); the mix plays that one file', 'sfx': SFX}
 json.dump(doc, open('out/s08-edl.json', 'w'), indent=1)
 open('film/data/s08-edl.js', 'w').write('window.S08 = ' + json.dumps(doc) + ';\n')
 f = []; runs = []   # rows that touch in the take AND in the scene play as one segment (no fade, no dip at the join)

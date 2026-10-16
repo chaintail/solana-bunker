@@ -328,37 +328,16 @@ function drawWin(t) {
   if (t >= T.single) { const n = Math.min(3, Math.floor((t - T.single) / ((T.shot + .15 - T.single) / 4))), k = [3, 6, 10, 15][n];
     const x = 80 - 4.5 * k, y = 60 - 3.5 * k; sprite(c, CHECK, x + Math.max(1, k / 5), y + Math.max(1, k / 5), k, { '#': '#063a12' }); sprite(c, CHECK, x, y, k, { '#': '#20e040' }); }
 }
-const BOX = 'AND BECAUSE EVERY ONE TIME KEY GETS USED EXACTLY ONCE, THE VAULT KEEPS A BITMAP OF WHICH LEAVES ARE SPENT. WHEN YOU RUN LOW, OR YOU JUST GET PARANOID, YOU SIGN ONE MORE MESSAGE THAT INSTALLS A BRAND NEW TREE. NEW ROOT, NEW KEYS, SAME ADDRESS, SAME BALANCE. THE NEW TREE COMES FROM THE SAME TWELVE WORD SEED PHRASE, JUST THE NEXT GENERATION. SO RECOVERY IS ONE INSTRUCTION: ROTATE.';
-const BOXL = []; { let l = ''; for (const w of BOX.split(' ')) { if ((l + ' ' + w).trim().length > 33) { BOXL.push(l); l = w; } else l = (l + ' ' + w).trim(); } BOXL.push(l); }
 // credits: artifacts/public-deployment.json confirmed_transactions (devnet), bytes / compute units
 const CRED = [['XMSS VAULT  V3', '', '', ''], ['WITHDRAW SOL', 'V1', 3117, 518509], ['WITHDRAW MOCK USDC', 'V1', 3214, 532564], ['BURN TWO LEAVES', 'V1', 3086, 529687], ['ROTATE ROOT', 'V1', 3146, 483319],
   ['NEW-ROOT WITHDRAW SOL', 'V1', 3117, 506910], ['NEW-ROOT WITHDRAW USDC', 'V1', 3214, 578944], ['MERKLE VAULT  V2', '', '', ''], ['WITHDRAW SOL', 'LEG', 805, 8003], ['WITHDRAW MOCK USDC', 'LEG', 902, 10413],
   ['ARRAY VAULT  V1', '', '', ''], ['WITHDRAW SOL', 'LEG', 677, 7101], ['WITHDRAW MOCK USDC', 'LEG', 774, 9512], ['PROGRAM', '', '', ''], ['DEPLOY PROGRAM', 'LEG', 542, 2820], ['CREATE MOCK USDC MINT', 'LEG', 430, 502]];
 function drawTag(t) {
-  const c = pf, t0 = T.tag;
-  if (t < t0 + 1) { if (Math.floor((t - t0) * 4) % 2 === 0) { ctext(c, 'LEVEL', 40, '#ffe000', 2); ctext(c, 'COMPLETE', 58, '#ffe000', 2); } return; }
-  const C0 = t0 + 7.0;   // credits start; the text box holds before that
-  const F = fn;
-  if (t < C0) {
-    text(F, 'LEVEL COMPLETE', 160 - Math.ceil(tw('LEVEL COMPLETE') / 2), 4, '#ffe000');
-    F.fillStyle = '#ffffff'; F.fillRect(4, 16, 208, 1); F.fillRect(4, 16 + 9 * BOXL.length + 10, 208, 1); F.fillRect(4, 16, 1, 9 * BOXL.length + 11); F.fillRect(211, 16, 1, 9 * BOXL.length + 11);
-    BOXL.forEach((l, i) => { if (t >= t0 + 1 + i * .12) text(F, l, 10, 22 + i * 9, '#ffffff'); });
-    // spent-leaf bitmap (slide 5's LEDs): 16 x 4, spent ones turn red one by one
-    text(F, 'SPENT LEAVES', 268 - Math.ceil(tw('SPENT LEAVES') / 2), 18, '#19e3ff');
-    const nSpent = Math.min(7, Math.floor(Math.max(0, t - t0 - 1.3) / .18));
-    for (let i = 0; i < 64; i++) { const x = 228 + (i % 16) * 5, y = 30 + Math.floor(i / 16) * 5; F.fillStyle = i < nSpent ? '#ff2030' : '#20c050'; F.fillRect(x, y, 3, 3); }
-    // NEXT LEVEL: a new tree grows from 8 leaves to a root; ROTATE stamps under it
-    if (t >= t0 + 2.6) {
-      text(F, 'NEXT LEVEL', 268 - Math.ceil(tw('NEXT LEVEL') / 2), 60, '#ffe000');
-      const lv = Math.min(4, Math.floor((t - t0 - 2.6) / .45) + 1);
-      const node = (x, y, col) => { F.fillStyle = col; F.fillRect(x - 2, y - 2, 5, 5); };
-      for (let L = 0; L < lv; L++) { const n = 8 >> L, y = 150 - L * 22, sp = 80 / n;
-        for (let i = 0; i < n; i++) { const x = Math.round(228 + sp / 2 + i * sp); if (L > 0) { F.fillStyle = '#7c8cff'; const cl = x - sp / 4, cr = x + sp / 4; F.fillRect(Math.round(cl), y + 2, 1, 20); F.fillRect(Math.round(cr), y + 2, 1, 20); F.fillRect(Math.round(cl), y + 2, Math.round(cr - cl) + 1, 1); }
-          node(x, y, L === 3 ? (Math.floor(t * 6) % 2 ? '#ffe000' : '#fff7a0') : L === 0 ? '#20c050' : '#7c8cff'); } }
-      if (t >= t0 + 4.6) { const k = t < t0 + 4.67 ? 3 : 2; text(F, 'ROTATE', 268 - Math.ceil(tw('ROTATE', k) / 2), 166, '#ff2030', k); } }
-    return; }
+  // v7 (Liam 16702): straight to the proof table after the last line. v6's LEVEL COMPLETE flash, rotation text box, spent-leaf bitmap, NEXT LEVEL tree and ROTATE
+  // stamp are cut; the table scrolls in over T.tag..T.proof (0.6545 s, 0.595 s at 1.1x; v6: 3.9 s) and holds to the end (scene 9 opens on it)
+  const F = fn, C0 = T.tag;
   // credits roll: the table of transactions built, scrolls up and stops with everything on screen
-  const y0 = Math.round(lerp(244, 8, Math.min(1, (t - C0) / 3.9)));
+  const y0 = Math.round(lerp(244, 8, Math.min(1, (t - C0) / (T.proof - C0))));
   const row = (s, y, col) => { if (y > -8 && y < 240) text(F, s, 6, y, col); };
   row('TRANSACTIONS WE BUILT, ALL CONFIRMED ON DEVNET', y0, '#ffe000');
   row('OPERATION'.padEnd(24) + 'TX ' + 'BYTES'.padStart(7) + 'CU'.padStart(9), y0 + 12, '#19e3ff');

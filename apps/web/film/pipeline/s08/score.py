@@ -10,7 +10,8 @@ One key (C major / A minor). Tempo map (beats per minute from the markers, so th
   D workaround TRUCK_1 - 14 beats .. C1 starts        beat = (TRUCK_3 - TRUCK_1) / 4           (~133.3)  2-step: triangle on 1 and 3, chord stabs on 2 and 4
   E rescue     BANNER .. BANNER + 16 beats (= WIN)    beat = (BLOCK_DROP - BANNER) / 13        (~127.0)
   F win        WIN_1 .. CHECK                         beat = (CHECK - WIN_1) / 16              (~125.3)  C Dm Em F-G, then the full chord on CHECK
-  tag          v4's cues at v4's times (sfx): LEVEL COMPLETE jingle, the 124 BPM bed, ROTATE coin, credits ticks
+  tag          v4's cues at the sfx times. v7 (Liam 16702, tag cut to the proof table): the jingle from the tag start (LEVEL_COMPLETE, first note), its
+               arpeggio under the table's scroll, the held C major chord as the table lands, ending 0.1 s before the scene (x11); no row ticks
 Levels (absolute, mixed after the voice loudnorm like v4): beds -33 dBFS RMS and stings -27 dBFS peak where they sit under speech, stings -12 dBFS peak in the
 clear (GAME OVER, INSERT COIN). With --voice (the loudnormed voice alone, build.sh writes it) a dialogue guard then trims the score so that in every 200 ms
 window where the voice is active (RMS >= -30 dBFS) the score sits at least GUARD_DB under it (fast attack with 100 ms look-ahead;
@@ -48,11 +49,15 @@ class Grid:
 GRIDS = []
 def grid_of(t):
     g = [x for x in GRIDS if x.start <= t + 1e-6] or GRIDS[:1]; return g[-1]   # the section running at t (or the last one that ran)
-def sting(marker, p, desc, t=None, level=None, length=None, offset=0.0):
-    """render pattern p alone at a peak level and place it so that its event (offset s into the pattern) lands on the marker"""
+def sting(marker, p, desc, t=None, level=None, length=None, offset=0.0, step_down=None):
+    """render pattern p alone at a peak level and place it so that its event (offset s into the pattern) lands on the marker.
+    step_down=(t, dB): the sting itself steps down by dB from t on (20 ms ramp ending 12 ms before t), so a sting starting at t reads over its tail"""
     tm = M[marker] if t is None else t; t0 = tm - offset; L = length or p.length + .25
     lev = level if level is not None else (STING_UNDER if overlap(t0, t0 + p.length) >= .2 else STING_CLEAR)   # in the clear = under 20 % of its notes under speech
-    place(C.cue(p, L, ('peak', lev), fade_ms=3), t0); duck(tm, t0 + p.length)
+    x = C.cue(p, L, ('peak', lev), fade_ms=3)
+    if step_down:
+        ts, sdb = step_down; tt = t0 + np.arange(len(x)) / SR; x = x * 10 ** (sdb * np.clip((tt - (ts - .032)) / .02, 0, 1) / 20)
+    place(x, t0); duck(tm, t0 + p.length)
     EVENTS.append(dict(marker=marker, t=M.get(marker, tm), event=round(tm, 4), level='peak %.0f' % lev, what=desc))
 def bed(name, p, t0, t1, desc, level=BED_UNDER, grid=None):
     """a looped pattern from t0 to t1, RMS-normalised over its span, 30 ms fade at the cut"""
@@ -85,7 +90,8 @@ pre = M['SFX_XMSS_LAND'] - T['awesome']
 sting('SFX_XMSS_LAND', P([(I['whistle'], 'G7>G6=%.3f' % (pre - .05), .08), (I['sq50'], '- G5>G4=.06', 1.0), (I['snare'], '- N1=.02', .5)], step=pre),
       'tiny: short whistle, then a "tink" (50 % square G5 to G4, 60 ms) + noise click', offset=pre)
 sting('SFX_EXPLODE', P([(I['boom'], 'N3>N13=.65', 1.0), (I['kick'], 'C3>C1=.3', .8), (I['sq50'], 'G3>C2=.22', .25)], step=.65),
-      'explosion: long-mode noise burst sweeping down (period 3 to 13), triangle drop, square growl', level=STING_UNDER - 2)
+      'explosion: long-mode noise burst sweeping down (period 3 to 13), triangle drop, square growl; steps down 9 dB for the score tick', level=STING_UNDER - 2,
+      step_down=(M['SFX_SCORE_TICK'], -9.0))   # x11: the tick starts 91 ms into the burst (1x: 100 ms) and only read +2.4 dB over it
 tones = ['G4', 'C5', 'E5', 'G5', 'C6', 'E6', 'G6', 'C7', 'E7', 'G7']
 sting('SFX_SCORE_TICK', P([(I['blip50'], ' '.join(tones[1 + k // 3 + k % 3] for k in range(21)), 1.0)], step=.7 / 21),
       'score tick-up: 21 square blips (one per counter step, 1/30 s), rolling C major arpeggio C5 to G7')
@@ -164,13 +170,17 @@ sting('SFX_JOE', P([(I['blip'], 'G5 C6 E6 G6 C7 . E7 . .', 1.0)], step=.055), '1
 
 # ---------------- tag: v4's cues, v4's times
 for x in D['sfx']:
-    w = {'jingle': C.jingle, 'bed': C.bed, 'coin': C.coin, 'tick': C.tick}[x['file']]()
+    w = C.jingle(x['hold']) if x['file'] == 'jingle' and 'hold' in x else {'jingle': C.jingle, 'bed': C.bed, 'coin': C.coin, 'tick': C.tick}[x['file']]()
     if x['file'] == 'bed':   # as v4's build: trimmed at the scene end, 0.6 s linear fade-out
         d = TOTAL - x['t']; w = w[:int(round(d * SR))].copy(); k = int(.6 * SR); w[-k:] *= np.linspace(1, 0, k)
+    assert x['t'] + len(w) / SR <= TOTAL + 1e-9, ('tag cue runs past the scene end', x)   # nothing is cut off at the end
     place(w, x['t'])
-EVENTS.append(dict(marker='SFX_LEVEL_COMPLETE', t=M['SFX_LEVEL_COMPLETE'], event=round(D['sfx'][0]['t'] + 3 * .085, 4), level='peak -12',
-                   what="v4's jingle from the LEVEL COMPLETE flash (tag); its top C6 lands on the marker"))
-SECTIONS.append(dict(section='tag', t0=T['tag'], t1=TOTAL, bpm=124, rms=-30, what="v4: jingle, bed from tag + 1 s, coin on ROTATE, 18 credits ticks"))
+jt = next(x['t'] for x in D['sfx'] if x['file'] == 'jingle'); v7 = 'hold' in D['sfx'][0]
+EVENTS.append(dict(marker='SFX_LEVEL_COMPLETE', t=M['SFX_LEVEL_COMPLETE'], event=round(jt + (0 if v7 else 3 * .085), 4), level='peak -12',
+                   what="v4's jingle from the tag start, held chord shortened to end before the scene; its first note on the marker as the proof table starts" if v7 else
+                        "v4's jingle from the LEVEL COMPLETE flash (tag); its top C6 lands on the marker"))
+SECTIONS.append(dict(section='tag', t0=T['tag'], t1=TOTAL, bpm=None, rms=None, what="v7: jingle only (arpeggio under the table's scroll, held chord as it lands)") if v7 else
+                dict(section='tag', t0=T['tag'], t1=TOTAL, bpm=124, rms=-30, what="v4: jingle, bed from tag + 1 s, coin on ROTATE, 18 credits ticks"))
 
 score += beds * bed_gain
 

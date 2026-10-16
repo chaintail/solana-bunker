@@ -150,16 +150,17 @@ def cue(pattern, length, level, fade_ms=20):
     return peak_to(x, level[1]) if level[0] == 'peak' else rms_to(x, level[1])
 
 # ---- v4's tag cues as patterns (bit-identical to the v4 wavs)
-def jingle():
+def jingle(hold=1.35, length=2.1):
+    """v4: hold 1.35 s, 2.1 s buffer. v7 passes a shorter hold; the buffer then ends 50 ms after the bass (release inside the note, so nothing is cut)"""
     st = .085   # one arpeggio note = 2 steps of 42.5 ms, the harmony enters half a note late
     I = dict(lead=inst(v4=True, wave='sq', duty=.5, vol=1, gate=.95, a=.002, d=.1, s=.8, r=.01), harm=inst(v4=True, wave='sq', duty=.25, vol=.7, gate=.95, a=.002, d=.1, s=.8, r=.01),
              bass=inst(v4=True, wave='tri', vol=1, a=.002, d=1, s=1, r=.01), leadH=inst(v4=True, wave='sq', duty=.5, vol=1, a=.002, d=.5, s=.35, r=.35),
              harmH=inst(v4=True, wave='sq', duty=.25, vol=.8, a=.002, d=.5, s=.35, r=.35), bassH=inst(v4=True, wave='tri', vol=1, a=.002, d=.8, s=.7, r=.4))
-    p = Pattern([(I['lead'], 'C5 . E5 . G5 . C6 . G5 . C6 . E6 . {leadH} E6=1.35', .5),                 # voice 1: 50 % square, C5 E5 G5 C6 G5 C6 E6, held E6
-                 (I['harm'], '- G4 . B4 . D5 . G5 . D5 . G5 . B5 . < {harmH} C6=1.35', .38),             # voice 2: 25 % square a fourth below, half a step late; held C6
-                 (I['bass'], 'C2 . E2 . G2 . C3 . G2 . C3 . E3 . {bassH} C3=1.4', .6)],               # triangle two octaves down; held C3
+    p = Pattern([(I['lead'], 'C5 . E5 . G5 . C6 . G5 . C6 . E6 . {leadH} E6=%g' % hold, .5),                 # voice 1: 50 % square, C5 E5 G5 C6 G5 C6 E6, held E6
+                 (I['harm'], '- G4 . B4 . D5 . G5 . D5 . G5 . B5 . < {harmH} C6=%g' % hold, .38),             # voice 2: 25 % square a fourth below, half a step late; held C6
+                 (I['bass'], 'C2 . E2 . G2 . C3 . G2 . C3 . E3 . {bassH} C3=%g' % (hold + .05), .6)],               # triangle two octaves down; held C3
                 step=st / 2, instruments=I)
-    return cue(p, 2.1, ('peak', -12))
+    return cue(p, length if hold == 1.35 else p.length + .05, ('peak', -12))
 def bed():
     BPM = 124; I = dict(bass=inst(v4=True, wave='tri', vol=1, gate=.9, a=.003, d=1, s=1, r=.02), lead=inst(v4=True, wave='sq', duty=.125, vol=1, gate=.8, a=.002, d=.06, s=.35, r=.03),
                         hat=inst(v4=True, wave='hat', vol=.7))
