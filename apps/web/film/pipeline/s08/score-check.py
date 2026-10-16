@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Scene 8 v5 score checks, by waveform (dev-mac, from ~/video-work/solana-bunker/s08, system python):
   python3 film/pipeline/s08/score-check.py [--score film/audio/s08/score.wav] [--voice out/voice-ln.wav] [--final out/audio-final.wav]
-1. every marker has an onset in the score within 20 ms: the level jump (RMS of the next 8 ms over the 10 ms before, with a 2 ms gap) of at least 3 dB nearest
-   the marker in +-20 ms. LEVEL_COMPLETE is checked on the jingle note that lands on it.
+1. every marker has an onset in the score: the level jump (RMS of the next 8 ms over the 10 ms before, with a 2 ms gap) nearest the marker in +-20 ms (local
+   maxima of at least 3 dB). LEVEL_COMPLETE is checked on the jingle note that lands on it. v8 bar: the onset within MAX_MS (10 ms) of the marker and the jump
+   at least MIN_DB (6 dB), so every hit reads over the tail before it (v5-v7: 20 ms and 3 dB). v8 also checks the jingle's held chord against the table stop.
 2. the voice is never masked: in every 200 ms window (50 ms hop) where the loudnormed voice is active (RMS >= -30 dBFS) the score is at least 15 dB under it.
 3. levels: score RMS per section where someone speaks, sting peaks, the score's peak; the final mix's peak and the score's offset in it (cross-correlation over the tag)."""
 import sys, os, json, argparse, wave, numpy as np
@@ -14,7 +15,7 @@ def rd(p):
     w = wave.open(p); ch = w.getnchannels(); x = np.frombuffer(w.readframes(w.getnframes()), '<i2').astype(float) / 32768; return x.reshape(-1, ch).mean(1), w.getframerate()
 def db(v): return 20 * np.log10(max(float(v), 1e-9))
 def rms(x, sr, a, b): s = x[max(0, int(round(a * sr))):max(0, int(round(b * sr)))]; return np.sqrt((s ** 2).mean()) if len(s) else 0.0
-s, ssr = rd(A.score); v, vsr = rd(A.voice); ok = True
+s, ssr = rd(A.score); v, vsr = rd(A.voice); ok = True; MIN_DB, MAX_MS = 6.0, 10.0
 ev = {e['marker']: e for e in json.load(open(A.events))['events']} if os.path.exists(A.events) else {}
 print('1. markers (score onset - marker, ms; level jump dB)')
 worst = 0
@@ -23,9 +24,14 @@ for m in D['markers']:
     taus = np.arange(t - .02, t + .0201, .0005); J = np.array([db(rms(s, ssr, u, u + .008)) - db(rms(s, ssr, u - .012, u - .002)) for u in taus])
     pk = [i for i in range(1, len(J) - 1) if J[i] >= 3 and J[i] >= J[i - 1] and J[i] >= J[i + 1]]   # onsets: local maxima of the jump, >= 3 dB (not at the window edge)
     i = min(pk, key=lambda i: abs(taus[i] - t)) if pk else int(np.argmax(J)); best = (taus[i], J[i])   # the onset nearest the marker
-    d = (best[0] - m['t']) * 1000; good = best[1] >= 3 and abs(d) <= 20; ok &= good; worst = max(worst, abs(d))
+    d = (best[0] - m['t']) * 1000; good = best[1] >= MIN_DB and abs(d) <= MAX_MS; ok &= good; worst = max(worst, abs(d))
     print('  %-20s %6.2f s  %+6.1f ms  %+5.1f dB %s' % (m['id'], m['t'], d, best[1], '' if good else '  FAIL'))
 print('  worst offset %.1f ms' % worst)
+lc = ev.get('SFX_LEVEL_COMPLETE', {})
+if 'chord' in lc:   # v8: the held chord (after the 7-note arpeggio) lands as the proof table stops (T.proof)
+    t = lc['chord']; taus = np.arange(t - .02, t + .0201, .0005); J = np.array([db(rms(s, ssr, u, u + .008)) - db(rms(s, ssr, u - .012, u - .002)) for u in taus])
+    i = int(np.argmax(J)); d = (taus[i] - D['T']['proof']) * 1000; good = abs(d) <= MAX_MS; ok &= good
+    print('  %-20s %6.2f s  %+6.1f ms  %+5.1f dB %s  (jingle chord vs T.proof, the table stops)' % ('JINGLE_CHORD', D['T']['proof'], d, J[i], '' if good else '  FAIL'))
 print('2. masking (200 ms windows, 50 ms hop, voice active >= -30 dBFS): score must be >= 15 dB under the voice')
 h = np.arange(0, TOTAL - .2 + 1e-9, .05); vw = np.array([db(rms(v, vsr, a, a + .2)) for a in h]); sw = np.array([db(rms(s, ssr, a, a + .2)) for a in h])
 act = vw >= -30; mg = (vw - sw)[act]

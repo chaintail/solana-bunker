@@ -13,10 +13,11 @@ X = dict(D); X['total'] = round(M / D['fps'], 4); X['speed'] = S
 X['edl'] = [dict(e, out_in=r(e['out_in']), out_out=r(e['out_out'])) for e in D['edl']]
 X['T'] = {k: r(v) for k, v in D['T'].items()}
 X['markers'] = [dict(m, t=r(m['t'])) for m in D['markers']]
-# the jingle's arpeggio (0.595 s) has a fixed tempo; its hold is shortened so the chord still ends 0.1 s before the end: hold = tail - 0.595 - 0.05 - 0.1
+# v8: the jingle's 7-note arpeggio spans the table's scroll (T.tag .. T.proof, score.py), so the chord lands as the table stops; its hold is shortened so the
+# chord still ends 0.1 s before the end: hold = tail - scroll - 0.05 - 0.1 (v7 x12 kept the 1.1x arpeggio, 0.595 s, and the chord landed 50 ms late)
 X['sfx'] = [dict(x, t=r(x['t'])) for x in D['sfx']]
 for x in X['sfx']:
-    if 'hold' in x: x['hold'] = round(X['total'] - x['t'] - 0.595 - 0.05 - 0.1, 3)
+    if 'hold' in x: x['hold'] = round(X['total'] - x['t'] - (X['T']['proof'] - X['T']['tag']) - 0.05 - 0.1, 3)
 X['note'] = 'x12 copy of s08-edl.js (pipeline/s08/edl-x12.py): scene times / 1.2, total = %d frames (scene %d frames at 1.2x). ' % (M, N) + D.get('note', '')
 open(os.path.join(FILM, 'data/s08-edl-x12.js'), 'w').write('window.S08 = ' + json.dumps(X) + ';\n')
 print('total', D['total'], '->', X['total'], '(%d -> %d frames)' % (N, M))

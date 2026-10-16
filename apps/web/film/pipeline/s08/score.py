@@ -31,12 +31,24 @@ ap = argparse.ArgumentParser(); ap.add_argument('--edl', default=os.path.join(FI
 ap.add_argument('--voice'); ap.add_argument('--events', default='out/score-events.json'); ap.add_argument('--table', action='store_true'); A = ap.parse_args()
 src = open(A.edl).read(); D = json.loads(src[src.index('{'):src.rindex('}') + 1])
 T, M, TOTAL = D['T'], {m['id']: m['t'] for m in D['markers']}, D['total']
+SPD = D.get('speed', 1.0)   # x11 / x12 copies: the picture runs SPD times faster than the scene clock (capture --speed)
+CLEAR_DB, CLEAR_MAX = 7.0, -15.0   # v8: every sting reads at least CLEAR_DB over what is already sounding (the duck below is at most CLEAR_MAX)
 SPEECH = [(e['out_in'], e['out_out']) for e in D['edl']]
-N = int(round(TOTAL * SR)); score = np.zeros(N); beds = np.zeros(N); bed_gain = np.ones(N); EVENTS = []; SECTIONS = []
+N = int(round(TOTAL * SR)); score = np.zeros(N); beds = np.zeros(N); bed_gain = np.ones(N); EVENTS = []; SECTIONS = []; STINGS = []
 
 def overlap(t0, t1): return sum(max(0, min(t1, b) - max(t0, a)) for a, b in SPEECH) / max(t1 - t0, 1e-9)
 def place(x, t, buf=None):
     buf = score if buf is None else buf; i0 = int(round(t * SR)); n = min(len(x), N - i0); buf[i0:i0 + n] += x[:n]
+def pic(p):
+    """v8: a sting whose steps and note lengths follow an animation in the page (counter steps, odometer, spin frames, saw strokes, blinks, drops) is written
+    in scene seconds; at SPD x the picture plays them SPD times faster, so the pattern is time-scaled by 1/SPD (pitch, envelopes and vibrato unchanged).
+    Stings timed from the bar grid or from word times (T) are already in output seconds and are not passed through pic()."""
+    if SPD == 1.0: return p
+    p.step /= SPD
+    for ev, _ in p.tracks:
+        for e in ev:
+            if 'len' in e[4]: e[4]['len'] /= SPD
+    p.length /= SPD; return p
 def duck(t0, t1, db=-6.0, ramp=.02):
     """the beds step aside (db) while a sting plays, so the sting reads without being louder"""
     i = np.arange(max(0, int((t0 - ramp) * SR)), min(N, int((t1 + ramp) * SR))); tt = i / SR
@@ -57,7 +69,7 @@ def sting(marker, p, desc, t=None, level=None, length=None, offset=0.0, step_dow
     x = C.cue(p, L, ('peak', lev), fade_ms=3)
     if step_down:
         ts, sdb = step_down; tt = t0 + np.arange(len(x)) / SR; x = x * 10 ** (sdb * np.clip((tt - (ts - .032)) / .02, 0, 1) / 20)
-    place(x, t0); duck(tm, t0 + p.length)
+    STINGS.append(dict(marker=marker, tm=tm, t0=t0, x=x)); duck(tm, t0 + p.length)
     EVENTS.append(dict(marker=marker, t=M.get(marker, tm), event=round(tm, 4), level='peak %.0f' % lev, what=desc))
 def bed(name, p, t0, t1, desc, level=BED_UNDER, grid=None):
     """a looped pattern from t0 to t1, RMS-normalised over its span, 30 ms fade at the cut"""
@@ -89,11 +101,11 @@ sting('SFX_LAMPORT_LAND', pLand(pre, 'C7>C5', 'C3>C1=.28', 'N9>N14=.24', 1.0), '
 pre = M['SFX_XMSS_LAND'] - T['awesome']
 sting('SFX_XMSS_LAND', P([(I['whistle'], 'G7>G6=%.3f' % (pre - .05), .08), (I['sq50'], '- G5>G4=.06', 1.0), (I['snare'], '- N1=.02', .5)], step=pre),
       'tiny: short whistle, then a "tink" (50 % square G5 to G4, 60 ms) + noise click', offset=pre)
-sting('SFX_EXPLODE', P([(I['boom'], 'N3>N13=.65', 1.0), (I['kick'], 'C3>C1=.3', .8), (I['sq50'], 'G3>C2=.22', .25)], step=.65),
+sting('SFX_EXPLODE', pic(P([(I['boom'], 'N3>N13=.65', 1.0), (I['kick'], 'C3>C1=.3', .8), (I['sq50'], 'G3>C2=.22', .25)], step=.65)),
       'explosion: long-mode noise burst sweeping down (period 3 to 13), triangle drop, square growl; steps down 9 dB for the score tick', level=STING_UNDER - 2,
       step_down=(M['SFX_SCORE_TICK'], -9.0))   # x11: the tick starts 91 ms into the burst (1x: 100 ms) and only read +2.4 dB over it
 tones = ['G4', 'C5', 'E5', 'G5', 'C6', 'E6', 'G6', 'C7', 'E7', 'G7']
-sting('SFX_SCORE_TICK', P([(I['blip50'], ' '.join(tones[1 + k // 3 + k % 3] for k in range(21)), 1.0)], step=.7 / 21),
+sting('SFX_SCORE_TICK', pic(P([(I['blip50'], ' '.join(tones[1 + k // 3 + k % 3] for k in range(21)), 1.0)], step=.7 / 21)),
       'score tick-up: 21 square blips (one per counter step, 1/30 s), rolling C major arpeggio C5 to G7')
 
 # ---------------- B: tension (slot opens, block hops, wedges)
@@ -101,21 +113,21 @@ bB = (M['SFX_GAME_OVER'] - M['SFX_SLOT_OPEN']) / 6; gB = Grid('B', M['SFX_SLOT_O
 pB = P([(I['triS'], ' '.join(['A2 A3'] * 12), .5), (I['lead25'], '| E5 . F5 . E5 . F5 . E5 . F5 . F#5 . G5 . | G#5 . A5 . G#5 . A5 .', .35),
         (I['hat'], ' '.join(['- - C4 -'] * 6), .1)], bpm=60 / bB, spb=4)
 bed('B tension', pB, M['SFX_SLOT_OPEN'], M['SFX_WEDGE'], 'tension: A minor, triangle octave pedal in 16ths, 25 % lead creeping E-F to G#-A, off-beat hat', grid=gB)
-sting('SFX_SLOT_OPEN', P([(I['blip25'], 'G4>D4 E4>B3 C4>G3', 1.0)], step=.1), 'three bricks drop: three falling blips G4, E4, C4')
-sting('SFX_BLOCK_HOP', P([(I['blip25'], 'E4>E6=.22', 1.0)], step=.22), 'jump: 25 % square slide E4 up to E6')
+sting('SFX_SLOT_OPEN', pic(P([(I['blip25'], 'G4>D4 E4>B3 C4>G3', 1.0)], step=.1)), 'three bricks drop: three falling blips G4, E4, C4')
+sting('SFX_BLOCK_HOP', pic(P([(I['blip25'], 'E4>E6=.22', 1.0)], step=.22)), 'jump: 25 % square slide E4 up to E6')
 pre = M['SFX_WEDGE'] - T['transaction']; k = max(1, int(round(pre / .04))); rest = ' '.join(['-'] * k)   # 40 ms steps, the crunch starts on step k
 sting('SFX_WEDGE', P([(I['whistle'], 'E6>E4=%.3f' % pre, .2), (I['grit'], rest + ' M2 N6 M3 N7 M2 N6 M3 N7 M2 N6', .7), (I['sq50'], rest + ' B2=.25', .35),
                       (I['lead25'], rest + ' F3=.25', .3)], step=pre / k),
       'wedge: drop whistle from "transaction", then the crunch: metallic short-mode noise grinding (40 ms), B2 + F3 tritone', offset=pre)
 
-sting('SFX_SAW', P([(I['rasp'], 'E3>A3 A3>E3 E3>A3 A3>E3 E3>A3 A3>E3', .5), (I['grit'], 'N5 N7 N5 N7 N5 N7', .5)], step=.135),
+sting('SFX_SAW', pic(P([(I['rasp'], 'E3>A3 A3>E3 E3>A3 A3>E3 E3>A3 A3>E3', .5), (I['grit'], 'N5 N7 N5 N7 N5 N7', .5)], step=.135)),
       'saw: three back-and-forth strokes (0.27 s each, with the sprite), buzzing 12.5 % square E3-A3 + noise')
-sting('SFX_BREAK', P([(I['snare'], 'M1=.03', 1.0), (I['boom'], 'N4>N10=.25', .6), (I['blip25'], 'C5>C4 A4>A3 F4>F3 D4>D3', .8)], step=.1),
+sting('SFX_BREAK', pic(P([(I['snare'], 'M1=.03', 1.0), (I['boom'], 'N4>N10=.25', .6), (I['blip25'], 'C5>C4 A4>A3 F4>F3 D4>D3', .8)], step=.1)),
       'the block falls apart: metallic crack + noise, four falling blips, one per chunk')
 
 # ---------------- C: game over, then silence under the sigh
-sting('SFX_GAME_OVER', P([(I['sq50'], 'C5 B4 Bb4 {hold50} A4~=.62', .5), (I['lead25'], 'A4 G#4 G4 {hold25} E4~=.62', .35),
-                          (I['tri'], 'A2 . . A2>A1=.6', .55), (I['snare'], 'N3', .3)], step=.17),
+sting('SFX_GAME_OVER', pic(P([(I['sq50'], 'C5 B4 Bb4 {hold50} A4~=.62', .5), (I['lead25'], 'A4 G#4 G4 {hold25} E4~=.62', .35),
+                          (I['tri'], 'A2 . . A2>A1=.6', .55), (I['snare'], 'N3', .3)], step=.17)),
       'GAME OVER: the minor fall, C5 B4 Bb4 A4 over A4 G#4 G4 E4, held with vibrato; triangle A2 sliding to A1; then nothing until "I guess"')
 
 # ---------------- D: workaround level (plodding 2-step), trucks, the stamp
@@ -129,11 +141,11 @@ bed('D workaround', pD, tD, c1, 'workaround: plodding 2-step, slow triangle on 1
 for i, n in enumerate(['A3', 'B3', 'C4', 'D4', 'E4']):
     sting('SFX_TRUCK_%d' % (i + 1), P([(I['putt'], '%s %s' % (n, n), 1.0), (I['grit'], 'M9 M9', .5)], step=bD / 4), 'truck %d putt-putt on %s' % (i + 1, n),
           level=STING_UNDER - (2 if i < 3 else 5))
-sting('SFX_STAMP', P([(I['rasp'], 'A2>E2~=.32', .6), (I['rasp2'], 'Bb2>F2~=.32', .4), (I['grit'], 'N10=.3', .25)], step=.32), 'thumbs-down raspberry: two low squares a semitone apart, 28 Hz flutter, sliding down')
+sting('SFX_STAMP', pic(P([(I['rasp'], 'A2>E2~=.32', .6), (I['rasp2'], 'Bb2>F2~=.32', .4), (I['grit'], 'N10=.3', .25)], step=.32)), 'thumbs-down raspberry: two low squares a semitone apart, 28 Hz flutter, sliding down')
 
 # ---------------- E: insert coin, rescue (banner, odometer, flip, swaps, block drop)
-sting('SFX_INSERT_COIN', P([(I['blip25'], 'G5 C6 - - G5 C6', 1.0)], step=1 / 12), 'INSERT COIN chime: G5-C6 on the first two blinks of the text (6 Hz flash); the third blink is left clear for "Solana" and the coin')
-CL = STING_UNDER - 10; p = C.coin(); place(p * 10 ** ((CL + 18) / 20), M['SFX_COIN_DROP'])   # small: 30 ms later the fanfare starts
+sting('SFX_INSERT_COIN', pic(P([(I['blip25'], 'G5 C6 - - G5 C6', 1.0)], step=1 / 12)), 'INSERT COIN chime: G5-C6 on the first two blinks of the text (6 Hz flash); the third blink is left clear for "Solana" and the coin')
+CL = STING_UNDER - 10; p = C.coin(); STINGS.append(dict(marker='SFX_COIN_DROP', tm=M['SFX_COIN_DROP'], t0=M['SFX_COIN_DROP'], x=p * 10 ** ((CL + 18) / 20)))   # small: 30 ms later the fanfare starts
 EVENTS.append(dict(marker='SFX_COIN_DROP', t=M['SFX_COIN_DROP'], event=M['SFX_COIN_DROP'], level='peak %.0f' % CL, what="v4's coin pattern (B5 to E6) as the coin hits the slot"))
 bE = (M['SFX_BLOCK_DROP'] - M['SFX_BANNER']) / 13; gE = Grid('E', M['SFX_BANNER'], bE, M['SFX_BANNER']); GRIDS.append(gE)
 pE = P([(I['tri'], '| C2 . C3 . C2 . C3 . C2 . C3 . C2 . C3 . | F2 . F3 . F2 . F3 . G2 . G3 . G2 . G3 . | A2 . A3 . A2 . A3 . F2 . F3 . F2 . F3 . '
@@ -146,13 +158,13 @@ bed('E rescue', pE, gE.t1, tE1, 'rescue: C | F G | Am F | G, triangle octave bou
 sting('SFX_BANNER', P([(I['sq50'], 'G4 C5 E5 G5 . . {hold50} C6~=.6', .5), (I['lead25'], 'E4 G4 C5 E5 . . {hold25} G5~=.6', .3), (I['tri'], 'C3=.6 - - - - - C3=.6', .5), (I['snare'], 'N3 - - - - - N3', .45)], step=bE / 4),
       'banner fanfare: rising G4 C5 E5 G5 to a held C6 (with E, G a third below), triangle C, noise hits')
 sting('SFX_NEW', P([(I['blip25'], 'E6 C7', 1.0)], step=bE / 4), 'NEW!: two bright blips E6, C7', level=STING_UNDER - 2)
-sting('SFX_SLOT_WIDEN', P([(I['blip25'], ' '.join(tones[k // 3 + k % 3] for k in range(16)), 1.0)], step=1.2 / 16),
+sting('SFX_SLOT_WIDEN', pic(P([(I['blip25'], ' '.join(tones[k // 3 + k % 3] for k in range(16)), 1.0)], step=1.2 / 16)),
       'odometer 1,232 to 4,096: 16 blips over 1.2 s, rolling C major arpeggio rising G4 to G6')
-sting('SFX_SPIN', P([(I['blip25'], 'G5 . . B5 . . D6 . . ' + 'D6 . G5 . ' * 4 + 'D6 . {hold25} C6~=.45', 1.0), (I['tri'], '- ' * 27 + 'C3=.45', .5)], step=1 / 30),
+sting('SFX_SPIN', pic(P([(I['blip25'], 'G5 . . B5 . . D6 . . ' + 'D6 . G5 . ' * 4 + 'D6 . {hold25} C6~=.45', 1.0), (I['tri'], '- ' * 27 + 'C3=.45', .5)], step=1 / 30)),
       'the ">" grows (G5 B5 D6), spins (D6/G5 at 15 Hz with the frames), resolves to C6 as the green "<" settles')
-sting('SFX_SWAP_A', P([(I['blip25'], 'C6>C5=.15', 1.0)], step=.15), '"-A" tumbles off: falling blip C6 to C5', level=STING_UNDER - 2)
-sting('SFX_SWAP_B', P([(I['blip25'], 'C5>C6=.15', 1.0)], step=.15), '"-B" flies in: rising blip C5 to C6', level=STING_UNDER - 2)
-sting('SFX_BLOCK_DROP', P([(I['sq50'], 'G5>G3=.4', 1.0), (I['kick'], '- - - - C3>C1=.2', .6)], step=.1), 'the block drops through: falling note G5 to G3')
+sting('SFX_SWAP_A', pic(P([(I['blip25'], 'C6>C5=.15', 1.0)], step=.15)), '"-A" tumbles off: falling blip C6 to C5', level=STING_UNDER - 2)
+sting('SFX_SWAP_B', pic(P([(I['blip25'], 'C5>C6=.15', 1.0)], step=.15)), '"-B" flies in: rising blip C5 to C6', level=STING_UNDER - 2)
+sting('SFX_BLOCK_DROP', pic(P([(I['sq50'], 'G5>G3=.4', 1.0), (I['kick'], '- - - - C3>C1=.2', .6)], step=.1)), 'the block drops through: falling note G5 to G3')
 
 # ---------------- F: win screen
 bF = (M['SFX_CHECK'] - M['SFX_WIN_1']) / 16; gF = Grid('F', M['SFX_WIN_1'], bF, M['SFX_WIN_1']); GRIDS.append(gF)
@@ -164,25 +176,58 @@ pF = P([(I['tri'], '| C2 . . . C3 . . . G2 . . . C3 . . . | D2 . . . D3 . . . A2
 bed('F win', pF, gF.t1, M['SFX_CHECK'], 'win screen: C | Dm | Em | F G, triangle half notes, 12.5 % broken chords, hat and snare on 2 and 4', grid=gF)
 for i, notes in enumerate(['C5 E5 G5 C6', 'D5 F5 A5 D6', 'E5 G5 B5 E6', 'F5 A5 C6 F6']):
     sting('SFX_WIN_%d' % (i + 1), P([(I['blip25'], notes, 1.0)], step=bF / 4), 'four-note ascending motif ' + notes.replace(' ', '-'))
-sting('SFX_CHECK', P([(I['hold50'], 'C6~=.7', .45), (I['chord'], 'C5^047c=.7', .4), (I['tri'], 'C3=.7', .55), (I['boom'], 'N3>N8=.45', .35)], step=.7),
+sting('SFX_CHECK', pic(P([(I['hold50'], 'C6~=.7', .45), (I['chord'], 'C5^047c=.7', .4), (I['tri'], 'C3=.7', .55), (I['boom'], 'N3>N8=.45', .35)], step=.7)),
       'full C major chord: C6 + an arpeggiated C-E-G-C voice + triangle C3, noise crash')
-sting('SFX_JOE', P([(I['blip'], 'G5 C6 E6 G6 C7 . E7 . .', 1.0)], step=.055), '1-up for Joe: G5 C6 E6 G6 C7 E7', level=STING_UNDER - 3)
+sting('SFX_JOE', pic(P([(I['blip'], 'G5 C6 E6 G6 C7 . E7 . .', 1.0)], step=.055)), '1-up for Joe: G5 C6 E6 G6 C7 E7', level=STING_UNDER - 3)
 
 # ---------------- tag: v4's cues, v4's times
+JST = (T['proof'] - T['tag']) / 7 if 'speed' in D else .085   # v8: the 7-note arpeggio spans the table's scroll, the chord lands as it stops (0.085 s at 1.1x)
 for x in D['sfx']:
-    w = C.jingle(x['hold']) if x['file'] == 'jingle' and 'hold' in x else {'jingle': C.jingle, 'bed': C.bed, 'coin': C.coin, 'tick': C.tick}[x['file']]()
+    w = C.jingle(x['hold'], st=JST) if x['file'] == 'jingle' and 'hold' in x else {'jingle': C.jingle, 'bed': C.bed, 'coin': C.coin, 'tick': C.tick}[x['file']]()
     if x['file'] == 'bed':   # as v4's build: trimmed at the scene end, 0.6 s linear fade-out
         d = TOTAL - x['t']; w = w[:int(round(d * SR))].copy(); k = int(.6 * SR); w[-k:] *= np.linspace(1, 0, k)
     assert x['t'] + len(w) / SR <= TOTAL + 1e-9, ('tag cue runs past the scene end', x)   # nothing is cut off at the end
     place(w, x['t'])
 jt = next(x['t'] for x in D['sfx'] if x['file'] == 'jingle'); v7 = 'hold' in D['sfx'][0]
-EVENTS.append(dict(marker='SFX_LEVEL_COMPLETE', t=M['SFX_LEVEL_COMPLETE'], event=round(jt + (0 if v7 else 3 * .085), 4), level='peak -12',
+EVENTS.append(dict(marker='SFX_LEVEL_COMPLETE', t=M['SFX_LEVEL_COMPLETE'], event=round(jt + (0 if v7 else 3 * .085), 4), chord=round(jt + 7 * JST, 4), level='peak -12',
                    what="v4's jingle from the tag start, held chord shortened to end before the scene; its first note on the marker as the proof table starts" if v7 else
                         "v4's jingle from the LEVEL COMPLETE flash (tag); its top C6 lands on the marker"))
 SECTIONS.append(dict(section='tag', t0=T['tag'], t1=TOTAL, bpm=None, rms=None, what="v7: jingle only (arpeggio under the table's scroll, held chord as it lands)") if v7 else
                 dict(section='tag', t0=T['tag'], t1=TOTAL, bpm=124, rms=-30, what="v4: jingle, bed from tag + 1 s, coin on ROTATE, 18 credits ticks"))
 
-score += beds * bed_gain
+# ---------------- v8: clearance. A sting must read over what is already sounding (the previous sting's tail and the beds): where the level jump at its
+# marker (RMS of the 8 ms from the marker over the 10 ms ending 2 ms before it, as score-check measures) is under CLEAR_DB, everything that started
+# before it dips by the missing dB (at most CLEAR_MAX): 27 ms ramp ending 3 ms before the marker, held 50 ms, back over 150 ms. Stings that start
+# with it (CHECK and JOE) are not ducked by each other. Iterated, because a dip changes the next marker's tail too.
+STINGS.sort(key=lambda d: d['tm'])
+for d in STINGS:
+    d['buf'] = np.zeros(N); i0 = int(round(d['t0'] * SR)); n = min(len(d['x']), N - i0); d['buf'][i0:i0 + n] = d['x'][:n]; d['g'] = 1.0
+def dip_shape(tm):
+    tt = np.arange(N) / SR; return np.clip(np.minimum((tt - (tm - .030)) / .027, 1 - (tt - (tm + .050)) / .150), 0, 1)
+SH = {d['marker']: dip_shape(d['tm']) for d in STINGS}
+def assemble():
+    dips = {d['marker']: 1 - (1 - d['g']) * SH[d['marker']] for d in STINGS if d['g'] < 1}
+    out = beds * bed_gain * (np.prod(list(dips.values()), axis=0) if dips else 1)
+    for d in STINGS:
+        k = [v for m, v in dips.items() if M[m] - .005 > d['tm']]
+        out += d['buf'] * (np.prod(k, axis=0) if k else 1)
+    return out
+def jump(x, t):
+    """score-check's onset rule: the local maximum (>= 3 dB) of the level jump nearest the marker in +-20 ms, else the largest jump there"""
+    r = lambda a, b: np.sqrt(np.mean(x[int(round(a * SR)):int(round(b * SR))] ** 2)) + 1e-12
+    taus = np.arange(t - .02, t + .0201, .0005); J = np.array([20 * np.log10(r(u, u + .008) / r(u - .012, u - .002)) for u in taus])
+    pk = [i for i in range(1, len(J) - 1) if J[i] >= 3 and J[i] >= J[i - 1] and J[i] >= J[i + 1]]
+    return J[min(pk, key=lambda i: abs(taus[i] - t))] if pk else J.max()
+def clearance(gain=1.0):
+    """deepen the dips until every marker jumps CLEAR_DB over its tail in (tag cues + stings + beds) * gain; returns that mix"""
+    for it in range(8):
+        mix = (TAGBUF + assemble()) * gain; short = 0
+        for d in STINGS:
+            j = jump(mix, d['tm'])
+            if j < CLEAR_DB and d['g'] > 10 ** (CLEAR_MAX / 20) + 1e-9: d['g'] = max(10 ** (CLEAR_MAX / 20), d['g'] * 10 ** ((j - CLEAR_DB - .5) / 20)); short += 1
+        if not short: return mix
+    return (TAGBUF + assemble()) * gain
+TAGBUF = score.copy(); score = clearance()
 
 # ---------------- dialogue guard
 def rms_env(x, sr, hop=.01, win=.2):
@@ -193,7 +238,7 @@ def rms_env(x, sr, hop=.01, win=.2):
 def read_wav(p):
     w = wave.open(p); ch = w.getnchannels(); x = np.frombuffer(w.readframes(w.getnframes()), '<i2').astype(float) / 32768
     return x.reshape(-1, ch).mean(1), w.getframerate()
-GUARD = None
+GUARD = None; GK = np.ones(N)   # the guards' gain, kept so the clearance can run again on the guarded score
 if A.voice:
     v, vsr = read_wav(A.voice); h, vdb = rms_env(v, vsr); hop = h[1] - h[0]; W = int(round(.1 / hop))
     g = np.ones(len(h))
@@ -205,7 +250,7 @@ if A.voice:
         g = g * held
         for i in range(1, len(g)): g[i] = min(g[i], g[i - 1] * 10 ** ((REL_SPEECH if vdb[i] >= VOICE_ACTIVE else REL_FREE) * hop / 20))   # release dB/s
         for i in range(len(g) - 2, -1, -1): g[i] = min(g[i], g[i + 1] * 10 ** (200 * hop / 20))                # attack ramp 200 dB/s (no clicks)
-    k = np.interp(np.arange(N) / SR, h, g); score *= k; GUARD = dict(max_cut_db=round(float(20 * np.log10(g.min())), 1), iterations=it + 1,
+    k = np.interp(np.arange(N) / SR, h, g); score *= k; GK *= k; GUARD = dict(max_cut_db=round(float(20 * np.log10(g.min())), 1), iterations=it + 1,
                                                                        seconds_cut_over_3db=round(float((g < 10 ** (-3 / 20)).sum() * hop), 2))
     print('guard: max cut %.1f dB, %.2f s cut by more than 3 dB (%d passes)' % (GUARD['max_cut_db'], GUARD['seconds_cut_over_3db'], GUARD['iterations']))
     # peak guard: on the voice's loudest syllables the score steps aside so voice + score stays under PEAK_SUM (v4's chain is unchanged, so the final
@@ -217,16 +262,21 @@ if A.voice:
     vpk, spk = bmax(v, vsr), bmax(score, SR); gp = np.minimum(1, np.maximum(0, PEAK_SUM - vpk) / np.maximum(spk, 1e-9))
     for i in range(len(gp) - 2, -1, -1): gp[i] = min(gp[i], gp[i + 1] * 10 ** (400 * B / 20))
     for i in range(1, len(gp)): gp[i] = min(gp[i], gp[i - 1] * 10 ** (120 * B / 20))
-    score *= np.interp(np.arange(N) / SR, bt, np.minimum(gp, np.minimum(np.concatenate([[1], gp[:-1]]), np.concatenate([gp[1:], [1]]))))
+    kp = np.interp(np.arange(N) / SR, bt, np.minimum(gp, np.minimum(np.concatenate([[1], gp[:-1]]), np.concatenate([gp[1:], [1]])))); score *= kp; GK *= kp
     GUARD['peak_cut_max_db'] = round(float(20 * np.log10(max(gp.min(), 1e-6))), 1); GUARD['peak_cut_ms'] = int(round((gp < .99).sum() * B * 1000))
     print('peak guard: max cut %.1f dB over %d ms' % (GUARD['peak_cut_max_db'], GUARD['peak_cut_ms']))
+    # the peak guard can cut a sting's onset harder than the tail before it; the clearance runs again with the guards' gain held (the dips only lower
+    # what is already sounding, so the masking margin and the peak ceiling still hold)
+    score = clearance(GK)
+CLEAR = {d['marker']: round(20 * np.log10(d['g']), 1) for d in STINGS if d['g'] < 1}
+print('clearance dips (dB):', CLEAR)
 
 assert np.abs(score).max() < 10 ** (-11 / 20), 20 * np.log10(np.abs(score).max())
 os.makedirs(os.path.dirname(os.path.abspath(A.out)), exist_ok=True); C.save(A.out, score)
 EVENTS.sort(key=lambda e: (e['t'], e['marker']))
 for e in EVENTS: e['grid'] = grid_of(e['event']).at(e['event']) if e['marker'] != 'SFX_LEVEL_COMPLETE' else 'tag'
 os.makedirs(os.path.dirname(os.path.abspath(A.events)), exist_ok=True)
-json.dump(dict(events=EVENTS, sections=SECTIONS, guard=GUARD, levels=dict(bed_under=BED_UNDER, sting_under=STING_UNDER, sting_clear=STING_CLEAR, guard_db=GUARD_DB,
+json.dump(dict(events=EVENTS, sections=SECTIONS, guard=GUARD, clearance_db=CLEAR, levels=dict(bed_under=BED_UNDER, sting_under=STING_UNDER, sting_clear=STING_CLEAR, guard_db=GUARD_DB,
                voice_active=VOICE_ACTIVE)), open(A.events, 'w'), indent=1)
 if A.table:
     print('| marker | time (s) | bar:beat | what plays |\n|---|---|---|---|')

@@ -150,9 +150,10 @@ def cue(pattern, length, level, fade_ms=20):
     return peak_to(x, level[1]) if level[0] == 'peak' else rms_to(x, level[1])
 
 # ---- v4's tag cues as patterns (bit-identical to the v4 wavs)
-def jingle(hold=1.35, length=2.1):
-    """v4: hold 1.35 s, 2.1 s buffer. v7 passes a shorter hold; the buffer then ends 50 ms after the bass (release inside the note, so nothing is cut)"""
-    st = .085   # one arpeggio note = 2 steps of 42.5 ms, the harmony enters half a note late
+def jingle(hold=1.35, length=2.1, st=.085):
+    """v4: hold 1.35 s, 2.1 s buffer. v7 passes a shorter hold; the buffer then ends 50 ms after the bass (release inside the note, so nothing is cut).
+    v8: st (one arpeggio note) is passed so the 7-note arpeggio spans the proof table's scroll at any speed (0.085 s at 1.1x, 0.0779 s at 1.2x)"""
+    # one arpeggio note = 2 steps of st / 2, the harmony enters half a note late
     I = dict(lead=inst(v4=True, wave='sq', duty=.5, vol=1, gate=.95, a=.002, d=.1, s=.8, r=.01), harm=inst(v4=True, wave='sq', duty=.25, vol=.7, gate=.95, a=.002, d=.1, s=.8, r=.01),
              bass=inst(v4=True, wave='tri', vol=1, a=.002, d=1, s=1, r=.01), leadH=inst(v4=True, wave='sq', duty=.5, vol=1, a=.002, d=.5, s=.35, r=.35),
              harmH=inst(v4=True, wave='sq', duty=.25, vol=.8, a=.002, d=.5, s=.35, r=.35), bassH=inst(v4=True, wave='tri', vol=1, a=.002, d=.8, s=.7, r=.4))
