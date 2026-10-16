@@ -149,12 +149,13 @@ const OUT = window.vaultDraw($('vsv'), 205, 115, 92, 2), INN = window.vaultDraw(
 const vaultParts = (v) => [...v.rings, ...v.spokes, ...v.hinges, ...v.extra];
 // ---- lower third text states (hard cuts on the frame)
 function l3(t) {
-  let tag = 'UPDATE', sub = 'Chaintail Labs, Senior Bunker Correspondent', bar = '<span class="w">LIAM</span>';
-  if (t >= T.crypto && t < T.stateless) { sub = 'Liam C., Chaintail Labs, Senior Bunker Correspondent';
-    const p = P(t, T.graphy, T.graphy_end), k = p <= 0 ? 0 : Math.min(1.06, backO(p));
+  let tag = 'UPDATE', sub = 'Liam C. \u00a0·\u00a0 Bunker Correspondent, Chaintail Labs', bar = '<span class="w">LIAM</span>';   // Liam: name · title, company
+  if (t >= T.crypto && t < T.stateless) {
+    // Liam: it first reads CRYPTO NERD; then NERD slides to the right and GRAPHY fades in between (yellow)
+    const slide = easeIO(P(t, T.graphy, T.graphy + .25)), fade = P(t, T.graphy + .12, T.graphy_end);
     bar = `<span class="w">CRYPTO</span><span class="ins" id="ins"><i id="insi">GRAPHY</i></span><span class="w"> NERD</span>`;
-    $('l3bar').innerHTML = bar; const i = $('insi'), w = i.getBoundingClientRect().width / 1;
-    $('ins').style.width = (w * Math.min(1, k)) + 'px'; i.style.transform = `scaleX(${Math.max(.001, k)})`;
+    $('l3bar').innerHTML = bar; const i = $('insi'), w = i.getBoundingClientRect().width;
+    $('ins').style.width = (w * slide) + 'px'; i.style.opacity = String(fade);
     $('l3tag').textContent = tag; $('l3sub').textContent = sub; return; }
   if (t >= T.stateless && t < T.favorite) { tag = 'COMING UP NEXT';
     bar = `<span class="w">${t >= T.slh ? 'SLH-DSA (FIPS 205)' : 'A STATELESS BUNKER'}</span>`;

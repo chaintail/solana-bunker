@@ -214,3 +214,9 @@ Rulings applied: Q5 the wipe's "WE NOW RETURN TO THE STUDIO", Q6 UPDATE, Q7 the 
 - **Files:**
   - `s10-news.html`, `lib/vault.js`, `data/s10-{edl,qr,chyron}.js`, `pipeline/s10/{s10-timing.py,qr.mjs,build.sh,capture.sh,stills.sh}`.
   - Outputs: dev-mac `~/video-work/solana-bunker/s10/out/s10-v1.mp4` and `s10-v1-phone.mp4`.
+
+### Scene 10 v2 (Liam's notes)
+- The lower third first reads CRYPTO NERD. Then NERD slides right (7.19–7.44) and GRAPHY fades in yellow between them (7.31–7.54), ending before "us" ends.
+- The sub line under the name reads "Liam C. · Bunker Correspondent, Chaintail Labs".
+- Positions: the bar, sub line, ticker and LIVE / lemur / CNN bug are on the same pixels as opening v7 (side-by-side checked against `opening-v7.mp4` at 30 s). Nothing moved.
+- Fully recaptured. Output: dev-mac `s10/out/s10-v2.mp4` and `s10-v2-phone.mp4`, 33.40 s, −16.4 LUFS / −1.9 dBTP. The whitepaper QR decodes on master and phone frames.
