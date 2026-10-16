@@ -178,7 +178,7 @@ const backO = (p) => { const c = 1.9; return 1 + (c + 1) * Math.pow(p - 1, 3) + 
 const show = (el, v) => { el.style.display = v ? 'block' : 'none'; };
 // ---------- characters: s09 bodies (oval erased, head behind the body), head sprite sheets heads/s09-head-NN.png (16 x 12 cells of 152x220)
 const A9 = window.ANCHORS_S09, POSE = { pock: 'street-hands-in-pockets', cele: 'street-celebrate', stand: 'suit-standing', point: 'suit-point-right', clip: 'physicist-holding-clipboard' };
-const HK = 0.326, HS = 760 * HK / 152, NSHEET = 3;
+const HK = 0.326, HS = 760 * HK / 152, NSHEET = 3, KCX = window.KEY_CHIN_X;   // key crop: chin centre (KCX, 905), 0.326 key px per body px
 function makeFig(parent, poses, extra = '') {
   const el = document.createElement('div'); el.className = 'fig';
   el.innerHTML = '<div class="hd">' + [...Array(NSHEET).keys()].map((i) => `<img src="heads/s09-head-0${i}.png">`).join('') + '</div>' + poses.map((p) => `<img data-pose="${p}" src="assets/s09/${POSE[p]}.png" width="1024" height="1536">`).join('') + extra;
@@ -188,7 +188,7 @@ function setPose(el, p) { el._pose = p; el.querySelectorAll('img[data-pose]').fo
 function place(el, x, y, rot, s, flip = 1) {
   const a = A9[POSE[el._pose]];
   el.style.transform = `translate(${x}px,${y}px) rotate(${rot}deg) scale(${s * flip},${s}) translate(${-a.cx}px,${-a.chin}px)`;
-  let tr = `translate(${a.cx - 338 * HK}px,${a.chin + 3 - 905 * HK}px) scale(${HS})`;
+  let tr = `translate(${a.hx - KCX * HK}px,${a.chin + 3 - 905 * HK}px) scale(${HS})`;
   if (flip < 0) tr = `translate(${a.cx}px,0) scale(-1,1) translate(${-a.cx}px,0) ` + tr;
   el.querySelector('.hd').style.transform = tr; }
 const cum = []; D.heads.reduce((a, e, i) => ((cum[i] = a), a + e.frames), 0);
@@ -321,7 +321,7 @@ f.onSeek((t0) => {
     const hj = headFrame(tv, 'joe'); setHead(joe, hj); setPose(joe, tv >= T.ifonly ? 'cele' : 'pock'); place(joe, JOE.x, JOE.y, 0, JOE.s);
     // the forehead note: falls from above onto his forehead on "How" and follows his head (S09_HB: forehead point in the sprite cell)
     { const a = A9[POSE[joe._pose]], u = HB.fx[hj], v = HB.top[hj] - 40;
-      const hx = JOE.x + JOE.s * (a.cx - 338 * HK + u * HS - a.cx), hy = JOE.y + JOE.s * (a.chin + 3 - 905 * HK + v * HS - a.chin);
+      const hx = JOE.x + JOE.s * (a.hx - KCX * HK + u * HS - a.cx), hy = JOE.y + JOE.s * (a.chin + 3 - 905 * HK + v * HS - a.chin);
       const p = P(tv, T.how - .3, T.how), bob = tv >= T.how && tv < T.how + .2 ? -4 * Math.sin(P(tv, T.how, T.how + .2) * Math.PI) : 0;
       show($('fnote'), tv >= T.how - .3); $('fnote').style.display = tv >= T.how - .3 ? 'flex' : 'none';
       pose($('fnote'), hx, lerp(hy - 260, hy, p * p) + bob, -9, 50); }
