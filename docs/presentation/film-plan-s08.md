@@ -147,3 +147,52 @@ Scene 52.32 s (1570 frames; v3 was 54.57 s). Speech ends 40.05 s, tag 40.32-52.3
 - Joe (16470): from 39.65 s (after the three-step pop-up) he cheers with a whole-figure bounce (12 px, 3 Hz, sin squared ease) and a rock (+-4 deg, 1 Hz) about his neck; head rides behind the body, no limb animation.
 - Tag audio: `pipeline/s08/chiptune.py` (numpy, square/triangle/noise, 44.1 kHz mono) writes `apps/web/film/audio/s08/{jingle,bed,coin,tick}.wav`. Jingle 2.1 s (C major arpeggio, two squares + triangle bass, peak -12 dBFS) at the LEVEL COMPLETE flash; bed 8 bars at 124 BPM (C Am F G x2, 12.5 % square lead, triangle bass, noise hat; RMS -30 dBFS, 15.48 s, plays from the text box (tag + 1 s) to the end with a 0.6 s fade-out); coin blip (B5 to E6, peak -18 dBFS) on the ROTATE stamp; 18 ticks (30 ms, peak -18 dBFS, 5 ms edge fades because 20 ms would eat the blip) as the credits rows scroll in. The cues are mixed in build.sh after the speech loudnorm (absolute levels), with the brown-noise bed, before the limiter; `s08-timing.py` writes the cue times (`out/s08-sfx.args/.filter`). Measured in the final mix over the tag: jingle peak -11.1 dBFS, text box -15.1, credits -11.5 (includes the quiet brown bed and ticks).
 - Checks: waveforms at the E5/C1 join, the E6 head and the tag; stills at 22.1, 24.0, 24.25, 30.1, 30.4, 40.4, 45.2, 49.0 s and a 3-frame Joe bounce strip. Outputs `out/s08-v4.mp4`, `s08-v4-phone.mp4`, `s08-v4-tag-audio.wav`. Heads re-keyed (1024 frames).
+
+### v5: the whole scene scored in chiptune (Liam 16499)
+
+The Suno idea is dropped: the arcade scene is scored with our own synthesiser, timed to the markers. Picture unchanged (v4's video streams copied, no re-capture).
+- `pipeline/s08/chiptune.py` is now a small tracker: note names, tempo (BPM + steps per beat, or seconds), token patterns for any number of voices (`.` hold, `-` rest, `{inst}` switch), arpeggio (`^047`, 60 Hz like the NES frame), pitch slide (`>G4`, also on noise periods), vibrato (`~`), per-note volume and length; instruments with ADSR on the NES palette (pulse 12.5/25/50 %, 4-bit triangle, 15-bit LFSR noise in long and short mode). New pulses are AC-coupled (no DC), like the console's output. The four v4 tag cues are patterns in it and re-render bit-identical to the committed v4 wavs.
+- `pipeline/s08/score.py` reads `data/s08-edl.js` (rows, T, markers, tag cue times) and renders `audio/s08/score.wav` (44.1 kHz mono, 52.32 s, tag cues included); every tempo and bar line is computed from the markers, so a re-time re-renders the score. One key, C major / A minor. `s08-timing.py` now hands the mix that one file at 0 s; `build.sh audio` writes the loudnormed voice alone (`out/voice-ln.wav`, same loudnorm), runs score.py on it, mixes exactly as v4 (cues after the loudnorm, brown bed, alimiter) and runs `pipeline/s08/score-check.py`; `build.sh remux v5 v4` puts the new audio on v4's picture.
+- Tempo map: A attract 123.7 BPM (beat = (SLOT_OPEN - LAMPORT_LAND) / 12; 2-beat pickup from 0.73 s under the load, bar 1 on LAMPORT_LAND, bar 4 on SLOT_OPEN); B tension 117.6 (GAME_OVER is bar 2 beat 3); D workaround 133.3 (beat = truck spacing / 2: trucks 1-3 fall on beats 1 and 3, the plod); E rescue 127.0 (BANNER bar 1, SPIN beat 2:4, BLOCK_DROP 4:2, the bed ends on the win screen); F win 125.3 (WIN_1 bar 1, CHECK bar 5); tag 124 (v4).
+- Levels: beds -33 dBFS RMS, stings -27 dBFS peak where they sit under speech, -12 dBFS peak in the clear (GAME OVER, INSERT COIN). Beds step down 6 dB under each sting. A dialogue guard then trims the score so that in every 200 ms window where the voice is active (RMS >= -30 dBFS) the score is at least 16 dB under it (100 ms look-ahead, release 40 dB/s in speech, 120 dB/s once it stops), and a peak guard keeps voice + score under 0.85 on the loudest syllables so the final peak stays v4's. Net: the score sits at -36 to -39 dBFS RMS while someone speaks (voice -16), not -30; the per-window rule is the stricter one.
+- Silence: nothing from the end of GAME OVER (11.6 s) until 12.78 s (score -91 dBFS under the sigh); C1 "Not really cool" has only trucks 4-5 and the raspberry (score -46 dBFS).
+- Checks (score-check.py, by waveform): all 32 markers have a score onset (>= 3 dB jump) within 7.5 ms (worst LEVEL_COMPLETE, +2.5 ms from the jingle note); masking: 612 active 200 ms windows (50 ms hop), score at least 16.0 dB under the voice in every one (median 22.4); final mix -16.6 LUFS, true peak -0.9 dBFS (v4: -16.5 LUFS, -1.0 dBFS); phone -16.6 LUFS, -0.7 dBTP. The whole mix, voice and score alike, is 5 ms late against the picture because of alimiter's look-ahead, as in v4.
+- Not timed as asked: GAME OVER's first note (C5, 10.58-10.75 s) sits under the tail of "limit" and is ducked by the guard, so the fall is heard from B4; the LEVEL_COMPLETE jingle stays at the tag start (v4) and meets the marker with its 4th note; INSERT COIN chimes on two of its three blinks; the coin drop (24.00) and the banner (24.03) are 30 ms apart, so the coin is kept small.
+- Outputs: `out/s08-v5.mp4`, `s08-v5-phone.mp4`, `s08-v5-score.wav` (the score alone), `s08-v5-score-audition.wav` (4.5-34.5 s of the mix), `s08-v5-tag-audio.wav`.
+
+Cue table (bar:beat is the section's bar and beat, so `A 2:1.95` is 50 ms before beat 2 of bar 2 of section A; stings start exactly on their markers whatever the grid; levels as rendered, before the guards):
+
+| marker | time (s) | bar:beat | what plays | level (dBFS peak) |
+|---|---|---|---|---|
+| LAMPORT_LAND | 1.70 | A 1:1.00 | falling whistle from "XMSS", then the land: triangle thud C3 to C1 + low noise | -27 |
+| XMSS_LAND | 3.32 | A 1:4.34 | tiny: short whistle, a 60 ms "tink" (50 % square G5 to G4) + noise click | -27 |
+| EXPLODE | 4.10 | A 2:1.95 | noise burst sweeping down (long mode, period 3 to 13), triangle drop, square growl | -29 |
+| SCORE_TICK | 4.20 | A 2:2.15 | 21 square blips, one per counter step (1/30 s), rolling C major arpeggio C5 up to G7 | -27 |
+| SLOT_OPEN | 7.52 | B 1:1.00 | three falling blips G4, E4, C4 (the three bricks) | -27 |
+| BLOCK_HOP | 8.86 | B 1:3.63 | jump: 25 % square slide E4 to E6 | -27 |
+| WEDGE | 10.04 | B 2:1.94 | drop whistle from "transaction", then the crunch: metallic short-mode noise grinding in 40 ms steps, B2 + F3 tritone; the tension loop stops | -27 |
+| GAME_OVER | 10.58 | B 2:3.00 | the minor fall C5 B4 Bb4 A4 (over A4 G#4 G4 E4), held A with vibrato, triangle A2 sliding to A1; then silence under the sigh | -12 |
+| SAW | 15.36 | D 1:4.73 | three back-and-forth strokes (0.27 s each, with the sprite): buzzing 12.5 % square E3-A3 + noise | -27 |
+| BREAK | 16.48 | D 2:3.22 | metallic crack + noise, four falling blips (one per chunk) | -27 |
+| TRUCK_1 | 19.08 | D 4:1.00 | putt-putt on A3 | -29 |
+| TRUCK_2 | 19.98 | D 4:3.00 | putt-putt on B3 | -29 |
+| TRUCK_3 | 20.88 | D 5:1.00 | putt-putt on C4 | -29 |
+| TRUCK_4 | 22.00 | D 5:3.49 | putt-putt on D4 (loop has stopped: C1 is nearly dry) | -32 |
+| TRUCK_5 | 22.60 | D 5:4.82 | putt-putt on E4 | -32 |
+| STAMP | 22.80 | D 6:1.27 | raspberry: two low squares a semitone apart, 28 Hz flutter, sliding down | -27 |
+| INSERT_COIN | 23.15 | D 6:2.04 | chime G5-C6 on the first two blinks of INSERT COIN (the third blink is left clear for "Solana") | -12 |
+| COIN_DROP | 24.00 | D 6:3.93 | v4's coin (B5 to E6), small | -37 |
+| BANNER | 24.03 | E 1:1.00 | fanfare G4 C5 E5 G5 to a held C6 (thirds below), triangle C, noise hits; the rescue bed starts | -27 |
+| NEW | 25.31 | E 1:3.71 | two blips E6, C7 | -29 |
+| SLOT_WIDEN | 26.73 | E 2:2.72 | odometer: 16 blips over 1.2 s, rolling C major arpeggio G4 up to G6 | -27 |
+| SPIN | 27.33 | E 2:3.99 | ">" grows (G5 B5 D6), spins (D6/G5 at 15 Hz, with the frames), resolves to C6 as the green "<" settles | -27 |
+| SWAP_A | 28.81 | E 3:3.12 | "-A" off: falling blip C6 to C5 | -29 |
+| SWAP_B | 29.16 | E 3:3.86 | "-B" in: rising blip C5 to C6 | -29 |
+| BLOCK_DROP | 30.17 | E 4:2.00 | falling note G5 to G3 as the block drops through | -27 |
+| WIN_1 | 31.69 | F 1:1.00 | motif C5-E5-G5-C6 | -27 |
+| WIN_2 | 33.28 | F 1:4.32 | motif D5-F5-A5-D6 | -27 |
+| WIN_3 | 35.51 | F 2:4.98 | motif E5-G5-B5-E6 | -27 |
+| WIN_4 | 37.83 | F 4:1.83 | motif F5-A5-C6-F6 | -27 |
+| CHECK | 39.35 | F 5:1.00 | full C major chord: C6 + an arpeggiated C-E-G-C voice + triangle C3, noise crash; the win bed ends | -27 |
+| JOE | 39.35 | F 5:1.00 | 1-up: G5 C6 E6 G6 C7 E7 | -30 |
+| LEVEL_COMPLETE | 40.57 | tag | v4's jingle from the tag start (40.32, the flash); its 4th note (C6) is on the marker (40.575) | -12 |

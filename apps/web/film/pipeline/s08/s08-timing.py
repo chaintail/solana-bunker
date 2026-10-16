@@ -6,7 +6,9 @@ E5/C1 ("withdrawal" | "Not") has almost no pause (plan R2): the cut is the quiet
 v4: E5 and C1 are one continuous stretch of the take (no inserted gap; the natural pause is 477.04-477.14 s), E6 starts at "Solana" (the "Oh, but" groan
 is cut at 479.60 s), E8 is split at the comma into E8a (engineer) and E8b (lab coat, from "and"); rows that touch in the take play as ONE audio segment (no fade at the join).
 One real time shift: +0.60 s after E8 (the block drops through the slot). The tag gets 8-bit chiptune (pipeline/s08/chiptune.py -> audio/s08/*.wav), mixed in build.sh. Beat times are take times of the key
-words (transcript tokens rechecked with a 50 ms energy scan), mapped through the edit list, so the scene never hard-codes a time twice."""
+words (transcript tokens rechecked with a 50 ms energy scan), mapped through the edit list, so the scene never hard-codes a time twice.
+v5: the whole scene is scored (pipeline/s08/score.py reads markers, T and sfx from data/s08-edl.js and renders audio/s08/score.wav, tag cues included);
+the mix takes that one file at 0 s (out/s08-sfx.args/.filter)."""
 import json, subprocess, numpy as np
 SR = 48000
 def pcm(a, b):
@@ -71,7 +73,7 @@ for mk in markers: mk['t'] = round(mk['t'], 3)
 C0 = TAG0 + 7.0; V = 236 / 3.9
 SFX = [{'file': 'jingle', 't': TAG0}, {'file': 'bed', 't': round(TAG0 + 1.0, 3)}, {'file': 'coin', 't': round(TAG0 + 4.6, 3)}] + \
       [{'file': 'tick', 't': round(C0 + (244 + o - 232) / V, 3)} for o in [0, 12] + [24 + 10 * i for i in range(16)]]
-doc = {'total': TOTAL, 'fps': 30, 'edl': edl, 'T': T, 'markers': markers, 'note': 'markers are timing only; the only sound effects in the mix are the chiptune cues of the tag (sfx)', 'sfx': SFX}
+doc = {'total': TOTAL, 'fps': 30, 'edl': edl, 'T': T, 'markers': markers, 'note': 'v5: score.py renders the whole chiptune score (audio/s08/score.wav) from markers, T and the tag cue times (sfx); the mix plays that one file', 'sfx': SFX}
 json.dump(doc, open('out/s08-edl.json', 'w'), indent=1)
 open('film/data/s08-edl.js', 'w').write('window.S08 = ' + json.dumps(doc) + ';\n')
 f = []; runs = []   # rows that touch in the take AND in the scene play as one segment (no fade, no dip at the join)
@@ -86,12 +88,6 @@ f.append('[base]' + ''.join(f'[a{i}]' for i in range(len(runs))) + f"amix=inputs
 open('out/s08-audio.filter', 'w').write('\n'.join(f) + '\n')
 for e in edl: print(e['id'], e['speaker'], e['src_in'], e['src_out'], '->', e['out_in'], e['out_out'], e['frames'])
 print('total', TOTAL, 'tag', TAG0)
-# sfx submix for build.sh: inputs 2.. are the wavs (out/s08-sfx.args), mixed (normalize=0) into [sfx]; levels are baked into the wavs (chiptune.py)
-args = []; ch = []; DUR = {'bed': TOTAL - (TAG0 + 1.0)}
-for k, x in enumerate(SFX):
-    ms = int(round(x['t'] * 1000)); args += ['-i', f"film/audio/s08/{x['file']}.wav"]
-    fade = f",afade=t=out:st={DUR['bed'] - .6:.3f}:d=0.6" if x['file'] == 'bed' else ''
-    trim = f",atrim=0:{DUR['bed']:.3f}" if x['file'] == 'bed' else ''
-    ch.append(f"[{k + 2}:a]aresample=48000{trim}{fade},adelay={ms}|{ms}[x{k}];")
-ch.append(''.join(f'[x{k}]' for k in range(len(SFX))) + f"amix=inputs={len(SFX)}:normalize=0:duration=longest,apad=whole_dur={TOTAL},atrim=0:{TOTAL}[sfx]")
-open('out/s08-sfx.args', 'w').write(' '.join(args)); open('out/s08-sfx.filter', 'w').write('\n'.join(ch))
+# score input for build.sh: input 2 is the whole score (score.py, scene length, levels baked in, tag cues included), from 0 s, into [sfx]
+open('out/s08-sfx.args', 'w').write('-i film/audio/s08/score.wav')
+open('out/s08-sfx.filter', 'w').write(f"[2:a]aresample=48000,apad=whole_dur={TOTAL},atrim=0:{TOTAL}[sfx]")
