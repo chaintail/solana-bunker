@@ -13,7 +13,8 @@ Audio (mono 48 kHz, as every scene mix):
             Level: -20 dB under speech, -14 dB in speech gaps of 0.8 s or more (speech = 20 ms RMS >= -40 dBFS on the dialogue,
             sub-0.15 s holes bridged); ramps linear in dB, 300 ms release after the last word, 100 ms attack ending on the next word.
             Dialogue guard (as s08 score.py): in every 100 ms window (10 ms hop) where the dialogue is active (RMS >= -30 dBFS) the music
-            is held 16 dB under it by a gain trim (attack 60 dB/s, release 20 dB/s). Out: a raised-cosine fade (spec music.fade).
+            is held 16 dB under it by a gain trim (attack 60 dB/s, release 20 dB/s; the trim treats windows from -32 dBFS as active, since
+            the loudnorm gain that follows can lift the dialogue by up to 2 dB). Out: a raised-cosine fade (spec music.fade).
   sfx       each file as (L+R)/2, gained to -20 LUFS event loudness (ebur128 with 1 s of padded silence, as film/sfx master.py),
             then the spec gain (0 in the clear, -6 under speech); its hit (spec 'hit', seconds into the file) lands on the picture frame.
   mix       dialogue + music + sfx -> loudnorm pass 1 (measure) -> pass 2 as one linear gain -> the scene's limiter with latency=1 (the
@@ -149,17 +150,20 @@ def main():
     # dialogue guard (100 ms windows, 10 ms hop): music >= GUARD dB under the active dialogue, trimmed with a smooth gain
     hop = .01; nh = int(T / hop) + 1; vdb = rms_db(d, .1, hop, nh); GD, VA = spec['guard_db'], spec['voice_active_db']; trim = np.ones(N)
     for it in range(6):
-        mdb = rms_db(music * trim, .1, hop, nh); act = (vdb >= VA) & (mdb > -90)
+        mdb = rms_db(music * trim, .1, hop, nh); act = (vdb >= VA - 2) & (mdb > -90)   # 2 dB below the check's threshold: the loudnorm gain comes later
         need = np.where(act, np.minimum(0, vdb - (GD + .3) - mdb), 0.0)
         if need.min() > -.05: break
         g = 10 ** (np.array([need[max(0, i - 5):i + 6].min() for i in range(nh)]) / 20)
         for i in range(1, nh): g[i] = min(g[i], g[i - 1] * 10 ** (20 * hop / 20))
         for i in range(nh - 2, -1, -1): g[i] = min(g[i], g[i + 1] * 10 ** (60 * hop / 20))
         trim *= np.interp(t, np.arange(nh) * hop, g)
-    music = (music * trim).astype(np.float32)
+    music = (music * trim).astype(np.float32); sp = np.zeros(N, bool)
+    for a, b in runs: sp[int(a * SR):int(b * SR)] = True
+    sp[:s0] = False
     rep['music'] = dict(file=M['file'], mono_lufs=mono_I, gain_to_ref_db=round(M['ref_lufs'] - mono_I, 2), track_in=M['track_in'], scene_in=M['scene_in'],
                         gaps_at_gap_level=[[round(a, 2), round(b, 2)] for a, b in gaps if b > M['scene_in']], guard_trim_max_db=round(float(20 * np.log10(trim[s0:].min())), 1),
-                        guard_trim_s_over_3db=round(float((trim[s0:] < 10 ** (-3 / 20)).sum() / SR), 2))
+                        guard_trim_s_over_3db=round(float((trim[s0:] < 10 ** (-3 / 20)).sum() / SR), 2),
+                        guard_trim_median_db_under_speech=round(float(20 * np.log10(np.median(trim[sp]))), 1) if sp.any() else None)
     # ---------------- sfx
     sfx = np.zeros(N, np.float32); rep['sfx'] = []
     for e in spec['sfx']:
