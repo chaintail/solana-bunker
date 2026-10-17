@@ -7,14 +7,14 @@
 #         -> brown-noise bed re-generated at the new length -> out/x12/audio-final.wav
 #  video: build.sh's grade with its times scaled by 1/1.2 (grain in from 2.3/1.2 s over 0.4/1.2 s, grade blended in over 0.3/1.2-1.2/1.2 s, so frame 0 is slide 5's
 #         ungraded last frame) -> out/s06-$V-x12.mp4 (crf 14), out/s06-$V-x12-phone.mp4 (960x540 crf 26)
-# V=<tag> (default v9) reads out/x12/seg-<tag>/list.txt.
+# V=<tag> (default v10) reads out/x12/seg-<tag>/list.txt. v10: the frame count comes from out/s06-edl.json's total (26.5 s -> 663 frames, 22.1 s).
 set -euo pipefail
 export PATH=/opt/homebrew/opt/ffmpeg-full/bin:/opt/homebrew/bin:$PATH
-cd ~/video-work/solana-bunker/s06; O=out/x12; mkdir -p $O; FFV="ffmpeg -nostdin -v error -y"; SPEED=1.2; M=738
-V=${V:-v9}; SEG=$O/seg-$V; N=s06-$V-x12
+cd ~/video-work/solana-bunker/s06; O=out/x12; mkdir -p $O; FFV="ffmpeg -nostdin -v error -y"; SPEED=1.2
+M=$(python3 -c "import json,math;N=round(json.load(open('out/s06-edl.json'))['total']*30);print(math.ceil(N/$SPEED-1e-9))")
+V=${V:-v10}; SEG=$O/seg-$V; N=s06-$V-x12
 XT=$(python3 -c "print(round($M/30,4))")
-[ "$(python3 -c "import json;print(json.load(open('out/s06-edl.json'))['total'])")" = 29.5 ] || { echo "out/s06-edl.json is not the v7 timing"; exit 1; }
-[ "$(grep -c . $SEG/list.txt)" = 3 ] || { echo "$SEG/list.txt does not list 3 chunks"; exit 1; }
+NC=$(( (M + 299) / 300 )); [ "$(grep -c . $SEG/list.txt)" = $NC ] || { echo "$SEG/list.txt does not list $NC chunks"; exit 1; }
 cp out/s06-audio.filter $O/s06-audio.filter
 $FFV -i out/take-dn.wav -/filter_complex $O/s06-audio.filter -map '[mix]' -ac 1 -ar 48000 $O/mix-1x.wav
 $FFV -i $O/mix-1x.wav -af "atempo=$SPEED,apad=whole_dur=$XT,atrim=0:$XT,asetpts=PTS-STARTPTS" -ac 1 -ar 48000 $O/mix.wav

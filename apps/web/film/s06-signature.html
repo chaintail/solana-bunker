@@ -1,4 +1,4 @@
-<!doctype html><html data-duration="30" data-fps="30"><head><meta charset="utf-8">
+<!doctype html><html data-duration="26.5" data-fps="30"><head><meta charset="utf-8">
 <link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
 <style>
 /* Slide 6, a password is not a signature (docs/presentation/film-plan-s06.md; decisions from the plan review: the bouncer never speaks, the lab coat
@@ -144,7 +144,7 @@ svg{position:absolute;left:0;top:0;overflow:visible}
 <div class="L" id="beam" style="mix-blend-mode:screen"></div>
 <svg width="0" height="0" style="position:absolute"><defs><filter id="rough" x="-8%" y="-8%" width="116%" height="116%"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="2" result="w"/><feDisplacementMap in="SourceGraphic" in2="w" scale="5" result="d"/><feTurbulence type="fractalNoise" baseFrequency=".75" numOctaves="2" seed="5" result="s"/><feColorMatrix in="s" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -3.2 3.05" result="m"/><feComposite in="d" in2="m" operator="in"/></filter></defs></svg>
 <div class="L" id="stampL" style="display:none"><div id="stamp" style="position:absolute;left:640px;top:350px;width:0;height:0"><div id="stampIn" style="position:absolute;left:0;top:0;transform-origin:0 0"><div style="position:absolute;left:0;top:0;transform:translate(-50%,-50%);font-family:Anton;font-size:190px;line-height:1.08;letter-spacing:.06em;text-transform:uppercase;color:#ff2b31;border:14px solid #ff2b31;border-radius:12px;padding:6px 40px 0;white-space:nowrap;filter:url(#rough)">Rejected</div></div></div></div>
-<img src="heads/s06-bouncer.png" style="display:none"><img src="assets/bodies/1-suit-arms-crossed.png" style="display:none"><img src="assets/bodies/1-suit-point-right.png" style="display:none"><img src="assets/bodies/5-physicist-professor-point.png" style="display:none">
+<img src="heads/s06-bouncer.png" style="display:none"><img src="heads/s06-wb-00.png" style="display:none"><img src="assets/bodies/1-suit-arms-crossed.png" style="display:none"><img src="assets/bodies/1-suit-point-right.png" style="display:none"><img src="assets/bodies/5-physicist-professor-point.png" style="display:none">
 
 <script src="data/s06-edl.js"></script>
 <script src="lib/film.js"></script>
@@ -160,7 +160,8 @@ const S5_HANDOFF = null;   // v7: no handoff move or zoom; he keeps the scene 5 
 // until the first word at 0.3 s, then the live figure takes over. v9: its body is placed with slide 5's geometry (s05 professor-point = body x + 115.5 on the
 // shrug frame, body px X -> 175 + (X - 396) * .34, Y -> 533 + (Y - 1000) * .34), so collar, tie and shoes do not move at the takeover (only the arms change);
 // the s06 head sprite sits 6.49 px right / 2.68 px up of the s05 one for the same chin point (measured), so this figure's head is offset by that in body px.
-const S5_END = { x: 175 + (394.5 - 396) * 0.34, y: 533 + (306 - 1000) * 0.34, s: 0.34, t0: 0.3, t1: 0.9, hdx: -6.49 / 0.34, hdy: 2.68 / 0.34 };
+// v10: slide 5 v8's last frame has the full-chin c22 cut (s05-heads.py NORM), so this figure's head is that cut and geometry, not the s06 sheet (see below).
+const S5_END = { x: 175 + (394.5 - 396) * 0.34, y: 533 + (306 - 1000) * 0.34, s: 0.34, t0: 0.3, t1: 0.9 };
 const ADDR = 'ADLw7WkPsqngneGqoCKmGR17w16kmgA9q1WnxURt9Wod';   // vaults[].recipient_sol, artifacts/public-deployment.json
 const ADDR_SHORT = ADDR.slice(0, 6) + '…' + ADDR.slice(-8);
 
@@ -176,8 +177,16 @@ const T = {
 };
 // v3 tag timing: sign right after "address", form through the slot, door opens for the stick man and shuts, a speech pause on the shut door,
 // then the devil's attempt under "and nothing else", the slot slams on "else" (SFX_SLOT_SLAM in data/s06-edl.js), REJECTED, long hold
-Object.assign(T, { sign0: T.address + .80, sign1: T.address + 1.80, slot0: 23.50, shrink0: 23.60, squash0: 24.00, slotShut: 24.22,
-  door0: 24.45, hopIn: 24.65, doorClose: 24.95, narrOut: 24.80, devilUp: 25.90, hand0: T.l7b + .10, hand1: T.l7b + .45, dslot0: T.l7b + .20 });
+// v10 (Liam, 2026-10-16: "speed up the animation and cut out that pause"): L7b now follows L7a after a breath (s06-timing.py), so the gap's choreography,
+// kept in its v9 seconds below, plays GK times faster: sign -> form through the slot -> door opens, stick man hops in, narrator out, door shuts (v9 sign0 .. 25.10),
+// then the devil's rise (v9 25.90 .. 26.10); v9's 0.80 s hold on the shut door (25.10 .. 25.90) is dropped. g() maps v9 seconds from sign0 (unchanged, 0.80 s
+// after "address") so the rise ends 0.05 s before "and", as in v9. Every duration inside the gap is divided by GK in the cues below.
+const V9G = { shut: 25.10, rise: 25.90, riseD: 0.20 }, G0 = T.address + .80;
+const GK = (V9G.shut - G0 + V9G.riseD) / (T.l7b - .05 - G0);
+const g = (x) => G0 + (x - G0 - (x >= V9G.rise ? V9G.rise - V9G.shut : 0)) / GK;
+Object.assign(T, { sign0: G0, sign1: g(G0 + 1.0), slot0: g(23.50), shrink0: g(23.60), squash0: g(24.00), slotShut: g(24.22),
+  door0: g(24.45), hopIn: g(24.65), doorClose: g(24.95), narrOut: g(24.80), devilUp: g(V9G.rise), hand0: T.l7b + .10, hand1: T.l7b + .45, dslot0: T.l7b + .20 });
+window.__GK = GK;
 Object.assign(T, { stamp: T.slam + .35 }); T.freeze = T.stamp + .20;
 const FREEZE_AT = T.freeze;          // everything stops here (grain keeps running)
 window.__T = T;
@@ -221,8 +230,16 @@ const bX = makeFig($('bouncer'), 'suitX', 'bouncer'), bP = makeFig($('bouncer'),
 const narr = makeFig($('narr'), 'prof', 'narr'), wbNarr = makeFig($('wbNarr'), 'prof', 'narr');
 // v9: the whiteboard lab coat is layered the slide 5 way (s05-hash.html: oval-erased body PNG from s05-bodies.py, head BEHIND the body), so the collar and the
 // notched skin strip under the chin look the same as in slide 5's last frame at the takeover; same 20ae821 professor-point art as BODY.prof.
-{ const [b0, hd, b1] = wbNarr.children; b0.src = 'assets/s06/s05-physicist-professor-point.png'; b0.style.webkitMaskImage = b0.style.maskImage = 'none'; b1.remove();
-  wbNarr.insertBefore(hd, b0); hd.dataset.base = `translate(${S5_END.hdx}px,${S5_END.hdy}px) ` + hd.dataset.base; }
+// v10: its head is slide 5 v8's cut: film/heads/s06-wb-00.png (pipeline/s06/wb-heads.py: L1a + L1b keyed with s05-heads.py v8's NORM graph at 136x197, one NORM
+// anchored so L1a's first frame registers on c22's last sprite) drawn with slide 5's head geometry (s05-hash.html setPose: left hx - 365 KF, top hy + 6 - 900 KF,
+// scale KF / 0.1793, anchor 511.5 / 308; a slide 5 fig x is this body's x + 116 at the same screen point, y is the same), behind the body.
+const KF5 = 217 / 665;
+{ const [b0, hd, b1] = wbNarr.children; b0.src = 'assets/s06/s05-physicist-professor-point.png'; b0.style.webkitMaskImage = b0.style.maskImage = 'none'; b1.remove(); hd.remove();
+  const h5 = document.createElement('div'); h5.id = 'wbHead';
+  h5.style.cssText = `position:absolute;left:${511.5 - 365 * KF5 - 116}px;top:${308 + 6 - 900 * KF5}px;width:136px;height:197px;transform-origin:0 0;transform:scale(${KF5 / 0.1793});` +
+    'background:url(heads/s06-wb-00.png) no-repeat;background-size:2176px 2364px';
+  wbNarr.insertBefore(h5, b0); }
+const setWbHead = (i) => { const c = Math.min(i, 67); $('wbHead').style.backgroundPosition = `${-(c % 16) * 136}px ${-Math.floor(c / 16) * 197}px`; };
 place(wbNarr, S5_END.x, S5_END.y, 0, S5_END.s);
 const BNECK = [583.3, 294.8], BS = 0.3;
 
@@ -254,7 +271,7 @@ $('stickG').innerHTML = `<g class="marker" stroke="#fff" stroke-width="7">
   <path d="${wob([[0, -214], [-46, -160]], 13)}"/><path d="${wob([[0, -214], [46, -164]], 14)}"/>
   <path d="${wob([[0, -118], [-36, 0]], 15)}"/><path d="${wob([[0, -118], [36, 0]], 16)}"/></g>`;
 
-// whiteboard plate: slide 5 v5's real last frame (film/s05 2e04d96, still at t 96.4 from s05-hash.html), rendered once without the lab coat (plate) and with him (full)
+// whiteboard plate: slide 5's real last frame (v10: film/s05 a38d379 v8, s05-hash.html at 91.4333 s, pipeline/s06/s05-end.sh), rendered once without the lab coat (plate) and with him (full)
 
 // headlight beam: two soft lamps + a horizontal flare
 $('beam').innerHTML = `<div id="beamIn" style="position:absolute;left:0;top:0;width:900px;height:720px;transform-origin:450px 400px">
@@ -297,7 +314,7 @@ function stickPos(t) {
     [T.problem, T.problem + .2, -120, 60, 640, 640, 60], [T.problem + .3, T.problem + .5, 60, 220, 640, 640, 60], [T.problem + .6, T.problem + .8, 220, 420, 640, 640, 60],
     [T.l2end + .12, T.l2end + .32, 420, 630, 640, 625, 70], [T.l2end + .42, T.l2end + .62, 630, 870, 625, 610, 60],
     [T.getInFirst + .05, T.getInFirst + .2, 870, 780, 610, 630, 40, -14], [T.getInFirst + .26, T.getInFirst + .41, 780, 700, 630, 645, 30, -8],
-    [T.hopIn, T.hopIn + .22, 700, 870, 645, 610, 60],
+    [T.hopIn, T.hopIn + .22 / GK, 700, 870, 645, 610, 60],
   ], [-200, 640, 0]);
 }
 
@@ -307,7 +324,7 @@ f.onSeek((t0) => {
 
   // whiteboard plate, sweep, flash
   const sw = P(t, T.sweep0, T.sweep1), bx = -350 + 1980 * sw;
-  show($('wb'), sw < 1); setHead(wbNarr, nf);
+  show($('wb'), sw < 1); setWbHead(nf);
   { place(wbNarr, S5_END.x, S5_END.y, 0, S5_END.s);
     show($('wbBake'), t < S5_END.t0); show($('wbNarr'), t >= S5_END.t0); }
   const m = sw > 0 ? `linear-gradient(to right,transparent ${bx - 60}px,#000 ${bx + 90}px)` : 'none';
@@ -320,13 +337,13 @@ f.onSeek((t0) => {
   // door: slot (eyes on beat 2), swing open after L2, slam on the shove, open for the form, close behind the stick man; tag slam
   let sh = 0, eyes = false;                                  // shutter open fraction
   if (t >= T.pw && t < T.l2end) { sh = step(P(t, T.pw, T.pw + .2), 4) * (1 - step(P(t, T.l2end - .1, T.l2end), 2)); eyes = true; }
-  if (t >= T.slot0 && t < T.slotShut + .08) sh = step(P(t, T.slot0, T.slot0 + .12), 3) * (1 - step(P(t, T.slotShut, T.slotShut + .08), 2));
+  if (t >= T.slot0 && t < T.slotShut + .08 / GK) sh = step(P(t, T.slot0, T.slot0 + .12 / GK), 3) * (1 - step(P(t, T.slotShut, T.slotShut + .08 / GK), 2));
   if (t >= T.dslot0) sh = t < T.slam - .04 ? step(P(t, T.dslot0, T.dslot0 + .10), 3) : 1 - P(t, T.slam - .04, T.slam);
   $('shutter').setAttribute('transform', `translate(${-92 * sh} 0)`); show($('eyes'), eyes);
   let ang = 0;
   if (t >= T.l2end && t < T.first - .12) ang = 72 * ease(P(t, T.l2end, T.l2end + .42));
   else if (t >= T.first - .12 && t < T.first + .01) ang = 72 * (1 - P(t, T.first - .12, T.first + .01));
-  if (t >= T.door0 && t < T.doorClose + .15) ang = 72 * ease(P(t, T.door0, T.door0 + .45)) * (1 - P(t, T.doorClose, T.doorClose + .15));
+  if (t >= T.door0 && t < T.doorClose + .15 / GK) ang = 72 * ease(P(t, T.door0, T.door0 + .45 / GK)) * (1 - P(t, T.doorClose, T.doorClose + .15 / GK));
   const shake = t >= T.first && t < T.first + .12 ? [3, -3, 2, -2][Math.floor((t - T.first) * 30) % 4] : 0;
   $('doorPanel').style.transform = `translateX(${shake}px) rotateY(${ang}deg)`;
   $('doorRefl').style.opacity = (.42 * Math.cos(ang * Math.PI / 180)).toFixed(3);
@@ -346,7 +363,7 @@ f.onSeek((t0) => {
   if (tip !== null) { const d = `M-400,450 L${tip},450 Q${tip + 60},450 ${tip + 60},410 Q${tip + 60},375 ${tip + 25},375`; $('hookPath').setAttribute('d', d); $('hookEdge').setAttribute('d', d); }
 
   // stick man
-  const [sx, sy, sr] = stickPos(t), stickIn = (t >= T.hopIn + .22);
+  const [sx, sy, sr] = stickPos(t), stickIn = (t >= T.hopIn + .22 / GK);
   $('stickG').setAttribute('transform', `translate(${sx} ${sy}) rotate(${sr})`); show($('stick'), !stickIn && t >= T.problem - .01);
 
   // devil: rises behind (L3), whispers, shoves in (L5); tag: his own form, the slot slams on his fingers
@@ -354,7 +371,7 @@ f.onSeek((t0) => {
   if (t >= T.whoever && t < T.first - .12) { dvis = true; dy = lerp(820, 330, step(P(t, T.whoever, T.whoever + .25), 5));
     if (t >= T.pw3 + .14 && t < T.getsIn - .14) { const q = step(P(t, T.pw3 + .14, T.pw3 + .28), 3); dx = lerp(700, 668, q); dr = -14 * q; }
     if (t >= T.getInFirst) { const q = step(P(t, T.getInFirst, T.getInFirst + .3), 5); dx = lerp(700, 870, q); dy = lerp(330, 345, q); dr = q < 1 ? 10 : 0; } }
-  if (t >= T.devilUp) { dvis = true; dx = 1095; dy = lerp(820, 330, step(P(t, T.devilUp, T.devilUp + .2), 5)); if (t >= T.slam) dr = 9; }
+  if (t >= T.devilUp) { dvis = true; dx = 1095; dy = lerp(820, 330, step(P(t, T.devilUp, T.devilUp + V9G.riseD / GK), 5)); if (t >= T.slam) dr = 9; }
   const dsc = t >= T.getInFirst && t < T.first ? 1 - .08 * P(t, T.getInFirst, T.getInFirst + .3) : 1;
   show($('devil'), dvis); $('devil').style.transform = `translate(${dx - 60}px,${dy - 87}px) rotate(${dr}deg) scale(${dsc})`;
   // devil's hand + his own form (tag)
@@ -370,7 +387,7 @@ f.onSeek((t0) => {
   const TL = [T.narrIn, L.L5.out_out + .03], TR = [T.l6 + .40, T.narrOut], NARR = { left: [118, 282, 27], right: [1162, 262, -27] };
   let side = null, pk = 0;
   if (t >= TL[0] && t < TL[1] + .2) { side = 'left'; pk = t < TL[1] ? step(P(t, TL[0], TL[0] + .15), 3) : 1 - step(P(t, TL[1], TL[1] + .15), 3); }
-  if (t >= TR[0] && t < TR[1] + .2) { side = 'right'; pk = t < TR[1] ? step(P(t, TR[0], TR[0] + .15), 3) : 1 - step(P(t, TR[1], TR[1] + .15), 3); }
+  if (t >= TR[0] && t < TR[1] + .2 / GK) { side = 'right'; pk = t < TR[1] ? step(P(t, TR[0], TR[0] + .15), 3) : 1 - step(P(t, TR[1], TR[1] + .15 / GK), 3); }
   show($('narrN'), side && pk > 0); setHead(narr, nf);
   if (side) { const [x, y, r] = NARR[side], back = (1 - pk) * 380, fl = side === 'left' ? 1 : -1; place(narr, x - fl * back, y, r, .42, fl); }
 
@@ -386,16 +403,16 @@ f.onSeek((t0) => {
   show($('bang'), t >= T.slam + .02); $('bang').style.left = '900px'; $('bang').style.top = '236px';
 
   // the form: floats up on "signature", fills, signs, goes through the slot
-  const fm = $('form'); show(fm, t >= T.sig && t < T.squash0 + .18);
+  const fm = $('form'); show(fm, t >= T.sig && t < T.squash0 + .18 / GK);
   let fx = 0, fy = (1 - ease(P(t, T.sig, T.sig + .48))) * 720, fs = 1, fsy = 1, frot = -2;
-  if (t >= T.shrink0) { const q = ease(P(t, T.shrink0, T.squash0)); fx = lerp(0, 870 - 335, q); fy = lerp(0, 255 - 355, q); fs = lerp(1, .16, q); frot = lerp(-2, 0, q); fsy = 1 - P(t, T.squash0, T.squash0 + .18); }
+  if (t >= T.shrink0) { const q = ease(P(t, T.shrink0, T.squash0)); fx = lerp(0, 870 - 335, q); fy = lerp(0, 255 - 355, q); fs = lerp(1, .16, q); frot = lerp(-2, 0, q); fsy = 1 - P(t, T.squash0, T.squash0 + .18 / GK); }
   fm.style.transform = `translate(${fx}px,${fy}px) rotate(${frot}deg) scale(${fs},${fs * fsy})`;
   const type = (s, t1, cps = 25) => s.slice(0, Math.max(0, Math.floor((t - t1) * cps + 1e-6)));
   $('fAmt').textContent = type('1.5 SOL', T.withdrawal);
   $('fTo').textContent = type(ADDR_SHORT, T.address, 22); $('fToFull').textContent = t >= T.address + .7 ? ADDR : '';
   if (!sigLen) sigLen = sigEl.getTotalLength();
   const sp = P(t, T.sign0, T.sign1); sigEl.style.strokeDashoffset = (1 - sp).toFixed(4);
-  const q = $('quill'); show(q, t >= T.sign0 - .3 && t < T.sign1 + .3);
+  const q = $('quill'); show(q, t >= T.sign0 - .3 && t < T.sign1 + .3 / GK);
   const pt = sigEl.getPointAtLength(sigLen * sp); q.style.transform = `translate(${pt.x - 3}px,${pt.y - 138}px)`;
 
   // REJECTED: slams in after the slot (dossier.js D.slam curve: scale 3 -> .96 -> 1 in 0.14 s, -8 deg), with a camera thump on the world

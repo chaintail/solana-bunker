@@ -22,9 +22,12 @@ lines = [  # id, text, src_in, src_out, out_in (None = right after the previous 
     # v3 (Liam): the line is split at the pause after "address" (silence 359.43-359.55); our form is signed and goes through the slot in the gap,
     # the speech pauses (about 0.8 s of bed on the shut door), then "and nothing else" plays over the devil's attempt and the slot slams on "else".
     ('L7a', 'Something that says this exact withdrawal, to this exact address,', 355.28, 359.49, 18.70),
-    ('L7b', 'and nothing else.', 359.49, 360.70, 26.15),  # "else" ends 360.56 (silence to 361.02, then a lip click at 361.04)
+    # v10 (Liam, 2026-10-16: "cut out that pause"): the 3.24 s gap after "address" is cut to a breath. The take is silent (below -45 dB) 359.43-359.54, so
+    # both cut edges (and their 20 ms fades) sit in silence; with 0.24 s inserted the gap between the words is 0.11 + 0.24 = 0.35 scene s = 0.29 s at 1.2x.
+    # L7b (and everything tied to it: the slot slam marker, REJECTED, the freeze, the end) is 3.00 s earlier than in v9 (26.15).
+    ('L7b', 'and nothing else.', 359.49, 360.70, 23.15),  # "else" ends 360.56 (silence to 361.02, then a lip click at 361.04)
 ]
-TOTAL, FREEZE = 29.50, 0.0   # v7: the 0.5 s "*the math*" gap is removed, everything after it is 0.5 s earlier
+TOTAL, FREEZE = 26.50, 0.0   # v7: the 0.5 s "*the math*" gap is removed, everything after it is 0.5 s earlier; v10: 3.00 s less (29.50 -> 26.50)
 edl = []
 for i, (id_, text, si, so, oi) in enumerate(lines):
     if oi is None: oi = round(edl[-1]['out_out'] + FREEZE, 3)
