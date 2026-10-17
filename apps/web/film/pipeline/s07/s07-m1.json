@@ -1,0 +1,28 @@
+{
+ "scene": "s07", "name": "s07-m1", "dir": "~/video-work/solana-bunker/s07",
+ "note": "v7 x12 (6ca1dd1), 1000 frames = 33.333 s, hard cut seminar -> alley on frame 774. Frame k shows page time k x 1.2 / 30. Seminar dry (cue sheet); noir reprise from the cut. Times below are picture frames; see film-plan-s07.md 'm1 (music)'.",
+ "master": "out/s07-v7-x12.mp4", "phone": "out/s07-v7-x12-phone.mp4", "dialogue": "out/x12/audio-final.wav",
+ "fps": 30, "frames": 1000, "limiter": "alimiter=limit=0.95:latency=1",
+ "guard_db": 16, "voice_active_db": -30, "sfx_ref_lufs": -20,
+ "music": {"file": "~/audio-work/solana-bunker/music/suno/5-noir/suno-5-noir-a.wav", "ref_lufs": -16, "highpass": 180,
+           "track_in": 17.203, "scene_in": 25.8, "frame_in": 774, "head_fade": 0.005,
+           "out_downbeat_track": 24.484, "fade": [33.14, 33.3333],
+           "under": -20, "gap": -14, "gap_min": 0.8, "release": 0.3, "attack": 0.1,
+           "why": "bar 5 (analysis downbeat 17.252, loop point, spectral-flux attack 17.20-17.21) on the cut; bar 7 (analysis 24.52, flux 24.484) lands 33.08, then a fade to the last frame"},
+ "sfx": [
+  {"id": "click tweet sheet", "file": "~/audio-work/solana-bunker/out/work/projector-click-2-manual-advance.wav", "frame": 18, "hit": 0.344, "gain": -6},
+  {"id": "click Lamport sheet", "file": "~/audio-work/solana-bunker/out/work/projector-click-2-manual-advance.wav", "frame": 175, "hit": 0.344, "gain": -6},
+  {"id": "click XMSS sheet", "file": "~/audio-work/solana-bunker/out/work/projector-click-2-manual-advance.wav", "frame": 605, "hit": 0.344, "gain": -6},
+  {"id": "VERSION 3 stamp", "file": "~/audio-work/solana-bunker/out/work/stamp-thump-3-kenney-soft-heavy.wav", "frame": 727, "hit": 0.0, "gain": -6},
+  {"id": "slot clack", "file": "~/audio-work/solana-bunker/out/work/slot-slam-4-mail-slot-clack.wav", "frame": 926, "hit": 0.078, "gain": -6}
+ ],
+ "picture_checks": [
+  {"id": "flash tweet sheet", "frame": 18, "metric": "up"},
+  {"id": "flash curve sheet (not scored)", "frame": 115, "metric": "up"},
+  {"id": "flash Lamport sheet", "frame": 175, "metric": "up"},
+  {"id": "flash XMSS sheet", "frame": 605, "metric": "up"},
+  {"id": "VERSION 3 stamp", "frame": 727, "metric": "diff"},
+  {"id": "hard cut to the alley", "frame": 774, "metric": "diff"},
+  {"id": "slot shutter open", "frame": 926, "metric": "diff"}
+ ]
+}
