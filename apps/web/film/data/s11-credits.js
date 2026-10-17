@@ -2,6 +2,7 @@
 // v7 (2026-10-16): MUSIC, ARCADE SCORE and NEWS STINGS after AUDIO ENGINEERS; SOUND EFFECTS as one line; the Lamport portrait line opens the closing lines.
 // Initials only for surnames; Mikail without an H; "Claude-Do", never "Claude D.". The whole text lives here: a change to the list is one edit.
 // a line may hold \n (a break) or be {it: text} (lighter weight, italic).
+// {sp: text}: a line with a small gap above it (v8: the NEWS STINGS credits, which wrap onto two lines each, read as separate credits).
 // roll: [heading, lines] where a line is a name (string) or [sub-role, name] (CAST, VOICE ACTORS); {joke: text} is a free line.
 // cards: the full-screen cards after the roll (plan section 5, Q12); the last one carries the lemur logo, holds 3 s, then fades to black.
 window.S11_CREDITS = {
@@ -23,7 +24,7 @@ window.S11_CREDITS = {
     ['AUDIO ENGINEERS', ['Codex', 'Claude Fable', 'Grok']],
     ['MUSIC', ['Suno, prompts by Liam C.']],
     ['ARCADE SCORE', ['Original 8-bit score, Chaintail Labs']],
-    ['NEWS STINGS', ['Freesound.org (CC0)', 'code_box: Mini News Jingle', 'xkeril: Minimalist news transition', 'Antwash: Da Da Da Daaa Opening']],
+    ['NEWS STINGS', ['Freesound.org (CC0)', {sp: 'code_box: Mini News Jingle'}, {sp: 'xkeril: Minimalist news transition'}, {sp: 'Antwash: Da Da Da Daaa Opening'}]],
     ['SOUND EFFECTS', ['Freesound.org and Kenney.nl (CC0)']],
     ['LOCATION', ['WorldOS v2', 'do-box', 'Solana devnet']],
     ['ANIMATION STUDIO', ['dev-mac']],
