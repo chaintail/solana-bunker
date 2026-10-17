@@ -274,3 +274,27 @@ Rulings applied: Q9 the roll at 6 px a frame, Q10 the cards on black, Q11 Liam's
   - The new lines read at 540p.
   - Contact sheet: `s11-v7-roll-phases.png`.
 - **Outputs:** `s11-v7.mp4` and `s11-v7-phone.mp4` (960x540, crf 26). Both chunks were recaptured: 585 + 675 frames.
+
+## 17. As built: scene 11 v8 (composer, 2026-10-17: the phase 2 hold at 2.0x so the roll ends earlier; the NEWS STINGS credits spaced)
+- **Roll speed:** the phase 2 hold is 12 px a frame (2.0x). It was 10 in v7. The cubic eases, phase 1 and phase 3 are unchanged.
+
+  | phase | scene time (s) | px a frame (measured on the master) |
+  |---|---|---|
+  | 1 | 3.60–19.20 | 6 (1.00x) |
+  | 2: ease in | 19.20–21.93 | 6 to 12, reached with the middle of the crew blocks at the window's centre |
+  | 2: hold | 21.93–25.27 | 12 (2.00x) |
+  | 3: ease out | 25.27–27.27 | 12 to 6, reached as the Lamport line enters the window |
+  | 3: hold, the closing lines | 27.27–31.93 | 6 (1.00x) |
+- **NEWS STINGS:** each of the three credits wraps onto two lines in the 379 px column at 28 px. A one-line fit would need about 20 px type or new wording, so the text and size stay. A 14 px gap now sits above each credit (`{sp: text}` in `data/s11-credits.js`, `.cr .sp` in the page), and the three read as separate entries. The style is otherwise the same: all white, one font. The roll is 5655 px tall (v7: 5613).
+- **Length:** the roll ends and card 1 starts at 31.93. That is 1.27 s earlier than v6 (33.20) and 1.17 s earlier than v7 (33.10). Card 2 is at 36.43 and fully in at 36.83. Total 40.83 s, 1225 frames (v6: 42.10 s, 1263 frames). The NEWS STINGS gaps cost 0.1 s. Ending 2 s before v6 needs a 13 px hold or shorter eases.
+- **Audio:** the groove's in-point is picked from its downbeats, so the final chord (bar 35) lands on card 2. Bar 27 would come in at 17.91, under the voice, so the groove comes in on bar 28 (track 63.00, grid 63.04) at 20.25. That is 1.15 s after the read's end, during the ease in. The final chord lands at 36.43. The groove fades out over the 0.4 s to jingle B's last hit, at 36.83. Jingle A is unchanged: its first big hit is at 1.80. The voice is -16.0 LUFS and the whole scene -19.0 LUFS integrated, with a -1.9 dBFS peak.
+- **Capture:** only chunk b (from 19.5 s, 640 frames) was recaptured. The roll's offsets for every chunk-a frame are identical to v7. The v8 page rendered at frame 584 matches chunk a's frame 584 at 88 dB PSNR.
+- **Checks:**
+  - glitch-scan v2 with `--chunk-starts 585 --ref 0` is clean on master and phone (0 flagged; closest frame to frame 0 at 18.8 dB).
+  - Lossless frame 0 equals scene 10 frame 834 (PSNR inf); the master's frame 0 is at 41.97 dB.
+  - Onsets on the master's AAC: jingle A 1.8000, groove in 20.2553, groove chord 36.4368, jingle B 36.8333.
+  - The outro transcript (faster_whisper small) matches `outro-v4.wav`.
+  - All three codes decode on master and phone at 13.24, 15.71, 16.21, 20.0 and 29.63 s, in reveal order.
+  - The new lines read at 540p.
+  - Contact sheet: `s11-v8-roll-phases.png`.
+- **Outputs:** `s11-v8.mp4` and `s11-v8-phone.mp4` (960x540, crf 26).
