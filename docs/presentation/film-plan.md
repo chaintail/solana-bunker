@@ -18,6 +18,26 @@ Liam: mix all four design worlds and more (he will bring further styles), one sl
 
 Pipeline: apps/web/film/<scene>.html, animations seekable (Web Animations API or window.__seek), apps/web/film/scripts/capture.mjs renders 30 fps PNG frames on do-box; encoding and compositing on dev-mac only.
 
+## Opening v10 (Liam, voice 2026-10-17)
+
+Two changes on v9 (77d39b1). Everything else is v9's: the advisory card and its voice, the ident, jingle C on the SPECIAL REPORT slam, the desk, the hold, the announcer, the bed and the limiter. Scripts: `pipeline/render-vo-v10.py`, `pipeline/capture-v10.sh`, `pipeline/build-opening-v10.sh`, `pipeline/audio-v10.filter`, `pipeline/jingles-v10.py`, `pipeline/verify-v10.sh`, `pipeline/sponsor-check-v10.py`. Scene: `s00-intro-v10.html`. Work tree on dev-mac: `~/video-work/solana-bunker/opening-v10`. Only the sponsor card was recaptured (s00-intro-v10, chunks c00 to c02). The advisory and ident segments are v9's encodes.
+
+1. **"Chaintail Labs" back at 1.0x.** Everything through "by" is v9's 1.2x read. "Chaintail Labs" and the end tail are the original 1.0 render (`out/s00a-v5/vo-final.wav`).
+   - The join is at a zero crossing in the digital silence 10 ms before "Chaintail": 2.7415 s in the v9 read and 3.2946 s in the 1.0 render. There is no crossfade and no added pause. The silence before "Chaintail" is 0.496 s, against 0.599 s / 1.2 = 0.499 s.
+   - The read is 3.952 s, against v9's 3.766 s (+0.186 s). The sponsor card holds 6 frames longer: 129 frames (4.3 s) against 123 (4.1 s). The text and the brand reveal are v9's, so output frames 0 to 113 are unchanged. The fade-out moves from frame 114 to 120.
+2. **Jingle A starts 0.45 s earlier.** It starts at 16.157 s, 0.45 s before v9's placement relative to the ident. The mastered file had a 2 ms fade-in (the master is the pre-master times 0.3802); the first 3 ms now come from the pre-master at the same gain.
+   - A's first onset, a pickup about 10 dB below the hits, is 0.29 to 0.30 s after the ident's first frame (15.867 s). Its first full hit (0.660 s into the file) is at 16.82 s, 0.45 s before the slam lands (17.267 s).
+   - The duck at Liam's first word (18.347 s) and the 1.0 s fade are v9's.
+
+**Timeline (30 fps):** sponsor 0–128 | advisory 129–475 (voice at 4.8 s) | ident 476–541 | desk 542–1573 | hold 1574–1636. The whole scene is 54.567 s (1637 frames), against v9's 54.367 s.
+
+**Checks:**
+- Loudness is -16.5 LUFS integrated with a -1.9 dBFS peak.
+- glitch-scan v2 was run with 16 chunk starts and refs at frames 0, 129, 476 and 542, on the master and the phone file. There are no stale frame-0 copies. One flag, the pair 541/542, is v9's designed white hand-off from the ident to the desk.
+- "Chaintail Labs" in the mix correlates with the 1.0 render's segment at 1.0000. It is 1.101 s long in both.
+- faster-whisper small (int8), prompted with the brand name, reads the sponsor audio from the mix as "The following program is brought to you by Chaintail Labs."
+- Jingle C's last hit is at 52.435 to 52.438 s in the stem, 2 to 5 ms after the slam frame (52.433 s).
+
 ## Opening v9 (Liam, voice 2026-10-16)
 
 Four changes on the locked x11 cut (branch film/opening-v8, ff6c269). Everything else is x11's: the desk picture and the hold (`opening-x11/out/final`), Liam's desk voice at 1.1x with the denoise chain, the jump cut and the earlier end cut (`opening-x11/out/desk-final.wav`), "A special report." at +5 dB 0.75 s after the hold starts, the brown-noise bed and the limiter (0.80, no auto-level).
