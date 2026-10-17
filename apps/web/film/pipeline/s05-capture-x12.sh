@@ -7,7 +7,7 @@
 set -uo pipefail
 export PATH=/opt/homebrew/opt/ffmpeg-full/bin:/opt/homebrew/bin:$PATH CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 cd ~/video-work/solana-bunker/s05; mkdir -p out/x12/seg render/x12
-SPEED=1.2; M=2420; CH=300
+SPEED=1.2; M=2287; CH=300   # v8: 91.45 s scene = 2744 frames -> ceil(2744/1.2) = 2287 (v6/v7: 2420)
 find render/x12 -name 'f*.png' -delete
 chunk() { # n first_frame count
   local n=$1 a=$2 c=$3 try pid last cnt idle

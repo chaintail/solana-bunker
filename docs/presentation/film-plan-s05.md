@@ -51,3 +51,20 @@ residual (a) for the legs: on pointing switches the legs and shoes no longer shi
 out/s05-v7-x12.mp4 / -phone.mp4. Results: 2420 frames, 80.667 s, -15.8 LUFS, true peak -1.0 dBFS, LRA 4.0 (same as v6); glitch-scan v2 --chunk-size 300 --ref 0
 clean on master and phone. Diff against v6 x12: only the neck strip and the professor-point legs change (other pixels are H.264 noise; pause frames 500/510 PSNR
 47-50 dB, last frame 2419 51 dB).
+
+## v8, x12 build (no pause before "oh crackers"; full-chin heads in the B&W half)
+Liam, voice 2026-10-16: (A) cut the silence between "So let's spend some" and "oh crackers" and let the robbery zoom by under the speech; (B) in the
+black-and-white half the head had a rectangle cut out of the left jaw and sat off the lab coat collar.
+A: s05-timing.py GAP_16A = 0.27 (was 5.60): 0.06 tail + 0.27 + 0.07 head = 0.40 scene s speech to speech, 0.32 s silence at 1.2x (measured -40 dB,
+49.14-49.46 s of the master, between "some" and "oh"); both phrases keep their 20 ms cut fades, so there is no click at the join. Every cue, word and
+adelay from c16b on moves 5.33 s earlier; the scene is 91.45 s (v7 96.78). Beat 4 keeps its v7 choreography in beat seconds and plays it through rt(),
+which maps the mailbox pop (beat -0.72) to the first word of c16a and the freeze (beat 5.57) to its v7 place against the speech (c16b speech - 0.05):
+3.84x faster, 1.64 scene s. The board's root glow runs on t + GLOW_SHIFT so the frozen glow is v7's.
+B: s05-heads.py NORM: from c15 on (source 288 s+) Liam sits closer and further left (face 1.10x, centre about 70 px left), so the fixed zone/kill masks cut
+the left jaw. Each of those phrases is scaled and padded into the c1-c14 geometry before keying (per-phrase registration against c8), so the masks
+clear the jaw and every sprite uses the lab coat head anchor 511.5 / 308. Heads c1-c14 are unchanged.
+Results: 2287 frames, 76.233 s (v7 2420 frames, 80.667 s: 4.43 s shorter); -15.8 LUFS integrated, true peak -1.0 dBFS, LRA 3.7 LU; glitch-scan v2
+--chunk-size 300 --ref 0 clean on master and phone (frame 1801 is the designed switch to professor-point at c20a). Chunk 06 captured from frame 1800
+painted frame 0 at its third frame (1802) on two runs; it was captured from 1795 and encoded from 1800. The heads concat can miss the last phrase
+(c22.mov not yet readable on the shared volume): all.mov must be 2164 frames. Last frame 2286 against v7 2419: PSNR 32.4 dB, 39.9 dB outside the
+head (H.264 noise); the head is the full-chin c22 cut, so s06's baked opening frame has to be regenerated from this frame.

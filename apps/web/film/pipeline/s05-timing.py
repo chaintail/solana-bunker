@@ -19,6 +19,7 @@ def words(a, b):
 LEAD = 0.5          # slide-4 end frame held before the first word
 TAIL = 2.6          # after the last word: board holds, then hard cut to slide 6
 PAUSE_7B = 0.36     # v6: inserted pause after 'if it matches' (0.36 scene s = 300 ms heard in the 1.2x cut); every key after it re-anchors later by this much (the bed covers the gap)
+GAP_16A = 0.27      # v8 (Liam, 2026-10-16): was 5.60 s of silence before 'oh crackers'. 0.06 tail + 0.27 + 0.07 head = 0.40 scene s speech to speech = 333 ms heard at 1.2x
 # id, (tok_a, tok_b), e0, e1, cut_in, cut_out, gap_after
 P = [
  ('c1',  (217.7, 219.6), 218.12, 219.26, 218.00, 219.38, 0.35),   # So back to Justin's tweet.
@@ -39,7 +40,7 @@ P = [
  ('c13', (259.1, 264.9), 259.32, 264.79, 259.22, 264.85, 0.40),   # So, what's the standard ... compress data on chain? A Merkle tree, of course.
  ('c14', (265.1, 271.8), 265.43, 271.66, 265.33, 271.70, 1.20),   # Same thousand secrets. Now we commit them as a Merkle root. 33,000 bytes ... becomes 390.
  ('c15', (288.7, 293.4), 288.73, 292.77, 288.65, 292.85, 0.50),   # And now it's time to celebrate. We have our bunker and our funds are safe.
- ('c16a',(293.4, 294.95),293.65, 294.94, 293.55, 295.00, 5.60),   # So let's spend some   (the race runs through the gap)
+ ('c16a',(293.4, 294.95),293.65, 294.94, 293.55, 295.00, GAP_16A),   # So let's spend some   (v8: no pause; the robbery runs under this line, see s05-hash.html beat 4)
  ('c16b',(295.2, 297.6), 295.37, 297.57, 295.30, 297.65, 0.45),   # oh crackers, what the flip happened here?
  ('c17', (297.6, 298.9), 297.78, 298.70, 297.70, 298.78, 0.60),   # We just got robbed.
  ('c18', (299.0, 300.75),299.43, 300.97, 299.35, 301.00, 0.50),   # Ah, here's the theoretical problem

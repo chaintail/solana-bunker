@@ -2,11 +2,11 @@
 # Runs ON dev-mac from ~/video-work/solana-bunker/s05. x12 build mode (Liam 16763): s05-build-x11.sh at 1.2x on the v6 cut list.
 # audio: the v6 cut list (film/data/s05-audio.filter, 0.36 s pause (300 ms heard at 1.2x) after 'if it matches') -> mix.wav -> atempo=1.2 (pitch kept; every phrase start t lands at t/1.2,
 #   in step with the --speed=1.2 picture) -> two-pass loudnorm -16 LUFS -> brown-noise bed re-generated at the new length -> out/x12/audio-final.wav
-# video: out/x12/seg/c*.mp4 (s05-capture-x12.sh, 2420 frames = 80.667 s) muxed -> ../out/s05-$V-x12.mp4 + the 960x540 crf 26 phone cut ../out/s05-$V-x12-phone.mp4 (V = cut version, default v7)
+# video: out/x12/seg/c*.mp4 (s05-capture-x12.sh, 2287 frames = 76.233 s in v8) muxed -> ../out/s05-$V-x12.mp4 + the 960x540 crf 26 phone cut ../out/s05-$V-x12-phone.mp4 (V = cut version, default v8)
 set -euo pipefail
 export PATH=/opt/homebrew/opt/ffmpeg-full/bin:/opt/homebrew/bin:$PATH
 cd ~/video-work/solana-bunker/s05; O=out/x12; mkdir -p $O ../out
-FFV="ffmpeg -nostdin -v error -y"; SPEED=1.2; M=2420; V=${V:-v7}
+FFV="ffmpeg -nostdin -v error -y"; SPEED=1.2; M=2287; V=${V:-v8}   # v8: 2287 frames = 76.233 s (v6/v7: 2420)
 XT=$(python3 -c "print(round($M/30,4))")
 [ -f out/take-dn.wav ] || { echo "out/take-dn.wav missing (run s05-build.sh once)"; exit 1; }
 cp film/data/s05-audio.filter $O/s05-audio.filter
