@@ -1,0 +1,29 @@
+{
+ "scene": "s09", "name": "s09-m1", "dir": "~/video-work/solana-bunker/s09",
+ "note": "v11 x13 (d1d6025), 897 frames = 29.9 s; frame k shows page time k x 1.3 / 30 (s09-timing.py T / 1.3). Black-and-white half dry; Reassuring Groove reprise from the colour snap. SFX at the five edit-list markers, each hit on its picture frame; see film-plan-s09.md 'm1 (music)'.",
+ "master": "out/s09-v11-x13.mp4", "phone": "out/s09-v11-x13-phone.mp4", "dialogue": "out/x13/audio-final.wav",
+ "fps": 30, "frames": 897, "limiter": "alimiter=limit=0.80:level=0:latency=1",
+ "guard_db": 16, "voice_active_db": -30, "sfx_ref_lufs": -20,
+ "music": {"file": "~/audio-work/solana-bunker/music/suno/1-sponsor/suno-1-reassuring-groove-a.wav", "ref_lufs": -16, "highpass": 180,
+           "track_in": 19.147, "scene_in": 13.8, "frame_in": 414, "head_fade": 0.005,
+           "out_downbeat_track": 33.002, "fade": [29.4, 29.9],
+           "under": -20, "gap": -14, "gap_min": 0.8, "release": 0.3, "attack": 0.1,
+           "why": "bar 9 (analysis downbeat 19.18, the 8-bar phrase start; attack 19.150) on the colour snap (T.snap 17.92 / 1.3 -> frame 414, the white-flash frame); bars 9-15 play whole, bar 15 (flux 33.002) at 27.66, fade over the last 0.5 s",
+           "next_downbeat_note": "bar 16 (flux 35.311 s) would land at 29.964 s, 0.064 s after the scene's end: the cue closes on the bar line at the cut"},
+ "sfx": [
+  {"id": "TV static", "file": "~/audio-work/solana-bunker/out/work/tv-static-2-channel-change.wav", "frame": 3, "hit": 0.024, "gain": 0},
+  {"id": "record scratch", "file": "~/audio-work/solana-bunker/out/work/record-scratch-1-short-scratch.wav", "frame": 411, "hit": 0.05, "gain": -6},
+  {"id": "stamp", "file": "~/audio-work/solana-bunker/out/work/stamp-thump-2-stamp-bright-shelved.wav", "frame": 456, "hit": 0.055, "gain": -6},
+  {"id": "whoosh", "file": "~/audio-work/solana-bunker/out/work/whoosh-3-little-whoosh.wav", "frame": 475, "hit": 0.773, "gain": -6, "swell": true},
+  {"id": "cash register", "file": "~/audio-work/solana-bunker/out/work/cash-register-2-dusty-machine.wav", "frame": 492, "hit": 0.013, "gain": 0}
+ ],
+ "picture_checks": [
+  {"id": "static on", "frame": 3, "metric": "diff"},
+  {"id": "record scratch jolt", "frame": 411, "metric": "diff"},
+  {"id": "colour snap (white flash)", "frame": 414, "metric": "up"},
+  {"id": "stamp lands (shake)", "frame": 456, "metric": "diff"},
+  {"id": "BUT WAIT slides up", "frame": 475, "metric": "diff"},
+  {"id": "FREE swings in", "frame": 492, "metric": "diff"},
+  {"id": "hard cut to the testimonial", "frame": 510, "metric": "diff"}
+ ]
+}
