@@ -248,3 +248,29 @@ Rulings applied: Q9 the roll at 6 px a frame, Q10 the cards on black, Q11 Liam's
 ## 15. As built: scene 11 v6 (scene 10 v8 x12 last frame)
 - **Only change from v5:** the opening still. `S10V=v8-x12 build.sh assets` cut the last frame of `s10-v8-x12.mp4` (835 frames at 30 fps; the duration minus 0.05 s seek lands on frame 834) into `assets/s11-s10-last.png`. The cut is pixel-identical to frame 834 and to `s10-v8-x12-last.png`. This scene has no Liam speech, so no speed change applies to it. Only chunk a (0–19.5 s) was recaptured. Chunk b (from frame 585) cannot show the still, which is hidden from 0.40 s, so v5's chunk b is reused. Voice, reveals, credits, audio chain and length (42.10 s, 1263 frames) are unchanged. Outputs: `s11-v6.mp4` and `s11-v6-phone.mp4` (960x540, crf 26).
 - **Checks:** Lossless frame 0 equals s10 frame 834 (PSNR inf). The encoded master frame 0 is at 42.0 dB (H.264, as in v5). Frames 0–10 of the lossless capture differ from v5 and frames 11–584 are identical. The PSNR of frames 0–14 against the opening still matches v5's profile to within 0.01 dB, so the bars sweep as before. Encoded master frames from 250 on are identical to v5. Frames 11–249 are within the first GOP and differ only by encoder drift (about 51 dB). glitch-scan v2 with `--chunk-starts 585 --ref 0` is clean on master and phone. The opening still matches no frame after frame 1. All three codes decode on master and phone at 13.24, 15.71, 16.21 and 20.0 s, in reveal order. Audio is −16.4 LUFS with a −1.9 dBFS peak, as in v5.
+
+## 16. As built: scene 11 v7 (Liam, 2026-10-16: the roll's speed curve, the music credits, the jingles and the sponsor groove)
+- **Credits** (`data/s11-credits.js`): after AUDIO ENGINEERS, MUSIC (Suno, prompts by Liam C.), ARCADE SCORE (Original 8-bit score, Chaintail Labs) and NEWS STINGS (Freesound.org (CC0) / code_box: Mini News Jingle / xkeril: Minimalist news transition / Antwash: Da Da Da Daaa Opening). SOUND EFFECTS is one line: Freesound.org and Kenney.nl (CC0). "Leslie Lamport portrait: photo by Leslie Lamport, via Wikimedia Commons" is the first of the closing lines, before "No curves were harmed" and card 1's "Based on a true story". The roll is 5613 px tall (v6: 4851), measured in Chrome at load. The four NEWS STINGS credits are wider than the 379 px column at 28 px, so each one wraps onto two lines.
+- **Roll speed** (`pipeline/s11/s11-timing.py`, `T.roll_px`, the page reads the whole-pixel offset per roll frame):
+
+  | phase | scene time (s) | px a frame (measured on the master) |
+  |---|---|---|
+  | 1: EXECUTIVE PRODUCERS, STORY INSPIRATION, CAST and on, under the outro read | 3.60–19.20 | 6 (1.00x) |
+  | 2: cubic ease in | 19.20–22.17 | 6 to 10, reached with the middle of the crew blocks at the window's centre |
+  | 2: hold | 22.17–26.33 | 10 (1.67x) |
+  | 3: cubic ease out | 26.33–28.33 | 10 to 6, reached as the Lamport line enters the window |
+  | 3: hold, the closing lines | 28.33–32.97 | 6 (1.00x) |
+
+  The last line leaves the window at 32.97. The empty window holds 4 frames, so the groove's bar 27 in-point falls after the read's end (19.10), and card 1 starts at 33.10. AVERAGE JOE (cast line 3) is centred at 8.27, inside phase 1.
+- **Length:** 42.00 s, 1260 frames (v6: 42.10 s, 1263 frames). The roll ends at 33.10 (v6: 33.20), 0.10 s earlier, not the 2 s asked for. The four new blocks add 763 px, which costs 4.2 s at 6 px a frame, and the curve saves about 4.3 s. Ending 2 s earlier at the same 1.6x needs a 12 to 13 px hold (2.0 to 2.2x).
+- **Audio** (`out/s11-mix.filter`): the voice alone gained to -16 LUFS, as the v1–v6 loudnorm. Jingle A (`news-open-1-mini-jingle.wav`, mastered -20 LUFS, played at that loudness in the mono mix) starts at 1.127, so its first big hit (file 0.668) lands on the CNN slam at 1.80. Its -12 dB duck at 4.60 and its 1.0 s fade act on silence, because the file ends at 4.43. The sponsor groove (`suno-1-reassuring-groove-a.wav`, -26 LUFS, 180 Hz high-pass) comes in on bar 27 (track 60.72) at 19.11. Its final chord, bar 35 (track 79.18), lands at 37.60 on card 2, and it fades out over the 0.4 s to jingle B's hit. Jingle B (`news-open-2-minimalist-transition.wav`) starts at 36.70, so its last hit (file 1.29) lands at 38.00, as card 2's crossfade ends, and its tail runs into the fade. The brown-noise bed and limiter 0.80 are unchanged.
+- **Loudness:** the voice segment (4.5–19.1) measures -16.0 LUFS, as in v6. The whole scene measures -19.3 LUFS integrated (v6: -16.4), because the 23 s of credits carry only the groove at -26. The peak is -1.9 dBFS.
+- **Checks:**
+  - glitch-scan v2 with `--chunk-starts 585 --ref 0` is clean on master and phone: 0 flagged, and no other frame matches frame 0 (closest 18.8 dB).
+  - Lossless frame 0 equals scene 10 frame 834 (PSNR inf); the master's frame 0 is at 41.97 dB.
+  - Onsets on the master's AAC: jingle A 1.8000, groove chord 37.6035, jingle B 38.0000, groove in 19.1127.
+  - faster_whisper (small) on the master's 4.5–19.5 s gives the same text as on `outro-v4.wav`.
+  - All three codes decode on master and phone at 13.24, 15.71, 16.21, 20.0 and 30.67 s, in reveal order.
+  - The new lines read at 540p.
+  - Contact sheet: `s11-v7-roll-phases.png`.
+- **Outputs:** `s11-v7.mp4` and `s11-v7-phone.mp4` (960x540, crf 26). Both chunks were recaptured: 585 + 675 frames.
