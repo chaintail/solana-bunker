@@ -1,0 +1,8 @@
+[6:a]aresample=48000,adelay=867200S:all=1,apad=whole_dur=54.5667[liam];
+[1:a]aresample=48000,adelay=230400S:all=1,apad=whole_dur=54.5667[vo];
+[2:a]aresample=48000,apad=whole_dur=54.5667[spons];
+[3:a]aresample=48000,apad=whole_dur=54.5667[jc];
+[4:a]aresample=48000,volume=5dB,adelay=2554400S:all=1,apad=whole_dur=54.5667[ann];
+[5:a]lowpass=f=220,volume=0.05,afade=t=in:d=0.3,afade=t=out:st=53.9667:d=0.6[bed];
+[7:a]aresample=48000,apad=whole_dur=54.5667[ja];
+[bed][vo][liam][spons][jc][ann][ja]amix=inputs=7:normalize=0:duration=longest,atrim=0:54.5667,asetpts=PTS-STARTPTS,alimiter=limit=0.80:level=0[aout]
