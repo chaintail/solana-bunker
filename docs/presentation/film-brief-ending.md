@@ -38,13 +38,19 @@ On screen: chyron with the Crypto Twitter jokes continuing; on "crypto nerd" the
    COSTUME DESIGN: Codex GPT-6.1
    MATTE & COMPOSITING: ffmpeg / Chrome headless
    TRANSCRIPTION: NVIDIA Parakeet
-   SOUND EFFECTS: freesound.org contributors (CC0) / Kenney
+   AUDIO ENGINEERS: Codex / Claude Fable / Grok (added in v3)
+   MUSIC: Suno, prompts by Liam C. (added in v7)
+   ARCADE SCORE: Original 8-bit score, Chaintail Labs (added in v7)
+   NEWS STINGS: Freesound.org (CC0) / code_box: Mini News Jingle / xkeril: Minimalist news transition / Antwash: Da Da Da Daaa Opening (added in v7)
+   SOUND EFFECTS: Freesound.org and Kenney.nl (CC0) (v7; v1-v6: freesound.org contributors (CC0) / Kenney)
    LOCATION: WorldOS v2 / do-box / Solana devnet
    ANIMATION STUDIO: dev-mac
+   ASSOCIATE PRODUCER: Grok (added in v3)
    HOSTING & CATERING: GitHub
    ARCHIVAL SOURCES: Physical Review, 1920 to 1947 / 9,923 records checked
    STUNTS: Bunker Program HssAePJf…NK6V, Solana devnet / Every transaction in this film is real and open in the explorer.
    SPECIAL THANKS: Leslie Lamport / Robert Winternitz / Ralph Merkle / NIST
+   Leslie Lamport portrait: photo by Leslie Lamport, via Wikimedia Commons (added in v7)
    No curves were harmed in the making of this film.
    No meme coins were harmed either. Yet.
    Based on a true story. / Events were dramatized. / Characters and names may have been changed to protect the identity of victims.

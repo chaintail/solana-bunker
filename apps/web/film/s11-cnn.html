@@ -1,15 +1,17 @@
-<!doctype html><html data-duration="42.1" data-fps="30"><head><meta charset="utf-8">
+<!doctype html><html data-duration="42.0" data-fps="30"><head><meta charset="utf-8">
 <link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
 <style>
 /* Scene 11, Chaintail News Network credits over the parchment outro (film-plan-ending.md part C, in the approved C2 design: s11-credits-look.html).
    C0 broadcast bars over scene 10's last frame; C1 the ident: the swirl in the desk palette, the C2 header block (lemur, CNN, CHAINTAIL NEWS / NETWORK,
    red rule) scaled up to the frame centre, the lemur spinning in, CNN slamming in, the lines dropping in; C2 the split: the block eases into the panel's
    header while the panel squeezes to the left third and the parchment slides in; C3 the roll at 6 px a frame, Liam's last line (voice only) over the
-   parchment; C4 card 1 on black; C5 card 2 (PRODUCT OF, the logo, Chaintail Labs, ©); C6 to black.
+   parchment (v7: on a speed curve); C4 card 1 on black; C5 card 2 (PRODUCT OF, the logo, Chaintail Labs, ©); C6 to black.
    Faces as C2: Oswald (CNN), Inter (network lines, credits, card 2's small lines), Liberation Serif (Solana Bunker and the sign-off in italic; Chaintail Labs /
    R&D project upright; the cards), Special Elite (handles). Layout measured at load, as in C2. Text: data/s11-credits.js. Codes: data/s11-qr.js.
    v4: the locked outro read; the codes pop in on its words (GitHub on "GitHub", Telegram on "collaborate", X half a second later) and the ask line writes
    in left to right from "reach" (a moving soft-edged mask over its measured ink, 0.9 s). The title and Chaintail Labs block are there from the split.
+   v7: the roll's speed curve. T.roll_px holds its whole-pixel offset per roll frame: 6 px a frame until the voice has ended, eased up to 10 px a frame
+   through the crew blocks, eased back to 6 px a frame for the closing lines (pipeline/s11/s11-timing.py).
    Timing: data/s11-edl.js (pipeline/s11/s11-timing.py). No post grade. */
 html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#000}
 #s10{position:absolute;left:0;top:0;width:1280px;height:720px}
@@ -182,8 +184,8 @@ f.onSeek((t) => {
   [['qGh', T.q_gh], ['qTg', T.q_tg], ['qX', T.q_x]].forEach(([id, a]) => ($(id).style.opacity = String(easeO(P(t, a, a + T.pop)))));
   { const p = P(t, T.ask, T.ask + T.ask_d), x = lerp(ASK.x0 - 32, ASK.x1, p), m = p >= 1 ? 'none' : `linear-gradient(90deg,#000 0,#000 ${x}px,transparent ${x + 32}px)`;
     $('ask').style.webkitMaskImage = m; $('ask').style.maskImage = m; }
-  // C3: the roll, starting below its window, whole pixels per frame
-  const fr = Math.max(0, Math.round((t - T.roll) * 30)); $('roll').style.transform = `translateY(${Math.round(HDR.win) - T.pxf * fr}px)`;
+  // C3: the roll, starting below its window, whole pixels per frame (v7: the speed curve's offsets, T.roll_px)
+  const fr = Math.min(T.roll_px.length - 1, Math.max(0, Math.round((t - T.roll) * 30))); $('roll').style.transform = `translateY(${Math.round(HDR.win) - T.roll_px[fr]}px)`;
   // C4-C6: the cards on black, then to black
   $('cards').style.opacity = String(P(t, T.card1, T.card1 + .5)); $('cards').style.display = t >= T.card1 ? 'block' : 'none';
   const c2 = P(t, T.card2, T.card2 + .4); $('card1').style.opacity = String(1 - c2); $('card2').style.opacity = String(c2);

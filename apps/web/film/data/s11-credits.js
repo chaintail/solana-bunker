@@ -1,4 +1,5 @@
 // Scene 11's end credits: Liam's final list, verbatim (film-brief-ending.md section C.3, main 4aef292; Liam 16352/16357).
+// v7 (2026-10-16): MUSIC, ARCADE SCORE and NEWS STINGS after AUDIO ENGINEERS; SOUND EFFECTS as one line; the Lamport portrait line opens the closing lines.
 // Initials only for surnames; Mikail without an H; "Claude-Do", never "Claude D.". The whole text lives here: a change to the list is one edit.
 // a line may hold \n (a break) or be {it: text} (lighter weight, italic).
 // roll: [heading, lines] where a line is a name (string) or [sub-role, name] (CAST, VOICE ACTORS); {joke: text} is a free line.
@@ -20,7 +21,10 @@ window.S11_CREDITS = {
     ['MATTE & COMPOSITING', ['ffmpeg', 'Chrome headless']],
     ['TRANSCRIPTION', ['NVIDIA Parakeet']],
     ['AUDIO ENGINEERS', ['Codex', 'Claude Fable', 'Grok']],
-    ['SOUND EFFECTS', ['freesound.org contributors (CC0)', 'Kenney']],
+    ['MUSIC', ['Suno, prompts by Liam C.']],
+    ['ARCADE SCORE', ['Original 8-bit score, Chaintail Labs']],
+    ['NEWS STINGS', ['Freesound.org (CC0)', 'code_box: Mini News Jingle', 'xkeril: Minimalist news transition', 'Antwash: Da Da Da Daaa Opening']],
+    ['SOUND EFFECTS', ['Freesound.org and Kenney.nl (CC0)']],
     ['LOCATION', ['WorldOS v2', 'do-box', 'Solana devnet']],
     ['ANIMATION STUDIO', ['dev-mac']],
     ['ASSOCIATE PRODUCER', ['Grok']],
@@ -28,6 +32,7 @@ window.S11_CREDITS = {
     ['ARCHIVAL SOURCES', ['Physical Review, 1920 to 1947', '9,923 records checked']],
     ['STUNTS', ['Bunker Program HssAePJf…NK6V, Solana devnet', {it: 'Every transaction in this film is real and open in the explorer.'}]],
     ['SPECIAL THANKS', ['Leslie Lamport', 'Robert Winternitz', 'Ralph Merkle', 'NIST']],
+    { joke: 'Leslie Lamport portrait: photo by Leslie Lamport, via Wikimedia Commons' },
     { joke: 'No curves were harmed in the making of this film.' },
     { joke: 'No meme coins were harmed either. Yet.' },
   ],
