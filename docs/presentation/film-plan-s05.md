@@ -68,3 +68,32 @@ Results: 2287 frames, 76.233 s (v7 2420 frames, 80.667 s: 4.43 s shorter); -15.8
 painted frame 0 at its third frame (1802) on two runs; it was captured from 1795 and encoded from 1800. The heads concat can miss the last phrase
 (c22.mov not yet readable on the shared volume): all.mov must be 2164 frames. Last frame 2286 against v7 2419: PSNR 32.4 dB, 39.9 dB outside the
 head (H.264 noise); the head is the full-chin c22 cut, so s06's baked opening frame has to be regenerated from this frame.
+
+## m1 (music): workshop cue from the bunker, RENT cash register, confetti, camera shutter on the freeze
+m1 (music): the v8 x12 picture copied (`-c:v copy`; video md5 3abbe1788f1619ae1c086cdc81c99c23 for master and m1, phone 26c60b1d4b1c7d8e6beba03288494fd5), audio = the delivered mix
+(`out/x12/audio-final.wav`) + music + SFX (music-plan.md, "Bunker + whiteboard", re-derived for v8: the freeze is 4.44 scene s earlier than v7's 53.87).
+The workshop cue (`suno-4-mechanical-curiosity-a.wav`, (L+R)/2, -16 LUFS, 180 Hz high-pass) is one render from bunker 1.583 s, split at 46.5 s: this mix carries
+part 2 and continues the bunker's bar 22 from the first sample (`out/s04-s05-m1-music-unsplit.wav`; the two music stems divided by their scene gains concatenate
+to it with max abs diff 8e-9; the scene gains differ by 0.10 dB, the only step at the join). Downbeats are measured spectral-flux attacks (20-45 ms before the
+analysis.json times); every splice is attack to attack with 20 ms equal-power edges ending 5 ms before the attack. Segments (whiteboard s): bunker cue
+(bars 1-22) to 9.511; splice to intro bars 1-2 (thin) 9.511-14.453 under the hash cascade (11.33-13.96); splice to body bars 7-14 14.453-34.247, bar 13 on the
+RENT stamp landing (frame 879, 29.300 s, measured -0.7 ms); splice to intro bars 3-6 (thin) 34.247-44.145 under the Merkle tree and the odometer (35.12-42.30);
+a 0.372 s stop-time break; body bars 23-24 from 44.517 s; downbeat end on bar 25 at the freeze (frame 1484, 49.467 s, measured -0.7 ms) with a 0.5 s tail;
+silence; the track's final chord (bar 27, 64.436 s to the file end) on the shrug text (frame 2210, 73.667 s, measured +1.3 ms), ringing out by 75.19 s.
+The break is new against the plan: v8 is 2.14 bars from the intro's end to the freeze, so no whole-bar chain that keeps bar 13 on the RENT stamp reaches it;
+the intro stops on its bar 7 attack and the body enters 0.372 s later under "And now", which puts bar 25 on the freeze. The plan's race swell (49.20-53.40, -10)
+is gone: the robbery now plays under "So let's spend some" with no gap. Freeze = frame 1484, the first frame with the lab coat's shrug pose and the grey (the board
+clock stops at page 59.31, frame 1483; plan v7 53.87). Levels: -20 dB under speech; -14 dB in the gaps 13.16-14.68, 19.33-20.29, 43.04-44.49 (300 ms release,
+100 ms attack); RENT swell -10 dB in 27.94-30.22; dip from the bunker held at -24 dB to 1.467 s, back to -20 by 1.767 s; -20 to -16 dB from 49.133 s into the
+stop; final chord -16 dB under "coded.", -12 dB from 74.28 s. Dialogue guard 16 dB in 100 ms and 200 ms windows (dialogue active at >= -30 dBFS): a gain trim
+(attack 150 dB/s, release 50 dB/s) takes the music down on quiet syllables (it holds the bar 25 downbeat and the final chord well under "oh" and "coded");
+minimum 16.3 dB in both. SFX (film/sfx `out/work`, -20 LUFS event loudness): cash-register-1 (first transient 0.035 s, the bell follows at 0.35 s) at 0 dB on
+the RENT stamp landing, frame 879 (29.300 s, in the clear; measured +2.0 ms); confetti-pop-1 (pop 0.070 s) at -6 dB on frame 1346 (44.867 s), the first frame with
+confetti in view (T.joe is frame 1344; measured +4.0 ms); camera-shutter-2 (0.000 s) at -6 dB on the freeze, frame 1484 (49.467 s, measured +1.0 ms): it lands
+on the first word of "oh crackers", so it takes the under-speech level (at the plan's 0 dB the shutter read 1.9 dB over the voice in 200 ms windows). Mix -> loudnorm pass 1 (-15.83 LUFS) -> one linear gain (-0.68 dB) -> the scene's limiter (`alimiter=limit=0.95`, latency compensated) ->
+ebur128 -16.0 LUFS; true peak +0.2 dBTP in the wav, -0.3 dBTP in the mp4 (-16.1 LUFS / -0.4 dBTP on the 96k phone cut): the shutter, "oh" and the bar 25 downbeat
+engage the limiter, whose auto level puts its ceiling at 0 dBFS (v8 x12: -1.0). Dialogue lag vs the delivered mix 0 samples, AAC lag 0. Transcript (faster-whisper
+small int8) the same words as v8 x12 ("two"/"2" and "ED 25519"/"ED25519" are formatting). Built with `pipeline/m1-workshop.py pipeline/m1-workshop.json` (both
+scenes in one run; do-box numpy, ffmpeg on dev-mac) and `pipeline/m1-transcribe.py` -> dev-mac `~/video-work/solana-bunker/out/s05-m1.mp4`, `s05-m1-phone.mp4`,
+`s05-m1-audio.wav`, stems `s05-m1-dialogue.wav`, `s05-m1-music.wav`, `s05-m1-sfx.wav` (48 kHz float, after the scene gain, before the limiter), `s05-m1-levels.png`,
+`s05-m1-event-frames.png`, report `out/s04-s05-m1-report.json`.

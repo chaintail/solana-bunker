@@ -1,0 +1,66 @@
+{
+ "name": "s04-s05-m1",
+ "note": "One workshop cue (Mechanical Curiosity) from the bunker (s04 v8 x12, 23997d8, 1395 frames) into the whiteboard (s05 v8 x12, a38d379, 2287 frames), music-plan.md 'Bunker + whiteboard'. Scene time = page time / 1.2; frame k shows page time k x 0.04. Anchors: bar 13 on the RENT stamp landing (s05 f879: c11 out_out + 1.45 = page 35.03, scale 1.004 at page 35.16), bar 25 on the freeze (f1484: the board stops at c16b speech start - 0.05 = page 59.31, and f1484 is the first frame with the lab coat's shrug pose (freeze + 0.02) and the grey), bar 27 (final chord) on the shrug text (f2210: 'works' + 0.5 = page 88.394). Segments A and B chain back from C, so bar 1 lands at s04 1.583 and bar 7 (body) at s04 16.423, on the Ed25519 curve's last stroke (page 19.7 = 16.417). v8's whiteboard is 4.44 s shorter before the freeze than v7, so no whole-bar chain from the RENT stamp reaches the freeze: segment E (bars 23-24) enters 0.371 s after the intro's bar 7 attack (a stop-time break under 'And now'), which puts bar 25 on the freeze.",
+ "fps": 30, "guard_db": 16, "guard_attack_db_s": 150, "guard_release_db_s": 50, "voice_active_db": -30, "sfx_ref_lufs": -20,
+ "music_unsplit": "out/s04-s05-m1-music-unsplit.wav", "report": "out/s04-s05-m1-report.json",
+ "music": {
+  "file": "~/audio-work/solana-bunker/music/suno/4-workshop/suno-4-mechanical-curiosity-a.wav",
+  "analysis": "~/audio-work/solana-bunker/music/suno/4-workshop/analysis.json",
+  "ref_lufs": -16, "highpass": 180, "edge": 0.020, "edge_lead": 0.005,
+  "segments": [
+   {"id": "A", "bar_in": 1, "bar_out": 23, "chain": "next", "note": "bunker in on the unroll; bar 7 (body) on the curve's last stroke; runs across the cut into the whiteboard"},
+   {"id": "B", "bar_in": 1, "bar_out": 3, "chain": "next", "note": "intro bars 1-2 (thin) under the hash cascade"},
+   {"id": "C", "bar_in": 7, "bar_out": 15, "anchor": {"scene": "s05", "frame": 879, "bar": 13}, "note": "body bars 7-14; bar 13 on the RENT stamp"},
+   {"id": "D", "bar_in": 3, "bar_out": 7, "chain": "prev", "note": "intro bars 3-6 (thin) under the Merkle tree and the odometer"},
+   {"id": "E", "bar_in": 23, "bar_out": 25, "tail": 0.5, "anchor": {"scene": "s05", "frame": 1484, "bar": 25}, "note": "body bars 23-24, downbeat end (bar 25) on the freeze, 0.5 s tail"},
+   {"id": "F", "bar_in": 27, "anchor": {"scene": "s05", "frame": 2210, "bar": 27}, "note": "the track's final chord on the shrug, to the file end"}
+  ],
+  "checks": [
+   {"id": "bar 7 (body arrives) on the curve's last stroke", "scene": "s04", "t": 16.4167},
+   {"id": "bar 13 on the RENT stamp landing", "scene": "s05", "frame": 879},
+   {"id": "bar 25 (downbeat end) on the freeze", "scene": "s05", "frame": 1484},
+   {"id": "bar 27 (final chord) on the shrug", "scene": "s05", "frame": 2210}
+  ]
+ },
+ "levels": {
+  "under": -20, "gap": -14, "gap_min": 0.8, "release": 0.3, "attack": 0.1,
+  "gap_overrides": [{"scene": "s05", "t": 29.3, "db": -10, "why": "rent tag swell (plan 27.95-30.20 at -10)"}],
+  "automation": [
+   {"id": "dip and return across the cut (plan: bunker 45.50 dip to -24, back to -20 in the whiteboard's first gap)", "points": [["s04", 45.5, -20], ["s04", 46.49, -24], ["s05", 1.467, -24], ["s05", 1.767, -20]]},
+   {"id": "stop at -16 on the freeze", "points": [["s05", 49.133, -20], ["s05", 49.433, -16], ["s05", 50.1, -16]]},
+   {"id": "final chord -16 under 'coded', -12 after it", "points": [["s05", 73.55, -16], ["s05", 73.983, -16], ["s05", 74.283, -12], ["s05", 76.3, -12]]}
+  ]
+ },
+ "scenes": {
+  "s04": {
+   "frames": 1395, "dialogue": "out/s04/v8x12/audio-final.wav", "master": "out/s04-v8-x12.mp4", "phone": "out/s04-v8-x12-phone.mp4",
+   "out": "out/s04-m1", "abr": "192k", "abr_phone": "128k", "limiter": "alimiter=limit=0.95:latency=1",
+   "sfx": [
+    {"id": "SUPER stamped", "file": "~/audio-work/solana-bunker/out/work/stamp-thump-2-stamp-bright-shelved.wav", "frame": 745, "hit": 0.055, "gain": -6},
+    {"id": "pump.fun glass shatter", "file": "~/audio-work/solana-bunker/out/work/glass-shatter-2-glass-panel.wav", "frame": 909, "hit": 0.035, "gain": -6}
+   ],
+   "picture_checks": [
+    {"id": "curve last stroke", "frame": 492},
+    {"id": "SUPER camera thump", "frame": 745},
+    {"id": "glass shatter (shards fly)", "frame": 909},
+    {"id": "last frame", "frame": 1392}
+   ]
+  },
+  "s05": {
+   "frames": 2287, "dialogue": "s05/out/x12/audio-final.wav", "master": "out/s05-v8-x12.mp4", "phone": "out/s05-v8-x12-phone.mp4",
+   "out": "out/s05-m1", "abr": "192k", "abr_phone": "96k", "limiter": "alimiter=limit=0.95:latency=1",
+   "sfx": [
+    {"id": "RENT stamp", "file": "~/audio-work/solana-bunker/out/work/cash-register-1-purchase.wav", "frame": 879, "hit": 0.035, "gain": 0},
+    {"id": "confetti", "file": "~/audio-work/solana-bunker/out/work/confetti-pop-1-party-popper.wav", "frame": 1346, "hit": 0.070, "gain": -6},
+    {"id": "camera shutter on the freeze", "file": "~/audio-work/solana-bunker/out/work/camera-shutter-2-yn500-single.wav", "frame": 1484, "hit": 0.0, "gain": -6}
+   ],
+   "picture_checks": [
+    {"id": "hash cascade starts", "frame": 340},
+    {"id": "RENT stamp landing", "frame": 879},
+    {"id": "first confetti in frame", "frame": 1346},
+    {"id": "freeze (shrug pose, grey starts)", "frame": 1484},
+    {"id": "shrug text", "frame": 2210}
+   ]
+  }
+ }
+}
