@@ -18,6 +18,26 @@ Liam: mix all four design worlds and more (he will bring further styles), one sl
 
 Pipeline: apps/web/film/<scene>.html, animations seekable (Web Animations API or window.__seek), apps/web/film/scripts/capture.mjs renders 30 fps PNG frames on do-box; encoding and compositing on dev-mac only.
 
+## Opening v11 (2026-10-17)
+
+v10's picture (the video stream copied, md5 identical) with two audio changes. Everything else is v10's. Scripts: `pipeline/build-opening-v11.sh`, `pipeline/stems-v11.filter`, `pipeline/music-v11.py`, `pipeline/verify-v11.sh`, `pipeline/verify-v11.py`, `pipeline/levels-plot-v11.py` (do-box, matplotlib); jingle A uses `jingles-v10.py` with a_lead 0.829. Work tree on dev-mac: `~/video-work/solana-bunker/opening-v11`. Stems for the final stitch: `opening-v11/out/stems/{dialogue-sfx,music,stings}.wav` (48 kHz mono 24-bit, pre-limiter, at the final gain).
+
+1. **Jingle A starts at 15.778 s** (Liam: "start that jingle before the transition screen appears"). Its first note is at 15.775 to 15.780 s, about 90 ms before the ident's first frame (15.867 s). Its 1.489 s hit is at 17.267 s, on the slam. The gain (-3.1 dB), the -12 dB duck at Liam's first word (18.347 s) and the 1.0 s fade are v10's. There is no fade-in.
+2. **Music, from `music-plan.md` (Opening).** The plan's opening times are x11 scene times, so v11 anchors each cue to v10's picture rather than adding 0.2 s to the plan times. Cues are folded to mono, high-passed at 180 Hz and referenced to -16 LUFS over the span they play, so -20 dB sits 20 LU under the voices (about -16 LUFS). Cuts are on measured attacks; analysis.json's beat times run 29 to 46 ms late.
+   - **Sponsor groove** (`suno-1-reassuring-groove-a`) at -20 dB: in at 0.261 s on beat 2 of bar 1 (track 1.278 s), 64 ms before the read. Its bar 3 downbeat (track 5.312 s) lands on the WARNING card cut (4.300 s), with a 0.5 s tail to 4.800 s. Two bars (4.60 s) do not fit between the read (0.330 s) and the cut, so the entry is on a beat, not a downbeat. The advisory plays dry.
+   - **News bed** (`suno-2-breaking-news-a`): bar 1 (track 0.117 s) at 17.853 s, under jingle A and 0.21 s before the desk entry (18.067 s). It sits at -20 dB under speech and rises to -14 dB in the one desk gap of 0.8 s or more (44.53 to 45.38 s). It dips to -26 dB from 51.433 s. Its bar 18 downbeat (track 34.697 s) lands on the SPECIAL REPORT slam (52.433 s) under jingle C, with a 0.5 s tail to 52.933 s. The track's stab ending (bar 20) is not used.
+   - **Dialogue guard.** The music is held at least 16 dB under the voices (sponsor, advisory, Liam, announcer) in every 100 ms and 200 ms window where the voice is active (at or above -30 dBFS, the arcade score-check's threshold). The duck has a 100 ms look-ahead attack and a 300 ms release. Under Liam's speech the bed mostly sits 5 to 8 dB below the -20 dB level and returns in the pauses.
+3. **Loudness.** v10's limiter (0.80, no auto-level), then a two-pass loudnorm in linear mode (+0.50 dB). loudnorm's own meter reads this mix 0.17 LU lower than ebur128, so the pass-2 target is corrected for that.
+
+**Checks:**
+- The video stream md5 is v10's (7a589f8a6badc97aa8b4470a07ca483f).
+- Loudness: master -16.0 LUFS integrated, LRA 3.8 LU, -1.4 dBTP. Phone -16.0 LUFS, -1.3 dBTP.
+- Guard: the minimum margin is 17.0 dB, both in 100 ms windows at a 10 ms hop and on the arcade grid (200 ms windows at a 50 ms hop). No window is under 16 dB. The median is 25.8 dB.
+- Onsets in the stems: groove in at 0.263 s, groove out at 4.297 to 4.301 s, bed in at 17.853 s, bed out at 52.434 s. Jingle A's first note is at 15.775 to 15.780 s and its slam hit at 17.262 to 17.270 s. The whole mix is 5 ms late against the picture (the limiter's look-ahead, as in v10).
+- "Chaintail Labs" correlates with the 1.0 render at 0.9975 with the groove under it, and is the same 1.101 s long.
+- faster-whisper small (int8), prompted with the brand names, reads the whole mix correctly, including "brought to you by Chaintail Labs" and "A special report." Unprompted, it hears "Chained Air Labs" in both v10 and v11. Decoded from 45 s, both read "The Special Report"; the audio under that line is v10's plus 0.50 dB (correlation 0.99997).
+- Level plot: `opening-v11-levels.png`.
+
 ## Opening v10 (Liam, voice 2026-10-17)
 
 Two changes on v9 (77d39b1). Everything else is v9's: the advisory card and its voice, the ident, jingle C on the SPECIAL REPORT slam, the desk, the hold, the announcer, the bed and the limiter. Scripts: `pipeline/render-vo-v10.py`, `pipeline/capture-v10.sh`, `pipeline/build-opening-v10.sh`, `pipeline/audio-v10.filter`, `pipeline/jingles-v10.py`, `pipeline/verify-v10.sh`, `pipeline/sponsor-check-v10.py`. Scene: `s00-intro-v10.html`. Work tree on dev-mac: `~/video-work/solana-bunker/opening-v10`. Only the sponsor card was recaptured (s00-intro-v10, chunks c00 to c02). The advisory and ident segments are v9's encodes.
