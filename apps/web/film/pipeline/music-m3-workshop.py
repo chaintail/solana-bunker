@@ -11,7 +11,14 @@ Segment options on top of music-m2-workshop.py (bar_in / bar_out / chain / ancho
   in_grid               bar_in's downbeat is the bar grid (mean of the measured attacks of the bars either side): for a bar with no measurable attack
   xfade_prev            the 20 ms equal-power fade-in starts where the previous segment's fade-out starts (a crossfade); when the incoming downbeat
                         lands later than the outgoing cut, the incoming side's pre-roll (the track just before bar_in) covers the difference
-Level, treatment and SFX: m2's, unchanged (music-m4.py sidechain on the two dialogues concatenated, gain = under + depth x (1 - duck))."""
+Level, treatment and SFX: m2's, unchanged (music-m4.py sidechain on the two dialogues concatenated, gain = under + depth x (1 - duck)).
+Optional spec keys (s05 v10; absent = m3 exactly):
+  wav_only_reader           decode 48 kHz PCM/float WAV with SciPy (no ffmpeg); keep DSP on the original platform
+  tag                       output name tag (default m3)
+  scenes.<s>.trim_fade_s    the scene is shorter than its delivered dialogue: the dialogue is cut to the scene length with a raised-cosine fade over its
+                            last trim_fade_s seconds (samples before the fade unchanged)
+  music.end_fade_s          the render ends with a raised-cosine fade over its last end_fade_s seconds (the cue cut at the last scene's end)
+  music.prev                {name, unsplit}: the previous build's render; writes <out>/s04-s05-<tag>-vs-<name>.json (first differing sample)"""
 import sys, os, json, importlib.util
 import numpy as np
 
@@ -21,8 +28,27 @@ s2 = importlib.util.spec_from_file_location('w2', os.path.join(here, 'music-m2-w
 SR = M.SR; db = M.db; flux_attack = W2.flux_attack; TAG = 'm3'
 
 
+def rcos_out(n):
+    return .5 + .5 * np.cos(np.pi * (np.arange(n) + .5) / n)
+
+
 def main():
-    spec = json.load(open(sys.argv[1])); M.ROOT = sys.argv[2]; OUT = sys.argv[3]; os.makedirs(OUT, exist_ok=True)
+    global TAG
+    spec = json.load(open(sys.argv[1])); M.ROOT = sys.argv[2]; OUT = sys.argv[3]; os.makedirs(OUT, exist_ok=True); TAG = spec.get('tag', TAG)
+    if spec.get('wav_only_reader'):
+        # The v10 inputs are all PCM/float WAV at 48 kHz; decode without ffmpeg.
+        # Keep DSP on the original NumPy/SciPy platform for bit-identical m3 samples.
+        from scipy.io import wavfile
+        def read_wav(p):
+            sr, x = wavfile.read(M.path(p))
+            assert sr == SR, (p, sr)
+            if np.issubdtype(x.dtype, np.integer):
+                assert x.dtype.kind == 'i', (p, x.dtype)
+                x = x.astype(np.float64) / (2 ** (np.iinfo(x.dtype).bits - 1))
+            else:
+                x = x.astype(np.float64)
+            return x.mean(axis=1) if x.ndim == 2 else x
+        M.read = read_wav
     FPS = spec['fps']; SC = spec['scenes']; names = list(SC)
     L = {s: SC[s]['frames'] / FPS for s in names}; NS = {s: int(round(L[s] * SR)) for s in names}
     OFF = {}; acc = 0.0
@@ -30,9 +56,17 @@ def main():
     N = sum(NS.values()); JOIN = NS[names[0]]
     Ff = lambda s, f: OFF[s] + f / FPS
     t = np.arange(N) / SR
-    d = {}
+    d = {}; trims = {}
     for s in names:
-        x = M.read(SC[s]['dialogue']); assert abs(len(x) - NS[s]) <= 2, (s, len(x), NS[s]); d[s] = np.pad(x, (0, max(0, NS[s] - len(x))))[:NS[s]]
+        x = M.read(SC[s]['dialogue'])
+        if SC[s].get('trim_fade_s'):
+            nf = int(round(SC[s]['trim_fade_s'] * SR)); assert len(x) > NS[s], (s, len(x), NS[s])
+            trims[s] = {'delivered_s': len(x) / SR, 'cut_s': NS[s] / SR, 'fade_s': [(NS[s] - nf) / SR, NS[s] / SR],
+                        'max_abs_in_fade': float(np.abs(x[NS[s] - nf:NS[s]]).max()), 'max_abs_after_cut': float(np.abs(x[NS[s]:]).max())}
+            x = x[:NS[s]].copy(); x[-nf:] *= rcos_out(nf)
+            print(f"{s} dialogue cut {trims[s]['delivered_s']:.4f} -> {trims[s]['cut_s']:.4f} s, fade {trims[s]['fade_s'][0]:.4f}-{trims[s]['fade_s'][1]:.4f} s "
+                  f"(peak in the fade {20 * np.log10(trims[s]['max_abs_in_fade'] + 1e-12):.1f} dBFS, after the cut {20 * np.log10(trims[s]['max_abs_after_cut'] + 1e-12):.1f} dBFS)")
+        assert abs(len(x) - NS[s]) <= 2, (s, len(x), NS[s]); d[s] = np.pad(x, (0, max(0, NS[s] - len(x))))[:NS[s]]
     dd = np.concatenate([d[s] for s in names])
     # ---------------- music: attacks on m1's detection signal, material = the treated cue (m2)
     m = spec['music']; raw = M.read(m['file'])
@@ -93,6 +127,9 @@ def main():
                          track_in=round(g['tin'], 4), track_out=round(g['tout'], 4), film_in=round(fa, 4), film_out=round(fb, 4), film_fade_start=round(a0, 4),
                          film_end=round(end, 4), tail_s=tail, preroll_s=round(g.get('preroll', LEAD + E), 4),
                          film_in_vs_m1_ms=round(1000 * (fa - r1['film_in']), 2) if same_in else None, **notes.get(g['id'], {})))
+    if m.get('end_fade_s'):
+        nf = int(round(m['end_fade_s'] * SR)); placed[N - nf:] *= rcos_out(nf)
+        print(f"music end fade {(N - nf) / SR - OFF[names[-1]]:.4f}-{N / SR - OFF[names[-1]]:.4f} s ({names[-1]} time), raised cosine")
     # ---------------- sidechain level (m2)
     dk = m['duck']; under = m['under_db_re_norm']
     frac, key = M.sidechain(dd, N, dk)
@@ -107,9 +144,16 @@ def main():
           'first_differing_sample': first, 'first_differing_s05_s': round(first / SR - OFF['s05'], 4), 'freeze_s05_s': round(fr / SR - OFF['s05'], 4),
           'identical_until_freeze_plus_ms': round(1000 * (first - fr) / SR, 2)}
     json.dump(vs, open(f'{OUT}/s04-s05-{TAG}-vs-m2.json', 'w'), indent=1)
+    if m.get('prev'):
+        pv = m['prev']; up = M.read(pv['unsplit']); n = min(N, len(up))
+        dp = np.abs(music.astype(np.float32).astype(np.float64)[:n] - up[:n]); fp = int(np.argmax(dp > 0)) if (dp > 0).any() else n
+        vp = {'prev': pv['name'], 'prev_samples': len(up), 'samples': N, 's04_part_bit_identical_float32': bool(dp[:JOIN].max() == 0),
+              'first_differing_sample': fp, 'first_differing_s05_s': round(fp / SR - OFF['s05'], 4), 'identical_samples_before': fp}
+        json.dump(vp, open(f"{OUT}/s04-s05-{TAG}-vs-{pv['name']}.json", 'w'), indent=1); print(f"vs {pv['name']}:", json.dumps(vp))
     common = {'title': spec['title'], 'cue': m['file'], 'hp': m['hp'], 'eq': m['eq'], 'cue_lufs_at_hp_before_eq': L_hp, 'cue_lufs_after_eq': L_cue,
               'norm_gain_db': g_norm, 'under_db_re_norm': under, 'under_lufs': m['norm_lufs'] + under, 'open_lufs': m['norm_lufs'] + under + dk['depth_db'],
-              'duck': dk, 'attack_vs_m1_ms': att_diff_ms, 'bar_s': bar_s, 'segments': rows, 'join_sample': JOIN, 'vs_m2': vs}
+              'duck': dk, 'attack_vs_m1_ms': att_diff_ms, 'bar_s': bar_s, 'segments': rows, 'join_sample': JOIN, 'vs_m2': vs,
+              **({'dialogue_trim': trims} if trims else {}), **({'end_fade_s': m['end_fade_s']} if m.get('end_fade_s') else {})}
     print(f"cue {L_hp:.2f} LUFS at 100 Hz, EQ {L_cue - L_hp:+.2f} dB, norm {g_norm:+.2f} dB; under {under:+.2f} dB ({m['norm_lufs'] + under:.1f} LUFS), "
           f"open {under + dk['depth_db']:+.2f} dB; attacks vs m1 max {max(abs(v) for v in att_diff_ms.values()):.2f} ms; bar {bar_s:.4f} s")
     for r in rows:

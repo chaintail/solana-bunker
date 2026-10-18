@@ -1,0 +1,224 @@
+{
+ "name": "s05-v10",
+ "tag": "v10",
+ "title": "s05 whiteboard v10: m3's workshop cue on the v10 picture, the scene cut 0.53 s after the last word",
+ "notes": [
+  "Liam on film v3: cut the weird pause after 'it all works as coded'. v10 ends the scene 0.53 s after the last word: 2236 frames, 74.533 s (v9/m3 2287, 76.233 s; 51 frames, 1.700 s shorter). The voice's last word ('coded.') decays below -40 dBFS at 74.00 s; the delivered dialogue is room tone / the brown-noise bed (about -52 dBFS) after that.",
+  "Audio = m3 (this file is m3-s05-workshop.json with the changes below), so the render is bit-identical to m3's up to the music's end fade, the s04 half and the s04/s05 split (sample 2,232,000) are unchanged, and bar 27 (the final chord) still lands on the shrug (frame 2210, 73.667 s).",
+  "Changes: s05 frames 2287 -> 2236; the s05 dialogue (delivered 76.233 s) is cut at 74.533 s with a 0.25 s raised-cosine fade over its last 0.25 s (bed only; every sample before 74.283 s unchanged); the music render ends with a 0.25 s raised-cosine fade to the scene end (the chord, which rang to 75.19 s, is cut 0.87 s into its ring without a click); m2's chord span for the placement check ends where the fade starts.",
+  "Treatment, levels, SFX and program chain unchanged (finish-m3.py: -16 LUFS, true peak <= -1.3 dBTP)."
+ ],
+ "fps": 30,
+ "music": {
+  "file": "in/cues/4-workshop/suno-4-mechanical-curiosity-a.wav",
+  "analysis": "in/cues/4-workshop/analysis.json",
+  "detect": {
+   "gain_db": 2.9,
+   "hp": 180,
+   "note": "m1's signal: (L+R)/2 x (-16 - (-18.9 LUFS)) dB, 180 Hz high-pass"
+  },
+  "hp": 100,
+  "norm_lufs": -18,
+  "under_db_re_norm": -11.3,
+  "eq": [
+   {
+    "type": "highshelf",
+    "f": 6000,
+    "gain_db": -6,
+    "q": 0.7071
+   },
+   {
+    "type": "highshelf",
+    "f": 11000,
+    "gain_db": -8,
+    "q": 0.7071
+   }
+  ],
+  "level_intro": {
+   "until_track": 14.9503,
+   "ramp_s": 2.475,
+   "body": [
+    14.9503,
+    64.4363
+   ],
+   "st_window_s": 3.0,
+   "smooth_s": 1.0,
+   "max_boost_db": 6
+  },
+  "duck": {
+   "depth_db": 5,
+   "key_lo_db": -44,
+   "key_hi_db": -38,
+   "attack_ms": 30,
+   "release_ms": 300
+  },
+  "edge": 0.02,
+  "edge_lead": 0.005,
+  "segments": [
+   {
+    "id": "A",
+    "bar_in": 1,
+    "bar_out": 23,
+    "chain": "next"
+   },
+   {
+    "id": "B",
+    "bar_in": 1,
+    "bar_out": 3,
+    "chain": "next"
+   },
+   {
+    "id": "C",
+    "bar_in": 7,
+    "bar_out": 15,
+    "anchor": {
+     "scene": "s05",
+     "frame": 879,
+     "bar": 13
+    }
+   },
+   {
+    "id": "D",
+    "bar_in": 3,
+    "bar_out": 7,
+    "chain": "prev"
+   },
+   {
+    "id": "E",
+    "bar_in": 23,
+    "out_beat": [
+     25,
+     4
+    ],
+    "anchor": {
+     "scene": "s05",
+     "frame": 1484,
+     "bar": 25
+    }
+   },
+   {
+    "id": "G",
+    "bar_in": 18,
+    "in_grid": true,
+    "xfade_prev": true,
+    "anchor": {
+     "scene": "s05",
+     "frame": 2210,
+     "bar": 27
+    }
+   }
+  ],
+  "checks": [
+   {
+    "id": "bar 7 (body arrives) on the curve's last stroke",
+    "scene": "s04",
+    "t": 16.4167
+   },
+   {
+    "id": "bar 13 on the RENT stamp landing",
+    "scene": "s05",
+    "frame": 879
+   },
+   {
+    "id": "bar 25 downbeat on the freeze (cue continues)",
+    "scene": "s05",
+    "frame": 1484
+   },
+   {
+    "id": "bar 27 (final chord) on the shrug",
+    "scene": "s05",
+    "frame": 2210
+   }
+  ],
+  "m1_report": "in/m1/s04-s05-m1-report.json",
+  "m2": {
+   "unsplit": "in/m2/s04-s05-m2-music-unsplit.wav",
+   "s04_audio": "in/m2/s04-m2-audio.wav",
+   "s04_music": "in/m2/s04-m2-music.wav",
+   "s05_music": "in/m2/s05-m2-music.wav",
+   "gain_db": {
+    "s04": 0.5,
+    "s05": 0.6
+   },
+   "freeze_frame": 1484,
+   "chord_span": [
+    73.6667,
+    74.2833
+   ]
+  },
+  "end_fade_s": 0.25,
+  "prev": {
+   "name": "m3",
+   "unsplit": "in/m3/s04-s05-m3-music-unsplit.wav"
+  }
+ },
+ "sfx_ref_lufs": -20,
+ "scenes": {
+  "s04": {
+   "frames": 1395,
+   "dialogue": "in/s04/audio-final.wav",
+   "m1_gain_db": -0.58,
+   "m1_stems": "in/m1/s04-m1",
+   "sfx": [
+    {
+     "id": "SUPER stamped",
+     "file": "in/sfx/stamp-thump-2-stamp-bright-shelved.wav",
+     "frame": 745,
+     "hit": 0.055,
+     "event_lufs": -28.7,
+     "m1_gain": -6,
+     "gain": -8,
+     "stamp": true
+    },
+    {
+     "id": "pump.fun glass shatter",
+     "file": "in/sfx/glass-shatter-2-glass-panel.wav",
+     "frame": 909,
+     "hit": 0.035,
+     "event_lufs": -24.0,
+     "m1_gain": -6,
+     "gain": -6
+    }
+   ],
+   "m2_gain_db": 0.5
+  },
+  "s05": {
+   "frames": 2236,
+   "dialogue": "in/s05/audio-final.wav",
+   "m1_gain_db": -0.68,
+   "m1_stems": "in/m1/s05-m1",
+   "sfx": [
+    {
+     "id": "RENT stamp (cash register)",
+     "file": "in/sfx/cash-register-1-purchase.wav",
+     "frame": 879,
+     "hit": 0.035,
+     "event_lufs": -23.0,
+     "m1_gain": 0,
+     "gain": 0
+    },
+    {
+     "id": "confetti",
+     "file": "in/sfx/confetti-pop-1-party-popper.wav",
+     "frame": 1346,
+     "hit": 0.07,
+     "event_lufs": -25.9,
+     "m1_gain": -6,
+     "gain": -6
+    },
+    {
+     "id": "camera shutter on the freeze",
+     "file": "in/sfx/camera-shutter-2-yn500-single.wav",
+     "frame": 1484,
+     "hit": 0.0,
+     "event_lufs": -23.2,
+     "m1_gain": -6,
+     "gain": -6
+    }
+   ],
+   "m2_gain_db": 0.6,
+   "trim_fade_s": 0.25
+  }
+ },
+ "wav_only_reader": true
+}

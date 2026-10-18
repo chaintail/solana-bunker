@@ -1,4 +1,4 @@
-<!doctype html><html data-duration="91.45" data-fps="30"><head><meta charset="utf-8">
+<!doctype html><html data-duration="89.4333" data-fps="30"><head><meta charset="utf-8">
 <link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
 <style>
 /* Slide 5 (hashes, Merkle tree, robbery). Everything is a pure function of the scene clock t (seconds): window.__seek(t) -> the cue list at the bottom.
@@ -126,6 +126,10 @@ T.cascEnd = T.casc + 3.15;
 // board, and with it the hand-off frame to slide 6, is the same as in v5 / x11.
 const PAUSE_7B = E.c7b2.out_in - E.c7b.out_out;
 const END = S.total;
+// v10 (Liam: cut the pause after 'it all works as coded'): the scene ends at 89.4333 s (html data-duration; 2683 frames -> 2236 output frames at
+// --speed=1.2, 0.53 s after the last word) instead of S.total = 91.45 (the 1x audio edit list, unchanged). Every cue, the head (c22's last sprite frame from
+// 88.82 s) and the board are at rest from 88.85 s on, so the last frame (89.40 s, hand-off to s06) is the same drawn state as at 91.433 s. END only gates
+// cues that hold their end state, so it stays S.total.
 const TB = (t) => Math.min(t, T.freeze);       // the board's clock: it stops dead at the robbery
 // v8: the freeze is 5.33 s earlier than in v7; the root glow pulse is offset by that much so the frozen glow (and the hand-off frame to slide 6) is v7's.
 const GLOW_SHIFT = (64.69 - 0.05) - T.freeze;
