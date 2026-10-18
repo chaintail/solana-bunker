@@ -1,0 +1,102 @@
+<!doctype html><html data-duration="2.2" data-fps="30"><head><meta charset="utf-8">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
+<style>
+/* Opening v9 (Liam 2026-10-16): the Chaintail News Network ident from the closing card (s11-cnn.html C0/C1 on film/s11) in place of the BREAKING NEWS band,
+   so the film opens and closes on the same flourish. Same swirl (two conic gradients at 9 and -14 deg/s, three blurred blobs on Lissajous paths, rays),
+   same colours, same broadcast bars, same header block (lemur, CNN, CHAINTAIL NEWS / NETWORK, red rule; measured layout copied from s11), here drawn at
+   1.6x about a point above the frame centre. BREAKING NEWS slams in with CNN as one slam (s11's CNN slam: scale 2.4 -> 1 over 0.25 s ease-out, the rule
+   shooting out 0.1 s later, a 2-frame frame shake on landing). Beats keep s11's durations with the gaps between them shortened so the card stays about
+   the old card's length (2.2 s, was 2.0 s): bars 0-0.42, ident 0.35, lemur spin 0.35-1.15, network lines 0.85, slam 1.15 (lands 1.40), streak 1.55,
+   then the old card's white flash (ease-in, solid on the last frame) into the desk's entry flash. Jingle A's first big hit is mixed on the landing. */
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#000}
+#panel{position:absolute;left:0;top:0;width:1280px;height:720px;overflow:hidden;background:radial-gradient(ellipse 90% 60% at 50% 0%,#244a80 0%,#0d1830 55%,#05070d 100%)}
+#panelIn{position:absolute;left:0;top:0;width:1280px;height:720px}
+.sw{position:absolute;left:-400px;top:-500px;width:2080px;height:1720px;filter:blur(36px);transform-origin:1040px 860px}
+#sw1{background:conic-gradient(from 0deg at 50% 50%,rgba(227,6,19,0),rgba(227,6,19,.55),rgba(36,74,128,.2),rgba(127,166,255,.5),rgba(13,24,48,0),rgba(227,6,19,.4),rgba(227,6,19,0))}
+#sw2{background:conic-gradient(from 90deg at 50% 50%,rgba(127,166,255,0),rgba(127,166,255,.35),rgba(255,255,255,.12),rgba(36,74,128,.45),rgba(127,166,255,0))}
+.blob{position:absolute;width:520px;height:520px;border-radius:50%;filter:blur(60px);margin:-260px 0 0 -260px}
+#rays{position:absolute;inset:-300px;background:repeating-conic-gradient(from 200deg at 50% 50%,rgba(160,200,255,.10) 0 4deg,transparent 4deg 11deg);transform-origin:50% 50%}
+#streak{position:absolute;top:-200px;width:160px;height:1200px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);transform:rotate(18deg);mix-blend-mode:screen}
+#hdr{position:absolute;left:0;top:0;width:427px;height:300px;transform-origin:0 0}
+#hLogo{position:absolute}
+#hCnn{position:absolute;font:700 96px/1 Oswald;letter-spacing:.03em;color:#fff;white-space:nowrap}
+.hl{position:absolute;font:800 20px/1 Inter;color:#fff;white-space:nowrap}
+#hRule{position:absolute;height:4px;background:#e30613;box-shadow:0 0 10px rgba(227,6,19,.7);transform-origin:50% 50%}
+#brk{position:absolute;left:0;width:1280px;text-align:center;font:700 118px/1 Oswald;letter-spacing:.05em;color:#fff;white-space:nowrap;text-shadow:0 7px 0 rgba(0,0,0,.35);transform-origin:50% 50%}
+#bars{position:absolute;inset:0;overflow:hidden}
+#bars i{position:absolute;top:-60px;height:840px;transform:skewX(-20deg)}
+#flash{position:absolute;inset:0;background:#fff;opacity:0}
+</style></head><body>
+<div id="panel"><div id="panelIn">
+  <div class="sw" id="sw1"></div><div class="sw" id="sw2"></div>
+  <div class="blob" id="b1" style="background:rgba(227,6,19,.55)"></div><div class="blob" id="b2" style="background:rgba(127,166,255,.5)"></div><div class="blob" id="b3" style="background:rgba(255,255,255,.22)"></div>
+  <div id="rays"></div>
+  <div id="hdr"><img id="hLogo" src="assets/chaintail-logo-white.svg"><div id="hCnn">CNN</div><div class="hl" id="hl1">CHAINTAIL NEWS</div><div class="hl" id="hl2">NETWORK</div><div id="hRule"></div></div>
+  <div id="brk">BREAKING NEWS</div>
+  <div id="streak"></div>
+</div></div>
+<div id="bars"><i style="width:260px;background:#e30613"></i><i style="width:200px;background:#0d1830"></i><i style="width:150px;background:#7fa6ff"></i><i style="width:90px;background:#fff"></i></div>
+<div id="flash"></div>
+<script src="lib/film.js"></script>
+<script>
+const f = window.__film, $ = (id) => document.getElementById(id);
+const T = { bars: 0.0, ident: 0.35, logo_in: 0.35, net_in: 0.85, cnn_in: 1.15, streak: 1.55, flash: 1.65, end: 2.2 };
+const K = 1.6, GY = 236, BRK_CAP_GAP = 46;   // header block scale, its centre's y, gap from the rule to BREAKING NEWS' cap top
+const P = (t, a, b) => f.prog(t, a, b), lerp = (a, b, p) => a + (b - a) * p;
+const easeO = (p) => 1 - Math.pow(1 - p, 3), easeIO = (p) => (p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2), easeI = (p) => p * p * p;
+const backO = (p) => { const c = 1.9; return 1 + (c + 1) * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2); };
+// ---- measured layout, the header part of s11's layout() verbatim
+const cv = document.createElement('canvas').getContext('2d');
+const fnt = (el) => { const cs = getComputedStyle(el); cv.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`; cv.letterSpacing = cs.letterSpacing === "normal" ? "0px" : cs.letterSpacing; };
+const capH = (el) => { fnt(el); return cv.measureText('H').actualBoundingBoxAscent; };
+const inkW = (el) => { fnt(el); const m = cv.measureText(el.textContent); return [m.actualBoundingBoxLeft, m.actualBoundingBoxRight]; };
+const base = (el) => { const sp = document.createElement('i'); sp.style.cssText = 'display:inline-block;width:0;height:0'; el.appendChild(sp); const y = sp.getBoundingClientRect().top; sp.remove(); return y; };
+let HDR = null;
+function layout() {
+  const cnn = $('hCnn'), lg = $('hLogo'), TOP = 30, ch = capH(cnn);
+  cnn.style.left = '0px'; cnn.style.top = TOP + 'px';
+  const capTop = base(cnn) - ch, capMid = capTop + ch / 2;
+  const lh = ch * 1.12, lw = lh * 622 / 502; lg.style.height = lh + 'px';
+  const [cl, cr] = inkW(cnn), W = lw + 22 + cl + cr, X0 = (427 - W) / 2;
+  lg.style.left = X0 + 'px'; lg.style.top = (capMid - lh / 2) + 'px'; cnn.style.left = (X0 + lw + 22 + cl) + 'px';
+  const l1 = $('hl1'), l2 = $('hl2'), A1 = .20, A2 = .30;
+  const at100 = (el) => { el.style.fontSize = '100px'; el.style.letterSpacing = '0px'; const [a, b] = inkW(el); return (a + b) / 100; };
+  const s1 = W / (at100(l1) + (l1.textContent.length - 1) * A1), s2 = W / (at100(l2) + (l2.textContent.length - 1) * A2);
+  l1.style.fontSize = s1 + 'px'; l1.style.letterSpacing = (A1 * s1) + 'px'; l2.style.fontSize = s2 + 'px'; l2.style.letterSpacing = (A2 * s2) + 'px';
+  l1.style.left = (X0 + inkW(l1)[0]) + 'px'; l2.style.left = (X0 + inkW(l2)[0]) + 'px';
+  const c1 = capH(l1), c2 = capH(l2);
+  l1.style.top = '0px'; l1.style.top = (capTop + ch + 24 - (base(l1) - c1)) + 'px';
+  l2.style.top = '0px'; l2.style.top = (base(l1) + 12 - (base(l2) - c2)) + 'px';
+  const b2 = base(l2); $('hRule').style.left = X0 + 'px'; $('hRule').style.width = W + 'px'; $('hRule').style.top = (b2 + 18) + 'px';
+  HDR = { cx: X0 + W / 2, cy: (capTop + b2 + 22) / 2, ruleBottom: b2 + 22 };
+  // BREAKING NEWS: centred on x 640, cap top BRK_CAP_GAP under the rule as drawn at K
+  const brk = $('brk'), ruleY = GY + K * (HDR.ruleBottom - HDR.cy);
+  brk.style.top = '0px'; brk.style.top = (ruleY + BRK_CAP_GAP - (base(brk) - capH(brk))) + 'px';
+  window.__layout = { HDR, ruleY, brkTop: brk.style.top };
+}
+f.onSeek((t) => {
+  if (!HDR) layout();
+  // C0: four broadcast bars sweep across the black after the advisory card; the ident is revealed behind the last bar
+  const pb = (k) => easeIO(P(t, T.bars + k * .04, T.bars + .3 + k * .04));
+  [...$('bars').children].forEach((b, k) => { const p = pb(k); b.style.left = lerp(-400, 1500, p) + 'px'; b.style.display = p > 0 && p < 1 ? 'block' : 'none'; });
+  const edge = lerp(-400, 1500, pb(3)) + 45; $('panel').style.clipPath = t < T.ident ? `polygon(0 0,${edge + 130}px 0,${edge - 130}px 720px,0 720px)` : 'none';
+  // C1: the swirl
+  $('sw1').style.transform = `rotate(${9 * t}deg)`; $('sw2').style.transform = `rotate(${-14 * t}deg)`;
+  [[640, 360, 420, 240, .31, .47, 0], [640, 360, 380, 260, .43, .29, 2], [640, 360, 300, 200, .53, .37, 4]].forEach(([cx, cy, ax, ay, wx, wy, ph], i) => {
+    const b = $('b' + (i + 1)); b.style.left = (cx + ax * Math.sin(wx * t * 2 + ph)) + 'px'; b.style.top = (cy + ay * Math.sin(wy * t * 2 + ph * 1.3)) + 'px'; });
+  $('rays').style.transform = `rotate(${4 * t}deg)`;
+  $('hdr').style.transform = `translate(${640 - K * HDR.cx}px,${GY - K * HDR.cy}px) scale(${K})`;
+  // the header block's intro (props: the logo's spin is not a character move)
+  { const p = P(t, T.logo_in, T.logo_in + .8), e = p <= 0 ? 0 : Math.min(1.08, backO(p));
+    $('hLogo').style.opacity = p > 0 ? '1' : '0'; $('hLogo').style.transform = `perspective(600px) rotateY(${lerp(720, 0, easeO(p))}deg) scale(${lerp(.2, 1, e)})`; }
+  { const p = P(t, T.cnn_in, T.cnn_in + .25), sc = `scale(${lerp(2.4, 1, easeO(p))})`;
+    $('hCnn').style.opacity = p > 0 ? '1' : '0'; $('hCnn').style.transform = sc; $('hCnn').style.transformOrigin = '50% 50%';
+    $('brk').style.opacity = p > 0 ? '1' : '0'; $('brk').style.transform = sc; }
+  [['hl1', T.net_in], ['hl2', T.net_in + .18]].forEach(([id, a]) => { const p = P(t, a, a + .3); $(id).style.opacity = String(p); $(id).style.transform = `translateY(${lerp(-24, 0, easeO(p))}px)`; });
+  $('hRule').style.transform = `scaleX(${easeO(P(t, T.cnn_in + .1, T.cnn_in + .4))})`;
+  const sh = t >= T.cnn_in + .25 && t < T.cnn_in + .25 + 2 / 30 ? (Math.floor((t - T.cnn_in) * 30) % 2 ? -5 : 5) : 0; $('panelIn').style.transform = `translate(${sh}px,${-sh * .6}px)`;
+  $('streak').style.left = lerp(-300, 1500, P(t, T.streak, T.streak + .4)) + 'px'; $('streak').style.display = t >= T.streak && t < T.streak + .4 ? 'block' : 'none';
+  // out: the old BREAKING card's white flash (ease-in, solid on the last frame), which the desk's entry flash fades out of
+  const fl = P(t, T.flash, T.end - 1 / 30); $('flash').style.opacity = String(fl * fl);
+});
+</script></body></html>

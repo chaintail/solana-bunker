@@ -1,0 +1,23 @@
+<!doctype html><html data-duration="5.14" data-fps="30"><head><meta charset="utf-8">
+<!-- Opening v10 (Liam 2026-10-17): s00-intro with "Chaintail Labs" read at 1.0x. The read is 0.186 s longer than v9 (render-vo-v10.py), so the card holds 6 output frames (0.2 s) longer: captured at --speed=1.2 like v9, the fade-out and the duration move by 0.24 s of scene time (4.55 -> 4.79, 4.9 -> 5.14), 154 scene frames -> 129 output frames. The text (0.3 s) and the brand reveal (3.35 s) are unchanged, so output frames 0-113 equal v9. -->
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
+<style>
+html,body{background:#000}
+.stage{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Liberation Serif','Times New Roman',Times,serif;color:#fff;text-align:center}
+.pre{font-size:52px;font-weight:400;line-height:1.2;letter-spacing:0;width:1180px}
+.brand{display:flex;align-items:center;gap:30px;margin-top:44px}
+.brand img{width:150px;height:150px;object-fit:contain}
+.brand span{font-size:96px;font-weight:700;letter-spacing:0}
+</style></head><body>
+<div class="stage" id="stage">
+  <div class="pre" id="pre">The following program is brought to you by</div>
+  <div class="brand" id="brand"><img src="assets/chaintail-logo-800.png"><span>Chaintail Labs</span></div>
+</div>
+<script src="lib/film.js"></script>
+<script>
+const f = window.__film;
+f.anim(document.getElementById('pre'), [{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}], 0.3, 0.6, {easing:'ease-out'});
+f.anim(document.getElementById('brand'), [{opacity:0,transform:'scale(.92)'},{opacity:1,transform:'none'}], 3.35, 0.5, {easing:'cubic-bezier(.2,.9,.3,1)'});
+f.anim(document.getElementById('stage'), [{opacity:1},{opacity:0}], 4.79, 0.35);
+f.onSeek(() => {});
+</script></body></html>

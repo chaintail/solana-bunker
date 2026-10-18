@@ -1,0 +1,47 @@
+<!doctype html><html data-duration="11.5667" data-fps="30"><head><meta charset="utf-8">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
+<style>
+html,body{background:#000;color:#fff;font-family:'Inter',sans-serif}
+.box{position:absolute;left:70px;top:230px;width:300px;height:300px;border:10px solid #fff;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.box .tv{font:800 62px/1 'Inter';letter-spacing:.04em}
+.box .big{font:700 120px/1 'Oswald';letter-spacing:.03em;margin-top:6px}
+.box .sub{font:800 26px/1 'Inter';letter-spacing:.3em;margin-top:14px}
+.copy{position:absolute;left:430px;top:78px;width:810px}
+.head{font:700 110px/1 'Oswald';letter-spacing:.03em;color:#ffd400;margin-bottom:22px}
+.body{font:700 54px/1.22 'Inter';letter-spacing:-.005em}
+.body .w{opacity:0;display:inline-block;margin-right:.26em}
+.view{margin-top:34px;font:800 49px/1.15 'Inter';text-transform:uppercase;letter-spacing:.01em;white-space:nowrap}
+.view .w{opacity:0;display:inline-block;margin-right:.26em}
+.head .w{opacity:0;display:inline-block}
+.rule{position:absolute;left:430px;top:58px;width:810px;height:6px;background:#fff;opacity:.85}
+</style></head><body>
+<div class="box" id="box"><div class="tv">TV-</div><div class="big">MATH</div><div class="sub">F C H</div></div>
+<div class="rule" id="rule"></div>
+<div class="copy">
+  <div class="head" id="head"><span class="w">WARNING</span></div>
+  <div class="body" id="body"></div>
+  <div class="view" id="view"></div>
+</div>
+<script src="data/s00b-words-v9.js"></script>
+<script src="lib/film.js"></script>
+<script>
+// v9 (Liam 2026-10-16): the advisory read at 1.2x (pipeline/render-vo-v9.py), so every fixed time on the card is divided by S = 1.2 and the card is 347 frames (was 390).
+const S = 1.2, f = window.__film, VO_AT = 0.6 / S;       // the VO file (with its own 0.8/1.2 s lead-in) starts here in scene time
+const W = window.VO.words;
+const copy = 'The following program contains math, conspiracy theories, and fear mongering based on hypothetical scenarios.'.split(' ');
+const view = 'Viewer discretion is advised.'.split(' ');
+const mk = (host, words, off) => words.map((txt, i) => { const s = document.createElement('span'); s.className = 'w'; s.textContent = txt; host.append(s); return [s, W[off + i]]; });
+const pairs = [...mk(document.getElementById('body'), copy, 1), ...mk(document.getElementById('view'), view, 15)];
+const hw = document.querySelector('#head .w');
+const show = (el, t) => f.anim(el, [{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}], t, 0.12 / S, {easing:'ease-out'});
+show(hw, VO_AT + W[0].s - 0.05 / S);
+for (const [el, w] of pairs) show(el, VO_AT + w.s - 0.05 / S);
+// rating box blinks in like the real thing; rule draws; "viewer discretion" line pulses on its last word
+f.anim(document.getElementById('box'), [{opacity:0,transform:'scale(.9)'},{opacity:1,transform:'none'}], 0.25 / S, 0.3 / S, {easing:'ease-out'});
+f.anim(document.getElementById('rule'), [{transform:'scaleX(0)',transformOrigin:'left'},{transform:'scaleX(1)',transformOrigin:'left'}], VO_AT + W[0].s - 0.2 / S, 0.5 / S, {easing:'ease-out'});
+const adv = pairs[pairs.length - 1][0];
+f.anim(adv, [{color:'#fff'},{color:'#ffd400'}], VO_AT + W[18].s, 0.3 / S);
+const DUR = Number(document.documentElement.dataset.duration);   // the fade-out keeps v7's length divided by S (13 x 0.04 / S)
+f.anim(document.body, [{opacity:1},{opacity:1,offset:1 - 13 * .04 / S / DUR},{opacity:.0}], 0, DUR, {easing:'linear'});
+f.onSeek(() => {});
+</script></body></html>
