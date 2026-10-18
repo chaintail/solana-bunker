@@ -1,0 +1,178 @@
+{
+ "title": "Conspiracy v13 (two script cuts, 55.333 s, 1660 frames): the m4c treatment re-anchored, bar 17 on CENSORED? (f632), bar 38 on the close",
+ "notes": [
+  "v13 (Liam, 2026-10-18): 'they were quick to point out that' and 'At least that's what crypto Twitter kept repeating.' cut (conspiracy-v13-edit.py); the picture loses x12b frames 787-814 and 987-1071 (113 frames, 3.767 s), so every event after the first cut is 28 frames earlier and every event after the second 113 frames earlier.",
+  "Treatment: m4c unchanged (cue from frame 0 with a 0.1 s fade-in, under speech -29.3 LUFS on the -18 LUFS cue = m2 +9 dB, pauses open +5 dB, sidechain 30 ms look-ahead / 300 ms release, HPF 100 Hz, shelves 6 kHz -6 / 11 kHz -8, notch 16.8 kHz -6 Q 8, intro levelling to bar 13, folder close 2, stamps -2 dB vs m1, -16 LUFS / <= -1.3 dBTP).",
+  "Music re-anchored by whole bars: the anchors are 33.567 s apart (m4c 37.333 s, 24 bars). 22 bars would need the cue 3.5% fast; 21 bars need it 1.16% slow (pitch -20 cents; m4c ran 1.52% fast, +26 cents). So bar 17 stays on the CENSORED? landing (f632, 21.0667) and bar 38 (m4c: bar 41) lands at 54.633 = m4c's 58.400 - 3.767, between the close starting (53.92) and the shut (54.80); the cue still plays from frame 0. Bars 37-41 have the same level and texture, so the close lands on the same kind of downbeat; the cue is not spliced.",
+  "Effects: the TRUST ME, BRO slam (m4c f1032) fell inside the second cut along with its stamp, so it is gone; CHECKED, the folder close and the ? move 113 frames earlier; CLASSIFIED and CENSORED? are before the cuts and unchanged. End fade 58.45-59.00 -> 54.683-55.233."
+ ],
+ "dialogue": "in/audio-final.wav",
+ "music": {
+  "file": "in/suno-3-the-clock-ticks-twice-a.wav",
+  "hp": 100,
+  "extra_db": 9,
+  "detect_hp": 180,
+  "norm_lufs": -18,
+  "level_from_m1": {
+   "m1_hp": 180,
+   "m1_gap_db": -14
+  },
+  "duck": {
+   "depth_db": 5,
+   "key_lo_db": -44,
+   "key_hi_db": -38,
+   "attack_ms": 30,
+   "release_ms": 300
+  },
+  "anchors": [
+   {
+    "name": "bar 17 on the CENSORED? landing (f632)",
+    "track": 25.363,
+    "scene": 21.0667
+   },
+   {
+    "name": "bar 38 downbeat end, between close start and shut (m4c bar 41 at 58.40)",
+    "track": 58.527,
+    "scene": 54.6333
+   }
+  ],
+  "in": {
+   "scene": 0.0,
+   "fade": 0.1
+  },
+  "end": {
+   "fade_from": 54.6833,
+   "fade_to": 55.2333
+  },
+  "report_bars": {
+   "4": 4.836,
+   "13": 19.033,
+   "17": 25.363,
+   "25": 38.0,
+   "38": 58.527
+  },
+  "eq": [
+   {
+    "type": "highshelf",
+    "f": 6000,
+    "gain_db": -6,
+    "q": 0.7071
+   },
+   {
+    "type": "highshelf",
+    "f": 11000,
+    "gain_db": -8,
+    "q": 0.7071
+   },
+   {
+    "type": "peak",
+    "f": 16800,
+    "gain_db": -6,
+    "q": 8
+   }
+  ],
+  "level_intro": {
+   "until_track": 19.033,
+   "ramp_s": 1.58,
+   "body": [
+    19.033,
+    63.3
+   ],
+   "st_window_s": 3.0,
+   "smooth_s": 1.0,
+   "max_boost_db": 8
+  }
+ },
+ "guard": {
+  "target": 12,
+  "active_db": -30,
+  "windows_ms": [
+   100,
+   200
+  ],
+  "note": "measured and reported, not enforced (Liam judges the level by ear)"
+ },
+ "sfx": [
+  {
+   "name": "CLASSIFIED slam",
+   "file": "in/sfx/stamp-thump-1-traditional-stamp.wav",
+   "hit": 2.1,
+   "frame": 63,
+   "gain": -8
+  },
+  {
+   "name": "CENSORED? slam",
+   "file": "in/sfx/stamp-thump-1-traditional-stamp.wav",
+   "hit": 21.0667,
+   "frame": 632,
+   "gain": -2
+  },
+  {
+   "name": "CHECKED slam",
+   "file": "in/sfx/stamp-thump-1-traditional-stamp.wav",
+   "hit": 43.5333,
+   "frame": 1306,
+   "gain": -8
+  },
+  {
+   "name": "folder close (main impact on the shut)",
+   "file": "in/sfx/folder-close-2-doc-folder.mp3",
+   "hit": 54.8,
+   "frame": 1644,
+   "gain": -6,
+   "attack_peak_db": 6,
+   "attack_rise_db": 6
+  },
+  {
+   "name": "? stamp",
+   "file": "in/sfx/stamp-thump-2-stamp-bright-shelved.wav",
+   "hit": 55.1,
+   "frame": 1653,
+   "gain": -2
+  }
+ ],
+ "credits": [
+  {
+   "file": "folder-close-2-doc-folder.mp3",
+   "title": "document folder open-close #2.wav",
+   "freesound_id": 511699,
+   "author": "Timbre",
+   "licence": "CC0 1.0",
+   "url": "https://freesound.org/people/Timbre/sounds/511699/",
+   "note": "HQ preview (lossy) trimmed to the first event, 50 ms fade-out, -20 LUFS, 48 kHz; used from m2 on the folder shut"
+  },
+  {
+   "file": "stamp-thump-1-traditional-stamp.wav",
+   "freesound_id": 470710,
+   "author": "I.fekry",
+   "licence": "CC0 1.0",
+   "url": "https://freesound.org/people/I.fekry/sounds/470710/"
+  },
+  {
+   "file": "stamp-thump-2-stamp-bright-shelved.wav",
+   "freesound_id": 362624,
+   "author": "kermite607",
+   "licence": "CC0 1.0",
+   "url": "https://freesound.org/people/kermite607/sounds/362624/"
+  }
+ ],
+ "verify": {
+  "music": [
+   {
+    "name": "bar 17 downbeat on CENSORED? landing",
+    "at": 21.0667,
+    "frame": 632
+   },
+   {
+    "name": "bar 38 downbeat end",
+    "at": 54.6333
+   }
+  ]
+ },
+ "ref": {
+  "m2_stems": "in/m4c-cut/conspiracy-m4c",
+  "m2_gain_db": 0.9,
+  "name": "m4c",
+  "note": "m4c's delivered stems (after its +0.90 dB loudness gain) with the same two spans removed (x12b samples 1257822-1302622 and 1578000-1714000 at 48 kHz); the key keeps verify-m4.py's name"
+ }
+}
