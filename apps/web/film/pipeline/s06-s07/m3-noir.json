@@ -1,0 +1,90 @@
+{
+ "title": "s06 + s07 m3: one noir cue from the speakeasy through the seminar to the alley, split at the s06/s07 cut sample",
+ "notes": [
+  "Liam on m2: the lecture has no music and is more boring; keep the speakeasy music going through, a little quieter under the lecture, back up on the cut to the dark alley.",
+  "One render on a joint timeline (s06 663 frames + s07 1000 frames at 30 fps = 1,060,800 + 1,600,000 samples at 48 kHz); the music stem is split at joint sample 1,060,800 (the s06/s07 cut).",
+  "Treatment = m2 (conspiracy m4c): cue mono fold, high-pass 100 Hz, high shelves 6 kHz -6 dB and 11 kHz -8 dB, normalised to -18 LUFS (whole filtered cue); under speech -29.3 LUFS, +5 dB between words; sidechain from the dialogue of both scenes as one key (10 ms RMS, -44..-38 dBFS, 30 ms look-ahead attack, 300 ms release), so the release runs across the cut.",
+  "s06: m2's placement unchanged (track 84.160 s at scene 0.236 s, 5 ms raised-cosine head, bar 23 on frame 9, bar 28 on the door shut, frame 576); m2's fade at 19.40-19.70 is removed, so the bed plays under the slot slam, REJECTED and the freeze and on into s07.",
+  "Length: the cue is 126.4 s and its body ends at bar 32 (about 118.4 s; a pause, then the final chord at 120.8 s). 84.16 + 55.43 s would need track 139.6 s, so one bar-aligned loop: bar 29 (106.926 s, a phrase start) -> bar 1 (2.830 s, the theme's first bar; chroma of the bar 0.93 like bar 29's), measured flux downbeats (180 Hz high-pass), equal-power 50 ms crossfade ending 5 ms before the downbeat. The loop lands at s07 0.902 s, inside the 1 s ramp down, under the lecture.",
+  "Lecture (s07 0 to frame 774): -4 dB on the whole sidechain (under speech -33.3 LUFS), reached by a 1.0 s ramp (linear in dB) from the cut; the ramp starts at s06's level as delivered (join_comp_db = s06 scene gain - s07 scene gain, so the delivered music has no level step at the cut).",
+  "Alley (frame 774 on): back to 0 dB (-29.3 under speech) over a linear-in-dB ramp from the cut that lands on bar 8's downbeat (the continuous grid puts it 0.44 s after the cut; no downbeat can land on the cut without a splice, so m2's bar 5 on the cut is not kept). m2's raised-cosine fade 33.14 s to the last frame is kept.",
+  "Stamps as m2 (REJECTED 0 -> -2 dB, VERSION 3 -6 -> -8 dB); all effects unchanged from m2 (null against m2's sfx stems).",
+  "Program -16 LUFS per scene, true peak <= -1.3 dBTP before AAC (finish-m3.py per scene); AAC 192k on master and phone."
+ ],
+ "fps": 30,
+ "music": {
+  "file": "in/cue/suno-5-noir-a.wav",
+  "analysis": "in/cue/analysis.json",
+  "hp": 100,
+  "eq": [
+   {"type": "highshelf", "f": 6000, "gain_db": -6, "q": 0.7071},
+   {"type": "highshelf", "f": 11000, "gain_db": -8, "q": 0.7071}
+  ],
+  "norm_lufs": -18,
+  "under_lufs": -29.3,
+  "duck": {"depth_db": 5, "key_lo_db": -44, "key_hi_db": -38, "attack_ms": 30, "release_ms": 300},
+  "place": {"track_in": 84.16, "scene_in": 0.236, "head_fade": 0.005},
+  "loop": {"from_bar": 29, "to_bar": 1, "xfade_s": 0.05, "xfade_end_before_s": 0.005},
+  "level": {"lecture_db": -4, "ramp_down_s": 1.0, "alley_frame": 774, "ramp_up_to_bar": 8, "ramp_up_max_s": 0.5},
+  "end": {"scene": "s07", "fade_from": 33.14, "fade_to": 33.3333},
+  "report_bars": {"s06": [23, 28], "s07": [1, 2, 7, 8, 9]},
+  "intro_check": {"st_window_s": 3.0, "first_s": 2.0},
+  "highs_check": {"min_hz": 12000, "spike_db": 8, "median_halfwidth_hz": 400}
+ },
+ "scenes": [
+  {
+   "name": "s06",
+   "title": "s06 m3 (speakeasy, v10 x12 picture, 663 frames = 22.100 s): noir bed as m2, continuing past the door shut into s07",
+   "dialogue": "in/s06/audio-final.wav",
+   "frames": 663,
+   "sfx_mode": "event_lufs",
+   "sfx_ref_lufs": -20,
+   "sfx": [
+    {"id": "door shut", "file": "in/sfx/stamp-thump-3-kenney-soft-heavy.wav", "frame": 576, "hit": 0.0, "gain": -6},
+    {"id": "slot slam", "file": "in/sfx/slot-slam-1-metal-slam.wav", "frame": 606, "hit": 0.09, "gain": 0},
+    {"id": "REJECTED stamp", "file": "in/sfx/stamp-thump-1-traditional-stamp.wav", "frame": 617, "hit": 0.051, "gain": 0, "gain_change_db": -2}
+   ],
+   "verify": {"music": [
+    {"name": "bar 23 downbeat after the takeover", "bar": 23, "frame": 9},
+    {"name": "bar 28 downbeat on the door shut", "bar": 28, "frame": 576}
+   ]},
+   "ref": {"name": "m2", "stems": "in/m2/s06-m2", "loudness": "in/m2/s06-m2-loudness.json"},
+   "mux": {"master": "s06/out/s06-v10-x12.mp4", "phone": "s06/out/s06-v10-x12-phone.mp4", "dst": "s06/out/s06-m3", "work": "s06/out/m3",
+           "args": "-ac 1 -movflags +faststart -shortest"}
+  },
+  {
+   "name": "s07",
+   "title": "s07 m3 (seminar + alley, v7 x12 picture, 1000 frames = 33.333 s): the noir bed from s06 through the lecture at -4 dB, back up on the alley cut",
+   "dialogue": "in/s07/audio-final.wav",
+   "frames": 1000,
+   "sfx_mode": "event_lufs",
+   "sfx_ref_lufs": -20,
+   "sfx": [
+    {"id": "click tweet sheet", "file": "in/sfx/projector-click-2-manual-advance.wav", "frame": 18, "hit": 0.344, "gain": -6},
+    {"id": "click Lamport sheet", "file": "in/sfx/projector-click-2-manual-advance.wav", "frame": 175, "hit": 0.344, "gain": -6},
+    {"id": "click XMSS sheet", "file": "in/sfx/projector-click-2-manual-advance.wav", "frame": 605, "hit": 0.344, "gain": -6},
+    {"id": "VERSION 3 stamp", "file": "in/sfx/stamp-thump-3-kenney-soft-heavy.wav", "frame": 727, "hit": 0.0, "gain": -6, "gain_change_db": -2},
+    {"id": "slot clack", "file": "in/sfx/slot-slam-4-mail-slot-clack.wav", "frame": 926, "hit": 0.078, "gain": -6}
+   ],
+   "verify": {"music": [
+    {"name": "loop: bar 1 downbeat (from bar 29)", "bar": 1},
+    {"name": "bar 8 downbeat, 0.44 s after the alley cut (frame 774)", "bar": 8},
+    {"name": "bar 9 downbeat", "bar": 9}
+   ]},
+   "ref": {"name": "m2", "stems": "in/m2/s07-m2", "loudness": "in/m2/s07-m2-loudness.json"},
+   "mux": {"master": "s07/out/s07-v7-x12.mp4", "phone": "s07/out/s07-v7-x12-phone.mp4", "dst": "s07/out/s07-m3", "work": "s07/out/m3",
+           "args": "-ac 1 -movflags +faststart -shortest"}
+  }
+ ],
+ "fetch": [
+  ["video-work/solana-bunker/s06/out/x12/audio-final.wav", "in/s06/"],
+  ["video-work/solana-bunker/s07/out/x12/audio-final.wav", "in/s07/"],
+  ["audio-work/solana-bunker/music/suno/5-noir/suno-5-noir-a.wav", "in/cue/"],
+  ["audio-work/solana-bunker/music/suno/5-noir/analysis.json", "in/cue/"],
+  ["audio-work/solana-bunker/out/work/stamp-thump-3-kenney-soft-heavy.wav", "in/sfx/"],
+  ["audio-work/solana-bunker/out/work/slot-slam-1-metal-slam.wav", "in/sfx/"],
+  ["audio-work/solana-bunker/out/work/stamp-thump-1-traditional-stamp.wav", "in/sfx/"],
+  ["audio-work/solana-bunker/out/work/projector-click-2-manual-advance.wav", "in/sfx/"],
+  ["audio-work/solana-bunker/out/work/slot-slam-4-mail-slot-clack.wav", "in/sfx/"]
+ ]
+}
