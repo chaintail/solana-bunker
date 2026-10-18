@@ -1,0 +1,217 @@
+{
+ "name": "s05-m3",
+ "title": "s05 whiteboard m3 (v9 picture): workshop cue continues through the robbery to the scene end, m2 treatment",
+ "notes": [
+  "Audio-only remix of m2 (abae06f; carried unchanged by v9 777a293). Liam: the music stops before the end of the whiteboard scene; keep music going through the whole video, continuing the music that was playing before. The workshop cue is still ONE render on the film timeline (s04 then s05) split at sample 2,232,000 (s04 46.5 s); segments A-D and E's entry are m2's (same bars, anchors, attacks, 20 ms equal-power edges ending 5 ms before each attack, the 0.372 s stop-time break before E), so the render is bit-identical to m2's up to the freeze plus 50 ms and the s04 part is unchanged.",
+  "Change, s05 from the freeze (frame 1484, 49.467 s) on: E (bars 23-24) no longer ends on the bar 25 downbeat with a 0.5 s tail. Bar 25's downbeat still lands on the freeze and E plays on through bar 25 beats 1-3, then crosses (20 ms equal-power, ending 5 ms before bar 25 beat 4's attack) into G: bars 18-26 and the track's own final chord (bar 27) to the file end, with bar 27 anchored on the shrug (frame 2210, 73.667 s) exactly where m2's separate chord segment F put it. The continuous cue reaches the chord naturally, so F is dropped.",
+  "Why bar 25 is cut to three beats: freeze to chord is 24.200 s = 9.78 bars (bar 2.4742 s, beat 0.6186 s, from the measured attacks), so no whole-bar chain keeps both anchors. One beat is dropped (bar 25 is a 3/4 bar right after the freeze, under 'oh crackers' and the camera shutter) and that bar's third beat runs 0.075 s long (bar 18's downbeat lands 1.931 s after the freeze instead of 1.856 s); the incoming side covers the extra time with the last 92 ms of the track before bar 18 (bar 17's fourth beat ringing), so there is no hole. Bar 18 has no measurable downbeat transient (m1's detector caught a pickup 37 ms early), so its downbeat is the bar grid: the mean of the measured bar 17 and bar 19 attacks.",
+  "Treatment unchanged from m2 (conspiracy m4c): mono fold, 100 Hz high-pass, high shelves 6 kHz -6 dB and 11 kHz -8 dB, -18 LUFS normalisation, intro leveller, -11.3 dB under speech (cue -29.3 LUFS), +5 dB between words, sidechain 30 ms look-ahead / 300 ms release on the delivered dialogue. Sound effects unchanged (RENT cash register 0 dB, confetti -6, camera shutter -6 on the freeze).",
+  "Program: finish-m3.py (-16 LUFS, true peak <= -1.3 dBTP, limiter latency-compensated)."
+ ],
+ "fps": 30,
+ "music": {
+  "file": "in/cues/4-workshop/suno-4-mechanical-curiosity-a.wav",
+  "analysis": "in/cues/4-workshop/analysis.json",
+  "detect": {
+   "gain_db": 2.9,
+   "hp": 180,
+   "note": "m1's signal: (L+R)/2 x (-16 - (-18.9 LUFS)) dB, 180 Hz high-pass"
+  },
+  "hp": 100,
+  "norm_lufs": -18,
+  "under_db_re_norm": -11.3,
+  "eq": [
+   {
+    "type": "highshelf",
+    "f": 6000,
+    "gain_db": -6,
+    "q": 0.7071
+   },
+   {
+    "type": "highshelf",
+    "f": 11000,
+    "gain_db": -8,
+    "q": 0.7071
+   }
+  ],
+  "level_intro": {
+   "until_track": 14.9503,
+   "ramp_s": 2.475,
+   "body": [
+    14.9503,
+    64.4363
+   ],
+   "st_window_s": 3.0,
+   "smooth_s": 1.0,
+   "max_boost_db": 6
+  },
+  "duck": {
+   "depth_db": 5,
+   "key_lo_db": -44,
+   "key_hi_db": -38,
+   "attack_ms": 30,
+   "release_ms": 300
+  },
+  "edge": 0.02,
+  "edge_lead": 0.005,
+  "segments": [
+   {
+    "id": "A",
+    "bar_in": 1,
+    "bar_out": 23,
+    "chain": "next"
+   },
+   {
+    "id": "B",
+    "bar_in": 1,
+    "bar_out": 3,
+    "chain": "next"
+   },
+   {
+    "id": "C",
+    "bar_in": 7,
+    "bar_out": 15,
+    "anchor": {
+     "scene": "s05",
+     "frame": 879,
+     "bar": 13
+    }
+   },
+   {
+    "id": "D",
+    "bar_in": 3,
+    "bar_out": 7,
+    "chain": "prev"
+   },
+   {
+    "id": "E",
+    "bar_in": 23,
+    "out_beat": [
+     25,
+     4
+    ],
+    "anchor": {
+     "scene": "s05",
+     "frame": 1484,
+     "bar": 25
+    }
+   },
+   {
+    "id": "G",
+    "bar_in": 18,
+    "in_grid": true,
+    "xfade_prev": true,
+    "anchor": {
+     "scene": "s05",
+     "frame": 2210,
+     "bar": 27
+    }
+   }
+  ],
+  "checks": [
+   {
+    "id": "bar 7 (body arrives) on the curve's last stroke",
+    "scene": "s04",
+    "t": 16.4167
+   },
+   {
+    "id": "bar 13 on the RENT stamp landing",
+    "scene": "s05",
+    "frame": 879
+   },
+   {
+    "id": "bar 25 downbeat on the freeze (cue continues)",
+    "scene": "s05",
+    "frame": 1484
+   },
+   {
+    "id": "bar 27 (final chord) on the shrug",
+    "scene": "s05",
+    "frame": 2210
+   }
+  ],
+  "m1_report": "in/m1/s04-s05-m1-report.json",
+  "m2": {
+   "unsplit": "in/m2/s04-s05-m2-music-unsplit.wav",
+   "s04_audio": "in/m2/s04-m2-audio.wav",
+   "s04_music": "in/m2/s04-m2-music.wav",
+   "s05_music": "in/m2/s05-m2-music.wav",
+   "gain_db": {
+    "s04": 0.5,
+    "s05": 0.6
+   },
+   "freeze_frame": 1484,
+   "chord_span": [
+    73.6667,
+    75.19
+   ]
+  }
+ },
+ "sfx_ref_lufs": -20,
+ "scenes": {
+  "s04": {
+   "frames": 1395,
+   "dialogue": "in/s04/audio-final.wav",
+   "m1_gain_db": -0.58,
+   "m1_stems": "in/m1/s04-m1",
+   "sfx": [
+    {
+     "id": "SUPER stamped",
+     "file": "in/sfx/stamp-thump-2-stamp-bright-shelved.wav",
+     "frame": 745,
+     "hit": 0.055,
+     "event_lufs": -28.7,
+     "m1_gain": -6,
+     "gain": -8,
+     "stamp": true
+    },
+    {
+     "id": "pump.fun glass shatter",
+     "file": "in/sfx/glass-shatter-2-glass-panel.wav",
+     "frame": 909,
+     "hit": 0.035,
+     "event_lufs": -24.0,
+     "m1_gain": -6,
+     "gain": -6
+    }
+   ],
+   "m2_gain_db": 0.5
+  },
+  "s05": {
+   "frames": 2287,
+   "dialogue": "in/s05/audio-final.wav",
+   "m1_gain_db": -0.68,
+   "m1_stems": "in/m1/s05-m1",
+   "sfx": [
+    {
+     "id": "RENT stamp (cash register)",
+     "file": "in/sfx/cash-register-1-purchase.wav",
+     "frame": 879,
+     "hit": 0.035,
+     "event_lufs": -23.0,
+     "m1_gain": 0,
+     "gain": 0
+    },
+    {
+     "id": "confetti",
+     "file": "in/sfx/confetti-pop-1-party-popper.wav",
+     "frame": 1346,
+     "hit": 0.07,
+     "event_lufs": -25.9,
+     "m1_gain": -6,
+     "gain": -6
+    },
+    {
+     "id": "camera shutter on the freeze",
+     "file": "in/sfx/camera-shutter-2-yn500-single.wav",
+     "frame": 1484,
+     "hit": 0.0,
+     "event_lufs": -23.2,
+     "m1_gain": -6,
+     "gain": -6
+    }
+   ],
+   "m2_gain_db": 0.6
+  }
+ }
+}

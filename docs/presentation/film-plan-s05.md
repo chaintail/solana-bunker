@@ -115,3 +115,18 @@ v8 -> v9: frames 0-147 (the hand-off image fading out) differ by the block; of f
 "*this is all theoretical" banner, 2148-2151 the TIMING ATTACK stamp, edge anti-aliasing only; a fresh still matches v9 at 1961 and v8 at 2151, Chrome
 raster variation between runs), the rest >= 45 dB. Last frame 2286 (hand-off to s06) 51.3 dB. glitch-scan v2 --chunk-size 300 --ref 0: clean on master
 and phone.
+
+## m3 (music): workshop cue continues through the robbery to the scene end
+Liam on m2: the music stopping at the freeze read as intentional, but the robbery is weirdly quiet; keep music going through the whole video by continuing
+the music that was playing before. Audio-only remix of m2 on the v9 picture (`-c:v copy` from out/s05-v9.mp4 / -phone.mp4; video md5 4458d31e70ad35cdd558333100963828
+master, 41f5a0fb1de061f7f287a7fd512d7b36 phone, both unchanged). The workshop cue is still one render across s04 + s05 split at 46.5 s; the render is identical
+to m2's up to 50 ms after the freeze, and the s04 half is untouched (rebuilt s04 audio byte-identical to the delivered out/s04-m2-audio.wav, md5
+02141903a2353528d47d8f385f69e27b). From the freeze (frame 1484, 49.467 s) the bar 25 downbeat still lands on the freeze, but E plays on through bar 25 beats
+1-3 and crosses (20 ms equal-power, ending 5 ms before bar 25 beat 4's attack, 51.306 s) into bars 18-26 and the track's own final chord, bar 27 on the
+shrug (frame 2210, 73.667 s) as in m2; the chord is reached by the continuous cue, so m2's separate chord segment is gone. Freeze to chord is 24.200 s =
+9.78 bars, so bar 25 is a 3/4 bar whose third beat runs 75 ms long (bar 18's downbeat at 51.398 s); the incoming side covers the gap with the 92 ms of track
+before bar 18. Bar 18 has no measurable downbeat attack, so its downbeat is the grid between the bar 17 and 19 attacks. Bars 23-25 are heard a second time
+(68.7-73.7 s). The chord rings out by 75.19 s (the file end), as in m2. Treatment, SFX and program chain as m2; s05 scene gain +0.7 dB (m2 +0.6), so the step
+at the s04/s05 join is 0.2 dB. -16.0 LUFS, true peak -1.3 dBTP (wav and both mp4s), LRA 3.0; dialogue lag 0. Built with `pipeline/build-s05-m3.sh`
+(`music-m3-workshop.py`, `m3-s05-workshop.json`, `finish-m3.py`, `continuity-m3.py`, `verify-m3.py`, `plot-levels-m3.py`) -> dev-mac
+`~/video-work/solana-bunker/out/s05-m3.mp4`, `s05-m3-phone.mp4`, `s05-m3-audio.wav`, stems `s05-m3-{dialogue,music,sfx}.wav`, `s04-s05-m3-music-unsplit.wav`.
