@@ -1,0 +1,189 @@
+{
+ "title": "s09 m2 (infomercial, v11 x13 picture, 897 frames = 29.900 s): music treatment per conspiracy m4c",
+ "notes": [
+  "Treatment = conspiracy m4c (film/conspiracy 70fecfa, music-m4.py): cue mono fold, high-pass 100 Hz, high shelves 6 kHz -6 dB and 11 kHz -8 dB, normalised to -18 LUFS; under speech the cue sits at -29.3 LUFS (m4c's '+9'), 5 dB higher between words; sidechain from the dialogue (10 ms RMS key -44..-38 dBFS, 30 ms look-ahead attack, 300 ms release); no breakpoints, swells, dips, guard trim or minimum-gap logic. Program -16 LUFS, true peak <= -1.3 dBTP before AAC (finish-m3.py); AAC 192k on master and phone.",
+  "Plan unchanged from s09-m1 (bd4a501): black-and-white half dry; Reassuring Groove (suno-1-reassuring-groove-a) cut in at track 19.147 s on the colour snap, frame 414 (13.800 s, 5 ms head fade), bar 9 (the 8-bar phrase start) on the snap, bars 9-15 whole, raised-cosine fade 29.4-29.9.",
+  "Start: the cue enters on a picture event (the colour snap, masked by the record scratch; the black-and-white half stays dry by plan); not moved.",
+  "Intro: the used span starts on bar 9, in the body (first 6 s within 0.3 dB of the span's median); no intro levelling.",
+  "Highs: spectral check of the used span: one tonal spike above 12 kHz, 17.05 kHz, 8.1 dB over its +-400 Hz median (Welch 16384; 9.0 dB at 0.7 Hz resolution, -3 dB width 17.6 Hz, over 6 dB in 30% of frames; the conspiracy cue's notched 16.8 kHz tone reads 9.0 dB / 12 dB / 4.4 Hz / 37% on the same checks). Notch 17.05 kHz -6 dB Q 8, as m4c's 16.8 kHz notch.",
+  "Effects as m1 (each file gained to -20 LUFS event loudness + gain, hit on its frame); stamp rule: the YEAH, WE DID THAT TOO! stamp -6 -> -8 dB."
+ ],
+ "dialogue": "in/audio-final.wav",
+ "frames": 897,
+ "fps": 30,
+ "music": {
+  "file": "in/suno-1-reassuring-groove-a.wav",
+  "hp": 100,
+  "eq": [
+   {
+    "type": "highshelf",
+    "f": 6000,
+    "gain_db": -6,
+    "q": 0.7071
+   },
+   {
+    "type": "highshelf",
+    "f": 11000,
+    "gain_db": -8,
+    "q": 0.7071
+   },
+   {
+    "type": "peak",
+    "f": 17050,
+    "gain_db": -6,
+    "q": 8
+   }
+  ],
+  "norm_lufs": -18,
+  "under_lufs": -29.3,
+  "duck": {
+   "depth_db": 5,
+   "key_lo_db": -44,
+   "key_hi_db": -38,
+   "attack_ms": 30,
+   "release_ms": 300
+  },
+  "place": {
+   "mode": "cut",
+   "track_in": 19.147,
+   "scene_in": 13.8,
+   "head_fade": 0.005
+  },
+  "end": {
+   "fade_from": 29.4,
+   "fade_to": 29.9
+  },
+  "report_bars": {
+   "9": 19.18,
+   "15": 33.042
+  }
+ },
+ "sfx_mode": "event_lufs",
+ "sfx_ref_lufs": -20,
+ "sfx": [
+  {
+   "id": "TV static",
+   "file": "in/sfx/tv-static-2-channel-change.wav",
+   "frame": 3,
+   "hit": 0.024,
+   "gain": 0
+  },
+  {
+   "id": "record scratch",
+   "file": "in/sfx/record-scratch-1-short-scratch.wav",
+   "frame": 411,
+   "hit": 0.05,
+   "gain": -6
+  },
+  {
+   "id": "stamp",
+   "file": "in/sfx/stamp-thump-2-stamp-bright-shelved.wav",
+   "frame": 456,
+   "hit": 0.055,
+   "gain": -6,
+   "gain_change_db": -2
+  },
+  {
+   "id": "whoosh",
+   "file": "in/sfx/whoosh-3-little-whoosh.wav",
+   "frame": 475,
+   "hit": 0.773,
+   "gain": -6,
+   "swell": true
+  },
+  {
+   "id": "cash register",
+   "file": "in/sfx/cash-register-2-dusty-machine.wav",
+   "frame": 492,
+   "hit": 0.013,
+   "gain": 0
+  }
+ ],
+ "sfx_null": {
+  "m1_stem": "in/m1/s09-m1-sfx.wav",
+  "m1_gain_db": 0.56
+ },
+ "guard": {
+  "active_db": -30,
+  "windows_ms": [
+   100,
+   200
+  ],
+  "note": "measured and reported, not enforced (as conspiracy m4)"
+ },
+ "verify": {
+  "music": [
+   {
+    "name": "bar 9 downbeat on the colour snap",
+    "at": 13.833,
+    "frame": 414
+   },
+   {
+    "name": "bar 15 downbeat",
+    "at": 27.695
+   }
+  ]
+ },
+ "ref": {
+  "name": "m1",
+  "stems": "in/m1/s09-m1",
+  "gain_db": 0.56
+ },
+ "mux": {
+  "master": "s09/out/s09-v11-x13.mp4",
+  "phone": "s09/out/s09-v11-x13-phone.mp4",
+  "dst": "s09/out/s09-m2",
+  "work": "s09/out/m2",
+  "args": "-ac 1 -movflags +faststart -shortest"
+ },
+ "fetch": [
+  [
+   "video-work/solana-bunker/s09/out/x13/audio-final.wav",
+   "in/"
+  ],
+  [
+   "audio-work/solana-bunker/music/suno/1-sponsor/suno-1-reassuring-groove-a.wav",
+   "in/"
+  ],
+  [
+   "audio-work/solana-bunker/music/suno/1-sponsor/analysis.json",
+   "in/"
+  ],
+  [
+   "audio-work/solana-bunker/out/work/tv-static-2-channel-change.wav",
+   "in/sfx/"
+  ],
+  [
+   "audio-work/solana-bunker/out/work/record-scratch-1-short-scratch.wav",
+   "in/sfx/"
+  ],
+  [
+   "audio-work/solana-bunker/out/work/stamp-thump-2-stamp-bright-shelved.wav",
+   "in/sfx/"
+  ],
+  [
+   "audio-work/solana-bunker/out/work/whoosh-3-little-whoosh.wav",
+   "in/sfx/"
+  ],
+  [
+   "audio-work/solana-bunker/out/work/cash-register-2-dusty-machine.wav",
+   "in/sfx/"
+  ],
+  [
+   "video-work/solana-bunker/s09/out/s09-m1-dialogue.wav",
+   "in/m1/"
+  ],
+  [
+   "video-work/solana-bunker/s09/out/s09-m1-music.wav",
+   "in/m1/"
+  ],
+  [
+   "video-work/solana-bunker/s09/out/s09-m1-sfx.wav",
+   "in/m1/"
+  ],
+  [
+   "video-work/solana-bunker/s09/out/s09-m1-report.json",
+   "in/m1/"
+  ]
+ ]
+}
