@@ -1,0 +1,56 @@
+{
+ "5-physicist-professor-point": {
+  "ox0": 298,
+  "oy0": 84,
+  "ox1": 491,
+  "oy1": 315
+ },
+ "2-street-walking": {
+  "ox0": 418,
+  "oy0": 128,
+  "ox1": 602,
+  "oy1": 359
+ },
+ "2-street-celebrate": {
+  "ox0": 420,
+  "oy0": 120,
+  "ox1": 603,
+  "oy1": 353
+ },
+ "2-street-hands-in-pockets": {
+  "ox0": 418,
+  "oy0": 129,
+  "ox1": 603,
+  "oy1": 361
+ },
+ "4-engineer-point-clipboard": {
+  "ox0": 315,
+  "oy0": 137,
+  "ox1": 508,
+  "oy1": 310
+ },
+ "4-engineer-thumbs-up": {
+  "ox0": 414,
+  "oy0": 137,
+  "ox1": 609,
+  "oy1": 313
+ },
+ "4-engineer-holding-key": {
+  "ox0": 414,
+  "oy0": 137,
+  "ox1": 609,
+  "oy1": 313
+ },
+ "4-engineer-point-down": {
+  "ox0": 315,
+  "oy0": 137,
+  "ox1": 508,
+  "oy1": 310
+ },
+ "2-street-hands-on-head": {
+  "ox0": 420,
+  "oy0": 121,
+  "ox1": 603,
+  "oy1": 354
+ }
+}

@@ -1,0 +1,404 @@
+<!doctype html><html data-duration="55.77" data-fps="30"><head><meta charset="utf-8">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css"><link rel="stylesheet" href="dossier.css">
+<style>
+/* Slide 4, "we made a Solana Bunker": the dossier folder slides off a desk, a blueprint sheet unrolls, three characters (Liam's head on stand-in
+   bodies) stand on it one after another and freeze when their part is done. Timing: data/s04-timing.js (audio edit). Heads: heads/<who>/h%05d.png
+   (pipeline/s04-heads.py), bodies: assets/bodies (pipeline/s04-bodies.sh). */
+@font-face{font-family:'Architects Daughter';font-weight:400;src:url(fonts/ArchitectsDaughter-400.woff2) format('woff2')}   /* also in fonts.css; repeated here because other builders rsync their own fonts.css over the shared dev-mac tree */
+:root{--ink:#eaf7fb;--ink2:rgba(234,247,251,.55);--acc:#ffd23f;--draft:'Architects Daughter','Special Elite',cursive}
+html,body{background:#06374c}
+#root{position:absolute;inset:0;overflow:hidden}
+#shake{position:absolute;inset:0}
+/* ---------- desk phase (the dossier we came from) ---------- */
+#desk{position:absolute;inset:0}
+#fold{position:absolute;left:300px;top:50px;width:700px;height:620px;transform-origin:350px 310px}
+#fbase{left:0;top:0;width:700px;height:620px;border-radius:6px 14px 14px 14px}
+#fbase .tab{position:absolute;right:50px;top:-44px;width:220px;height:48px;border-radius:12px 12px 0 0;background:#c9a255}
+#fcover{position:absolute;left:0;top:0;width:700px;height:620px;border-radius:6px 14px 14px 14px}
+#fcover .tab{position:absolute;left:44px;top:-46px;width:240px;height:50px;border-radius:12px 12px 0 0;background:#d9b46c}
+#flabel{left:44px;top:70px;width:500px;height:104px}
+#flabel .ty{position:absolute;left:24px;top:20px;font-size:56px;line-height:64px;letter-spacing:.02em}
+#fcls{left:96px;top:290px;font-size:104px;border-width:10px;padding:4px 28px 0;transform:rotate(-13deg)}
+#fqm{position:absolute;left:400px;top:170px;width:300px;text-align:center;font-family:'Anton';font-size:380px;line-height:1;color:var(--red);mix-blend-mode:multiply;filter:url(#rough);transform:rotate(-9deg)}
+/* ---------- the blueprint sheet ---------- */
+#sheet{position:absolute;inset:0;background:radial-gradient(ellipse 85% 90% at 50% 45%,#0e5873 0,#0a4a63 55%,#073a4f 100%)}
+#sheet .gr{position:absolute;inset:0;background:
+  repeating-linear-gradient(0deg,rgba(234,247,251,.16) 0 1.5px,transparent 1.5px 100px),repeating-linear-gradient(90deg,rgba(234,247,251,.16) 0 1.5px,transparent 1.5px 100px),
+  repeating-linear-gradient(0deg,rgba(234,247,251,.06) 0 1px,transparent 1px 20px),repeating-linear-gradient(90deg,rgba(234,247,251,.06) 0 1px,transparent 1px 20px)}
+#sheet .gn{position:absolute;inset:0;background:var(--toner);opacity:.20;mix-blend-mode:multiply}
+#roll{position:absolute;top:-14px;bottom:-14px;width:84px;border-radius:42px/16px;background:linear-gradient(90deg,#03222f,#14708f 20%,#c6ecf7 44%,#3a9dbd 64%,#06323f);box-shadow:-16px 0 26px rgba(0,0,0,.38),10px 0 22px rgba(0,0,0,.4)}
+#ink{position:absolute;left:0;top:0}
+.dt{position:absolute;font-family:var(--draft);color:var(--ink);white-space:pre;line-height:1.08;text-shadow:0 0 1px rgba(234,247,251,.6)}
+.acc{color:var(--acc)}
+#pencil{position:absolute;left:0;top:0;width:150px;height:40px;opacity:0;transform-origin:4px 20px}
+/* ---------- characters ---------- */
+.char{position:absolute;left:0;top:0;width:640px;height:720px;transform-origin:320px 700px}
+.char img{position:absolute}
+.char .hd{position:absolute}
+.gshadow{position:absolute;border-radius:50%;background:radial-gradient(ellipse,rgba(0,15,25,.5),rgba(0,15,25,0) 70%)}
+/* ---------- the pump page ---------- */
+#pump{position:absolute;left:370px;top:125px;width:560px;height:460px;background:#0d1117;border:2px solid #2b3340;border-radius:14px;overflow:hidden;font-family:'Inter',sans-serif;color:#e6edf3;box-shadow:0 20px 40px rgba(0,0,0,.5)}
+.pcl{position:absolute;left:0;top:0;width:560px;height:460px}
+.pbar{position:absolute;left:0;top:0;right:0;height:46px;background:#141a22;border-bottom:1px solid #26303c}
+.pbar b{position:absolute;left:16px;top:9px;font:800 24px/28px 'Inter';color:#53f29a;letter-spacing:-.02em}
+.pbar i{position:absolute;right:16px;top:12px;font:700 15px/22px 'Inter';font-style:normal;background:#53f29a;color:#04210f;border-radius:12px;padding:0 12px}
+.pcard{position:absolute;left:16px;top:60px;width:208px;height:132px;background:#161d27;border:1px solid #27313e;border-radius:12px}
+.pcard .av{position:absolute;left:12px;top:12px;width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe27a,#e0a100);font:800 22px/52px 'Inter';text-align:center;color:#3a2800}
+.pcard .nm{position:absolute;left:76px;top:14px;font:800 22px/24px 'Inter'}
+.pcard .tk{position:absolute;left:76px;top:40px;font:500 14px/18px 'Inter';color:#8b98a8}
+.pcard .mc{position:absolute;left:12px;top:78px;font:800 30px/34px 'Inter';color:#53f29a}
+.pcard .ch{position:absolute;left:12px;top:108px;font:700 14px/18px 'Inter';color:#53f29a}
+.pbuy{position:absolute;left:16px;top:204px;width:208px;height:44px;border-radius:10px;background:#53f29a;color:#04210f;font:800 20px/44px 'Inter';text-align:center}
+.pmeta{position:absolute;left:16px;top:262px;width:208px;font:500 14px/22px 'Inter';color:#8b98a8}
+.pmeta span{color:#e6edf3;float:right;font-weight:700}
+.pchart{position:absolute;left:240px;top:60px}
+#cracks{position:absolute;left:370px;top:125px}
+.shard{position:absolute;overflow:hidden;display:none}
+.coin{position:absolute;border-radius:50%;object-fit:cover;box-shadow:0 3px 8px rgba(0,0,0,.5);border:3px solid #f4f1e6;background:#fff}
+/* ---------- the fan of three sheets ---------- */
+#fanDim{position:absolute;inset:0;background:#01202c;opacity:0}
+.fcard{position:absolute;width:400px;height:290px;margin-left:-200px;margin-top:-145px;background:#0b4f69;border:2px solid var(--ink);box-shadow:0 14px 30px rgba(0,0,0,.55);overflow:hidden}
+.fcard .gr{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(234,247,251,.14) 0 1px,transparent 1px 40px),repeating-linear-gradient(90deg,rgba(234,247,251,.14) 0 1px,transparent 1px 40px)}
+.fcard svg{position:absolute;left:0;top:0}
+</style></head><body>
+<div id="root"><div id="shake">
+  <div id="desk"><div class="blotter"></div>
+    <div id="fold"><div id="fbase" class="manila abs"><div class="tab"></div></div>
+      <div id="fcover" class="manila"><div class="tab"></div><div id="flabel" class="paper"><div class="ty">SOLANA BUNKER</div></div>
+        <div id="fcls" class="stamp">Classified</div><div id="fqm">?</div></div></div>
+    <div class="lamp" id="lamp"></div>
+  </div>
+  <div id="sheet"><div class="gr"></div>
+    <svg id="ink" width="1280" height="720" viewBox="0 0 1280 720" fill="none" stroke="#eaf7fb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></svg>
+    <div id="texts"></div>
+    <div class="gn"></div>
+  </div>
+  <svg id="pencil" viewBox="0 0 150 40"><polygon points="2,20 22,12 26,28" fill="#f2d7a4" stroke="#222" stroke-width="1.5"/><polygon points="2,20 8,17.5 9,23" fill="#222"/><polygon points="22,12 138,8 140,30 26,28" fill="#ffd23f" stroke="#222" stroke-width="1.5"/><rect x="138" y="8" width="10" height="22" rx="3" fill="#e86a6a" stroke="#222" stroke-width="1.5"/></svg>
+  <div id="roll"></div>
+  <div id="stage"></div>
+  <div id="fanDim"></div><div id="fan"></div>
+</div></div>
+<script src="lib/film.js"></script><script src="lib/dossier.js"></script><script>
+// film.js waits for document.fonts.ready, which can resolve before a font used only by late-created text has been requested: load the ones this scene uses explicitly
+{ const fl = Promise.all(['400 40px "Architects Daughter"', '400 20px "Special Elite"', '400 20px Anton', '500 20px Inter', '700 20px Inter', '800 20px Inter'].map((f) => document.fonts.load(f, 'AaBb\u2212\u00b2\u00b7?')));
+  try { Object.defineProperty(document.fonts, 'ready', { get: () => fl.then(() => undefined), configurable: true }); } catch (e) {} }
+</script><script src="data/s04-timing.js"></script><script src="assets/bodies/holed/anchors.js"></script>
+<script>
+const D = __D, film = __film, $ = (i) => document.getElementById(i), mk = D.mk;
+D.defs();
+const NS = 'http://www.w3.org/2000/svg';
+const pr = film.prog, lerp = (a, b, p) => a + (b - a) * p, rs = film.rng(2026);
+const eo = (p) => 1 - Math.pow(1 - p, 3), eio = (p) => (p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
+const eb = (p) => { const c1 = 1.9, c3 = c1 + 1; return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); };   // out-back
+const nrm = (s) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+const W = (pid, word, start = true) => { const ws = S4.words[pid]; const i = ws.findIndex((x) => nrm(x[0]).startsWith(nrm(word))); if (i < 0) throw new Error('word not found ' + pid + ' ' + word); return start ? ws[i][1] : ws[i][2]; };
+const ink = $('ink'), texts = $('texts'), stage = $('stage');
+const ACC = '#ffd23f', INKC = '#eaf7fb';
+// ---------- drawing kit: every element is driven from one onSeek hook ----------
+const el = (tag, attrs, parent = ink) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+const group = (parent = ink, attrs = {}) => el('g', attrs, parent);
+const path = (d, attrs = {}, parent = ink) => el('path', Object.assign({ d, pathLength: 1, 'stroke-dasharray': 1, 'stroke-dashoffset': 1, style: 'opacity:0' }, attrs), parent);
+// vis: fraction 0..1 from a window [a,b] with optional fade-out window
+const outF = (t, out) => (out ? 1 - pr(t, out[0], out[1]) : 1);
+const draw = (e, t0, t1, o = {}) => film.onSeek((t) => { const p = (o.ease || ((x) => x))(pr(t, t0, t1)); e.style.strokeDashoffset = 1 - p; e.style.opacity = (p > 0 ? 1 : 0) * outF(t, o.out); });
+const pop = (e, t0, dur = .22, o = {}) => film.onSeek((t) => { const p = pr(t, t0, t0 + dur); e.style.opacity = (p > 0 ? 1 : 0) * outF(t, o.out); e.style.transformBox = 'fill-box'; e.style.transformOrigin = 'center'; e.style.transform = `scale(${p > 0 ? eb(p) : 0})`; });
+const dtext = (str, x, y, size, t0, t1, o = {}) => {
+  const e = mk('div', 'dt' + (o.cls ? ' ' + o.cls : ''), `left:${x}px;top:${y}px;font-size:${size}px;${o.css || ''}`, o.parent || texts, str);
+  if (o.center) e.style.transform = 'translateX(-50%)';
+  film.onSeek((t) => { const p = pr(t, t0, t1); e.style.clipPath = `inset(-14px ${(1 - p) * 100}% -14px -8px)`; e.style.opacity = (p > 0 ? 1 : 0) * outF(t, o.out); });
+  return e;
+};
+// ---------- 0. the desk we came from, then the unroll ----------
+const fold = $('fold');
+film.onSeek((t) => {
+  const p = eio(pr(t, .05, 1.05));
+  fold.style.transform = `translate(${p * 1000}px,${p * 90}px) rotate(${p * 11}deg)`;
+  $('lamp').style.opacity = 1 - pr(t, .8, 2.2);
+  $('desk').style.display = t > 2.5 ? 'none' : '';
+  // the sheet comes off a rolled tube that sits at the left edge and rolls to the right until it leaves the frame (nothing is drawn before the sheet is open)
+  const u = eio(pr(t, .45, 2.45)), tx = 44 + u * 1290;
+  $('sheet').style.clipPath = `inset(0 ${Math.max(0, 1 - tx / 1280) * 100}% 0 0)`;
+  const R = $('roll'); R.style.left = (tx - 42) + 'px'; R.style.display = (t > .1 && tx < 1330) ? '' : 'none'; R.style.opacity = pr(t, .1, .4);
+  R.style.transform = `rotate(${Math.sin(t * 9) * (u > 0 && u < 1 ? .6 : 0)}deg)`;
+});
+draw(path('M22 22H1258V698H22Z', { 'stroke-width': 4 }), 2.3, 3.6, { ease: eo });
+draw(path('M34 34H1246V686H34Z', { 'stroke-width': 1.5 }), 2.5, 3.8, { ease: eo });
+for (const d of ['M640 22V46', 'M640 698V674', 'M22 360H46', 'M1258 360H1234']) draw(path(d), 2.6, 3.6);
+const tTB = W('g2', 'Solana');   // v8: title block drawn in at the start of "Solana" in "a Solana bunker" (Liam 16809), not at the start of the sheet
+const TB = { x: 700, y: 556, w: 300, h: 94 };   // v6: title block raised a little so the engineer (now kept at his normal place) points at the REV cell
+draw(path(`M${TB.x} ${TB.y}H${TB.x + TB.w}V${TB.y + TB.h}H${TB.x}Z`, { 'stroke-width': 3.5 }), tTB, tTB + 1.0, { ease: eo });
+draw(path(`M${TB.x} ${TB.y + 44}H${TB.x + TB.w}M${TB.x + 170} ${TB.y + 44}V${TB.y + TB.h}`, { 'stroke-width': 2 }), tTB + .5, tTB + 1.3);
+dtext('SOLANA BUNKER', TB.x + 12, TB.y + 5, 31, tTB + .6, tTB + 1.4, { css: 'letter-spacing:.04em' });
+// ---------- 1. the equation ("nerding out on math"), the question, the headline ----------
+const tMath = W('a2', 'math'), tNerd = W('a2', 'nerding'), tFasc = W('c1', 'fascinating'), tResearch = W('b2', 'research');
+const tCan = W('c2', 'Can'), tBunkE = W('c2', 'bunker', false);
+const eq = dtext('\u2212x\u00b2 + y\u00b2 = 1 \u2212 (121665/121666)\u00b7x\u00b2\u00b7y\u00b2', 640, 92, 50, tNerd - .3, tMath + .9, { center: true, out: [11.3, 11.9] });
+{ // scratched handwritten side note with an arrow at the equation
+  const o = { out: [11.3, 11.9] }, tN = tMath + .5;
+  const note = dtext('elliptic curve', 700, 196, 42, tN, tN + .8, Object.assign({ cls: 'acc', css: 'transform:rotate(-6deg);transform-origin:0 50%' }, o));
+  draw(path('M708 246q40 -10 70 4t68 -6t60 4', { stroke: ACC, 'stroke-width': 3 }), tN + .85, tN + 1.2, o);          // scratch under the note
+  draw(path('M690 214C650 200 640 168 700 140', { stroke: ACC, 'stroke-width': 4 }), tN + 1.0, tN + 1.4, o);
+  draw(path('M676 136L702 138L694 164', { stroke: ACC, 'stroke-width': 4 }), tN + 1.35, tN + 1.6, o);              // arrow head, aimed up at the equation
+}
+{ // faint construction circle + cross, drawn on "cool research question", rubbed out before the headline
+  const o = { out: [11.3, 11.9] };
+  draw(path('M640 400m-120 0a120 120 0 1 0 240 0a120 120 0 1 0 -240 0', { 'stroke-width': 2 }), tResearch - .1, tResearch + 1.5, Object.assign({ ease: eo }, o));
+  draw(path('M640 270V530M500 400H780', { 'stroke-width': 1.5 }), tResearch + .3, tResearch + 1.5, o);
+}
+const HLX = 770;   // headline centre: right of the narrator, who is on screen before it is written
+const HL = mk('div', 'abs', 'left:0;top:0;width:1280px;height:720px;transform-origin:0 0', texts);
+const hl1 = dtext('CAN WE BUILD A', HLX, 196, 100, tFasc - .1, tFasc + 1.6, { center: true, parent: HL });
+const hl2 = dtext('SOLANA BUNKER?', HLX, 316, 100, tCan + .05, tBunkE + .1, { center: true, parent: HL });
+const qg = group(ink), qBox = path('M0 0', { 'stroke-width': 5, stroke: ACC }, qg);   // box round the "?" (path set once the font has laid the line out)
+draw(qBox, tBunkE - .1, tBunkE + .4, { ease: eo });
+const pen = $('pencil');
+film.onSeek((t) => {
+  if (!qBox.dataset.set && hl2.offsetWidth) { const x2 = HLX + hl2.offsetWidth / 2 + 4, x1 = x2 - 74; qBox.setAttribute('d', `M${x1} 322H${x2}V424H${x1}Z`); qBox.dataset.set = 1; }
+  const s = eio(pr(t, 16.5, 17.3));
+  const tr = `translate(${lerp(0, 36, s)}px,${lerp(0, 30, s)}px) scale(${lerp(1, .3, s)})`;
+  HL.style.transform = tr; qg.style.transform = tr; qg.style.transformOrigin = '0 0';
+  let on = 0, nx = 0, ny = 0; const w = (e) => e.offsetWidth;
+  const p1 = pr(t, tFasc - .1, tFasc + 1.6), p2 = pr(t, tCan + .05, tBunkE + .1), pe = pr(t, tNerd - .3, tMath + .9);
+  if (pe > 0 && pe < 1) { on = 1; nx = 640 - w(eq) / 2 + pe * w(eq); ny = 150; }
+  else if (p1 > 0 && p1 < 1) { on = 1; nx = HLX - w(hl1) / 2 + p1 * w(hl1); ny = 290; }
+  else if (p2 > 0 && p2 < 1) { on = 1; nx = HLX - w(hl2) / 2 + p2 * w(hl2); ny = 410; }
+  pen.style.opacity = on; pen.style.transform = `translate(${nx - 4}px,${ny - 20 + 3 * Math.sin(t * 41)}px) rotate(-10deg)`;
+});
+// ---------- 2. the Ed25519 curve, keyholes, the PDA off the curve ----------
+const L2 = group(ink), L2T = mk('div', 'abs', 'inset:0', texts);
+film.onSeek((t) => { const o = 1 - .86 * pr(t, 31.1, 31.7) - .14 * pr(t, 40.9, 41.5); L2.style.opacity = o; L2T.style.opacity = o; });
+const CV = { x: 640, y: 400, R: 150 }, rad = (th) => CV.R * (1 + .09 * Math.cos(4 * th + .5) + .045 * Math.sin(2 * th + 1));
+const pt = (th, k = 1) => [CV.x + k * rad(th) * Math.cos(th), CV.y + k * rad(th) * Math.sin(th)];
+{
+  let d = ''; for (let i = 0; i <= 200; i++) { const th = i / 200 * Math.PI * 2, p = pt(th); d += (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1); }
+  draw(path(d + 'Z', { 'stroke-width': 6 }, L2), 17.5, 19.7, { ease: (p) => p });
+  const tOff = W('d2', 'off-chain'), tAddr = W('d2', 'address');
+  [-100, -62, -25, 20, 62, 105, 150, 195, 235].forEach((deg, i) => {
+    const th = deg * Math.PI / 180, p = pt(th), q = pt(th, 1.22), g = group(L2, { style: 'opacity:0' });
+    el('circle', { cx: p[0], cy: p[1], r: 9, fill: INKC, stroke: 'none' }, g);
+    const kh = group(g, { transform: `translate(${q[0]} ${q[1]}) scale(2.0)` });   // keyhole mark
+    el('circle', { cx: 0, cy: -4, r: 5, fill: INKC, stroke: 'none' }, kh); el('path', { d: 'M-3 -1L3 -1L5.5 12L-5.5 12Z', fill: INKC, stroke: 'none' }, kh);
+    pop(g, tOff + i * .1 + .25, .24);
+  });
+  dtext('every point on the curve\nhas a private key\nsomewhere', CV.x, CV.y - 30, 25, tAddr + .25, tAddr + 1.55, { center: true, parent: L2T, css: 'text-align:center' });
+  // compass swings (pivot = curve centre) and plots one point OFF the curve
+  const RO = 225, tPDA = W('d3', 'PDA'), A0 = 25 * Math.PI / 180, A1 = -12 * Math.PI / 180, tc0 = tPDA - .12, tc1 = tPDA + .55;
+  const OFF = [CV.x + RO * Math.cos(A1), CV.y + RO * Math.sin(A1)];
+  const arc = path(`M${CV.x + RO * Math.cos(A0)} ${CV.y + RO * Math.sin(A0)}A${RO} ${RO} 0 0 0 ${OFF[0]} ${OFF[1]}`, { 'stroke-width': 3, stroke: ACC }, L2);
+  draw(arc, tc0 + .05, tc1);
+  const cg = group(ink, {}), legA = el('line', { 'stroke-width': 7 }, cg), legB = el('line', { 'stroke-width': 9 }, cg), hinge = el('circle', { r: 13, fill: '#0a4a63', 'stroke-width': 5 }, cg), knob = el('line', { 'stroke-width': 8 }, cg), tipdot = el('circle', { r: 5, fill: ACC, stroke: 'none' }, cg), ped = el('circle', { r: 5, fill: INKC, stroke: 'none' }, cg);
+  film.onSeek((t) => {
+    const p = eio(pr(t, tc0, tc1)), phi = lerp(A0, A1, p), tip = [CV.x + RO * Math.cos(phi), CV.y + RO * Math.sin(phi)], Lg = 340;
+    const mid = [(CV.x + tip[0]) / 2, (CV.y + tip[1]) / 2], h = Math.sqrt(Lg * Lg - (RO / 2) ** 2), n = [-Math.sin(phi), Math.cos(phi)];
+    let H = [mid[0] + n[0] * h * -1, mid[1] + n[1] * h * -1]; if (H[1] > mid[1]) H = [mid[0] + n[0] * h, mid[1] + n[1] * h];
+    const lift = pr(t, tc1 + .12, tc1 + .45), a = (t >= tc0 - .1 && lift < 1) ? pr(t, tc0 - .1, tc0 + .1) * (1 - lift) : 0;
+    cg.style.opacity = a; cg.style.transform = `translate(0,${-lift * 60}px)`;
+    legA.setAttribute('x1', CV.x); legA.setAttribute('y1', CV.y); legA.setAttribute('x2', H[0]); legA.setAttribute('y2', H[1]);
+    legB.setAttribute('x1', H[0]); legB.setAttribute('y1', H[1]); legB.setAttribute('x2', tip[0]); legB.setAttribute('y2', tip[1]);
+    hinge.setAttribute('cx', H[0]); hinge.setAttribute('cy', H[1]);
+    const dir = [H[0] - mid[0], H[1] - mid[1]], dl = Math.hypot(dir[0], dir[1]);
+    knob.setAttribute('x1', H[0]); knob.setAttribute('y1', H[1]); knob.setAttribute('x2', H[0] + dir[0] / dl * 46); knob.setAttribute('y2', H[1] + dir[1] / dl * 46);
+    tipdot.setAttribute('cx', tip[0]); tipdot.setAttribute('cy', tip[1]); ped.setAttribute('cx', CV.x); ped.setAttribute('cy', CV.y);
+  });
+  // the off-curve point: a bold accent ring, blinking while the question is asked
+  const og = group(L2, { style: 'opacity:0' }); el('circle', { cx: OFF[0], cy: OFF[1], r: 13, fill: ACC, stroke: 'none' }, og); el('circle', { cx: OFF[0], cy: OFF[1], r: 27, stroke: ACC, 'stroke-width': 5 }, og);
+  const tO = tc1 + .05, tThink = W('e1', 'think');
+  film.onSeek((t) => { const p = pr(t, tO, tO + .2); let o = p > 0 ? 1 : 0; if (t > 23.45 && t < 26.9) o = (Math.floor((t - 23.45) * 3.5) % 2) ? .15 : 1; og.style.opacity = o; og.style.transformBox = 'fill-box'; og.style.transformOrigin = 'center'; og.style.transform = `scale(${p > 0 ? eb(p) : 0})`; });
+  dtext('NO PRIVATE\nKEY EXISTS', OFF[0] + 30, OFF[1] + 30, 34, tO + .08, 23.4, { cls: 'acc', parent: L2T });
+}
+// ---------- the characters ----------
+const CHINX = 345, FACE_TOP = 225, FACE_H = 665;   // key frame (760x1100): chin x, hairline y, hairline-to-chin px (the face)
+const edl = S4.edl;
+const pyr = (x) => { const f = Math.floor(x), d = x - f; return d < .5 ? f : d > .5 ? f + 1 : (f % 2 === 0 ? f : f + 1); };   // python round(): pipeline/s04-heads.py numbers the frames with it
+const spriteInfo = (who) => { const s = edl.filter((x) => x.who === who), f0 = pyr(s[0].out_in * 30), l = s[s.length - 1]; return { f0, n: pyr(l.out_in * 30) - f0 + pyr((l.out_out - l.out_in) * 30) + 3 }; };
+// A character = Liam's head sprite (behind) + a generated body PNG with the face oval cut out (in front, so the collar covers the neck) [+ hat overlay].
+// poses: { name: { file, mirror, hat } }; k = scene px per PNG px (chosen so the face, hairline to chin, equals the oval's height on that body); pivot = PNG point the transform turns about.
+function makeChar(id, who, poses, k, pivot) {
+  const root = mk('div', 'char', `width:1024px;height:1536px;transform-origin:${pivot[0]}px ${pivot[1]}px`, stage); root.id = id;
+  const info = spriteInfo(who), hs = GEN.FACE / FACE_H, dw = 760 * hs, dh = 1100 * hs, cols = 20, rows = Math.ceil(info.n / cols);
+  const hd = mk('div', 'hd', `width:${dw}px;height:${dh}px`, root);
+  const sp = mk('div', '', `position:absolute;left:0;top:0;width:${dw}px;height:${dh}px;background:url(heads/${who}.png) 0 0/${cols * dw}px ${rows * dh}px no-repeat`, hd);
+  const wr = {};
+  for (const [name, d] of Object.entries(poses)) {
+    const w = mk('div', '', `position:absolute;left:0;top:0;width:1024px;height:1536px;display:none;${d.mirror ? 'transform:scaleX(-1);' : ''}`, root);
+    mk('img', '', 'left:0;top:0', w).src = 'assets/bodies/holed/' + d.file + '.png';
+    const g = GEN.bodies[d.file]; d.cx = d.mirror ? 1024 - g.cx : g.cx; d.top = g.bot - GEN.FACE;
+    if (d.hat) mk('img', '', `left:${g.cx - 512}px;top:0`, w).src = 'assets/bodies/4-engineer-overlay-hardhat.png';
+    wr[name] = w;
+  }
+  let cur = -1, pose = '';
+  return { root, k,
+    setHead(t) { const i = Math.max(0, Math.min(info.n - 1, Math.round(t * 30 + 1e-6) - info.f0)); if (i !== cur) { sp.style.backgroundPosition = `${-(i % cols) * dw}px ${-Math.floor(i / cols) * dh}px`; cur = i; } },
+    setPose(p) { if (p === pose) return; pose = p; for (const q in wr) wr[q].style.display = q === p ? 'block' : 'none'; const d = poses[p]; hd.style.left = (d.cx - CHINX * hs) + 'px'; hd.style.top = (d.top - FACE_TOP * hs) + 'px'; },
+    place(px, py, rot, sc) { root.style.transform = `translate(${px - pivot[0]}px,${py - pivot[1]}px) rotate(${rot}deg) scale(${k * sc})`; } };
+}
+// ---------- 3. the pump.fun page (real screenshot of the live site, header included), with our fake $BUNKER card and rising chart drawn over its feed ----------
+const PUMP = { x: 222, y: 165, w: 835, h: 522 }, PSC = 835 / 1440;
+const pump = mk('div', '', 'position:absolute;left:0;top:0', stage);
+const pumpP = mk('div', '', `position:absolute;left:${PUMP.x}px;top:${PUMP.y}px;width:${PUMP.w}px;height:${PUMP.h}px;overflow:hidden;border-radius:10px;border:2px solid #2b3340;box-shadow:0 20px 40px rgba(0,0,0,.55);opacity:0`, pump);
+const candles = [];
+function panel(parent) {
+  const c = mk('div', '', 'position:absolute;left:0;top:0;width:100%;height:100%;overflow:hidden;background:#0b0d10', parent);
+  const inner = mk('div', '', `position:absolute;left:0;top:0;width:1440px;height:900px;transform:scale(${PSC});transform-origin:0 0;font-family:Inter,sans-serif;color:#e6edf3`, c);
+  mk('img', '', 'position:absolute;left:0;top:0;width:1440px;height:900px', inner).src = 'assets/pumpfun/pumpfun-live.png';
+  const card = mk('div', '', 'position:absolute;left:530px;top:108px;width:894px;height:782px;background:#0d1015;border-left:1px solid #26303c;border-radius:12px 0 0 0', inner);
+  card.insertAdjacentHTML('beforeend', `<div style="position:absolute;left:30px;top:28px;width:84px;height:84px;border-radius:18px;background:radial-gradient(circle at 35% 30%,#ffe27a,#e0a100);font:800 36px/84px Inter;text-align:center;color:#3a2800">SB</div>
+    <div style="position:absolute;left:132px;top:26px;font:800 44px/50px Inter">$BUNKER <span style="font:600 24px Inter;color:#8b98a8">Solana Bunker Coin</span></div>
+    <div style="position:absolute;left:132px;top:84px;font:500 24px Inter;color:#8b98a8">created 2m ago · 3,402 holders</div>
+    <div style="position:absolute;right:34px;top:20px;text-align:right"><div style="font:500 22px Inter;color:#8b98a8">Market cap</div><div style="font:800 62px/66px Inter;color:#4ade80">$4.20M</div><div style="font:700 26px Inter;color:#4ade80">▲ 312%</div></div>
+    <div style="position:absolute;left:30px;bottom:26px;width:834px;height:74px;border-radius:14px;background:#86efac;color:#04210f;font:800 32px/74px Inter;text-align:center">Buy $BUNKER</div>`);
+  const sv = document.createElementNS(NS, 'svg'); sv.setAttribute('width', 834); sv.setAttribute('height', 520); sv.setAttribute('viewBox', '0 0 834 520'); sv.style.cssText = 'position:absolute;left:30px;top:170px'; card.appendChild(sv);
+  const r = film.rng(77); let g = ''; for (let i = 1; i < 6; i++) g += `<line x1="0" x2="834" y1="${i * 86}" y2="${i * 86}" stroke="#1d2631" stroke-width="2"/>`;
+  sv.innerHTML = g; const cs = []; let price = 470; const n = 34;
+  for (let i = 0; i < n; i++) { const up = r() < .72, step = (i > 28 ? 34 : 10) + r() * 12, o = price, cl = up ? price - step : price + step * .6; price = Math.max(40, cl); const col = up ? '#26d97a' : '#ff5d6c', hi = Math.min(o, cl) - 8 - r() * 14, lo = Math.max(o, cl) + 6 + r() * 10;
+    const x = 22 + i * 23.5, gg = el('g', {}, sv); el('line', { x1: x, x2: x, y1: hi, y2: lo, stroke: col, 'stroke-width': 3 }, gg); el('rect', { x: x - 8, y: Math.min(o, cl), width: 16, height: Math.max(5, Math.abs(o - cl)), fill: col, stroke: 'none' }, gg); cs.push(gg); }
+  return { c, cs };
+}
+const live = panel(pumpP); live.cs.forEach((g, i) => candles.push([g, 31.4 + i * .13]));
+film.onSeek((t) => { pumpP.style.opacity = t < tShat ? pr(t, 31.2, 31.8) : 0; for (const [g, ts] of candles) g.style.opacity = t >= ts ? 1 : 0; });
+// cracks and shards
+const tShat = W('f2', 'risk') - .05;
+const crackSvg = document.createElementNS(NS, 'svg'); crackSvg.setAttribute('width', 1280); crackSvg.setAttribute('height', 720); crackSvg.style.cssText = 'position:absolute;left:0;top:0'; stage.appendChild(crackSvg);
+const CC = [PUMP.x + 440, PUMP.y + 250], CP = [440, 250];
+{
+  const r = film.rng(5), ang = [], rin = [];
+  for (let j = 0; j < 8; j++) { ang.push((j * 45 + (r() - .5) * 26) * Math.PI / 180); rin.push(130 + r() * 90); }
+  ang.push(ang[0] + Math.PI * 2); rin.push(rin[0]);
+  ang.forEach((a, j) => { if (j < 8) { const L = 460, w = [0, 0].map(() => 0); let d = `M${CC[0]} ${CC[1]}`; let x = CC[0], y = CC[1]; for (let s = 1; s <= 4; s++) { const aa = a + (r() - .5) * .35, ll = L / 4; x += Math.cos(aa) * ll; y += Math.sin(aa) * ll; d += `L${x.toFixed(1)} ${y.toFixed(1)}`; }
+    const p = path(d, { stroke: '#fff', 'stroke-width': 3 }, crackSvg); draw(p, tShat - .22, tShat, { out: [tShat + .02, tShat + .05] }); } });
+  const shards = [], P = (a, rr) => [(Math.cos(a) * rr + CP[0]).toFixed(1), (Math.sin(a) * rr + CP[1]).toFixed(1)];
+  const defs = [];
+  for (let j = 0; j < 8; j++) { const a0 = ang[j], a1 = ang[j + 1], r0 = rin[j], r1 = rin[j + 1];
+    defs.push({ poly: [CP, P(a0, r0), P(a1, r1)], a: (a0 + a1) / 2, rr: 90, v: 330 + r() * 160, w: (r() - .5) * 420 });
+    defs.push({ poly: [P(a0, r0), P(a1, r1), P(a1, 1400), P(a0, 1400)], a: (a0 + a1) / 2, rr: 300, v: 170 + r() * 150, w: (r() - .5) * 300 }); }
+  for (const s of defs) { const sh = mk('div', 'shard', `left:${PUMP.x}px;top:${PUMP.y}px;width:${PUMP.w}px;height:${PUMP.h}px;border:2px solid #2b3340;background:#0d1117;clip-path:polygon(${s.poly.map((p) => p[0] + 'px ' + p[1] + 'px').join(',')});display:none`, pump);
+    sh.appendChild(panel(sh).c); s.el = sh; s.cx = CP[0] + Math.cos(s.a) * s.rr; s.cy = CP[1] + Math.sin(s.a) * s.rr; sh.style.transformOrigin = `${s.cx}px ${s.cy}px`; shards.push(s); }
+  film.onSeek((t) => { const dt = t - tShat;
+    for (const s of shards) { if (dt < 0 || dt > 1.4) { s.el.style.display = 'none'; continue; } s.el.style.display = 'block';
+      const x = Math.cos(s.a) * s.v * dt, y = Math.sin(s.a) * s.v * dt + 1150 * dt * dt / 2 - 120 * dt;
+      s.el.style.transform = `translate(${x}px,${y}px) rotate(${s.w * dt}deg)`; s.el.style.opacity = 1 - pr(dt, .8, 1.3); } });
+}
+// coins
+{
+  const logos = ['dogecoin.png', 'shiba.png', 'pepe.jpg', 'bonk.jpg', 'wif.jpg', 'popcat.jpg', 'floki.png', 'fartcoin.jpg'], r = film.rng(11), coins = [];
+  const tRain = W('f2', 'AI') + .15, tEnd = W('f2', 'risk') + .1;
+  for (let i = 0; i < 42; i++) { const sz = 52 + r() * 34, im = mk('img', 'coin', `width:${sz}px;height:${sz}px;display:none`, stage); im.src = 'assets/coins/' + logos[i % 8];
+    coins.push({ im, sz, x: 90 + r() * 1100, t0: tRain + (tEnd - tRain) * (i / 42) + r() * .1, v: 520 + r() * 280, rot0: r() * 360, w: (r() - .5) * 420 }); }
+  film.onSeek((t) => { for (const c of coins) { const dt = t - c.t0; if (dt < 0 || dt > 2.2) { c.im.style.display = 'none'; continue; } c.im.style.display = 'block';
+    c.im.style.transform = `translate(${c.x}px,${-110 + c.v * dt}px) rotate(${c.rot0 + c.w * dt}deg)`; } });
+}
+// "ARTIFICIAL INTELLIGENCE" written in full, ARTIFICIAL scratched out, SUPER written under it: reads SUPER INTELLIGENCE
+{
+  const tA = W('f1', 'artificial'), tS = W('f1', 'super'), tI = W('f1', 'intelligence', false), out = [41, 41.6];
+  dtext('ARTIFICIAL INTELLIGENCE', 420, 30, 46, tA - .25, tI - .1, { out });
+  draw(path('M424 54L650 50M426 64L648 60', { 'stroke-width': 4, stroke: ACC }), tS - .3, tS + .05, { out });   // scratch-out
+  const sp = dtext('SUPER', 440, 76, 52, tS + .05, tS + .5, { cls: 'acc', out, css: 'transform:rotate(-4deg);transform-origin:0 50%' });
+}
+// big key words: PDA (with what it stands for) and Ed25519
+{
+  const cards = mk('div', '', 'position:absolute;inset:0;pointer-events:none', $('shake')); $('shake').insertBefore(cards, $('fanDim'));
+  const tP = W('d3', 'PDA') - .05, tE = W('g3', 'ED25519') - .1, tEe = W('g3', 'algorithm') + .4;
+  const pda = mk('div', '', 'position:absolute;left:770px;top:30px;width:480px;text-align:center;opacity:0', cards, '<div style="font:400 210px/1.0 Anton,Impact,sans-serif;color:#ffd23f;text-shadow:0 5px 0 rgba(0,20,30,.55)">PDA</div><div style="font:400 36px/1.1 \'Architects Daughter\',cursive;color:#eaf7fb;margin-top:-6px;text-shadow:0 2px 0 rgba(0,20,30,.6)">program derived address</div>');
+  film.onSeek((t) => { const p = pr(t, tP, tP + .22); pda.style.opacity = (p > 0 ? 1 : 0) * (1 - pr(t, 25.1, 25.4)); pda.style.transform = `scale(${lerp(.4, 1, eb(p))})`; });
+  const dim = mk('div', '', 'position:absolute;inset:0;background:#01202c;opacity:0', cards);
+  const ed = mk('div', '', 'position:absolute;left:0;top:190px;width:1280px;text-align:center;opacity:0', cards, '<div style="font:400 250px/1.0 Anton,Impact,sans-serif;color:#ffd23f;text-shadow:0 6px 0 rgba(0,20,30,.6),0 0 40px rgba(0,20,30,.6)">Ed25519</div><div style="font:400 44px/1.1 \'Architects Daughter\',cursive;color:#eaf7fb;text-shadow:0 2px 0 rgba(0,20,30,.7)">immune to any future weakness in Ed25519</div>');
+  film.onSeek((t) => { const p = pr(t, tE, tE + .2), o = (p > 0 ? 1 : 0) * (1 - pr(t, tEe, tEe + .3)); ed.style.opacity = o; dim.style.opacity = .5 * o; ed.style.transform = `scale(${lerp(.5, 1, eb(p))})`; });
+}
+// ---------- the three characters ----------
+const KP = .5795 * .8, KO = .3598 * .8;   // 153 px / 95 px head sprites over a 231 px face
+const NAR = { x: -40, y: 625, rot: 25 };   // narrator: pivot (screen px), rotation (deg); scale = KP
+const phys = makeChar('phys', 'physicist', { pt: { file: '5-physicist-professor-point' } }, KP, [395, 900]);
+const joe = makeChar('joe', 'joe', { walk: { file: '2-street-walking' }, rest: { file: '2-street-hands-in-pockets' }, up: { file: '2-street-celebrate' }, fr: { file: '2-street-hands-on-head' } }, KO, [512, 1450]);
+const eng = makeChar('eng', 'engineer', { pt: { file: '4-engineer-point-clipboard', mirror: 1, hat: 1 }, key: { file: '4-engineer-holding-key', mirror: 1, hat: 1 }, thumb: { file: '4-engineer-thumbs-up', mirror: 1, hat: 1 }, pd: { file: '4-engineer-point-down', mirror: 1, hat: 1 } }, KO, [512, 1450]);
+const FLOOR_Y = 712;
+// physicist: tilts in from the left edge at 25 degrees, points at the curve, freezes when his part is over
+{
+  const tIn = W('c1', 'fascinating') - 2.4, tOut = W('e1', 'is', false) + .35;
+  film.onSeek((t) => { phys.setPose('pt'); phys.setHead(t);
+    const p = pr(t, tIn, tIn + .9), e = eb(p), sway = (1 - pr(t, tOut, tOut + .01)) * Math.sin((t - tIn) * 2.4) * 1.1;
+    phys.root.style.display = t >= tIn ? 'block' : 'none';
+    phys.place(lerp(-340, NAR.x, e), NAR.y + (1 - e) * 50, lerp(8, NAR.rot, e) + sway, 1); });
+}
+// correction flash: he mis-says "off-chain"; "*off-curve*" pops beside the lab coat, holds, pops out
+{
+  const tF = W('d2', 'off-chain') + .05, fl = mk('div', '', `position:absolute;left:175px;top:232px;font:400 64px/72px var(--draft);color:${ACC};white-space:nowrap;z-index:50;transform-origin:0 50%;text-shadow:0 0 3px #06374c,3px 3px 0 #06374c,-3px 3px 0 #06374c,3px -3px 0 #06374c,-3px -3px 0 #06374c;opacity:0`, stage, '*off-curve*');
+  film.onSeek((t) => { const a = pr(t, tF, tF + .16), b = pr(t, tF + .84, tF + 1.0); fl.style.opacity = (a > 0 && b < 1) ? 1 : 0; fl.style.transform = `rotate(-4deg) scale(${a <= 0 || b >= 1 ? 0 : b > 0 ? 1 - eo(b) : eb(a)})`; });
+}
+// Joe: slides up small from the bottom centre, grows while tilting from side to side (walking pose), rests, hands up on "risk", then (v6) hard-cuts to hands-on-head as the glass shatters and freezes
+{
+  const tIn = W('f1', 'So') - .45, tGrow = tIn + 3.5, tUp = tShat + .08, tFr = tUp + .4;
+  film.onSeek((t) => { joe.setHead(t); joe.setPose(t >= tFr ? 'fr' : t >= tUp ? 'up' : t >= tGrow ? 'rest' : 'walk');
+    const p = pr(t, tIn, tGrow), sc = lerp(.15, 1, eo(p)), tilt = 7 * Math.sin((t - tIn) * 2 * Math.PI / .85) * (1 - pr(t, tGrow - .6, tGrow + .35));
+    joe.root.style.display = t >= tIn ? 'block' : 'none';
+    joe.place(600, FLOOR_Y + (1 - eo(p)) * 80, tilt, sc); });
+}
+// engineer: cue = the vault door starts drafting. Walks in off the right (two stop-frame poses), fully in frame 1.5 s later, then points (mirrored so he points left at the door)
+{
+  const CLN = { pt: [413, 1441], key: [511.5, 1464], thumb: [512, 1465], pd: [412.5, 1442] };   // measured on holed/<pose>.png: zip centre x, boot baseline y (PNG px, unmirrored); all four poses are mirrored
+  const ENGOFF = {}; for (const n in CLN) ENGOFF[n] = [-KO * ((1024 - CLN[n][0]) - (1024 - CLN.pt[0])), -KO * (CLN[n][1] - CLN.pt[1])];
+  const tA = W('g2', 'Solana') - .1, tIn = tA - .3, tStop = tIn + 1.5, tRest = W('g3', 'algorithm', false) + .25, tPoint2 = W('h1', 'we') - .1, X = 1105, tPD = W('h2', 'times', false);   // v7: hard cut to the point-down pose at the end of "three times" (was "Actually", Liam 16759); frozen there, fingertip just above the REV cell of the title block
+  film.onSeek((t) => { eng.setHead(t);
+    const walking = t >= tIn && t < tStop, ph = Math.floor((t - tIn) / .2) % 2;
+    const pd = t >= tPD;
+    eng.setPose(pd ? 'pd' : walking ? (ph ? 'key' : 'pt') : (t >= tRest && t < tPoint2 ? 'thumb' : 'pt'));
+    eng.root.style.display = t >= tIn ? 'block' : 'none';
+    const env = 1 - eio(pr(t, tStop - .35, tStop)), p = pr(t, tIn, tStop), bob = walking ? -Math.abs(Math.sin((t - tIn) * Math.PI / .2)) * 9 * env : 0, sway = walking ? 3 * Math.sin((t - tIn) * Math.PI / .2) * env : 0;
+    const pn = pd ? 'pd' : walking ? (ph ? 'key' : 'pt') : (t >= tRest && t < tPoint2 ? 'thumb' : 'pt'), o = ENGOFF[pn];   // v6: every pose lands its torso centre line (zip) and its feet on the clipboard pose's x and baseline
+    eng.place(lerp(1560, X, p) + o[0], FLOOR_Y + bob + o[1], sway, 1); });
+}
+// ---------- 4. the vault door drafts itself ----------
+const VC = { x: 880, y: 262, R: 150 };
+function vault(parent, cx, cy, R, level, anim) {
+  const o = { rings: [], bolts: [], spokes: [], hinges: [], extra: [] }, sw = [3, 3.5, 4.5][level], mp = (d, a) => path(d, Object.assign({ 'stroke-width': sw }, a), parent);
+  const circ = (r) => `M${cx} ${cy}m${-r} 0a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 ${-2 * r} 0`;
+  const radii = [[1, .86, .62], [1.03, .88, .7, .6], [1.08, .94, .8, .66, .56]][level];
+  radii.forEach((k, i) => o.rings.push(mp(circ(R * k), { 'stroke-width': i === 0 ? sw + 2 : sw })));
+  const nb = [8, 12, 16][level]; for (let i = 0; i < nb; i++) { const a = (i / nb) * Math.PI * 2, rr = R * (level === 0 ? .93 : level === 1 ? .94 : 1.0); const g = el('circle', { cx: cx + rr * Math.cos(a), cy: cy + rr * Math.sin(a), r: R * (.045 + .005 * level), fill: INKC, stroke: 'none', style: 'opacity:0' }, parent); o.bolts.push(g); }
+  const ns = [4, 5, 6][level]; for (let i = 0; i < ns; i++) { const a = (i / ns) * Math.PI * 2 - Math.PI / 2, r0 = R * .17, r1 = R * (level === 2 ? .52 : .58); o.spokes.push(mp(`M${cx + r0 * Math.cos(a)} ${cy + r0 * Math.sin(a)}L${cx + r1 * Math.cos(a)} ${cy + r1 * Math.sin(a)}`, { 'stroke-width': sw + 1 })); const kn = el('circle', { cx: cx + r1 * Math.cos(a), cy: cy + r1 * Math.sin(a), r: R * .045, fill: INKC, stroke: 'none', style: 'opacity:0' }, parent); o.bolts.push(kn); }
+  o.rings.push(mp(circ(R * .17), { 'stroke-width': sw + 1 }));
+  const nh = [2, 3, 4][level]; for (let i = 0; i < nh; i++) { const yy = cy - R * .6 + i * (R * 1.2 / Math.max(1, nh - 1)); o.hinges.push(mp(`M${cx - R * 1.02} ${yy - 15}H${cx - R * 1.02 - 24}V${yy + 15}H${cx - R * 1.02}`, { 'stroke-width': sw })); }
+  if (level > 0) { const nl = level === 1 ? 2 : 4; for (let i = 0; i < nl; i++) { const a = [ -Math.PI / 4, Math.PI / 4, 3 * Math.PI / 4, -3 * Math.PI / 4][i], x = cx + R * 1.06 * Math.cos(a), y = cy + R * 1.06 * Math.sin(a);
+    o.extra.push(mp(`M${x - 12} ${y - 9}H${x + 12}V${y + 9}H${x - 12}Z`, { 'stroke-width': sw })); } }
+  return o;
+}
+{
+  const V = vault(ink, VC.x, VC.y, VC.R, 0), tA = W('g2', 'Solana') - .1;
+  V.rings.forEach((p, i) => draw(p, tA + i * .55, tA + i * .55 + 1.0, { ease: eo }));
+  V.bolts.forEach((b, i) => pop(b, tA + 2.4 + i * .075, .2));
+  V.spokes.forEach((p, i) => draw(p, tA + 3.4 + i * .1, tA + 3.9 + i * .1));
+  V.hinges.forEach((p, i) => draw(p, tA + 4.8 + i * .15, tA + 5.3 + i * .15));
+  // centre lines and dimension lines
+  const t5 = tA + 5.3;
+  draw(path(`M${VC.x - VC.R - 40} ${VC.y}H${VC.x + VC.R + 40}M${VC.x} ${VC.y - VC.R - 40}V${VC.y + VC.R + 40}`, { 'stroke-width': 1.5, 'stroke-dasharray': 1 }), tA + 1.2, tA + 3.0, {});
+  const dy = VC.y + VC.R + 36;
+  draw(path(`M${VC.x - VC.R} ${dy - 14}V${dy + 14}M${VC.x + VC.R} ${dy - 14}V${dy + 14}M${VC.x - VC.R} ${dy}H${VC.x + VC.R}M${VC.x - VC.R} ${dy}l14 -7M${VC.x - VC.R} ${dy}l14 7M${VC.x + VC.R} ${dy}l-14 -7M${VC.x + VC.R} ${dy}l-14 7`, { 'stroke-width': 2.5 }), t5, t5 + .9);
+  dtext('Ø 3000', VC.x, dy + 10, 30, t5 + .5, t5 + 1.1, { center: true });
+  dtext('SOLANA BUNKER VAULT DOOR', VC.x, VC.y - VC.R - 62, 24, tA + .2, tA + 1.4, { center: true });
+  // title block cells
+  const tShe = tA + 6.0;
+  dtext('SHEET 1 OF 3', TB.x + 10, TB.y + 54, 21, tShe, tShe + .7);
+  const revs = [['A', tShe + .8, W('h2', 'three')], ['B', W('h2', 'three'), W('h2', 'times')], ['C', W('h2', 'times'), 999]];
+  for (const [ch, a, b] of revs) { const e = mk('div', 'dt acc', `left:${TB.x + 182}px;top:${TB.y + 50}px;font-size:26px;transform-origin:0 50%`, texts, 'REV ' + ch);
+    film.onSeek((t) => { const p = pr(t, a, a + .12); e.style.opacity = (t >= a && t < b) ? 1 : 0; e.style.transform = `scaleY(${p > 0 ? p : 0})`; }); }
+  // everything of beat 2 is already faded: the sheet is clean for the door
+  window.VAULT_T = tA;
+}
+// ---------- 5. three sheets fan out ----------
+{
+  const tEach = W('h3', 'Each'), tVer = W('h3', 'version'), tBet = W('h3', 'better');
+  film.onSeek((t) => { $('fanDim').style.opacity = .5 * pr(t, tEach - .1, tEach + .3); });
+  [[tEach, 0, 270, 420, -8], [tVer, 1, 640, 400, 0], [tBet, 2, 1010, 420, 8]].forEach(([ta, lv, cx, cy, rot]) => {
+    const c = mk('div', 'fcard', `left:${cx}px;top:${cy}px;opacity:0`, $('fan')); c.insertAdjacentHTML('beforeend', '<div class="gr"></div>');
+    const sv = document.createElementNS(NS, 'svg'); sv.setAttribute('width', 400); sv.setAttribute('height', 290); sv.setAttribute('viewBox', '0 0 400 290'); sv.setAttribute('fill', 'none'); sv.setAttribute('stroke', INKC); sv.setAttribute('stroke-width', 3); sv.setAttribute('stroke-linecap', 'round'); c.appendChild(sv);
+    const v = vault(sv, 150, 135, 96, lv); [...v.rings, ...v.spokes, ...v.hinges, ...v.extra].forEach((p) => { p.style.opacity = 1; p.style.strokeDashoffset = 0; }); v.bolts.forEach((b) => (b.style.opacity = 1));
+    el('path', { d: 'M262 196H392V282H262ZM262 226H392M262 254H392', 'stroke-width': 2 }, sv);
+    const tx = (s, x, y, sz, col) => { const e = el('text', { x, y, fill: col || INKC, stroke: 'none', 'font-family': 'Architects Daughter', 'font-size': sz }, sv); e.textContent = s; };
+    tx('SOLANA BUNKER', 267, 217, 15); tx('SHEET ' + (lv + 1) + ' OF 3', 267, 245, 15); tx('REV ' + 'ABC'[lv], 267, 274, 20, ACC);
+    tx('VERSION ' + (lv + 1), 20, 270, 26, ACC);
+    film.onSeek((t) => { const p = pr(t, ta, ta + .38), e = eb(p); c.style.opacity = p > 0 ? 1 : 0; c.style.transform = `translate(${lerp(640 - cx, 0, e)}px,${lerp(360 - cy, 0, e)}px) rotate(${rot * e}deg) scale(${lerp(.2, .88, e)})`; });
+  });
+}
+// ---------- camera thumps ----------
+{ const hits = [[tShat, 12], [W('f1', 'super'), 4]];
+  film.onSeek((t) => { let y = 0, r = 0; for (const [h, a] of hits) { const d = t - h; if (d >= 0 && d < .5) { const e = Math.exp(-d * 8) * Math.sin(d * 50); y += a * e; r += a * e * .04; } } $('shake').style.transform = `translate(0,${y.toFixed(2)}px) rotate(${r.toFixed(3)}deg)`; }); }
+</script></body></html>

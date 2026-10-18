@@ -1,0 +1,130 @@
+<!doctype html><html data-duration="6" data-fps="30"><head><meta charset="utf-8">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
+<style>
+/* Slide 4 character kit, STAND-IN bodies. One asset per scene second (capture with --still=0,1,2,3,4,5):
+     ?layer=back   body only (no neck, no head), transparent
+     ?layer=front  collar / neckline, drawn over the bottom of the neck in the scene, transparent
+   The vector figures are the film/floating-head ones (physicist, man on the street, bunker engineer), drawn with the
+   figure centred at x=640, floor (hem for the physicist) at y=700, scale per asset in assets/bodies/anchors.js; pipeline/s04-bodies.sh crops 640x720+320+0 into assets/bodies/<asset>.png / <asset>-front.png.
+   When the generated bodies arrive they replace the PNGs (same crop box, same anchor in assets/bodies/anchors.json). */
+html,body{background:transparent !important}
+body.layer-front .back,body.layer-back .front{display:none}
+svg{position:absolute;left:0;top:0}
+</style></head><body>
+<div class="back"><svg width="1280" height="720" viewBox="0 0 1280 720"><g id="backG"></g></svg></div>
+<div class="front"><svg width="1280" height="720" viewBox="0 0 1280 720"><g id="frontG"></g></svg></div>
+<script src="lib/film.js"></script><script src="assets/bodies/anchors.js"></script>
+<script>
+const f = window.__film, L = new URLSearchParams(location.search).get('layer');
+if (L) document.body.classList.add('layer-' + L);
+const OL = '#0b1120', SK = '#e0a77f', SKD = '#c68a68';
+
+// ---------- helpers (all coordinates local to the figure: x 0 = centre, y absolute) ----------
+const poly = (pts) => pts.map((p) => p.join(',')).join(' ');
+const limb = (pts, w, col) => `<polyline points="${poly(pts)}" fill="none" stroke="${OL}" stroke-width="${w + 4}" stroke-linecap="round" stroke-linejoin="round"/><polyline points="${poly(pts)}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+const shape = (d, fill, extra = '') => `<path d="${d}" fill="${fill}" stroke="${OL}" stroke-width="2.5" stroke-linejoin="round" ${extra}/>`;
+const unit = (a, b) => { const dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy); return [dx / l, dy / l]; };
+const add = (a, d, k) => [a[0] + d[0] * k, a[1] + d[1] * k];
+const mx = (s, pts) => pts.map(([x, y]) => [s * x, y]);
+
+// hand: kind rest | point | open ; col = skin or glove colour
+function hand(kind, el, wr, col) {
+  const d = unit(el, wr), c = add(wr, d, 7);
+  let g = '';
+  if (kind === 'point') {
+    const tip = add(c, d, 19);
+    g += `<line x1="${c[0]}" y1="${c[1]}" x2="${tip[0]}" y2="${tip[1]}" stroke="${OL}" stroke-width="8" stroke-linecap="round"/><line x1="${c[0]}" y1="${c[1]}" x2="${tip[0]}" y2="${tip[1]}" stroke="${col}" stroke-width="4" stroke-linecap="round"/>`;
+  }
+  if (kind === 'open') {
+    for (const a of [-34, -12, 10, 32]) { const r = a * Math.PI / 180, fd = [d[0] * Math.cos(r) - d[1] * Math.sin(r), d[0] * Math.sin(r) + d[1] * Math.cos(r)], tip = add(c, fd, 17);
+      g += `<line x1="${c[0]}" y1="${c[1]}" x2="${tip[0]}" y2="${tip[1]}" stroke="${OL}" stroke-width="7" stroke-linecap="round"/><line x1="${c[0]}" y1="${c[1]}" x2="${tip[0]}" y2="${tip[1]}" stroke="${col}" stroke-width="3.5" stroke-linecap="round"/>`; }
+  }
+  return g + `<circle cx="${c[0]}" cy="${c[1]}" r="8.5" fill="${col}" stroke="${OL}" stroke-width="2.5"/>`;
+}
+// arm key-points, for the outward side s (+1 = viewer's right). shoulder (56,188)
+const SH = [50, 190];
+const ARM = {
+  rest:   [SH, [63, 264], [62, 336]],
+  point:  [SH, [97, 136], [135, 87]],
+  up:     [SH, [92, 160], [94, 100]],
+  pocket: [SH, [60, 264], [47, 328]],
+  mag:    [SH, [66, 262], [84, 208]],
+};
+// full arm: sleeve colour over skin; sleeveFrac 1 = long sleeve to the wrist, 0.5 = short sleeve to mid upper-arm...
+function arm(s, kind, hk, o) {
+  const pts = mx(s, ARM[kind]), [sh, el, wr] = pts;
+  let g = limb(pts, o.skinW || 14, o.skin || SK);
+  const sleeveEnd = o.sleeve === 'short' ? [sh[0] + (el[0] - sh[0]) * .55, sh[1] + (el[1] - sh[1]) * .55] : wr;
+  const sp = o.sleeve === 'short' ? [sh, sleeveEnd] : pts;
+  g += limb(sp, o.w || 20, o.col);
+  if (o.cuff) { const d = unit(el, wr), a = add(wr, d, -5), b = add(wr, d, 1); g += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${o.cuff}" stroke-width="${(o.w || 20) + 1}" stroke-linecap="butt"/>`; }
+  if (hk !== 'none') g += hand(hk, el, wr, o.glove || o.skin || SK);
+  return g;
+}
+const key = (x, y, ang) => `<g transform="translate(${x} ${y}) rotate(${ang})"><rect x="-3.5" y="-42" width="7" height="86" rx="2" fill="#e3b93c" stroke="${OL}" stroke-width="2"/><rect x="3.5" y="30" width="11" height="6" fill="#e3b93c" stroke="${OL}" stroke-width="2"/><rect x="3.5" y="20" width="8" height="5" fill="#e3b93c" stroke="${OL}" stroke-width="2"/><circle cx="0" cy="-54" r="12.5" fill="none" stroke="${OL}" stroke-width="9"/><circle cx="0" cy="-54" r="12.5" fill="none" stroke="#e3b93c" stroke-width="5"/></g>`;
+const mag = (x, y, ang) => `<g transform="translate(${x} ${y}) rotate(${ang})"><rect x="-3" y="-30" width="6" height="52" rx="3" fill="#6b4423" stroke="${OL}" stroke-width="2"/><circle cx="0" cy="-48" r="19" fill="rgba(190,225,255,.45)" stroke="${OL}" stroke-width="9"/><circle cx="0" cy="-48" r="19" fill="none" stroke="#d1a83a" stroke-width="5"/><path d="M-9 -56 Q-5 -62 2 -63" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".8"/></g>`;
+
+// legs / torso generators ------------------------------------------------------------
+const legs = (col, shoe, cuffCol, hemY = 600) => shape(`M-46 346 L-40 ${hemY} L-6 ${hemY} L-1 388 L1 388 L6 ${hemY} L40 ${hemY} L46 346 Z`, col)
+  + (cuffCol ? `<rect x="-40" y="${hemY - 8}" width="34" height="6" fill="${cuffCol}"/><rect x="6" y="${hemY - 8}" width="34" height="6" fill="${cuffCol}"/>` : '')
+  + shape(`M-60 618 Q-61 603 -44 600 L-6 600 L-6 618 Z`, shoe) + shape(`M60 618 Q61 603 44 600 L6 600 L6 618 Z`, shoe);
+const torso = (col, hem = 352, sw = 58) => shape(`M-22 176 L${-sw} 188 Q${-sw - 4} 194 ${-sw - 2} 208 L-48 300 L-47 ${hem} L47 ${hem} L48 300 L${sw + 2} 208 Q${sw + 4} 194 ${sw} 188 L22 176 Z`, col);
+const shadow = '';   // the scene draws the ground shadow
+// ---------- extra pieces for the engineer ----------
+const board = (x, y, a) => `<g transform="translate(${x} ${y}) rotate(${a})"><rect x="-21" y="-27" width="42" height="54" rx="3" fill="#8b5a2b" stroke="${OL}" stroke-width="2.5"/><rect x="-16" y="-20" width="32" height="42" fill="#fbfbf6"/><rect x="-7" y="-29" width="14" height="8" rx="2" fill="#9aa2ae" stroke="${OL}" stroke-width="2"/><path d="M-9 -9 H9 M-9 -3 H9 M-9 3 H9 M-9 9 H4" stroke="#6f7787" stroke-width="1.6"/></g>`;
+// walking legs: phase 1 = left leg forward and lifted, 2 = right leg forward and lifted (stop-frame, two poses)
+const legsWalk = (col, shoe, cuffCol, ph) => {
+  const hem = 600, L1 = ph === 1, dl = L1 ? -12 : 12, dr = -dl, ul = L1 ? 16 : 0, ur = L1 ? 0 : 16;
+  const leg = (sgn, d, up) => shape(`M${sgn * 46} 346 L${sgn * 40 + d} ${hem - up} L${sgn * 6 + d} ${hem - up} L${sgn * 1} 388 Z`, col)
+    + `<rect x="${Math.min(sgn * 40 + d, sgn * 6 + d)}" y="${hem - up - 8}" width="34" height="6" fill="${cuffCol}"/>`
+    + shape(`M${sgn * 60 + d} ${618 - up} Q${sgn * 61 + d} ${603 - up} ${sgn * 44 + d} ${hem - up} L${sgn * 6 + d} ${hem - up} L${sgn * 6 + d} ${618 - up} Z`, shoe);
+  return leg(-1, dl, ul) + leg(1, dr, ur);
+};
+const SHADOWLESS = true;
+// ---------- the three figures ----------
+const ENG = (p, s, ph) => { const o = { col: '#7c8794', w: 22, cuff: '#e8892b', glove: '#d49a34', skinW: 15 };
+  const m = -s;
+  const bodyTop = torso('#7c8794', 352) + `<rect x="-47" y="258" width="94" height="7" fill="#e8892b" opacity=".95"/><path d="M0 184 L0 352" stroke="${OL}" stroke-width="2"/><rect x="${-s * 12 - 10}" y="214" width="20" height="18" rx="2" fill="#69727e" stroke="${OL}" stroke-width="2"/><rect x="-47" y="320" width="94" height="6" fill="#5f6873" opacity=".7"/>`;
+  const lg = p === 'point' ? legs('#7c8794', '#3a2c20', '#e8892b') + shape('M-60 618 Q-61 600 -42 598 L-6 598 L-6 618Z', '#3a2c20') : legsWalk('#7c8794', '#3a2c20', '#e8892b', ph);
+  const clip = () => arm(m, 'mag', 'none', o) + board(m * 78, 222, m * 10) + `<circle cx="${m * 88}" cy="232" r="8.5" fill="${'#d49a34'}" stroke="${OL}" stroke-width="2.5"/>`;
+  const mine = p === 'point' ? arm(s, 'point', 'point', o) : arm(s, 'rest', 'rest', o);
+  return shadow + lg + bodyTop + mine + clip(); };
+const ENGFRONT = () => shape('M-24 166 L27 166 L27 184 L-24 184Z', '#6a7480') + `<rect x="-24" y="178" width="51" height="6" fill="#e8892b"/><path d="M-2 166 L-2 184" stroke="${OL}" stroke-width="2"/>`;
+const STREET = {
+   back(p, s) { const o = { col: '#d9a441', sleeve: 'short', w: 24, skinW: 15 };
+     const body = shadow + legs('#3d5d92', '#f1f1ee', null) + `<path d="M-40 596 L-6 596 M6 596 L40 596" stroke="#c8332d" stroke-width="3"/>` + torso('#d9a441', 332, 56) +
+       `<path d="M-46 346 L-30 372 M46 346 L30 372" stroke="${OL}" stroke-width="2" fill="none"/><path d="M-1 388 L-1 440" stroke="#2c4570" stroke-width="2"/>`;
+     const pk = (side) => arm(side, 'pocket', 'none', o) + `<circle cx="${side * 46}" cy="336" r="6" fill="${SK}" stroke="${OL}" stroke-width="2"/>`;
+     const a = { A: [pk(s), pk(-s)], B: [arm(s, 'point', 'point', o), pk(-s)], C: [arm(s, 'up', 'open', o), arm(-s, 'up', 'open', o)] }[p];
+     return body + a.join(''); },
+   front() { return `<path d="M-24 168 Q3 160 27 168 L27 182 Q3 198 -24 182Z" fill="#b9852b" stroke="${OL}" stroke-width="2.5"/><path d="M-20 178 Q3 190 23 178" stroke="#e9bf6a" stroke-width="3" fill="none"/>`; }
+};
+const PHYS = {
+   back(p, s) { const o = { col: '#eceff3', cuff: '#d4d9e0', w: 23, skinW: 14 };
+     const coat = shape('M-22 176 L-62 190 Q-66 196 -64 212 L-53 300 L-60 476 L60 476 L53 300 L64 212 Q66 196 62 190 L22 176 Z', '#eceff3') +
+       shape('M-14 178 L14 178 L10 300 L-10 300Z', '#cfd6e2') + shape('M-6 196 L6 196 L9 300 L0 310 L-9 300Z', '#3a3f55') +
+       `<path d="M0 300 L0 476" stroke="#b8bfcc" stroke-width="2.5"/><rect x="-46" y="360" width="30" height="34" rx="3" fill="#e2e6ec" stroke="${OL}" stroke-width="2"/><rect x="16" y="360" width="30" height="34" rx="3" fill="#e2e6ec" stroke="${OL}" stroke-width="2"/><rect x="-44" y="318" width="22" height="26" rx="2" fill="#e2e6ec" stroke="${OL}" stroke-width="2"/><path d="M-38 318 L-38 306 M-31 318 L-31 304" stroke="#2a4fa0" stroke-width="3" stroke-linecap="round"/><circle cx="-4" cy="346" r="2.4" fill="#aab2c0"/><circle cx="-4" cy="420" r="2.4" fill="#aab2c0"/>`;
+     const body = shadow + shape('M-34 470 L-30 600 L-6 600 L-1 480 Z M34 470 L30 600 L6 600 L1 480Z', '#5d6370') + shape('M-60 618 Q-61 603 -44 600 L-6 600 L-6 618Z', '#4a3322') + shape('M60 618 Q61 603 44 600 L6 600 L6 618Z', '#4a3322') + coat;
+     const m = -s;
+     const board = (x, y, a) => `<g transform="translate(${x} ${y}) rotate(${a})"><rect x="-21" y="-27" width="42" height="54" rx="3" fill="#8b5a2b" stroke="${OL}" stroke-width="2.5"/><rect x="-16" y="-20" width="32" height="42" fill="#fbfbf6"/><rect x="-7" y="-29" width="14" height="8" rx="2" fill="#9aa2ae" stroke="${OL}" stroke-width="2"/><path d="M-9 -9 H9 M-9 -3 H9 M-9 3 H9 M-9 9 H4" stroke="#6f7787" stroke-width="1.6"/></g>`;
+     const cA = () => arm(m, 'mag', 'none', o) + board(m * 78, 222, m * 10) + `<circle cx="${m * 88}" cy="232" r="8.5" fill="${SK}" stroke="${OL}" stroke-width="2.5"/>`;
+     const cC = () => board(m * 94, 62, m * 8) + arm(m, 'up', 'open', o);
+     const a = { A: [arm(s, 'rest', 'rest', o), cA()], B: [arm(s, 'point', 'point', o), cA()], C: [arm(s, 'up', 'open', o), cC()] }[p];
+     return body + a.join(''); },
+   front() { return shape('M-30 164 L-10 170 L-16 200 L-42 180Z', '#d4d9e0') + shape('M34 164 L14 170 L20 200 L46 180Z', '#d4d9e0') + shape('M-23 160 Q3 155 27 160 L29 175 Q3 183 -25 175Z', '#f4f6fa'); },
+};
+// asset list: [file, back(), front(), chin y (figure units: just above the collar top)]
+const A = [
+  ['physicist-point', () => PHYS.back('B', 1), PHYS.front],
+  ['joe-rest',        () => STREET.back('A', 1), STREET.front],
+  ['joe-up',          () => STREET.back('C', 1), STREET.front],
+  ['eng-walk1',       () => ENG('rest', -1, 1), ENGFRONT],
+  ['eng-walk2',       () => ENG('rest', -1, 2), ENGFRONT],
+  ['eng-point',       () => ENG('point', -1, 0), ENGFRONT],
+];
+const $ = (id) => document.getElementById(id);
+f.onSeek((t) => { const a = A[Math.min(A.length - 1, Math.round(t))], b = window.BODIES[a[0]];
+  const tf = `translate(640 700) scale(${b.S}) translate(0 ${-b.base})`;
+  $('backG').innerHTML = `<g transform="${tf}">${a[1]()}</g>`;
+  $('frontG').innerHTML = `<g transform="${tf}">${a[2]()}</g>`; });
+</script></body></html>
