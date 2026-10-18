@@ -1,6 +1,5 @@
 // Render a film scene to PNG frames with headless Chrome (CDP, no dependencies).
 //   node film/scripts/capture.mjs <scene> [--layer=front|back] [--still=<t>[,<t>...]] [--from=<s>] [--to=<s>] [--fresh] [--out=<dir>]
-// --settle=N waits N animation frames after each seek before the screenshot (default 2).
 // --fresh reloads the page before every frame (slower). Headless Chrome occasionally drops a paint after an incremental update; a fresh page does not.
 // Frames: apps/web/render/<scene>[-<layer>]/f%05d.png (fps from data-fps), gitignored.
 // With --layer the page background is transparent, so the PNGs carry alpha.
@@ -59,20 +58,17 @@ try {
   for (let i = 0; i < 300; i++) { if (await ev("document.documentElement.dataset.filmReady==='1'")) break; await sleep(100); }
   };
   await load();
-  const settle = Math.max(2, Number(opt.settle || 2));   // --settle=N: wait N animation frames after the seek (default 2); heavy SVG-filter scenes can paint a frame late
   const shot = async (t, file) => {
     if (opt.fresh) await load();
-    await ev(`(async()=>{window.__film.seek(${t});for(let i=0;i<${settle};i++)await new Promise(r=>requestAnimationFrame(r));return 1})()`);
+    await ev(`(async()=>{window.__film.seek(${t});await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));return 1})()`);
     const { data } = await send('Page.captureScreenshot', { format: 'png', fromSurface: true, captureBeyondViewport: false });
-    if (file) writeFileSync(file, Buffer.from(data, 'base64'));   // file=null: discarded warm-up shot
+    writeFileSync(file, Buffer.from(data, 'base64'));
   };
   if (opt.still) {
     for (const t of opt.still.split(',')) await shot(Number(t), join(out, `still-${t}.png`));
   } else {
     const fps = await ev('window.__film.fps'), dur = await ev('window.__film.duration');
     const a = Math.round(Number(opt.from ?? 0) * fps), b = Math.min(Math.round(dur * fps), opt.to ? Math.round(Number(opt.to) * fps) : Infinity);
-    // Warm-up: a fresh page can screenshot the stale ready-time paint on the first seek (chunk b's first frame showed the previous scene). Seek to the first target, wait, shoot and discard.
-    if (a < b) { await shot(a / fps, null); await sleep(100); await shot(a / fps, null); }
     for (let f = a; f < b; f++) {
       await shot(f / fps, join(out, `f${String(f).padStart(5, '0')}.png`));
       if (f % 100 === 0) console.log(`${scene}${layer ? ':' + layer : ''} frame ${f}/${b}`);
