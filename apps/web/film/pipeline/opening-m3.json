@@ -1,0 +1,110 @@
+{
+ "title": "Opening m3 (v11 picture, 54.567 s): m2 treatment; sponsor groove through the advisory, jingle A +3 dB, news bed fade-in",
+ "notes": [
+  "m3 changes over m2 (audio only): (1) the sponsor groove no longer stops at the WARNING card; it plays on, same treatment and sidechain, through the advisory and ends with a 0.6 s raised-cosine fade (15.50-16.10 s) under jingle A's first notes (jingle A 15.778 s). The groove's bar downbeats fall at scene 13.541 and 15.840 s (analysis downbeats 14.582 / 16.881 s less the measured 0.029 s attack offset, -1.012 s scene offset); no bar lands before 15.778 s within a fade, so the fade-under option is used. (2) jingle A +3 dB in the stings stem (15.0-30.0 s; jingle C untouched). (3) news bed under-speech level -3 dB (-14.3 dB re its -18 LUFS normalised cue = -32.3 LUFS, pauses +5 dB as before; the groove stays at -29.3 LUFS); (4) news bed raised-cosine fade-in over 2.0 s from its entry (17.85 s); landings unchanged. Everything else as m2: ",
+  "Audio-only remix of v11 (8636f6b). The music PLAN is v11's: the sponsor groove from bar 1 beat 2 (track attack 1.278 s) with its bar 3 downbeat (5.312 s) on the WARNING card cut (4.300 s) and a 0.5 s tail; the news bed from bar 1 (0.117 s) under jingle A to its bar 18 downbeat (34.697 s) on the SPECIAL REPORT slam (52.433 s), 0.5 s tail, under jingle C. Same placement code as music-v11.py (5 ms raised-cosine head before the entry attack, raised-cosine tail from the last downbeat). No cue moved: the groove already plays from 0.268 s (the sponsor read starts 0.33 s) and the bed's entry is tied to jingle A / the BREAKING NEWS slam.",
+  "Treatment (conspiracy m4c, 70fecfa): each cue folded to mono, 100 Hz high-pass (2nd-order Butterworth), high shelf 6 kHz -6 dB and 11 kHz -8 dB, normalised to -18 LUFS integrated (whole cue) before placement. Under speech the music sits at -11.3 dB re the normalised cue (cue loudness -29.3 LUFS, m4c '+9'), +5 dB in the pauses between words; sidechain from the voices stem (v11 voice-final: sponsor, advisory, Liam at the desk, announcer), key 10 ms RMS, -44..-38 dBFS, 30 ms look-ahead attack, 300 ms release; no minimum-gap logic, no gap rises, no dip before the slam (v11's -14 gap rises, the -26 dip and the 17 dB guard trim are gone).",
+  "Spectral check (65536-point Welch, prominence over a 1 kHz running median): the groove carries a pure tone at 16.797 kHz (0.7 Hz wide, 9.1 dB over its neighbourhood over the whole cue, 10.5 dB in the 1.27-5.82 s span played here; no 2-12 kHz peak reaches it), the same artifact as the conspiracy cue's 16.8 kHz: notch 16.8 kHz -6 dB Q 8 as m4c. The news bed has no isolated tone above 12 kHz (its peaks sit on a 200 Hz grid across the whole spectrum and are stronger below 12 kHz, 12.1 dB at 8.6 kHz vs 9.7 dB at 14.8 kHz): no notch.",
+  "Intro levelling (music-m4.py level_intro, max 6 dB): the news bed's bars 1-3 are 5.3 / 2.9 / 1.8 dB under its body (3 s short-term median); levelled toward the body median, ramping out over the bar before bar 4. The groove has no quiet intro (bars 1-2 within 0.8 dB of its body): not levelled.",
+  "Sound: v11's dialogue-and-sound stem (voices, brown-noise bed) and stings stem (jingles A and C) unchanged, at v11's final gain; no stamp in this scene. Program: finish-m3.py (-16 LUFS, true peak <= -1.3 dBTP, alimiter latency-compensated)."
+ ],
+ "length_s": 54.5667,
+ "dialogue": "in/opening/dialogue-sfx.wav",
+ "key": "in/opening/work-voice-final.wav",
+ "sfx": "in/opening/stings.wav",
+ "music": {
+  "hp": 100,
+  "norm_lufs": -18,
+  "under_db_re_norm": -11.3,
+  "eq": [
+   {
+    "type": "highshelf",
+    "f": 6000,
+    "gain_db": -6,
+    "q": 0.7071
+   },
+   {
+    "type": "highshelf",
+    "f": 11000,
+    "gain_db": -8,
+    "q": 0.7071
+   }
+  ],
+  "duck": {
+   "depth_db": 5,
+   "key_lo_db": -44,
+   "key_hi_db": -38,
+   "attack_ms": 30,
+   "release_ms": 300
+  },
+  "pre": 0.005,
+  "tail": 0.5,
+  "cues": [
+   {
+    "name": "sponsor groove (continues through the advisory)",
+    "file": "in/cues/1-sponsor/suno-1-reassuring-groove-a.wav",
+    "a_in": 1.278,
+    "a_end": 5.312,
+    "at_scene": 4.3,
+    "eq_extra": [
+     {
+      "type": "peak",
+      "f": 16800,
+      "gain_db": -6,
+      "q": 8
+     }
+    ],
+    "fade_out": {
+     "start": 15.5,
+     "dur": 0.6
+    }
+   },
+   {
+    "name": "news bed",
+    "file": "in/cues/2-news/suno-2-breaking-news-a.wav",
+    "a_in": 0.117,
+    "a_end": 34.697,
+    "at_scene": 52.4333,
+    "level_intro": {
+     "until_track": 6.24,
+     "ramp_s": 2.04,
+     "body": [
+      6.24,
+      38.8
+     ],
+     "st_window_s": 3.0,
+     "smooth_s": 1.0,
+     "max_boost_db": 6
+    },
+    "fade_in": 2.0,
+    "under_db_re_norm": -14.3
+   }
+  ]
+ },
+ "events": [
+  {
+   "name": "news bed bar 18 downbeat on the SPECIAL REPORT slam",
+   "layer": "music",
+   "at": 52.4333,
+   "frame": 1573
+  },
+  {
+   "name": "jingle A hit on the BREAKING NEWS slam (stings stem, unchanged)",
+   "layer": "sfx",
+   "at": 17.2667,
+   "frame": 518
+  }
+ ],
+ "ref": {
+  "name": "v11",
+  "music": "in/opening/music.wav",
+  "key": "in/opening/work-voice-final.wav",
+  "gain_db": 0.0,
+  "note": "v11's stems are at its final gain, which is the delivered level of its voices"
+ },
+ "sfx_gain": {
+  "db": 3.0,
+  "from": 15.0,
+  "to": 30.0
+ }
+}
