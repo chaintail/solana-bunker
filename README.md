@@ -96,7 +96,9 @@ The 16-leaf benchmark uses five samples per asset to preserve leaf space; larger
 
 - **Pitch (3 min):** link coming
 - **Technical (3 min):** link coming
-- **Film (7 min, YouTube):** https://www.youtube.com/watch?v=TeB0ym4IPFk
+- **Film (7 min, YouTube):** https://www.youtube.com/watch?v=74TAs5p3ls4
+- **Stream (HLS):** https://media.claude.do/solana-bunker/v5/hls/master.m3u8
+- **Download (MP4, 720p):** https://media.claude.do/solana-bunker/solana-bunker-film-v5-web.mp4
 
 ## Results and evidence
 
