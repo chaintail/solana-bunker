@@ -97,3 +97,21 @@ small int8) the same words as v8 x12 ("two"/"2" and "ED 25519"/"ED25519" are for
 scenes in one run; do-box numpy, ffmpeg on dev-mac) and `pipeline/m1-transcribe.py` -> dev-mac `~/video-work/solana-bunker/out/s05-m1.mp4`, `s05-m1-phone.mp4`,
 `s05-m1-audio.wav`, stems `s05-m1-dialogue.wav`, `s05-m1-music.wav`, `s05-m1-sfx.wav` (48 kHz float, after the scene gain, before the limiter), `s05-m1-levels.png`,
 `s05-m1-event-frames.png`, report `out/s04-s05-m1-report.json`.
+
+## v9, x12 build (hand-off frame refreshed to the s04 v6+ title block position)
+Liam: the blueprint title block (SOLANA BUNKER box + revision rows, bottom right) jumped down at the s04 -> s05 cut. s04 v6 (film/s04 aea1489) raised the block
+40 px (TB.y 596 -> 556), but assets/s05/handoff-s04-end.png was still the v3 last frame, so s05 frame 0 showed it at 596. The PNG is now s04-bunker.html from
+film/s04 bd297a6 (the s04 v8 x12 / m2 picture) rendered as `capture.mjs s04-bunker --still=55.733333333333334` (t = 1672/30, the scene's last frame, which
+capture.mjs pins to output frame 1394 at --speed=1.2) at 1280x720 on dev-mac, in a copy of bd297a6's film/ tree plus the head sprite sheets from the shared
+film/heads (not in git). Against s04's delivered f1394: 40.6 dB after the same crf 12 encode (36.5 dB raw, all of it yuv420p chroma on the yellow text).
+The old PNG was a decoded mp4 frame; the new one is a clean render. s05-hash.html: only the comment naming the source changed.
+Title block lines (y rows / x cols): s04 f1394, new PNG and v9 f0 all top 555-556, divider 599-600, bottom 649-650, sides 699-700 / 999-1000, REV cell 869-870;
+v8 f0 was 595-596 / 639-640 / 689-690. s04 f1394 vs v9 f0: 45.3 dB (v8 f0: 27.9 dB).
+Capture: s05-capture-x12.sh unchanged except its directories (out/x12v9/seg, render/x12v9, so v8's out/x12/seg is kept): 2287 frames, 8 chunks. Chunk 07's
+third frame (2102) was a stale frame-0 paint (the hand-off image), the same failure as v8's chunk 06; it was recaptured from frame 2095 and encoded from
+2100. Mux: video stream-copied from the chunks, audio = out/s05-m2-audio.wav unchanged (aac 192k mono, -shortest; the aac stream md5 equals s05-m2.mp4's);
+phone = scale 960:540 lanczos, crf 26 + the same audio at 192k. -> ~/video-work/solana-bunker/out/s05-v9.mp4 / s05-v9-phone.mp4, 2287 frames, 76.233 s.
+v8 -> v9: frames 0-147 (the hand-off image fading out) differ by the block; of frames 148-2286, 1247 are identical, 30 are 37.6-45 dB (1961-1986 the
+"*this is all theoretical" banner, 2148-2151 the TIMING ATTACK stamp, edge anti-aliasing only; a fresh still matches v9 at 1961 and v8 at 2151, Chrome
+raster variation between runs), the rest >= 45 dB. Last frame 2286 (hand-off to s06) 51.3 dB. glitch-scan v2 --chunk-size 300 --ref 0: clean on master
+and phone.
