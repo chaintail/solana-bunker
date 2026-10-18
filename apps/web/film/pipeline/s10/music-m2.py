@@ -125,6 +125,8 @@ def main():
         amp = np.clip((tt - s_in) / pl['in'].get('fade', 0.01), 0, 1)
     e = m['end']; p = np.clip((tt - e['fade_from']) / (e['fade_to'] - e['fade_from']), 0, 1)
     amp *= 0.5 * (1 + np.cos(np.pi * p))
+    if m.get('fade_in'):   # m3: raised-cosine fade-in from silence over fade_in s starting at the cue's entry; bar landings untouched
+        amp *= 0.5 - 0.5 * np.cos(np.pi * np.clip((tt - s_in) / m['fade_in'], 0, 1))
     # ---------------- sidechain (music-m4.py)
     dlgM = np.pad(dlg, (0, NM - N))
     preduck = mus * db(under) * amp
@@ -135,7 +137,7 @@ def main():
                     'eq_loudness_change_db': L_cue - L_hp, 'norm_gain_db': g_norm, 'norm_lufs': m['norm_lufs'], 'level_intro': lirep,
                     'under_lufs': m['under_lufs'], 'under_db_re_norm': under, 'open_db_re_norm': under + d['depth_db'], 'duck': d,
                     'place': pl, 'scene_eq_track_plus': off, 'speed': f, 'in_scene': s_in, 'in_track': tin, 'anchors': anc, 'end': e,
-                    'stem_extra_s': m.get('stem_extra_s', 0), 'cue_track_at_scene_0': -off,
+                    'stem_extra_s': m.get('stem_extra_s', 0), 'fade_in': m.get('fade_in'), 'cue_track_at_scene_0': -off,
                     'ms_ducked_over_half': int((frac[:N] > 0.5).sum() / 48), 'ms_fully_open_after_in': int((frac[:N][tt[:N] >= s_in] < 0.02).sum() / 48)}
     det = M.hp(raw, 180)
     rep['music']['bars_scene'] = {str(b): off + M.flux_onset(det, t) for b, t in m.get('report_bars', {}).items()}
