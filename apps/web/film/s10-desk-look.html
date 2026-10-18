@@ -1,0 +1,100 @@
+<!doctype html><html data-duration="1" data-fps="30"><head><meta charset="utf-8">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
+<style>
+/* Look draft for scene 10, back at the news desk (film-plan-ending.md part B), not the scene. One frame: just after "crypto nerd", the lower third
+   reads CRYPTOGRAPHY NERD ("GRAPHY" squeezed in between). Same desk as the opening (s02-news.html): rendered as two layers around the matted anchor
+   (?layer=back is s02-news.html's backdrop, unchanged; this page gives ?layer=front), composited on dev-mac exactly as pipeline/desk-v7.filter.
+   The styles below are s02-news.html's, copied; additions at the end. */
+
+/* Two layers are rendered separately and composited around the matted footage on dev-mac:
+     ?layer=back  studio backdrop (static; one still is enough)
+     ?layer=front desk, bugs, lower third, over-the-shoulder box, tweet card, chyron, flash, wipe (transparent PNGs)
+   no ?layer  both together (previews only) */
+html,body{font-family:'Inter',sans-serif;color:#fff}
+body.layer-front .back,body.layer-back .front{display:none}
+html:not([data-layer]) body,html[data-layer="back"] body{background:#05070d}
+/* ---------- back: studio ---------- */
+.studio{position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 50% 40%,#244a80 0%,#0d1830 50%,#05070d 100%)}
+.rays{position:absolute;inset:0;background:repeating-conic-gradient(from 200deg at 50% 30%,rgba(120,170,255,.07) 0 4deg,transparent 4deg 11deg);mask-image:radial-gradient(ellipse 60% 60% at 50% 30%,#000,transparent)}
+.sky{position:absolute;left:0;right:0;top:120px;height:420px}
+.sky i{position:absolute;bottom:0;background:#0a1226;border-top:2px solid rgba(120,170,255,.25)}
+.sky b{position:absolute;width:5px;height:7px;background:#ffd98a;opacity:.7}
+.moon{position:absolute;left:1010px;top:130px;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,#bcd2ff 60%,#6f8fd0);box-shadow:0 0 60px rgba(160,200,255,.55)}
+.glass{position:absolute;left:0;right:0;top:0;height:560px;background:linear-gradient(90deg,rgba(20,40,80,.0),rgba(60,110,200,.10) 50%,rgba(20,40,80,0))}
+.mullion{position:absolute;top:0;height:560px;width:10px;background:linear-gradient(90deg,#060a14,#16233f,#060a14)}
+.sign{position:absolute;left:50%;top:40px;transform:translateX(-50%);font:700 28px/1 'Oswald';letter-spacing:.5em;color:rgba(190,215,255,.55)}
+/* ---------- front ---------- */
+.desk{position:absolute;left:0;right:0;top:545px;height:175px;background:linear-gradient(180deg,#2a3a5c 0,#16213a 8%,#0b1224 40%,#070b17 100%);border-top:5px solid #7fa6ff;box-shadow:0 -10px 40px rgba(0,0,0,.5)}
+.desk:after{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:rgba(255,255,255,.55)}
+.deskfront{position:absolute;left:290px;width:700px;top:604px;height:5px;background:#2a3a5c;opacity:0}
+.live{position:relative;display:flex;align-items:center;gap:10px;font:800 26px/1 'Inter';letter-spacing:.14em;padding-right:16px;margin-right:2px;border-right:3px solid rgba(255,255,255,.55)}
+.live .dot{width:18px;height:18px;border-radius:50%;background:#e30613;box-shadow:0 0 14px #e30613}
+.live.tl{position:absolute;left:36px;top:30px;border:0;padding:0}
+.l3{position:absolute;left:36px;bottom:104px;width:880px;height:84px;display:flex;align-items:stretch;box-shadow:0 12px 30px rgba(0,0,0,.55);overflow:hidden}
+.l3 .tag{background:#fff;color:#e30613;font:800 30px/84px 'Inter';padding:0 22px;letter-spacing:.06em;min-width:180px;text-align:center}
+.l3 .bar{flex:1;background:linear-gradient(180deg,#f2141f,#b8000a);font:700 48px/84px 'Oswald';padding:0 24px;letter-spacing:.02em;white-space:nowrap}
+.l3sub{position:absolute;left:36px;bottom:70px;width:880px;height:36px;background:rgba(10,14,24,.94);font:700 22px/36px 'Inter';padding:0 20px;letter-spacing:.03em;color:#e8eefa;white-space:nowrap}
+.ticker{position:absolute;left:0;right:0;bottom:0;height:56px;background:#f4f5f7;display:flex;align-items:center;box-shadow:0 -4px 14px rgba(0,0,0,.4);overflow:hidden}
+.ticker .lbl{position:relative;z-index:2;height:100%;background:#0d1830;color:#fff;font:800 22px/56px 'Inter';padding:0 20px;letter-spacing:.12em;white-space:nowrap}
+.ticker .win{position:relative;flex:1;height:100%;overflow:hidden}
+.ticker .run{position:absolute;left:0;top:0;height:100%;white-space:nowrap;font:700 28px/56px 'Inter';color:#141821}
+.ticker .run span{display:inline-block;padding-right:0}
+.ticker .run b{color:#e30613;margin:0 22px}
+/* over-the-shoulder box */
+.ots{position:absolute;right:36px;top:36px;width:410px;height:230px;background:#000;box-shadow:0 10px 30px rgba(0,0,0,.6);overflow:hidden;transform-origin:100% 0}
+/* rev 7: the white outline is its own layer above the image (.obrd), the image sits in a clip box under it, so the image can never cover or flicker over the border during the zoom */
+.ots .clip{position:absolute;inset:0;overflow:hidden}
+.ots .obrd{position:absolute;inset:0;border:5px solid #fff;z-index:5;pointer-events:none}
+.ots .pan{position:absolute;left:5px;top:5px;width:410px;height:230px;transform-origin:0 0}
+.ots img{position:absolute;left:0;top:0;width:410px;height:230px;display:block}
+.ots svg.pen{position:absolute;left:0;top:0;width:410px;height:230px;overflow:visible}
+.ots svg.pen path{fill:none;stroke:#ff1f2d;stroke-width:3.6;stroke-linecap:round;stroke-linejoin:round}
+.otstag{position:absolute;right:36px;top:36px;transform:translateY(-100%);background:#e30613;font:800 18px/1 'Inter';letter-spacing:.14em;padding:6px 12px;opacity:0}
+/* tweet component (rev 4): real header (assets/tweet-header-v4.jpg) and real footer (assets/tweet-footer.jpg) are fixed, the real body (assets/tweet-body.jpg) scrolls between them */
+.tweet{position:absolute;left:24px;top:26px;width:430px;background:#000;border:1px solid #3a3f45;border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden}
+.tweet .thead,.tweet .tfoot{display:block;width:428px;height:auto;position:relative;z-index:2;background:#000}
+.tweet .tfoot{border-top:1px solid #2a2f35}
+.tweet .twin{position:relative;width:428px;height:358px;overflow:hidden;border-top:1px solid #1d2126}
+.tweet .tscroll{position:absolute;left:0;top:0;width:428px}
+.tweet .tinner{position:relative;width:1290px;transform-origin:0 0;transform:scale(.33178)}
+.tweet .tinner img{display:block;width:1290px}
+.tweet .hlg{position:absolute;left:0;top:0;width:1290px;height:1px}
+.tweet .hl{position:absolute;background:rgba(255,214,0,.42);border-radius:6px;transform-origin:0 50%;mix-blend-mode:screen}
+.tweet .twin:before,.tweet .twin:after{content:"";position:absolute;left:0;right:0;height:14px;z-index:3;pointer-events:none}
+.tweet .twin:before{top:0;background:linear-gradient(0deg,transparent,rgba(0,0,0,.85))}
+.tweet .twin:after{bottom:0;background:linear-gradient(180deg,transparent,rgba(0,0,0,.85))}
+/* channel bug */
+.chbug{position:absolute;right:26px;bottom:121px;display:flex;align-items:center;gap:12px;color:#fff;opacity:0;filter:drop-shadow(0 3px 8px rgba(0,0,0,.65))}
+.chbug img{height:50px;display:block}
+.chbug span{font:700 52px/1 'Oswald';letter-spacing:.06em}
+.qday{position:absolute;right:36px;top:36px;width:410px;height:230px;border:5px solid #fff;background:radial-gradient(ellipse at 50% 40%,#244a80,#0d1830 75%);box-shadow:0 10px 30px rgba(0,0,0,.6);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0}
+.qday b{font:700 104px/1 'Oswald';letter-spacing:.04em;color:#fff}
+.qday i{font:800 italic 44px/1 'Inter';color:#ff3b47;margin-top:8px;letter-spacing:.04em;transform:rotate(-4deg)}
+/* flash + wipe */
+.flash{position:absolute;inset:0;background:#fff;opacity:0}
+.wipe{position:absolute;top:0;bottom:0;left:0;width:1500px;background:linear-gradient(90deg,#8a0008,#e30613 18%,#e30613 100%);transform:translateX(-1500px);display:flex;align-items:center;justify-content:center}
+.wipe span{position:absolute;left:640px;transform:translateX(-50%);font:700 150px/1 'Oswald';letter-spacing:.06em;white-space:nowrap;text-shadow:0 8px 0 rgba(0,0,0,.35)}
+.wipe i{position:absolute;left:0;right:0;height:10px;background:#fff}
+
+/* ---------- additions for the sign-off ---------- */
+.l3 .bar{display:flex;align-items:center}
+.l3 .bar .w{display:inline-block;white-space:pre}
+.l3 .bar .ins{display:inline-block;color:#ffe600;overflow:hidden;vertical-align:top;transform-origin:0 50%}
+</style></head>
+<body>
+<div class="front" id="front">
+  <div class="desk"></div>
+  <div class="l3" id="l3"><div class="tag" id="l3tag">UPDATE</div><div class="bar" id="l3bar"><span class="w">CRYPTO</span><span class="ins" id="ins">GRAPHY</span><span class="w"> NERD</span></div></div>
+  <div class="l3sub" id="l3sub">Liam C., Chaintail Labs, Senior Bunker Correspondent</div>
+  <div class="chbug" id="chbug" style="opacity:1"><div class="live"><i class="dot"></i>LIVE</div><img src="assets/chaintail-logo-white.svg"><span>CNN</span></div>
+  <div class="ticker"><div class="lbl">CT LIVE</div><div class="win"><div class="run" id="run"></div></div></div>
+</div>
+<script src="data/s10-chyron.js"></script>
+<script src="lib/film.js"></script>
+<script>
+const f = window.__film, L = new URLSearchParams(location.search).get('layer'), $ = (id) => document.getElementById(id);
+if (L) { document.documentElement.dataset.layer = L; document.body.classList.add('layer-' + L); }
+const run = $('run'), unit = document.createElement('span');
+unit.innerHTML = window.S10_CHYRON.map((j) => j.replace(/&/g, '&amp;')).join('<b>•</b>') + '<b>•</b>'; run.append(unit, unit.cloneNode(true));
+f.onSeek(() => { run.style.transform = 'translateX(-60px)'; });
+</script></body></html>

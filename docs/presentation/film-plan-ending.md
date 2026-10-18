@@ -214,3 +214,77 @@ Output: dev-mac `~/video-work/solana-bunker/ending/out/ending-look-{A,B,C}.png` 
 - Q10: the closing cards on black (drafted), or on the parchment?
 - Q12: the brief's closing lines split over two cards: card 1 the four "Based on a true story …" lines (4 s), card 2 PRODUCT OF + logo + Chaintail Labs + © (3 s). Or all on one card?
 - Q11: Liam's last line voice only (drafted), or the anchor in a small box on the CNN panel?
+
+## 10. As built: scene 10 v1
+
+Rulings applied: Q5 the wipe's "WE NOW RETURN TO THE STUDIO", Q6 UPDATE, Q7 the drafted jokes, Q8 the punch-in.
+- **Cut list and lengths:** as section 2, B1 533.75–545.10 at 2.00 and B2 563.55–583.50 at 13.35. Scene 33.40 s, 1002 frames. The picture switches at frame 401 (13.367 s). Each footage stream is seeked so its source time = scene time + 531.75 (B1) or + 550.20 (B2), so lips match the audio frame by frame.
+- **Audio:** −16.4 LUFS, −1.9 dBTP on the master. `take-dn.wav` is regenerated in `s10/out` with the same chain.
+- **Word anchors:** moved from the beat table after a 20 ms energy recheck. "white" 11.55 (was 11.95), "nerd" 6.89, "stateless" 15.48 (15.89), "bigger" 20.92, "never" 21.74, "bunker" 30.02 / 30.82, "cook" 32.24. GRAPHY squeezes in 7.19–7.54, ending before "us" ends (7.69). `data/s10-edl.js` owns the numbers.
+- **Nested vault:** the inner door is drawn in scene 4's accent yellow (#ffd23f), and the outer door's hub, spokes and two inner rings fade as it opens. The first stills showed the inner door blending into the outer one. Port: `lib/vault.js` (scene 4's `vault()`, strokes scaled with R).
+- **Fixes after looking:** the chyron's CT LIVE label showed through the SPECIAL REPORT wipe (`.wipe` z-index 10).
+- **Scene 9's last frame (deviation):** under the wipe this is still from `s09-v2.mp4`. Scene 9 v3 (with the testimonial) is being built by another builder. When it exists: `S09V=v3 build.sh assets` and `build.sh video v2`; no recapture.
+- **Checks:**
+  - Stills opened at 0.3, 0.8, 1.5, 2.1, 6.7, 7.3, 7.6, 11.9, 13.33, 13.4, 16.0, 18.6, 22.4, 24.0, 30.2, 30.7, 31.6, 32.5 and 33.35, plus the same times on master frames.
+  - The whitepaper QR decodes (zxing-cpp) on a master frame and on a phone frame, at 720p and at 540p.
+- **Files:**
+  - `s10-news.html`, `lib/vault.js`, `data/s10-{edl,qr,chyron}.js`, `pipeline/s10/{s10-timing.py,qr.mjs,build.sh,capture.sh,stills.sh}`.
+  - Outputs: dev-mac `~/video-work/solana-bunker/s10/out/s10-v1.mp4` and `s10-v1-phone.mp4`.
+
+### Scene 10 v2 (Liam's notes)
+- The lower third first reads CRYPTO NERD. Then NERD slides right (7.19–7.44) and GRAPHY fades in yellow between them (7.31–7.54), ending before "us" ends.
+- The sub line under the name reads "Liam C. · Bunker Correspondent, Chaintail Labs".
+- Positions: the bar, sub line, ticker and LIVE / lemur / CNN bug are on the same pixels as opening v7 (side-by-side checked against `opening-v7.mp4` at 30 s). Nothing moved.
+- Fully recaptured. Output: dev-mac `s10/out/s10-v2.mp4` and `s10-v2-phone.mp4`, 33.40 s, −16.4 LUFS / −1.9 dBTP. The whitepaper QR decodes on master and phone frames.
+
+### Scene 10 v3 (scene 9 v3 underneath the wipe)
+- The frame under the SPECIAL REPORT wipe (0–0.55 s) is now the last frame of `s09-v3.mp4` (bd2c428, the testimonial's results grid). It was built with `S09V=v3 build.sh assets` and `build.sh video v3`, with no recapture. Nothing else changed.
+- Output: dev-mac `s10/out/s10-v3.mp4` and `s10-v3-phone.mp4`, 33.40 s, 1002 frames, −16.4 LUFS / −1.9 dBTP. The whitepaper QR decodes on master and phone frames (12.5 and 14.5 s) at 720p and 540p.
+
+### Scene 10 v4 (Liam's notes)
+- **No name bar anywhere.** The lower third slides in at 6.17 s (0.40 s before "crypto") already reading CRYPTO NERD. NERD slides and GRAPHY fades in as in v2. After COMING UP NEXT (B7, from 23.84) it reads CRYPTOGRAPHY NERD again. The sub line "Liam C. · Bunker Correspondent, Chaintail Labs" stays under it. The CNN bug still fades in at 1.60.
+- **No punch-in.** B2 is composited at B1's size and place (525x700 at 377,-20), so the head keeps one size for the whole scene. The jump cut is hidden by a 2-frame white flash in the front layer: frame 401 is solid white, frame 402 is half white, and both sit above the chyron. The wipe's own flash (1.10–1.40) is unchanged.
+- **Head match across the cut:** master frames 400 and 403, glasses outer temples at row 285 are 510–775 (265 px) and 508–771 (263 px). The rims are rows 240–319 on both. B2's head is turned very slightly (the bridge sits about 11 px left).
+- **Composite fix:** the front layer's FFV1 Matroska chunks carry millisecond timestamps, so the overlay took the previous front frame on about a third of frames (in v1–v3 too). It is now retimed (`settb=1/30,setpts=N`), so master frame n carries front frame n (checked on frames 398–404).
+- Output: dev-mac `s10/out/s10-v4.mp4` and `s10-v4-phone.mp4`, 33.40 s, 1002 frames, −16.4 LUFS / −1.9 dBTP. Cut strip (frames 400/401/402): `s10-v4-cut.png`. The whitepaper QR decodes on master and phone at 720p and 540p.
+
+### Scene 10 v5 (Liam's note)
+- After A STATELESS BUNKER and SLH-DSA (FIPS 205), the lower third does not return to CRYPTOGRAPHY NERD. It becomes a third COMING UP NEXT reading BUNKER IN A BUNKER, with the sub line "Next on Chaintail News", from the onset of "And my personal favorite idea" to the end of the scene.
+- The onset (`T.and_fav`) is take 573.53 s, scene 23.33 s, frame 700, taken from the 20 ms RMS of the denoised take, which leaves silence at 573.38–573.50 after "spent". Frame 699 reads SLH-DSA and frame 700 reads BUNKER IN A BUNKER.
+- The bunker-in-a-bunker shoulder box is unchanged. Only front chunk B (17 s to the end) was recaptured.
+- Output: dev-mac `s10/out/s10-v5.mp4` and `s10-v5-phone.mp4`, 33.40 s, 1002 frames, −16.4 LUFS / −1.9 dBTP. The whitepaper QR decodes on master and phone at 720p and 540p.
+
+### Scene 10 v6 (Liam's notes)
+- **The bar is on screen for the whole scene.** It sits under the wipe from 0.55 s and is revealed as the wipe moves out: the white tag reads UPDATE and the red box is empty. At 6.32 s (0.25 s before "crypto") CRYPTO NERD pops in (0.2 s, scale 0.70 → 1.06 → 1). The NERD slide and GRAPHY fade are unchanged. The sub line "Liam C. · Bunker Correspondent, Chaintail Labs" stays under it.
+- **Switches are no longer hard cuts.** Each switch is centred on its old time: the changed texts fade out (150 ms), the white tag and red box resize to the next state's widths (250 ms, eased in and out), and the new texts fade in (150 ms).
+  - UPDATE → COMING UP NEXT at 15.48 s resizes, so it runs 15.205–15.755.
+  - SLH-DSA (18.44) and BUNKER IN A BUNKER (23.33) keep the COMING UP NEXT width, so only the changed texts cross: 150 ms out, 150 ms in. The sub line fades only when it changes.
+  - The tag width is measured from the text (as v5: UPDATE 180 px).
+- Strip across the first switch (15.3, 15.4, 15.5, 15.6, 15.7 s): `s10-v6-transition.png`.
+- Output: dev-mac `s10/out/s10-v6.mp4` and `s10-v6-phone.mp4`, 33.40 s, 1002 frames, −16.4 LUFS / −1.9 dBTP. The cut flash is unchanged (frame 401 white, 402 half). The whitepaper QR decodes on master and phone at 720p and 540p.
+
+### Scene 10 v7 (Liam's note: the flash read as a glitch)
+- **No white flash at the jump cut.** The wipe's own flash (1.10–1.40) is unchanged.
+- **The cut is hidden by motion instead.**
+  - The UPDATE → COMING UP NEXT / A STATELESS BUNKER transition (text out 150 ms, eased 250 ms resize, text in 150 ms) is centred on the cut frame 401 (13.367 s), not on "stateless" (15.48).
+  - The whitepaper box leaves through the cut (exit 13.22–13.57 s, moving on frame 401). It is now on screen for about 2 s (11.55–13.57), and its QR still decodes at 12.5 s.
+  - The anchor layer alone crossfades over 4 frames, 399–402 (B2 weight .2/.4/.6/.8): B1 runs to frame 402 and B2 starts at 399 (take 563.50). The graphics do not crossfade. Head size is unchanged (glasses within 1 %).
+- Frames 397–404 have mean luma 71–78: no white frame. Strip of frames 400/401/402: `s10-v7-cut.png`.
+- `stills.sh` still composites one anchor per frame (no crossfade); only `build.sh` blends.
+- Output: dev-mac `s10/out/s10-v7.mp4` and `s10-v7-phone.mp4`, 33.40 s, 1002 frames, −16.4 LUFS / −1.9 dBTP. The whitepaper QR decodes on master and phone at 720p and 540p.
+
+### Scene 10 v8 (Liam 16777: the over-the-shoulder box stays up) as built, x11 build mode
+- **The box appears once and never leaves.** It slides in at "white paper" (scene 11.55 s; 10.50 s in the x11 cut) with the WHITEPAPER tag and stays through the jump cut and to the last frame. The v7 exit through the cut and the v5 exit after "cook" are removed.
+- **Content switches in place.** At the bunker-in-a-bunker beat (scene 30.02 s; 27.29 s in the x11 cut) the nested-vault panel crossfades over the whitepaper panel in 0.2 s inside the same box (position, size, border and shadow unchanged), and the tag text changes WHITEPAPER to BUNKER IN A BUNKER at the midpoint. The vault animation (inner door at "protecting", push-in at the second "bunker") is unchanged.
+- **Nothing else changed:** lower third, chyron, bug, beaker, anchor, audio (`audio-final.wav` byte-identical to s10-x11, -16.4 LUFS / -1.9 dBTP), 911 frames, 30.37 s.
+- **Pipeline:** `capture-x11.sh` and `build-x11.sh` take `TAG` (default `x11`); v8 is `TAG=v8-x11`, so its chunks and outputs (`out/s10-v8-x11.mp4`, `-phone.mp4`) do not touch the x11 ones.
+- **Checks:** stills at 10.3, 10.7, 15.0, 27.09, 27.40, 27.59, 29.0 s and the last frame; glitch-scan clean on master and phone; chunk-start frames 300/600/900 differ from frame 0 (mean abs diff 73-82) and sit within 2.3 of their neighbours.
+- **Scene 11 hand-off:** `pipeline/s11/build.sh assets` cuts the last frame (duration minus 0.05 s) from `../s10/out/s10-$S10V.mp4` into `film/assets/s11-s10-last.png`, shown under the bars at 0-0.35 s. Run it with `S10V=v8-x11`. The frame now has the box (bunker-in-a-bunker, tag, border) and the LAB beaker, and s11 must not redraw or remove them. No code change in s11.
+
+### Scene 10 v8 x12 (Liam 16583: "1.2 on all") as built
+- **v8 content, unchanged; Liam's speech at 1.2x.** `pipeline/s10/capture-x12.sh` captures the front layer at `--speed=1.2 --settle=4` (1002 scene frames -> ceil(1002/1.2) = 835 output frames, as capture.mjs computes; warm-up shots after each page load). `pipeline/s10/build-x12.sh` puts atempo=1.2 (pitch kept) on the v7 cut of the denoised take before the two-pass loudnorm, with the bed at the new length and the 0.80 limiter as build.sh. The scene's audio is Liam's take only, so there are no generated voices or sound effects to keep at 1.0. The v7 background composite is time-scaled as one picture (output frame k = v7 frame round(1.2 k)). Output frame 834 is v7 frame 1001 and page time 1001/30 s.
+- **x12 times:** the box arrives at 9.63 s, the anchor crossfade at the jump cut (v7 frames 399-402) falls on output frames 333-335, the COMING UP NEXT switch point (scene frame 401) falls between output frames 334 and 335, SLH-DSA comes in at 15.37 s, BUNKER IN A BUNKER at 19.44 s, the box switch at 25.02 s and the beaker at 26.87 s.
+- **Output:** dev-mac `s10/out/s10-v8-x12.mp4` and `s10-v8-x12-phone.mp4`, 835 frames, 27.83 s, -16.4 LUFS / -1.9 dBTP (phone -16.5 LUFS). `TAG` defaults to `v8-x12`; chunks are in `out/v8-x12/seg`.
+- **m1 (music):** the v8 x12 picture stream-copied (video md5 identical, main and phone) with the news bed and the wipe's jingle added to v8 x12's delivered mix (`pipeline/s10/build-m1.sh`: `s10-m1.json` -> `music-m1.py` -> `finish-m1.py` -> `verify-m1.py`; `plot-levels-m1.py` and `transcribe-m1.py` on do-box; the same files as the conspiracy m1 on `film/conspiracy`). The WE NOW RETURN wipe measured on the master: its leading edge reaches the right side of the frame on frame 11 (0.367 s), it starts back out on frame 34 (1.133) and clears on frame 50 (1.667). Jingle A (news-open-1-mini-jingle, in place of the plan's horn): its 0.660 s hit on frame 11, so its first 0.293 s (the start of the quiet pickup) falls before the scene and is trimmed; gain -3.1 dB (event loudness matched to x11's horn as mixed, as the opening); ducked -12 dB from 'Thanks' (1.86 s, 100 ms) with a linear fade to silence over 1.0 s. News bed 'Breaking News', 180 Hz high-pass, speed 1: bar 20's downbeat accent at 27.600 s, 30 ms after the last word decays (27.57); that puts the bar 7 entry at 1.145 s (downbeat 1.159), inside the wipe going out; the track's break (bar 19, 25.57) drops the bass under the last line. -20 dB under speech, -14 in the 6.48-7.31 gap, -12 for the stab, cosine fade 27.70-28.05; the music stem runs 0.30 s past the picture with that ring (for the stitch into the closing card), the scene mix cuts it at 27.833 with a 15 ms fade. The louder figure 0.72 s after bar 20's downbeat (bass back in, 39.53 s in the track) is not used: it would start after the picture ends. Dialogue guard: music 16.5 dB under the dialogue in every 100 ms window where the dialogue is at least -30 dBFS (ducks joined across pauses under 600 ms, 100 ms attack, 300 ms release), up to 6.6 dB. Loudness: linear gain to -16.0 LUFS (loudnorm measurement; -1.5 dB ceiling), the scene's limiter (alimiter 0.80 level=0, latency compensated, so the dialogue is sample-identical in time to v8 x12): -16.0 LUFS, -1.9 dBTP, LRA 2.9 (v8 x12 was -16.4). Measured: jingle hit on frame 11 to 0.0 ms; guard minimum 16.5 dB (7.4 dB if windows down to -35 dBFS count); transcript unchanged. Outputs on dev-mac: `s10/out/s10-m1.mp4`, `-phone.mp4`, stems `s10/out/s10-m1-{dialogue,music,sfx}.wav` (after the loudness gain, before the limiter).
+- **Checks:** glitch-scan v2 with `--chunk-starts 0,300,600 --ref 0` flags nothing on master or phone. The closest frame to frame 0 is 22.6 dB, below the 30 dB bar. At chunk starts 300 and 600 the frame differences sit at the median (1.14-1.19). Stills were checked at the wipe, every bar state, the jump cut (frames 330-337), the COMING UP NEXT cards, the box switch and the last frame.
+- **Last frame:** `build-x12.sh` writes `out/s10-v8-x12-last.png` (frame 834). It is not pixel-identical to the v8 x11 master's last frame (PSNR 39.4 dB). The content and timing are the same: a fresh capture at page time 1001/30 matches the x11 front layer exactly. The differences are anti-aliased edge pixels on the beaker, the vault drawing and the LIVE dot glow, which Chrome rasterizes differently 234 seeks into a chunk than after a fresh load, plus the different x264 encode. Run `pipeline/s11/build.sh assets` with `S10V=v8-x12`. Its duration-minus-0.05 s seek lands on frame 834, which matches the PNG exactly.

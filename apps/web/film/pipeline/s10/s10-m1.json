@@ -1,0 +1,37 @@
+{
+ "title": "Sign-off m1 (v8 x12 picture, 27.833 s)",
+ "notes": [
+  "Scene times (x12: v7 time / 1.2). The WE NOW RETURN wipe (measured on the master, red coverage per frame): enters on frame 1, its leading edge reaches the right side of the frame on frame 11 (0.367 s) and holds full cover, starts back out on frame 34 (1.133 s) and clears on frame 50 (1.667 s). 'WE NOW RETURN TO THE STUDIO' types from frame 16.",
+  "Dialogue (delivered mix, 10 ms RMS): 'Thanks' starts 1.86 s; the one gap of 0.8 s or more is 6.48-7.31; the last word decays below -47 dBFS at 27.57 s.",
+  "Jingle A (news-open-1-mini-jingle, the composer's choice over the horn): its first big hit (0.660 s into the file, as in the opening) on frame 11; it would start 0.293 s before the scene, so its head (the first notes of the quiet pickup) is trimmed with a 5 ms fade-in. Gain as in the opening: event loudness matched to x11's SPECIAL REPORT horn as mixed (-4 dB); ducked -12 dB from Liam's first word (100 ms) with a linear fade to silence over 1.0 s.",
+  "News bed ('Breaking News', 117.5 BPM): bar 20's downbeat accent (track onset about 38.77 s) lands at 27.60, just after the last word; at speed 1 that puts the bar 7 entry at about 1.21 s, under the wipe going out and just after the jingle's second hit (1.197). The track's break (bar 19, bass out from about 37.25 s in the track) falls under the last line by itself. -20 dB under speech, -14 in the 6.48-7.31 gap, -12 for the stab, then a cosine fade 27.70-28.05; the music stem carries that ring 0.30 s past the picture (into the closing card, for the stitch); the scene mix cuts it at 27.833 with a 15 ms fade.",
+  "Not used: the louder sixteenth-note figure with the bass back in, from 39.53 s in the track (0.72 s after bar 20's downbeat), which would fall after the picture ends and into the closing card's jingle."
+ ],
+ "dialogue": "s10/out/v8-x12/audio-final.wav",
+ "music": {
+  "file": "~/audio-work/solana-bunker/music/suno/2-news/suno-2-breaking-news-a.wav",
+  "hp": 180,
+  "anchors": [{"name": "bar 20 stab, just after the last word (27.57)", "track": 38.801, "scene": 27.60}],
+  "in": {"track": 12.376, "preroll": 0.015, "fade": 0.01},
+  "end": {"fade_from": 27.70, "fade_to": 28.05},
+  "stem_extra_s": 0.30,
+  "report_bars": {"7": 12.376, "8": 14.396, "19": 36.78, "20": 38.801},
+  "auto": [[1.0, -20], [6.48, -20], [6.78, -14], [7.21, -14], [7.31, -20], [27.57, -20], [27.59, -12]]
+ },
+ "guard": {"target": 16.5, "active_db": -30},
+ "sfx": [
+  {"name": "jingle A hit on the WE NOW RETURN wipe", "file": "~/audio-work/solana-bunker/out/work/news-open-1-mini-jingle.wav", "hit": 0.3667, "frame": 11,
+   "attack_s": 0.660, "gain": "JINGLE_GAIN", "duck": {"at": 1.86, "db": -12, "attack": 0.1, "fade": 1.0}}
+ ],
+ "verify": {
+  "src": "s10/out/s10-v8-x12.mp4", "src_phone": "s10/out/s10-v8-x12-phone.mp4",
+  "dst": "s10/out/s10-m1.mp4", "dst_phone": "s10/out/s10-m1-phone.mp4",
+  "final": "s10/out/m1/m1-final.wav", "stems": "s10/out/s10-m1",
+  "music": [
+   {"name": "music in (bar 7) under the wipe going out", "kind": "in", "picture": 1.1333, "frame": 34, "note": "picture = the wipe starts back out (f34); it clears on f50 (1.667)"},
+   {"name": "bar 7 downbeat onset", "kind": "onset", "at": 1.21, "picture": 1.1333, "frame": 34, "note": "inside the wipe-out, f34-f50"},
+   {"name": "bar 20 stab after the last word", "kind": "onset", "at": 27.60, "picture": 27.57, "note": "picture = the last word's end (dialogue below -47 dBFS)"},
+   {"name": "music stem silent (ring into the closing card)", "kind": "silent", "picture": 27.8333, "frame": 835, "note": "picture = the scene's end"}
+  ]
+ }
+}
