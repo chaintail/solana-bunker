@@ -1,0 +1,161 @@
+{
+ "title": "s06 m2 (speakeasy, v10 x12 picture, 663 frames = 22.100 s): music treatment per conspiracy m4c",
+ "notes": [
+  "Treatment = conspiracy m4c (film/conspiracy 70fecfa, music-m4.py): cue mono fold, high-pass 100 Hz, high shelves 6 kHz -6 dB and 11 kHz -8 dB, normalised to -18 LUFS; under speech the cue sits at -29.3 LUFS (m4c's '+9'), 5 dB higher between words; sidechain from the dialogue (10 ms RMS key -44..-38 dBFS, 30 ms look-ahead attack, 300 ms release); no breakpoints, swells, dips, guard trim or minimum-gap logic. Program -16 LUFS, true peak <= -1.3 dBTP before AAC (finish-m3.py); AAC 192k on master and phone.",
+  "Plan unchanged from s06-m1 (1e38b35): noir (suno-5-noir-a) one uncut segment, cut in at track 84.160 s at scene 0.236 s (5 ms raised-cosine head fade) so bar 23 lands on frame 9 after the takeover (frame 8) and before 'Alright' (0.375); bar 28 on the door shut (frame 576); raised-cosine fade 19.40-19.70; slot slam, REJECTED and the freeze dry.",
+  "Start: the cue already enters at 0.236 s, on the takeover frame, before the first word; not moved.",
+  "Intro: the used span (bars 23-28) is the cue's body (first 6 s short-term median within 0.6 dB of the span's); no intro levelling.",
+  "Highs: spectral check of the used span (100 Hz high-passed): no tonal spike above 12 kHz (largest 7.7 dB over its +-400 Hz median at 14.0 kHz in high-band frames, none in the long-term spectrum; the conspiracy cue's notched 16.8 kHz tone reads 9.0 dB on the same check); no notch.",
+  "Effects as m1 (each file gained to -20 LUFS event loudness + gain, hit on its frame); stamp rule: REJECTED stamp 0 -> -2 dB. The door shut (stamp-thump-3 file used as a door thud) is not a stamp cue and stays -6 dB."
+ ],
+ "dialogue": "in/audio-final.wav",
+ "frames": 663,
+ "fps": 30,
+ "music": {
+  "file": "in/suno-5-noir-a.wav",
+  "hp": 100,
+  "eq": [
+   {
+    "type": "highshelf",
+    "f": 6000,
+    "gain_db": -6,
+    "q": 0.7071
+   },
+   {
+    "type": "highshelf",
+    "f": 11000,
+    "gain_db": -8,
+    "q": 0.7071
+   }
+  ],
+  "norm_lufs": -18,
+  "under_lufs": -29.3,
+  "duck": {
+   "depth_db": 5,
+   "key_lo_db": -44,
+   "key_hi_db": -38,
+   "attack_ms": 30,
+   "release_ms": 300
+  },
+  "place": {
+   "mode": "cut",
+   "track_in": 84.16,
+   "scene_in": 0.236,
+   "head_fade": 0.005
+  },
+  "end": {
+   "fade_from": 19.4,
+   "fade_to": 19.7
+  },
+  "report_bars": {
+   "23": 84.242,
+   "28": 103.166
+  }
+ },
+ "sfx_mode": "event_lufs",
+ "sfx_ref_lufs": -20,
+ "sfx": [
+  {
+   "id": "door shut",
+   "file": "in/sfx/stamp-thump-3-kenney-soft-heavy.wav",
+   "frame": 576,
+   "hit": 0.0,
+   "gain": -6
+  },
+  {
+   "id": "slot slam",
+   "file": "in/sfx/slot-slam-1-metal-slam.wav",
+   "frame": 606,
+   "hit": 0.09,
+   "gain": 0
+  },
+  {
+   "id": "REJECTED stamp",
+   "file": "in/sfx/stamp-thump-1-traditional-stamp.wav",
+   "frame": 617,
+   "hit": 0.051,
+   "gain": 0,
+   "gain_change_db": -2
+  }
+ ],
+ "sfx_null": {
+  "m1_stem": "in/m1/s06-m1-sfx.wav",
+  "m1_gain_db": 0.69
+ },
+ "guard": {
+  "active_db": -30,
+  "windows_ms": [
+   100,
+   200
+  ],
+  "note": "measured and reported, not enforced (as conspiracy m4)"
+ },
+ "verify": {
+  "music": [
+   {
+    "name": "bar 23 downbeat after the takeover",
+    "at": 0.29,
+    "frame": 9
+   },
+   {
+    "name": "bar 28 downbeat on the door shut",
+    "at": 19.21,
+    "frame": 576
+   }
+  ]
+ },
+ "ref": {
+  "name": "m1",
+  "stems": "in/m1/s06-m1",
+  "gain_db": 0.69
+ },
+ "mux": {
+  "master": "s06/out/s06-v10-x12.mp4",
+  "phone": "s06/out/s06-v10-x12-phone.mp4",
+  "dst": "s06/out/s06-m2",
+  "work": "s06/out/m2",
+  "args": "-ac 1 -movflags +faststart -shortest"
+ },
+ "fetch": [
+  [
+   "video-work/solana-bunker/s06/out/x12/audio-final.wav",
+   "in/"
+  ],
+  [
+   "audio-work/solana-bunker/music/suno/5-noir/suno-5-noir-a.wav",
+   "in/"
+  ],
+  [
+   "audio-work/solana-bunker/music/suno/5-noir/analysis.json",
+   "in/"
+  ],
+  [
+   "audio-work/solana-bunker/out/work/stamp-thump-3-kenney-soft-heavy.wav",
+   "in/sfx/"
+  ],
+  [
+   "audio-work/solana-bunker/out/work/slot-slam-1-metal-slam.wav",
+   "in/sfx/"
+  ],
+  [
+   "audio-work/solana-bunker/out/work/stamp-thump-1-traditional-stamp.wav",
+   "in/sfx/"
+  ],
+  [
+   "video-work/solana-bunker/s06/out/s06-m1-dialogue.wav",
+   "in/m1/"
+  ],
+  [
+   "video-work/solana-bunker/s06/out/s06-m1-music.wav",
+   "in/m1/"
+  ],
+  [
+   "video-work/solana-bunker/s06/out/s06-m1-sfx.wav",
+   "in/m1/"
+  ],
+  [
+   "video-work/solana-bunker/s06/out/s06-m1-report.json",
+   "in/m1/"
+  ]
+ ]
+}
