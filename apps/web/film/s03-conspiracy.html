@@ -1,4 +1,4 @@
-<!doctype html><html data-duration="68.13" data-fps="30"><head><meta charset="utf-8">
+<!doctype html><html data-duration="59.38" data-fps="30"><head><meta charset="utf-8">
 <link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css"><link rel="stylesheet" href="dossier.css">
 <style>
 :root{--cork:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='360' height='360'><filter id='n' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='3' seed='9' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .28  0 0 0 0 .16  0 0 0 0 .05  0 0 0 1.5 -.55'/></filter><rect width='360' height='360' filter='url(%23n)'/></svg>")}
@@ -99,14 +99,18 @@
 <script>
 const D = __D, film = __film, $ = (i) => document.getElementById(i), mk = D.mk;
 D.defs();
-const OFF = 7.0, L = (g) => g - OFF, W = (p, w, s = true) => L(D.W(p, w, s)), A = (el, kf, at, dur, easing) => film.anim(el, kf, at, dur, easing ? { easing } : {});
+// v13 (Liam, 2026-10-18): two script cuts. CONSP.cuts = [x12b global start, seconds removed]; the hand-placed times in this file are x12b
+// global times and go through X13 (a time inside a cut lands on its start); word times in the data are already v13 times.
+const CUTS = window.CONSP.cuts || [], X13 = (g) => { let s = 0; for (const [a, d] of CUTS) { if (g >= a + d) s += d; else if (g > a) s += g - a; } return g - s; };
+const OFF = 7.0, L = (g) => X13(g) - OFF, W = (p, w, s = true) => D.W(p, w, s) - OFF, A = (el, kf, at, dur, easing) => film.anim(el, kf, at, dur, easing ? { easing } : {});
 const EO = D.ease.out, EI = D.ease.in, EIO = D.ease.io;
 const rs = film.rng(719);
 // ---- camera: pull back from the paper we pushed into at the end of slide 1
 { const S = 2.7, P = { x: 620, y: 200 };
   A($('cam'), [{ transform: `translate(${640 - P.x * S}px,${360 - P.y * S}px) scale(${S})` }, { transform: 'translate(0,0) scale(1)' }], 0.12, 2.1, 'cubic-bezier(.35,0,.15,1)'); }
 // ---- open folder: the cover is lying open on the left; it closes at the end (cover is above everything while closing)
-const tClose = L(71.85), tShut = L(72.9), tQ = L(73.28);
+// x12b (Liam, 2026-10-16): the close runs on "We'll let you draw your own conclusions" (68.853-70.413 s) and lands on the end of the line; the ? slams 0.2 s after
+const tClose = L(69.23), tShut = L(70.28), tQ = L(70.48);
 film.anim($('cover'), [{ transform: 'rotateY(-176deg)' }, { transform: 'rotateY(-176deg)', offset: tClose / tShut, easing: 'cubic-bezier(.5,0,.4,1)' }, { transform: 'rotateY(0deg)' }], 0, tShut);
 film.onSeek((t) => { $('fold3').style.zIndex = t >= tClose ? 80 : 'auto'; });
 D.slam($('qm'), tQ, -9, 2.2, .14);
@@ -198,7 +202,9 @@ const swing = (deg) => { const k = [{ opacity: 0, transform: 'rotate(0deg)' }]; 
 const swingK = swing(24);
 A(tag, swingK.map((k, i) => ({ ...k, offset: i / (swingK.length - 1) })), tDang, 3.4, 'ease-in-out');
 A(tagStr, swingK.map((k, i) => ({ ...k, offset: i / (swingK.length - 1) })), tDang, 3.4, 'ease-in-out');
-// tweet slip pinned over the board; stamp UNVERIFIED
+// tweet slip pinned over the board; stamp UNVERIFIED. v13: the slip and its TRUST ME, BRO slam illustrate p8b ("At least that's what crypto
+// Twitter kept repeating."), which is cut; the whole beat fell inside cut 2, so it is not built (the tweet first appears at p10, stamped).
+if (window.CONSP.words.p8b) {
 const tSlip = W('p8b', 'least') - .1, tRep = W('p8b', 'kept');
 A(ci, [{ opacity: 1 }, { opacity: .3 }], tSlip, .25);
 const sw2 = $('slipwrap');
@@ -209,6 +215,7 @@ A(slipPin, [{ opacity: 0, transform: 'scale(2.2)' }, { opacity: 1, transform: 's
 const unvW = mk('div', 'abs', 'left:0;top:362px;width:980px;display:flex;justify-content:center;pointer-events:none', sw2);
 const unv = mk('div', 'stamp', 'position:relative;font-size:68px;border-width:8px;padding:2px 20px 0', unvW, 'Trust me, bro');
 D.slam(unv, tRep, -9, 3.0, .13);
+}
 // ---- beat 8: corkboard line chart (replaces the shelf): one slip + tack per year, string between tacks, camera scrolls sideways, then pulls back
 const tShelf = L(42.85), tFp = L(52.55);
 const bd = $('bd'), wld = $('wld'), wsl = $('wsl'), wstr = $('wstr');
@@ -258,7 +265,7 @@ DATA.forEach(([yr, c], i) => {
 }
 D.hide(cork, L(43.55));
 // close: the corkboard (with the tweet and typed card) fades off the desk before the folder shuts, so the stamp lands on the folder over the plain desk
-D.hide(bd, L(70.55), .4);
+D.hide(bd, L(68.78), .4);
 D.hide(idx, tCork + .7);
 // ---- beat 9: the tweet slip returns over the pulled-back board with TRUST ME, BRO; CHECKED lands on "checked"; typed lines on a card
 const tTwit = W('p10', 'We') - .1, tChk = W('p10', 'checked'), tJ = W('p11', '9,923'), tSev = W('p12', '719'), t26 = W('p12', '2026', false);
@@ -272,14 +279,14 @@ const card = $('card');
 A(card, [{ opacity: 0, transform: 'translateY(420px) rotate(3deg)' }, { opacity: 1, transform: 'translateY(0) rotate(-.4deg)' }], tSev - .6, .5, EO);
 D.type($('l2'), '719 papers, 2026', tSev, t26 + .05, true);
 D.hide($('plateS'), L(51.6), .25);
-// ---- beat 10: the silence is real: the lamp flickers once
+// ---- beat 10: the silence is real
 const tReal = W('p13', 'real');
-A($('dim'), [{ opacity: 0 }, { opacity: .62, offset: .12 }, { opacity: .08, offset: .3 }, { opacity: .5, offset: .5 }, { opacity: 0 }], tReal - .05, .4, 'linear');
+// (the lamp flicker was removed: Liam 16805)
 // ---- camera thumps (JS driven, one hook): stamps and the folder shutting
-const hits = [[W('p8b', 'kept'), 7], [tCens, 6], [tChk, 9], [tShut, 8], [tQ, 11]];
+const hits = [...(window.CONSP.words.p8b ? [[W('p8b', 'kept'), 7]] : []), [tCens, 6], [tChk, 9], [tShut, 8], [tQ, 11]];
 film.onSeek((t) => { let y = 0, r = 0; for (const [h, a] of hits) { const d = t - h; if (d >= 0 && d < .45) { const e = Math.exp(-d * 9) * Math.sin(d * 52); y += a * e; r += a * e * .05; } } $('shake').style.transform = `translate(0,${y.toFixed(2)}px) rotate(${r.toFixed(3)}deg)`; });
 // hard cut to black for the next scene
-A($('cut'), [{ opacity: 0 }, { opacity: 1, offset: .0001 }, { opacity: 1 }], 68.13 - .1, .1, 'steps(1,end)');
+A($('cut'), [{ opacity: 0 }, { opacity: 1, offset: .0001 }, { opacity: 1 }], film.duration - .1, .1, 'steps(1,end)');
 // ---- polaroid frame for Liam (the video is overlaid at the same place by ffmpeg)
 const pol = $('pol'), tPi = L(9.75), tPo = L(57.45);
 film.anim(pol, [{ opacity: 0 }, { opacity: 1, offset: .15 / (tPo + .15 - tPi) }, { opacity: 1, offset: (tPo - tPi) / (tPo + .15 - tPi) }, { opacity: 0 }], tPi, tPo + .15 - tPi);

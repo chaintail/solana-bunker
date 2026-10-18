@@ -1,0 +1,48 @@
+{
+ "title": "Conspiracy m1 (x12b picture, 59.100 s)",
+ "notes": [
+  "Scene times. x12b: scene = global 1x time / 1.2 (s01 and s03 captured at --speed=1.2). Stamp hits are the first frame on which the stamp has landed (D.slam reaches scale 0.96 at 95% of its 0.13-0.14 s, page time), checked on contact sheets of the master: CLASSIFIED f63, CENSORED? f632, TRUST ME, BRO f1032, CHECKED f1419, ? f1766. The folder cover's rotation ends on f1757 (58.567 s, tShut = 70.28/1.2); its shake shows from f1758 (frame differences: the cover sweeps across f1743-1752, settles to 0.23 at f1757).",
+  "Speech map (dialogue 10 ms RMS >= -40 dBFS, gaps < 0.2 s merged): gaps of 0.8 s or more 19.73-21.22, 22.75-23.74, 34.92-35.96, 55.33-56.21; 5.36-6.14 (0.78 s) is the plan's named rise before 'here's where the conspiracy starts'. Last word ends 58.68.",
+  "Music: 'The Clock Ticks Twice'. Bar 13 (the first full bar) on the CENSORED? landing; bar 37's downbeat is the downbeat end at 58.40, between the cover starting to close (57.69) and the shut (58.567), under the paper slide's loudest part. With the cue at speed 1 the downbeats fall at 57.41 and 58.99, so the cue runs 1.59% fast (resampled by 1.015877: pitch +27 cents, tempo 152 -> 154.4 BPM) so both anchors land; this moves the entry (bar 3) into the gap at 5.52.",
+  "Levels: -20 under speech; -14 in the gaps; CENSORED? swell -10 (bar 13 and the stamp at -10, back to -20 as 'Maybe' starts at 21.19); the gap after TRUST ME, BRO swells to -12 for bar 22 (35.08); dip to -24 from 56.69 (1 s before the close) to the end downbeat; cosine fade 58.45-59.00 (the last three frames, 59.00-59.10, are black)."
+ ],
+ "dialogue": "out/consp-x12b/audio-final.wav",
+ "music": {
+  "file": "~/audio-work/solana-bunker/music/suno/3-conspiracy/suno-3-the-clock-ticks-twice-a.wav",
+  "hp": 180,
+  "anchors": [
+   {"name": "bar 13 on the CENSORED? landing (f632)", "track": 19.064, "scene": 21.0667},
+   {"name": "bar 37 downbeat end, between close start and shut", "track": 56.982, "scene": 58.40}
+  ],
+  "in": {"track": 3.274, "preroll": 0.015, "fade": 0.01},
+  "end": {"fade_from": 58.45, "fade_to": 59.0},
+  "report_bars": {"3": 3.274, "4": 4.853, "13": 19.064, "22": 33.297, "25": 38.034, "36": 55.403, "37": 56.982},
+  "auto": [[5.40, -14], [6.04, -14], [6.14, -20],
+           [19.75, -20], [20.05, -14], [20.20, -14], [20.50, -10], [21.10, -10], [21.19, -20],
+           [22.77, -20], [23.07, -14], [23.64, -14], [23.74, -20],
+           [34.92, -20], [35.08, -12], [35.86, -12], [35.96, -20],
+           [55.35, -20], [55.65, -14], [56.11, -14], [56.21, -20],
+           [56.69, -20], [56.99, -24]]
+ },
+ "guard": {"target": 16.5, "active_db": -30},
+ "sfx": [
+  {"name": "CLASSIFIED slam", "file": "~/audio-work/solana-bunker/out/work/stamp-thump-1-traditional-stamp.wav", "hit": 2.1, "frame": 63, "gain": -6},
+  {"name": "CENSORED? slam", "file": "~/audio-work/solana-bunker/out/work/stamp-thump-1-traditional-stamp.wav", "hit": 21.0667, "frame": 632, "gain": 0},
+  {"name": "TRUST ME, BRO slam", "file": "~/audio-work/solana-bunker/out/work/stamp-thump-1-traditional-stamp.wav", "hit": 34.4, "frame": 1032, "gain": -6},
+  {"name": "CHECKED slam", "file": "~/audio-work/solana-bunker/out/work/stamp-thump-1-traditional-stamp.wav", "hit": 47.3, "frame": 1419, "gain": -6},
+  {"name": "folder closes (paper slide, ends on the shut)", "file": "~/audio-work/solana-bunker/out/work/whoosh-2-paper-slide.wav", "hit": 58.5667, "frame": 1757, "gain": -6, "align": "cut"},
+  {"name": "folder shut", "file": "~/audio-work/solana-bunker/out/work/stamp-thump-3-kenney-soft-heavy.wav", "hit": 58.5667, "frame": 1757, "gain": -6},
+  {"name": "? stamp", "file": "~/audio-work/solana-bunker/out/work/stamp-thump-2-stamp-bright-shelved.wav", "hit": 58.8667, "frame": 1766, "gain": 0}
+ ],
+ "verify": {
+  "src": "out/conspiracy-x12b.mp4", "src_phone": "out/conspiracy-x12b-phone.mp4",
+  "dst": "out/conspiracy-m1.mp4", "dst_phone": "out/conspiracy-m1-phone.mp4",
+  "final": "out/consp-m1/m1-final.wav", "stems": "out/conspiracy-m1",
+  "music": [
+   {"name": "music in (bar 3, gap before 'here's where')", "kind": "in", "picture": 5.36, "note": "picture time = start of the speech gap (5.36-6.14)"},
+   {"name": "bar 13 downbeat on CENSORED? landing", "kind": "onset", "at": 21.0667, "picture": 21.0667, "frame": 632},
+   {"name": "bar 37 downbeat end", "kind": "onset", "at": 58.40, "picture": 58.40, "note": "target inside the close (57.69, f1731) .. shut (58.567, f1757)"},
+   {"name": "music silent", "kind": "silent", "picture": 59.0, "frame": 1770, "note": "first black frame"}
+  ]
+ }
+}

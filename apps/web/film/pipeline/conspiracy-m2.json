@@ -1,0 +1,46 @@
+{
+ "title": "Conspiracy m2 (x12b picture, 59.100 s): music under speech at m1's gap level, word-speed sidechain, folder close 2",
+ "notes": [
+  "Audio-only remix of m1 on the x12b picture (picture stream-copied). Liam on the m1 film (2026-10-17): the music too quiet; m1's un-ducked level is about right; keep a little ducking, tight to the words, not only in long pauses; the lifts in the quiet parts too dramatic; stamps a little quieter; replace the folder-close sound.",
+  "Music: placement, speed (1.015877) and the end fade are m1's. High-pass 180 -> 100 Hz. The cue is normalised to -18 LUFS integrated, then sits at m1's gap level (-14 dB re the raw cue at 180 Hz, converted to the same loudness on the normalised cue) while Liam speaks and opens by depth_db between words (sidechain on the dialogue stem: 30 ms look-ahead attack, 300 ms release). m1's breakpoint automation is gone: no -20 under speech, no CENSORED? (-10) or bar 22 (-12) swells, no -24 dip before the close.",
+  "Effects: the stamps 2 dB quieter than m1. The folder close (m1: whoosh-2-paper-slide ending on the shut + stamp-thump-3 on the shut) is replaced by folder-close-2-doc-folder (Freesound 511699 'document folder open-close #2.wav' by Timbre, CC0 1.0, https://freesound.org/people/Timbre/sounds/511699/; HQ preview trimmed to the first event, -20 LUFS like the other effect files), at m1's folder level (-6 dB); its main impact (the loudest transient, about 0.21 s in; a small precursor about 0.14 s before it is not the hit) on the shut, f1757 (58.567).",
+  "Loudness: -16 LUFS integrated, true peak <= -1.3 dBTP before AAC (one delay-compensated limiter, ceiling lowered until the true peak holds)."
+ ],
+ "dialogue": "in/audio-final.wav",
+ "music": {
+  "file": "in/suno-3-the-clock-ticks-twice-a.wav",
+  "hp": 100,
+  "detect_hp": 180,
+  "norm_lufs": -18,
+  "level_from_m1": {"m1_hp": 180, "m1_gap_db": -14},
+  "duck": {"depth_db": 5, "key_lo_db": -44, "key_hi_db": -38, "attack_ms": 30, "release_ms": 300},
+  "anchors": [
+   {"name": "bar 13 on the CENSORED? landing (f632)", "track": 19.064, "scene": 21.0667},
+   {"name": "bar 37 downbeat end, between close start and shut", "track": 56.982, "scene": 58.40}
+  ],
+  "in": {"track": 3.274, "preroll": 0.015, "fade": 0.01},
+  "end": {"fade_from": 58.45, "fade_to": 59.0},
+  "report_bars": {"3": 3.274, "13": 19.064, "22": 33.297, "37": 56.982}
+ },
+ "guard": {"target": 12, "active_db": -30, "windows_ms": [100, 200], "note": "measured and reported, not enforced"},
+ "sfx": [
+  {"name": "CLASSIFIED slam", "file": "in/sfx/stamp-thump-1-traditional-stamp.wav", "hit": 2.1, "frame": 63, "gain": -8},
+  {"name": "CENSORED? slam", "file": "in/sfx/stamp-thump-1-traditional-stamp.wav", "hit": 21.0667, "frame": 632, "gain": -2},
+  {"name": "TRUST ME, BRO slam", "file": "in/sfx/stamp-thump-1-traditional-stamp.wav", "hit": 34.4, "frame": 1032, "gain": -8},
+  {"name": "CHECKED slam", "file": "in/sfx/stamp-thump-1-traditional-stamp.wav", "hit": 47.3, "frame": 1419, "gain": -8},
+  {"name": "folder close (main impact on the shut)", "file": "in/sfx/folder-close-2-doc-folder.mp3", "hit": 58.5667, "frame": 1757, "gain": -6, "attack_peak_db": 6, "attack_rise_db": 6},
+  {"name": "? stamp", "file": "in/sfx/stamp-thump-2-stamp-bright-shelved.wav", "hit": 58.8667, "frame": 1766, "gain": -2}
+ ],
+ "credits": [
+  {"file": "folder-close-2-doc-folder.mp3", "title": "document folder open-close #2.wav", "freesound_id": 511699, "author": "Timbre", "licence": "CC0 1.0",
+   "url": "https://freesound.org/people/Timbre/sounds/511699/", "note": "HQ preview (lossy) trimmed to the first event, 50 ms fade-out, -20 LUFS, 48 kHz; used from m2 on the folder shut"},
+  {"file": "stamp-thump-1-traditional-stamp.wav", "freesound_id": 470710, "author": "I.fekry", "licence": "CC0 1.0", "url": "https://freesound.org/people/I.fekry/sounds/470710/"},
+  {"file": "stamp-thump-2-stamp-bright-shelved.wav", "freesound_id": 362624, "author": "kermite607", "licence": "CC0 1.0", "url": "https://freesound.org/people/kermite607/sounds/362624/"}
+ ],
+ "verify": {
+  "music": [
+   {"name": "bar 13 downbeat on CENSORED? landing", "at": 21.0667, "frame": 632},
+   {"name": "bar 37 downbeat end", "at": 58.40}
+  ]
+ }
+}
