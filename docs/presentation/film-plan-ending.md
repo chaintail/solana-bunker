@@ -298,3 +298,32 @@ Rulings applied: Q9 the roll at 6 px a frame, Q10 the cards on black, Q11 Liam's
   - The new lines read at 540p.
   - Contact sheet: `s11-v8-roll-phases.png`.
 - **Outputs:** `s11-v8.mp4` and `s11-v8-phone.mp4` (960x540, crf 26).
+
+## 18. As built: scene 11 v9 (Liam, 2026-10-17: the roll speeds up sooner and more smoothly, peaks lower, and slows down earlier)
+- **Liam's notes:** speed up sooner and more smoothly so the credits don't fly; take longer to slow down; don't time the speed-up to the voice. The first lines, the last lines and Mikail's name in R&D must be readable, even if the roll runs half a second longer.
+- **Where the lines are** (blocks measured at load, `out/layout-v8.json`): Justin Drake (STORY INSPIRATION, 163–237) and the CAST joke (289–949) are at the top of the roll. Mikail R. is the second name in RESEARCH & DEVELOPMENT (1624–1846). The closing lines (the Lamport portrait line and the two joke lines) start at 5292.
+- **Roll speed:** both eases are smoothsteps on the speed (v7/v8: cubic in-out). Phase 2 starts when the whole R&D block is in the window, not on the read's end. It is 5.3 s earlier than v8. The ease-in and ease-out lengths are the longest that fit in the extra half second.
+
+  | phase | scene time (s) | px a frame |
+  |---|---|---|
+  | 1 | 3.60–13.87 | 6 (1.00x) |
+  | 2: ease in | 13.87–17.67 (3.8 s) | 6 to 9, smoothstep |
+  | 2: hold | 17.67–24.77 | 9 (1.50x) |
+  | 3: ease out | 24.77–27.77 (3.0 s) | 9 to 6, smoothstep, reached as the Lamport line enters the window |
+  | 3: hold, the closing lines | 27.77–32.40 | 6 (1.00x) |
+
+  The peak is 1.5x (v8: 2.0x). The largest change in speed is 0.08 px a frame per frame (v8: 0.32). The ease-out is 3.0 s (v8: 2.0 s) and starts 126 px higher on the roll: roll offset 4620, as ARCHIVAL SOURCES enters the window (v8: 4746, STUNTS).
+- **Readability:** Justin Drake and the CAST block pass at 1.00x (Justin at the window's centre at 6.13). Mikail R. is at 1.00x from 13.50 to 14.10 (the lower third), 1.08x at the centre (14.63) and 1.17x as he leaves (15.60). SPECIAL THANKS and all the closing lines read at 1.00x (the Lamport portrait line is centred at 29.37, "No curves…" at 30.17, "No meme coins…" at 30.87).
+- **Length:** the roll ends and card 1 starts at 32.40, 0.47 s later than v8 (31.93). Card 2 is at 36.90 and fully in at 37.30. Total 41.30 s, 1239 frames (v8: 40.83 s, 1225 frames).
+- **Audio:** the cues are re-anchored on the new picture. The groove stays on bar 28 (bar 27 would come in at 18.41, under the voice). Its in-point moves to 20.72 (v8: 20.25) so the final chord still lands on card 2, now at 36.90. Jingle B's last hit is on card 2's landing frame, 37.30 (v8: 36.83). Jingle A, the voice and the levels are unchanged: jingle A's first big hit is at 1.80.
+- **Capture:** both chunks were recaptured with `out/cap-v9.sh` (as `cap-v8.sh`, both chunks; a warm-up shot per chunk). The roll changes from 13.87, inside chunk a. Chunk a has 585 frames, chunk b 654. v8's chunks are kept as `out/chunk-a-v8.mkv` and `out/chunk-b-v8.mkv`.
+- **Checks** (`out/verify-v9.sh`, dev-mac):
+  - glitch-scan v2 with `--chunk-starts 585 --ref 0` is clean on master and phone (0 flagged; closest frame to frame 0 at 18.8 dB). The credits-only cut is clean too (0 flagged).
+  - Lossless frame 0 equals scene 10 frame 834 (PSNR inf); the master's frame 0 is at 41.97 dB.
+  - Chunk a frames 0–414 are identical to v8's (PSNR inf on all 415).
+  - The parchment half (x 430–1280: title, codes, ask line) is identical to v8 on frames 0–957 (PSNR inf on all 958), so the codes and their reveal times are unchanged.
+  - Roll speed measured on the master's pixels matches the design in every phase: 299/299, 114/114, 213/213, 90/90 and 128/128 frames with text are within 1 px. (`roll_speed.py` fails on the 960x540 phone cut: crop size mismatch, a script bug; v8 ran it on the master only.)
+  - Onsets on the master's AAC (phone the same): jingle A 1.8000, groove in 20.7145, groove chord 36.9035, jingle B 37.3000.
+  - The master's audio is sample-identical to v8's from 0 to 20.2 s, so the voice, jingle A and the bed are unchanged (no new transcript was needed; `faster_whisper` is not in `~/whisper-venv`). The voice is -16.0 LUFS and the whole scene -19.0 LUFS integrated, with a -1.9 dBFS peak.
+  - Contact sheet: `s11-v9-roll-phases.png`.
+- **Outputs:** `s11-v9.mp4`, `s11-v9-phone.mp4` (960x540, crf 26; it now copies the master's 192k AAC, v8 re-encoded at 128k) and `s11-v9-credits-only.mp4` (the roll alone, 3.60–32.40, 960x540, for judging readability). The scan report is `s11-v9-glitch-scan.txt`.
