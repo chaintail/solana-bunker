@@ -1,5 +1,6 @@
 // Render a film scene to PNG frames with headless Chrome (CDP, no dependencies).
-//   node film/scripts/capture.mjs <scene> [--layer=front|back] [--still=<t>[,<t>...]] [--from=<s>] [--to=<s>] [--out=<dir>]
+//   node film/scripts/capture.mjs <scene> [--layer=front|back] [--still=<t>[,<t>...]] [--from=<s>] [--to=<s>] [--fresh] [--out=<dir>]
+// --fresh reloads the page before every frame (slower). Headless Chrome occasionally drops a paint after an incremental update; a fresh page does not.
 // --speed=<f> (or --speed <f>) time-scales the frame sequence: output frame k samples the page at t = k/fps * f, frame count ceil(N/f) for the N = duration*fps
 //   frames of the scene; the last output frame is pinned to the scene's last frame (N-1)/fps so the hand-off frame is unchanged. --from/--to are output seconds then.
 // Frames: apps/web/render/<scene>[-<layer>]/f%05d.png (fps from data-fps), gitignored.
@@ -7,7 +8,7 @@
 // With --still, writes <out>/still-<t>.png for each time instead of the frame sequence.
 // CHROME env overrides the browser binary (macOS: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome").
 import { spawn } from 'node:child_process';
-import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -22,7 +23,18 @@ const out = resolve(opt.out || join(here, '../../render', scene + (layer ? '-' +
 mkdirSync(out, { recursive: true });
 
 const port = 9800 + Math.floor(Math.random() * 400);
-const chrome = spawn(process.env.CHROME || '/usr/bin/google-chrome', ['--headless=new', `--remote-debugging-port=${port}`, `--user-data-dir=${mkdtempSync(join(tmpdir(), 'film-chrome-'))}`, '--no-first-run', '--hide-scrollbars', '--force-color-profile=srgb', '--allow-file-access-from-files', 'about:blank'], { stdio: 'ignore' });
+const profile = mkdtempSync(join(tmpdir(), 'film-chrome-'));
+const chrome = spawn(process.env.CHROME || '/usr/bin/google-chrome', ['--headless=new', `--remote-debugging-port=${port}`, `--user-data-dir=${profile}`, '--no-first-run', '--hide-scrollbars', '--force-color-profile=srgb', '--allow-file-access-from-files', 'about:blank'], { stdio: 'ignore', detached: true });   // own process group so helper processes die with it
+// Always quit this Chrome and delete its user-data-dir, on normal exit, errors, and SIGINT/SIGTERM/SIGHUP (leaked profiles filled dev-mac's disk).
+let cleaned = false;
+const cleanup = () => {
+  if (cleaned) return; cleaned = true;
+  try { process.kill(-chrome.pid, 'SIGKILL'); } catch { try { chrome.kill('SIGKILL'); } catch {} }
+  try { rmSync(profile, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 }); } catch {}
+};
+process.on('exit', cleanup);
+for (const sig of ['SIGINT', 'SIGTERM', 'SIGHUP']) process.on(sig, () => { cleanup(); process.exit(130); });
+process.on('uncaughtException', (e) => { console.error(e); cleanup(); process.exit(1); });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let ws;
 for (let i = 0; i < 60; i++) {
@@ -42,10 +54,15 @@ try {
   await send('Page.enable');
   await send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
   if (layer) await send('Emulation.setDefaultBackgroundColorOverride', { color: { r: 0, g: 0, b: 0, a: 0 } });
+  const load = async () => {
   await send('Page.navigate', { url: `file://${resolve(here, '..', scene + '.html')}?capture${layer ? '&layer=' + layer : ''}` });
+  await sleep(150);
   for (let i = 0; i < 300; i++) { if (await ev("document.documentElement.dataset.filmReady==='1'")) break; await sleep(100); }
+  };
+  await load();
   let warmed = false;
   const shot = async (t, file) => {
+    if (opt.fresh) { await load(); warmed = false; }
     if (!warmed) {   // warm-up: the first paint after a (re)load can still be the page's ready-time seek(0) state (stale frame-0 paint at chunk starts):
       warmed = true;  // seek to the target, wait, and discard two screenshots before the real one
       for (let i = 0; i < 2; i++) { await ev(`(async()=>{window.__film.seek(${t});await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));return 1})()`); await send('Page.captureScreenshot', { format: 'png', fromSurface: true, captureBeyondViewport: false }); }
@@ -69,5 +86,5 @@ try {
     }
   }
   console.log('done ->', out);
-} finally { chrome.kill(); }
+} finally { cleanup(); }
 process.exit(0);

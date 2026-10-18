@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""m3 audio verification (music treatment per conspiracy m4c), shared by the opening, s04 and s05. Runs on do-box (/home/claude/venvs/manim; ffmpeg audio
+"""s05 m3 audio verification: verify-m2.py with ref = m2 and the placement check limited to the placements' place_spans (where m2 had the same
+music). Runs on do-box (/home/claude/venvs/manim; ffmpeg audio
 only, -vn). Adapted from conspiracy verify-m4.py.
 usage: verify-m3.py <work prefix> <stem prefix> <final.wav> <report dir> [<m3.mp4> <m3-phone.mp4>]   (run from the work root)
   reads <work prefix>-placements.json (key = the dialogue that drives the sidechain at its delivered level; ref = the previous build's music stem and
@@ -49,7 +50,7 @@ for p in MP4:
     rep['sync'][os.path.basename(p) + '_audio_vs_pre_samples'] = lag(dec[:N], pre); rep['sync'][os.path.basename(p) + '_audio_len_s'] = len(dec) / SR
     rep['loudness'][os.path.basename(p)] = ebur(p)
 # ---- placement vs the ref music, per live span
-for a, b in pl['music_live']:
+for a, b in pl.get('place_spans', pl['music_live']):
     i, j = int(a * SR), int(b * SR)
     rep['place'].append({'span_s': [round(a, 3), round(b, 3)], 'preduck_vs_ref_lag_samples': lag(pdk[i:j], rmus[i:j], 480)})
 # ---- onsets

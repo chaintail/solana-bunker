@@ -1,0 +1,1 @@
+window.POSE_ALIGN = {"physicist-shrug": {"dx": 0.0, "dy": 0.0, "hx": 511.5, "hy": 308}, "physicist-holding-clipboard": {"dx": 0.0, "dy": 0.0, "hx": 511.5, "hy": 308}, "physicist-professor-point": {"dx": 115.5, "dy": 0.0, "hx": 511.5, "hy": 308}};

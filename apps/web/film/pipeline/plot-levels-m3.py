@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""m3 level plot (one scene against its previous build). Runs on do-box (/home/claude/venvs/manim, matplotlib). Input: levels.npz from verify-m3.py.
+"""m3 level plot (one scene against its previous build, m2): plot-levels-m2.py relabelled. Runs on do-box (/home/claude/venvs/manim, matplotlib). Input: levels.npz from verify-m3.py.
 usage: plot-levels-m3.py <out.png> <levels.npz> <scene label>
 Rows: 100 ms RMS (10 ms hop) of the dialogue, the ref music, the m3 music and the sfx at delivery level, with the sidechain (right axis) and the picture
 events; dialogue minus music where the dialogue is >= -30 dBFS and the music plays (ref and m3, 12 / 16 dB lines); music short-term loudness (3 s), ref
