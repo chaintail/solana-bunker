@@ -124,3 +124,7 @@ Public deterministic vectors are disposable and must never back a funded shared-
 - [xmss-reference](https://github.com/XMSS/xmss-reference), the pinned independent C implementation
 - Solana Winternitz Vault by Dean Little, which authenticates lamport operations with WOTS
 - Winterwallet by Blueshift, listed for further implementation comparison
+
+## License
+
+Code is licensed under [MIT](LICENSE); [film and presentation assets](apps/web/film/LICENSE.md) are all rights reserved.
