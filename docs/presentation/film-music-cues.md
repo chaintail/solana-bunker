@@ -1,6 +1,6 @@
 # Solana Bunker, music cue sheet (Liam 16495: go on the music plan)
 
-Five Suno cue families plus the arcade scored in-house with the chiptune tracker (pipeline/s08/score.py); scene 7 (the seminar) stays silent. Level: music about 20 dB under the voice during speech, up to 10 dB under in real gaps; duck fast attack / slow release; high-pass near 180 Hz; the brown-noise bed is muted while a cue plays; 20 ms edges; music changes only where the picture style changes. Keys: C major for news, workshop, arcade, sponsor; A minor for conspiracy and noir. Source: Suno on a paid plan (download while paid, keep the plan and date); CC0 fallback. Add a MUSIC credit line.
+Five Suno cue families plus the arcade scored in-house with the chiptune tracker (pipeline/s08/score.py); the noir cue continues under scene 7 (the seminar) at -4 dB, then comes back up on the alley cut. Level: music about 20 dB under the voice during speech, up to 10 dB under in real gaps; duck fast attack / slow release; high-pass near 180 Hz; the brown-noise bed is muted while a cue plays; 20 ms edges; music changes only where the picture style changes. Keys: C major for news, workshop, arcade, sponsor; A minor for conspiracy and noir. Source: Suno on a paid plan (download while paid, keep the plan and date); CC0 fallback. Add a MUSIC credit line.
 
 ## Cue 1: Sponsor card + advisory
 

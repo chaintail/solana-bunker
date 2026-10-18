@@ -24,7 +24,7 @@ The ten confirmed devnet operations, 225 runtime assertions and every measuremen
 
 ![Version two being robbed: the attacker copies the secret and swaps the destination](docs/presentation/assets/scene-robbed.png)
 
-Version three also rotates. A signed rotation installs a fresh tree with a new root and the next epoch, at the same address with the same balance, and the old root is rejected afterwards. The next tree comes from the same BIP39 seed phrase, so recovery is one instruction. The vault tracks spent one-time keys in a bitmap and can burn doubtful keys.
+Version three also rotates. A signed rotation installs a fresh tree with a new root and the next epoch, at the same address with the same balance, and the old root is rejected afterwards. The BIP39 seed phrase recovers keys, not signing progress; lost or uncertain signing journal state requires abandoning affected leaves or using a fresh tree. The vault tracks spent one-time keys in a bitmap and can burn doubtful keys.
 
 ![Rotation: the old root fails, the new root is active, the treasury address and balances are unchanged](docs/presentation/assets/scene-rekeyed.png)
 
@@ -96,7 +96,7 @@ The 16-leaf benchmark uses five samples per asset to preserve leaf space; larger
 
 - **Pitch (3 min):** link coming
 - **Technical (3 min):** link coming
-- **Full technical walkthrough (about 11 min, YouTube):** link coming
+- **Film (7 min, YouTube):** https://www.youtube.com/watch?v=TeB0ym4IPFk
 
 ## Results and evidence
 
