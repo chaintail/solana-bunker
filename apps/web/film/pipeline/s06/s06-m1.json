@@ -1,0 +1,24 @@
+{
+ "scene": "s06", "name": "s06-m1", "dir": "~/video-work/solana-bunker/s06",
+ "note": "v10 x12 (db34c88), 663 frames = 22.100 s. Takeover from the baked whiteboard frame 7/8, first word 0.375 s, door shut frame 576, slot slam frame 606, REJECTED lands frame 617. See film-plan-s06.md 'm1 (music)'.",
+ "master": "out/s06-v10-x12.mp4", "phone": "out/s06-v10-x12-phone.mp4", "dialogue": "out/x12/audio-final.wav",
+ "fps": 30, "frames": 663, "limiter": "alimiter=limit=0.80:level=0:latency=1",
+ "guard_db": 16, "voice_active_db": -30, "sfx_ref_lufs": -20,
+ "music": {"file": "~/audio-work/solana-bunker/music/suno/5-noir/suno-5-noir-a.wav", "ref_lufs": -16, "highpass": 180,
+           "track_in": 84.160, "downbeat_in_track": 84.210, "scene_in": 0.236, "frame_in": 9, "head_fade": 0.005,
+           "out_downbeat_track": 103.132, "fade": [19.40, 19.70],
+           "under": -20, "gap": -14, "gap_min": 0.8, "release": 0.3, "attack": 0.1,
+           "why": "bar 23 (analysis 84.242; attack: envelope onset 84.163, spectral flux 84.210-84.212) -> 0.286 s, frame 9, after the takeover (frame 8) and before Alright (0.375); bar 28 (analysis 103.166; attack 103.116-103.132, a 20-30 ms ramp) on the door shut, frame 576 = 19.200 s; mapping scene = track - 83.924 balances the two (about 12 ms each way); cut at 84.160 keeps the attack; 0.5 s tail: full to 19.40, raised-cosine fade to 19.70; slot slam and REJECTED dry"},
+ "sfx": [
+  {"id": "door shut", "file": "~/audio-work/solana-bunker/out/work/stamp-thump-3-kenney-soft-heavy.wav", "frame": 576, "hit": 0.0, "gain": -6},
+  {"id": "slot slam", "file": "~/audio-work/solana-bunker/out/work/slot-slam-1-metal-slam.wav", "frame": 606, "hit": 0.090, "gain": 0},
+  {"id": "REJECTED stamp", "file": "~/audio-work/solana-bunker/out/work/stamp-thump-1-traditional-stamp.wav", "frame": 617, "hit": 0.051, "gain": 0}
+ ],
+ "picture_checks": [
+  {"id": "takeover (baked -> live lab coat)", "frame": 8, "metric": "diff"},
+  {"id": "headlight sweep start", "frame": 45, "metric": "diff"},
+  {"id": "door shut", "frame": 576, "metric": "diff"},
+  {"id": "slot slam", "frame": 606, "metric": "diff"},
+  {"id": "REJECTED lands", "frame": 617, "metric": "diff"}
+ ]
+}
