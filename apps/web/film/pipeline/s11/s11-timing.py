@@ -11,7 +11,12 @@ downbeat (G_BARS) that comes in after the read's end (19.10), letting the empty 
 4 frames; v8: bar 28, no hold).
 Audio adds: jingle A (news-open-1) with its first big hit on the CNN slam (1.80); jingle B (news-open-2) with its last hit on card 2's landing
 frame (card2 + 0.4, the crossfade's end); the sponsor groove from the first downbeat after the voice, its final chord (bar 35) on card 2 (T.card2),
-faded out over the 0.4 s to jingle B's last hit (a downbeat end: the groove's next hit is 0.55 s after the chord)."""
+faded out over the 0.4 s to jingle B's last hit (a downbeat end: the groove's next hit is 0.55 s after the chord).
+v9 (Liam, 2026-10-17: speed up sooner and smoother, not as fast, more time to slow down; the first and last lines and Mikail's name readable; up to
+0.5 s longer): the speed curve no longer waits for the read's end. Phase 1 holds 6 px a frame (1.0x) through the opening blocks and until the whole
+RESEARCH & DEVELOPMENT block (Mikail R.) is in the window. Phase 2 eases (smoothstep on the speed, N_UP frames) up to 9 px a frame (1.5x; v8 2.0x)
+and holds. Phase 3 eases back down (smoothstep, N_DN frames; v8 a 2.0 s cubic) to 6 px a frame, reached as the closing lines enter the window
+(as v8), and holds until the last line has left. N_UP and N_DN are the longest eases that fit the roll in 864 frames (the scene in 41.30 s)."""
 import json, math
 FPS = 30
 VOICE_AT = 4.60     # v4: the locked read (Google en-US-Studio-O, voices/outro/outro-v4.wav), 1.0 s after the split lands (3.60)
@@ -22,12 +27,13 @@ at = lambda w: round(VOICE_AT - TRIM + w, 2)   # file time -> scene time
 # the roll, measured in s11-cnn.html at load (v7: + MUSIC, ARCADE SCORE, NEWS STINGS, the Lamport portrait line; SOUND EFFECTS one line; v8: 14 px gaps
 # between the NEWS STINGS credits): offsetHeight 5655, window 470.69 (the page starts the roll at Math.round(win) = 471).
 # Block tops in roll px: WRITTEN BY 1372, SPECIAL THANKS ends 5241, the Lamport line 5292.
+# v9 (blocks measured at load, out/layout-v8.json): STORY INSPIRATION 163-237 (Justin Drake), CAST 289-949,
+# RESEARCH & DEVELOPMENT 1624-1846 (Mikail R., the second name, at 1735).
 ROLL_H, WIN = 5655, 471
-PX1, PX2 = 6, 12                   # px a frame: v1-v6 speed; the phase 2 hold (v8: 2.0x; v7: 10, 1.67x; a whole number of px so the hold has no cadence)
-CREW_MID = (1372 + 5241) / 2       # the middle of the crew blocks
+PX1, PX2 = 6, 9                    # px a frame: v1-v6 speed; the phase 2 hold (v9: 1.5x; v8: 12, 2.0x; v7: 10, 1.67x; a whole number of px so the hold has no cadence)
+RD_IN = 1846                       # v9: phase 2 starts when the R&D block's last line is in the window (roll offset = its bottom)
 CLOSE_TOP = 5292                   # the closing lines' first line
-N_DN = 60                          # phase 3 ease, frames
-PH2 = 19.20                        # phase 2 starts 0.1 s after the read's end (the groove comes in at 19.14)
+N_UP, N_DN = 114, 90               # v9: the phase 2 and phase 3 eases, frames (3.8 s and 3.0 s; v8: phase 2 started at 19.20, after the read)
 LAT = 0.005                        # the limiter (alimiter, 5 ms attack, no latency compensation) delays the mix by 5 ms: the new layers go in 5 ms early
 # audio sources on dev-mac (attack times from out/onset_at.py: the steepest 2 ms RMS rise; the groove's on its 180 Hz high-passed mono downmix, as played)
 JA_HIT = 0.6677     # news-open-1-mini-jingle.wav: first big hit (the 0.02 and 0.34 onsets are pickups at -21 dBFS)
@@ -40,14 +46,14 @@ T = {'bars': 0.0, 'ident': .35, 'logo_in': .35, 'net_in': 1.15, 'cnn_in': 1.80, 
      'q_gh': at(W_GH), 'q_tg': at(W_COLLAB), 'q_x': round(at(W_COLLAB) + .5, 2), 'pop': .15,   # v4: each code pops in (opacity, 150 ms) on its cue
      'ask': at(W_REACH), 'ask_d': .9}                                                         # the ask line writes in left to right from "reach"
 R0 = round(T['roll'] * FPS)
-ease = lambda p: 4 * p ** 3 if p < .5 else 1 - (-2 * p + 2) ** 3 / 2
+ease = lambda p: p * p * (3 - 2 * p)   # v9: smoothstep (v7/v8: cubic in-out, twice the peak slope)
 
-def roll(p2):
-    """Roll positions for phase 2 starting at roll frame p2 -> (px list, phase frames)."""
-    c, px, v = 0.0, [0], []
-    for n in range(p2): c += PX1; px.append(round(c))
-    n_up = round((WIN + CREW_MID - WIN / 2 - c) / ((PX1 + PX2) / 2))
-    for k in range(n_up): c += PX1 + (PX2 - PX1) * ease((k + .5) / n_up); px.append(round(c))
+def roll():
+    """Roll positions -> (px list, phase frames)."""
+    c, px = 0.0, [0]
+    while c + PX1 / 2 < RD_IN: c += PX1; px.append(round(c))
+    p2 = len(px) - 1
+    for k in range(N_UP): c += PX1 + (PX2 - PX1) * ease((k + .5) / N_UP); px.append(round(c))
     hold = len(px) - 1; d0 = CLOSE_TOP - N_DN * (PX1 + PX2) / 2
     while c + PX2 / 2 < d0: c += PX2; px.append(round(c))
     dn = len(px) - 1
@@ -56,7 +62,8 @@ def roll(p2):
     while px[-1] < WIN + ROLL_H: c += PX1; px.append(round(c))
     return px, {'p2': p2, 'hold': hold, 'dn': dn, 'slow': slow, 'end': len(px) - 1}
 
-px, ph = roll(round(PH2 * FPS) - R0)
+px, ph = roll()
+assert ph['end'] <= 864, ph   # v9: at most 0.5 s over v8 (41.30 s)
 need = lambda g: max(0, math.ceil(round((VOICE_END - (g + (R0 + ph['end']) / FPS + 4.5 - G_CHORD)) * FPS, 6)))   # frames the empty window must hold
 G_BAR = next(b for b in sorted(G_BARS) if need(G_BARS[b]) <= 6); G_IN = G_BARS[G_BAR]; hold_n = need(G_IN)
 card2 = (R0 + ph['end'] + hold_n) / FPS + 4.5

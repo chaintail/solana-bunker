@@ -1,4 +1,4 @@
-<!doctype html><html data-duration="40.8333" data-fps="30"><head><meta charset="utf-8">
+<!doctype html><html data-duration="41.3" data-fps="30"><head><meta charset="utf-8">
 <link rel="stylesheet" href="base.css"><link rel="stylesheet" href="fonts.css">
 <style>
 /* Scene 11, Chaintail News Network credits over the parchment outro (film-plan-ending.md part C, in the approved C2 design: s11-credits-look.html).
@@ -11,7 +11,8 @@
    v4: the locked outro read; the codes pop in on its words (GitHub on "GitHub", Telegram on "collaborate", X half a second later) and the ask line writes
    in left to right from "reach" (a moving soft-edged mask over its measured ink, 0.9 s). The title and Chaintail Labs block are there from the split.
    v7: the roll's speed curve. T.roll_px holds its whole-pixel offset per roll frame: 6 px a frame until the voice has ended, eased up to 10 px a frame
-   through the crew blocks, eased back to 6 px a frame for the closing lines (pipeline/s11/s11-timing.py).
+   through the crew blocks, eased back to 6 px a frame for the closing lines (pipeline/s11/s11-timing.py). v9: 6 px a frame until the R&D block is in
+   the window, a smoothstep up to 9 px a frame (1.5x) over 3.8 s, a smoothstep back to 6 over 3.0 s as the closing lines arrive.
    Timing: data/s11-edl.js (pipeline/s11/s11-timing.py). No post grade. */
 html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#000}
 #s10{position:absolute;left:0;top:0;width:1280px;height:720px}

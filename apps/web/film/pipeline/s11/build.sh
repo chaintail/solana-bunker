@@ -7,6 +7,7 @@
 #          (out/s11-mix.filter), then the same bed and limiter. No gain on the whole mix: 23 s of groove 10 dB under the voice lowers the gated integrated
 #          reading, and lifting the scene back to -16 integrated would put the voice about 3.5 dB above scene 10 and into heavy limiting.
 #  video:  the captured chunks (out/chunk-a/b.mkv, capture.sh) + audio -> out/s11-<v>.mp4 (crf 14) and out/s11-<v>-phone.mp4 (960x540 crf 26). No grade.
+#          v9: the phone cut copies the master's 192k AAC (was 128k); out/s11-<v>-credits-only.mp4 is the roll alone (T.roll to T.roll_end), phone size.
 set -euo pipefail
 export PATH=/opt/homebrew/opt/ffmpeg-full/bin:/opt/homebrew/bin:$PATH
 cd ~/video-work/solana-bunker/s11; FFV="ffmpeg -nostdin -v error -y"; V=${2:-v1}; S10V=${S10V:-v2}
@@ -41,7 +42,9 @@ if [ "$1" = video ]; then
   printf "file '%s/out/chunk-a.mkv'\nfile '%s/out/chunk-b.mkv'\n" "$PWD" "$PWD" > out/chunks.txt
   $FFV -f concat -safe 0 -i out/chunks.txt -i out/audio-final.wav -map 0:v -map 1:a -r 30 -c:v libx264 -preset medium -crf 14 -pix_fmt yuv420p -vf setsar=1 \
     -c:a aac -b:a 192k -movflags +faststart -t $T out/s11-$V.mp4
-  $FFV -i out/s11-$V.mp4 -vf scale=960:540:flags=lanczos -c:v libx264 -preset medium -crf 26 -pix_fmt yuv420p -c:a aac -b:a 128k -movflags +faststart out/s11-$V-phone.mp4
+  $FFV -i out/s11-$V.mp4 -vf scale=960:540:flags=lanczos -c:v libx264 -preset medium -crf 26 -pix_fmt yuv420p -c:a copy -movflags +faststart out/s11-$V-phone.mp4
+  read R0 R1 < <(python3 -c "import json;T=json.load(open('out/s11-edl.json'))['T'];print(T['roll'],T['roll_end'])")
+  $FFV -ss $R0 -to $R1 -i out/s11-$V.mp4 -vf scale=960:540:flags=lanczos -c:v libx264 -preset medium -crf 26 -pix_fmt yuv420p -c:a aac -b:a 192k -movflags +faststart out/s11-$V-credits-only.mp4
   ffprobe -v error -show_entries format=duration:stream=codec_name,nb_frames,width,height -of compact out/s11-$V.mp4
-  ffprobe -v error -show_entries format=duration:stream=codec_name,width,height -of compact out/s11-$V-phone.mp4
+  for o in phone credits-only; do ffprobe -v error -show_entries format=duration:stream=codec_name,width,height,bit_rate -of compact out/s11-$V-$o.mp4; done
 fi
