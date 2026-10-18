@@ -130,3 +130,31 @@ before bar 18. Bar 18 has no measurable downbeat attack, so its downbeat is the 
 at the s04/s05 join is 0.2 dB. -16.0 LUFS, true peak -1.3 dBTP (wav and both mp4s), LRA 3.0; dialogue lag 0. Built with `pipeline/build-s05-m3.sh`
 (`music-m3-workshop.py`, `m3-s05-workshop.json`, `finish-m3.py`, `continuity-m3.py`, `verify-m3.py`, `plot-levels-m3.py`) -> dev-mac
 `~/video-work/solana-bunker/out/s05-m3.mp4`, `s05-m3-phone.mp4`, `s05-m3-audio.wav`, stems `s05-m3-{dialogue,music,sfx}.wav`, `s04-s05-m3-music-unsplit.wav`.
+
+## v10, x12 build (tail after the last line cut to half a second)
+Liam: cut the pause after "it all works as coded". `s05-hash.html` data-duration 91.45 -> 89.4333 scene s; the audio edit list and every cue stay at their
+v9 times. At 1.2x this is 2236 frames, 74.533333 s (v9/m3 2287, 76.233333 s: 51 frames / 1.700 s shorter), ending 0.53 s after "coded" decays below
+-40 dBFS at 74.00 s. `pipeline/s05-capture-v10.sh` captures eight 300-frame chunks (last 136) on dev-mac to `s05/out/x12v10/seg`; last output frame 2235
+samples page t = 89.40 s. The head and board have already settled there; no cue is retimed.
+
+Audio: m3's continuous workshop render, cut to the new scene end; bar 27 still lands on the shrug, frame 2210 / 73.6667 s (measured attack 73.6650 s,
+-1.7 ms). Music and the dialogue's room-tone / brown-noise tail have a 0.25 s raised-cosine fade, 74.283333-74.533333 s; the fade contains no remaining
+spoken word. The unsplit float32 music is bit-identical to m3 through sample 5,797,601 (first changed sample 5,797,602, s05 74.283375 s). The s04 half and
+split at sample 2,232,000 stay bit-identical; s04's rebuilt 24-bit PCM exactly equals m2 (the WAV files differ only in the three-byte Lavf version metadata,
+63.1.101 vs 61.7.103). SFX, cue placement, ducking and limiter chain stay as m3. s05 gain +0.7 dB, s04 +0.5 dB; concatenating the float stems after removing
+those gains matches the unsplit render to max abs 2.42e-8. Final WAV and decoded AAC in both MP4s: -16.0 LUFS, -1.3 dBTP, LRA 3.0 LU, lag 0 samples;
+each decoded audio track is 3,577,600 samples / 74.533333 s. AAC is mono 48 kHz at the requested 192k setting (measured average 180,485 bit/s).
+
+Built with `pipeline/build-s05-v10.sh` / `m3-s05-v10.json`: NumPy/SciPy mix on do-box with the 48 kHz PCM/float WAV reader (no local ffmpeg), limiter,
+AAC, mux, phone encode and metering on dev-mac under `ssh dev-mac 'bash -ls'`; plotting on do-box. Moving the DSP itself to macOS initially failed the
+bit-identity assertion, so it remains on its original platform. Master 1280x720 crf 12, phone 960x540 lanczos crf 26; both 30 fps / 2236 frames.
+`glitch-scan-v2.py --chunk-size 300 --ref 0` (md5 372f41937618fff9b46c0c1ece177a1e), dev-mac 2026-10-18 11:52 EDT: both clean, zero flags, including
+retained chunks 00/01. Fresh source renders at v10's 89.40 s and v9's 91.43333333333334 s are pixel-identical (decoded RGBA SHA256
+`b3df07442c012ee46d3a6418cb87026af00f2c8fd1afa1c8c2c1689c66807201`). The separately encoded last frames are not pixel-identical: v10 f2235 vs v9 f2286
+PSNR 43.434 dB; v10 f2235 vs s06-m3 f0 43.048 dB (v9 vs s06-m3 48.682 dB). Source end state is unchanged; these decoded comparisons include H.264 loss.
+Across common frames 0-2234, 413 decoded frames equal v9, 1592 are 40-45 dB, seven are 37.22-39.74 dB, the rest >=45 dB; no frame-0 flash.
+
+Outputs on dev-mac: `~/video-work/solana-bunker/out/s05-v10.mp4`, `s05-v10-phone.mp4`, `s05-v10-audio.wav`, `s05-v10-{dialogue,music,sfx}.wav`,
+`s04-s05-v10-music-unsplit.wav`, `s05-v10-end-compare.png`; verification under `s05/out/x12v10/audio-work/ws/verify-s05`.
+Copied to the composer's `.worldos/outbox`: `s05-v10.mp4`, `s05-v10-phone.mp4`, `s05-v10-levels.png`, `s05-v10-end-compare.png`,
+`s05-v10-glitch-scan.txt`. Frame comparisons and exact source-end-state check are reproducible with `pipeline/s05-v10-checks.sh`.
