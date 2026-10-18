@@ -1,0 +1,185 @@
+{
+ "title": "Conspiracy m4d (x12b picture, 59.100 s): music +12 dB over m2 from frame 0, intro levelled, tick highs cut, word-speed sidechain, folder close 2",
+ "notes": [
+  "m4d: audio-only variant of m2. Liam on m3b (+6 dB): music still way too quiet; start it at the beginning of the scene; lower the very high, whistly sounds. m4c and m4d differ only in music.extra_db (m4c +9, m4d +12 dB over m2 under speech: cue at -29.3 / -26.3 LUFS); the pause opening stays +5 dB above that; ducking timing as m2.",
+  "Start: m2 entered the cue at bar 3 (track 3.252 s) at scene 5.519 s, so the first 5.5 s had no music. m4 moves the cue 4 bars (one 4-bar phrase, 6.22 s of scene) earlier so it is already playing at frame 0 (track 3.95 s, 0.72 s after the bar 3 downbeat; bar 4 lands at 0.87 s) with a 0.1 s fade-in; a downbeat still lands on both anchor frames: bar 17 on the CENSORED? landing (f632, 21.0667) and bar 41 at 58.40 (m2: bars 13 and 37). Speed from the two measured onsets (1.0152, +26 cents; m2 1.0159).",
+  "Intro: the cue's opening (bars 1-12, track 0-19 s) is quieter than its body (3 s short-term median about 3 dB lower, dips 5-6 dB at bars 3-4 and 7-8); an upward-only slow leveller (music.level_intro) lifts it toward the body's median short-term loudness, max +8 dB, ramping out over the bar before bar 13; the body is not touched.",
+  "Highs: the 'whistly' sound is the clock-tick transients' top band, 12-17.2 kHz (rising to a tonal peak at 16.8 kHz, brick-walled above 17.2 kHz), 7-10 dB per Hz above the 4-9 kHz region and alone in the mix (the dialogue stops at about 8.5 kHz); nothing tonal stands out in 4-10 kHz. Cut: high shelf 6 kHz -6 dB, second high shelf 11 kHz -8 dB (so about -14 dB above 13 kHz), notch 16.8 kHz -6 dB Q 8; applied before the -18 LUFS normalisation, so the level targets hold on the filtered cue. High-pass 100 Hz as m2.",
+  "Everything else (effects, folder close 2, stamps -2 dB, the end fade, -16 LUFS / <= -1.3 dBTP) as m2."
+ ],
+ "dialogue": "in/audio-final.wav",
+ "music": {
+  "file": "in/suno-3-the-clock-ticks-twice-a.wav",
+  "hp": 100,
+  "extra_db": 12,
+  "detect_hp": 180,
+  "norm_lufs": -18,
+  "level_from_m1": {
+   "m1_hp": 180,
+   "m1_gap_db": -14
+  },
+  "duck": {
+   "depth_db": 5,
+   "key_lo_db": -44,
+   "key_hi_db": -38,
+   "attack_ms": 30,
+   "release_ms": 300
+  },
+  "anchors": [
+   {
+    "name": "bar 17 on the CENSORED? landing (f632)",
+    "track": 25.363,
+    "scene": 21.0667
+   },
+   {
+    "name": "bar 41 downbeat end, between close start and shut",
+    "track": 63.265,
+    "scene": 58.4
+   }
+  ],
+  "in": {
+   "scene": 0.0,
+   "fade": 0.1
+  },
+  "end": {
+   "fade_from": 58.45,
+   "fade_to": 59.0
+  },
+  "report_bars": {
+   "4": 4.836,
+   "13": 19.033,
+   "17": 25.363,
+   "25": 38.0,
+   "41": 63.265
+  },
+  "eq": [
+   {
+    "type": "highshelf",
+    "f": 6000,
+    "gain_db": -6,
+    "q": 0.7071
+   },
+   {
+    "type": "highshelf",
+    "f": 11000,
+    "gain_db": -8,
+    "q": 0.7071
+   },
+   {
+    "type": "peak",
+    "f": 16800,
+    "gain_db": -6,
+    "q": 8
+   }
+  ],
+  "level_intro": {
+   "until_track": 19.033,
+   "ramp_s": 1.58,
+   "body": [
+    19.033,
+    63.3
+   ],
+   "st_window_s": 3.0,
+   "smooth_s": 1.0,
+   "max_boost_db": 8
+  }
+ },
+ "guard": {
+  "target": 12,
+  "active_db": -30,
+  "windows_ms": [
+   100,
+   200
+  ],
+  "note": "measured and reported, not enforced (Liam judges the level by ear)"
+ },
+ "sfx": [
+  {
+   "name": "CLASSIFIED slam",
+   "file": "in/sfx/stamp-thump-1-traditional-stamp.wav",
+   "hit": 2.1,
+   "frame": 63,
+   "gain": -8
+  },
+  {
+   "name": "CENSORED? slam",
+   "file": "in/sfx/stamp-thump-1-traditional-stamp.wav",
+   "hit": 21.0667,
+   "frame": 632,
+   "gain": -2
+  },
+  {
+   "name": "TRUST ME, BRO slam",
+   "file": "in/sfx/stamp-thump-1-traditional-stamp.wav",
+   "hit": 34.4,
+   "frame": 1032,
+   "gain": -8
+  },
+  {
+   "name": "CHECKED slam",
+   "file": "in/sfx/stamp-thump-1-traditional-stamp.wav",
+   "hit": 47.3,
+   "frame": 1419,
+   "gain": -8
+  },
+  {
+   "name": "folder close (main impact on the shut)",
+   "file": "in/sfx/folder-close-2-doc-folder.mp3",
+   "hit": 58.5667,
+   "frame": 1757,
+   "gain": -6,
+   "attack_peak_db": 6,
+   "attack_rise_db": 6
+  },
+  {
+   "name": "? stamp",
+   "file": "in/sfx/stamp-thump-2-stamp-bright-shelved.wav",
+   "hit": 58.8667,
+   "frame": 1766,
+   "gain": -2
+  }
+ ],
+ "credits": [
+  {
+   "file": "folder-close-2-doc-folder.mp3",
+   "title": "document folder open-close #2.wav",
+   "freesound_id": 511699,
+   "author": "Timbre",
+   "licence": "CC0 1.0",
+   "url": "https://freesound.org/people/Timbre/sounds/511699/",
+   "note": "HQ preview (lossy) trimmed to the first event, 50 ms fade-out, -20 LUFS, 48 kHz; used from m2 on the folder shut"
+  },
+  {
+   "file": "stamp-thump-1-traditional-stamp.wav",
+   "freesound_id": 470710,
+   "author": "I.fekry",
+   "licence": "CC0 1.0",
+   "url": "https://freesound.org/people/I.fekry/sounds/470710/"
+  },
+  {
+   "file": "stamp-thump-2-stamp-bright-shelved.wav",
+   "freesound_id": 362624,
+   "author": "kermite607",
+   "licence": "CC0 1.0",
+   "url": "https://freesound.org/people/kermite607/sounds/362624/"
+  }
+ ],
+ "verify": {
+  "music": [
+   {
+    "name": "bar 17 downbeat on CENSORED? landing",
+    "at": 21.0667,
+    "frame": 632
+   },
+   {
+    "name": "bar 41 downbeat end",
+    "at": 58.4
+   }
+  ]
+ },
+ "ref": {
+  "m2_stems": "in/m2/conspiracy-m2",
+  "m2_gain_db": 0.3,
+  "m2_under_lufs": -38.3
+ }
+}
